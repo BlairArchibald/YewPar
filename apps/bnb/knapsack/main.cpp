@@ -7,6 +7,7 @@
 #include "bnb/bnb-seq.hpp"
 #include "bnb/bnb-par.hpp"
 #include "bnb/bnb-dist.hpp"
+#include "bnb/macros.hpp"
 
 #include "knapsack.hpp"
 
@@ -15,21 +16,13 @@ auto const numItems = 10;
 // Actions for HPX (PAR)
 HPX_PLAIN_ACTION(generateChoices<numItems>, gen_action)
 HPX_PLAIN_ACTION(upperBound<numItems>, bnd_action)
-
-// FIXME: I should define a MACRO for this setup
-struct childTask_act : hpx::actions::make_action<
-  decltype(&skeletons::BnB::Par::searchChildTask<KPSpace<numItems>, KPSolution, int, std::vector<int>, gen_action, bnd_action, childTask_act>),
-  &skeletons::BnB::Par::searchChildTask<KPSpace<numItems>, KPSolution, int, std::vector<int>, gen_action, bnd_action, childTask_act>,
-  childTask_act>::type {};
+YEWPAR_CREATE_BNB_PAR_ACTION(childTask_act, KPSpace<numItems>, KPSolution, int, std::vector<int>, gen_action, bnd_action)
 
 typedef std::vector<int> vecint;
 REGISTER_INCUMBENT(KPSolution, int, vecint);
 
 // Actions for HPX (DIST)
-struct childTaskDist_act : hpx::actions::make_action<
-  decltype(&skeletons::BnB::Dist::searchChildTask<KPSpace<numItems>, KPSolution, int, std::vector<int>, gen_action, bnd_action, childTaskDist_act>),
-    &skeletons::BnB::Dist::searchChildTask<KPSpace<numItems>, KPSolution, int, std::vector<int>, gen_action, bnd_action, childTaskDist_act>,
-    childTaskDist_act>::type {};
+YEWPAR_CREATE_BNB_DIST_ACTION(childTaskDist_act, KPSpace<numItems>, KPSolution, int, std::vector<int>, gen_action, bnd_action)
 
 REGISTER_REGISTRY(KPSpace<numItems>, int);
 
