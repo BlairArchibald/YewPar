@@ -48,7 +48,7 @@ expand(unsigned spawnDepth,
 
     /* Search the child nodes */
     if (spawnDepth > 0) {
-      childFuts.push_back(hpx::apply<ChildTask>(hpx::find_here(), spawnDepth - 1, c));
+      childFuts.push_back(hpx::async<ChildTask>(hpx::find_here(), spawnDepth - 1, c));
     } else {
       expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask>(spawnDepth - 1, c);
     }
@@ -77,12 +77,12 @@ search(unsigned spawnDepth,
   skeletons::BnB::Components::initialiseRegistry(space, initialBnd, incumbent);
 
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action updateInc;
-  hpx::async<updateInc>(reg->globalIncumbent_, root).get();
+  hpx::async<updateInc>(incumbent, root).get();
 
   expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask>(spawnDepth, root);
 
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::getIncumbent_action getInc;
-  return hpx::async<getInc>(reg->globalIncumbent_).get();
+  return hpx::async<getInc>(incumbent).get();
 }
 
 /* FIXME: Not sure this is needed. Can I not just call expand? */

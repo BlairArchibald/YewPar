@@ -109,7 +109,7 @@ search(unsigned spawnDepth,
 
   // Read the result form the global incumbent
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::getIncumbent_action getInc;
-  return hpx::async<getInc>::getIncumbent_action>(inc).get();
+  return hpx::async<getInc>(inc).get();
 }
 
 template <typename Space,
