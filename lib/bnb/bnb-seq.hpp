@@ -7,6 +7,8 @@
 
 namespace skeletons { namespace BnB { namespace Seq {
 
+static unsigned long numExpands = 0;
+
 template <typename Space,
           typename Sol,
           typename Bnd,
@@ -20,11 +22,13 @@ expand(const Space & space,
       const Gen && gen,
       const Bound && ubound) {
   std::vector<hpx::util::tuple<Sol, Bnd, Cand> > newCands = gen(space, n);
+  numExpands++;
   for (auto const & c : newCands) {
 
     /* Prune if required */
-    if (ubound(space, c) < hpx::util::get<1>(incumbent)) {
-      continue;
+    if (ubound(space, c) <= hpx::util::get<1>(incumbent)) {
+      //continue;
+      break;
     }
 
     /* Update incumbent if required */
