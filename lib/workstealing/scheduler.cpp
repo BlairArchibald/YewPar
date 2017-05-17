@@ -5,6 +5,7 @@ namespace workstealing {
 
 void stopScheduler() {
   running.store(false);
+  tasks_required_sem.signal(1);
 }
 
 void startScheduler(std::vector<hpx::naming::id_type> workqueues) {
