@@ -76,7 +76,7 @@ A dncRec(const A x) {
   auto pid  = prom.get_id();
 
   RecAct a;
-  hpx::util::function<void(hpx::naming::id_type)> task = hpx::util::bind(a, _1, l, pid);
+  hpx::util::function<void(hpx::naming::id_type)> task = hpx::util::bind(a, hpx::util::placeholders::_1, l, pid);
   hpx::apply<workstealing::workqueue::addWork_action>(workstealing::local_workqueue, task);
 
   auto r_res = dncRec<A, Divide, Conquer, Trivial, F, RecAct>(r);
