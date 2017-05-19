@@ -106,7 +106,7 @@ struct MCSol {
 
 using MCNode = hpx::util::tuple<MCSol, int, BitSet<NWORDS> >;
 
-struct GenNode {
+struct GenNode : skeletons::BnB::NodeGenerator<MCSol, int, BitSet<NWORDS> > {
   const BitGraph<NWORDS> & graph;
   const MCNode & n;
   std::array<unsigned, NWORDS * bits_per_word> p_order;
@@ -126,11 +126,12 @@ struct GenNode {
     childSol = hpx::util::get<0>(n);
     childBnd = hpx::util::get<1>(n) + 1;
     p = hpx::util::get<2>(n);
-    v = p.popcount() - 1;
+    numChildren = p.popcount();
+    v = numChildren - 1;
   }
 
   // Get the next value
-  MCNode operator() () {
+  MCNode next() override {
     auto sol = childSol;
     sol.members.push_back(p_order[v]);
     sol.colours = colourClass[v] - 1;
@@ -146,7 +147,7 @@ struct GenNode {
   }
 };
 
-skeletons::BnB::NodeGenerator<MCSol, int, BitSet<NWORDS>, GenNode>
+GenNode
 generateChoices(const BitGraph<NWORDS> & graph, const MCNode & n) {
   std::array<unsigned, NWORDS * bits_per_word> p_order;
   std::array<unsigned, NWORDS * bits_per_word> colourClass;
@@ -155,7 +156,7 @@ generateChoices(const BitGraph<NWORDS> & graph, const MCNode & n) {
   colour_class_order(graph, p, p_order, colourClass);
 
   GenNode g(graph, n, std::move(p_order), std::move(colourClass));
-  return skeletons::BnB::NodeGenerator<MCSol, int, BitSet<NWORDS>, GenNode>(g, p.popcount());
+  return g;
 }
 
 int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
