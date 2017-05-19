@@ -106,34 +106,56 @@ struct MCSol {
 
 using MCNode = hpx::util::tuple<MCSol, int, BitSet<NWORDS> >;
 
-std::vector<MCNode> generateChoices(const BitGraph<NWORDS> & graph, const MCNode & n) {
+struct GenNode {
+  const BitGraph<NWORDS> & graph;
+  const MCNode & n;
+  std::array<unsigned, NWORDS * bits_per_word> p_order;
+  std::array<unsigned, NWORDS * bits_per_word> colourClass;
+
+  MCSol childSol;
+  int childBnd;
+  BitSet<NWORDS> p;
+
+  int v;
+  GenNode(const BitGraph<NWORDS> & graph,
+          const MCNode & n,
+          const std::array<unsigned, NWORDS * bits_per_word> p_order,
+          const std::array<unsigned, NWORDS * bits_per_word> colourClass)
+    : graph(graph), n(n), p_order(p_order), colourClass(colourClass) {
+
+    childSol = hpx::util::get<0>(n);
+    childBnd = hpx::util::get<1>(n) + 1;
+    p = hpx::util::get<2>(n);
+    v = p.popcount() - 1;
+  }
+
+  // Get the next value
+  MCNode operator() () {
+    auto sol = childSol;
+    sol.members.push_back(p_order[v]);
+    sol.colours = colourClass[v] - 1;
+
+    auto cands = p;
+    graph.intersect_with_row(p_order[v], cands);
+
+    // Side effectful function update
+    p.unset(p_order[v]);
+    v--;
+
+    return hpx::util::make_tuple(std::move(sol), childBnd, std::move(cands));
+  }
+};
+
+skeletons::BnB::NodeGenerator<MCSol, int, BitSet<NWORDS>, GenNode>
+generateChoices(const BitGraph<NWORDS> & graph, const MCNode & n) {
   std::array<unsigned, NWORDS * bits_per_word> p_order;
   std::array<unsigned, NWORDS * bits_per_word> colourClass;
   auto p = hpx::util::get<2>(n);
 
   colour_class_order(graph, p, p_order, colourClass);
 
-  std::vector<MCNode> res;
-  res.reserve(p.popcount());
-
-  for (int v = p.popcount() - 1 ; v >= 0 ; --v) {
-    auto childSol = hpx::util::get<0>(n);
-    childSol.members.reserve(graph.size());
-    childSol.members.push_back(p_order[v]);
-    // -1 since we have effectively "taken" one colour class in the child
-    childSol.colours = colourClass[v] - 1;
-
-    auto childBnd = hpx::util::get<1>(n) + 1;
-
-    auto childCands = p;
-    graph.intersect_with_row(p_order[v], childCands);
-
-    res.push_back(hpx::util::make_tuple(childSol, childBnd, childCands));
-
-    p.unset(p_order[v]);
-  }
-
-  return res;
+  GenNode g(graph, n, std::move(p_order), std::move(colourClass));
+  return skeletons::BnB::NodeGenerator<MCSol, int, BitSet<NWORDS>, GenNode>(g, p.popcount());
 }
 
 int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {

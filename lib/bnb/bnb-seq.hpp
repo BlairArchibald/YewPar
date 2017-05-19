@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <hpx/util/tuple.hpp>
+#include "nodegenerator.hpp"
 
 namespace skeletons { namespace BnB { namespace Seq {
 
@@ -21,14 +22,17 @@ expand(const Space & space,
       const hpx::util::tuple<Sol, Bnd, Cand> & n,
       const Gen && gen,
       const Bound && ubound) {
-  std::vector<hpx::util::tuple<Sol, Bnd, Cand> > newCands = gen(space, n);
+
+  auto newCands = gen(space, n);
   numExpands++;
-  for (auto const & c : newCands) {
+
+  for (auto i = 0; i < newCands.numChildren; ++i) {
+    auto c = newCands.next();
 
     /* Prune if required */
     if (ubound(space, c) <= hpx::util::get<1>(incumbent)) {
       //continue;
-      break;
+      break; // Prune Level Optimisation
     }
 
     /* Update incumbent if required */
