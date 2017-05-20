@@ -47,7 +47,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto n = opts["n"].as<std::uint64_t>();
 
-  auto res = 0;
+  std::uint64_t res = 0;
 
   if (skeletonType == "seq") {
     res = skeletons::DnC::Seq::dnc<std::uint64_t>
