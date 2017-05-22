@@ -23,8 +23,7 @@ expand(unsigned spawnDepth,
 
   auto reg = skeletons::BnB::Components::Registry<Space,Bnd>::gReg;
 
-  Gen gen;
-  auto newCands = gen(hpx::find_here(), reg->space_, n);
+  auto newCands = Gen::invoke(0, reg->space_, n);
 
   std::vector<hpx::future<void> > childFuts;
   if (spawnDepth > 0) {
@@ -36,8 +35,8 @@ expand(unsigned spawnDepth,
     auto lbnd = reg->localBound_.load();
 
     /* Prune if required */
-    Bound ubound;
-    if (ubound(hpx::find_here(), reg->space_, c) <= lbnd) {
+    auto ubound = Bound::invoke(0, reg->space_, c);
+    if (ubound <= lbnd) {
       //continue;
       break; // Prune Level Optimisation
     }
