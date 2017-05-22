@@ -212,11 +212,12 @@ int hpx_main(boost::program_options::variables_map & opts) {
   if (skeletonType == "seq") {
     sol = skeletons::BnB::Seq::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS> >
       (graph, root, generateChoices, upperBound);
+    std::cout << "Exapnds = " << skeletons::BnB::Seq::numExpands << std::endl;
   }
   if (skeletonType == "par") {
     sol = skeletons::BnB::Par::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
                                       generateChoices_act, upperBound_act, par_act>
-      (0, graph, root);
+      (spawnDepth, graph, root);
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
@@ -226,7 +227,6 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   std::cout << "MaxClique Size = " << maxCliqueSize << std::endl;
   std::cout << "cpu = " << overall_time.count() << std::endl;
-  std::cout << "Exapnds = " << skeletons::BnB::Seq::numExpands << std::endl;
 
   return hpx::finalize();
 }

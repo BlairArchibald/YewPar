@@ -1,1 +1,3 @@
 - [ ] More robust build system (including proper versioning)
+- [ ] Stack sizes for the searches should be set to medium or large by default
+  due to the (likely) high degree of recursion
