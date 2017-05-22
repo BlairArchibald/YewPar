@@ -18,6 +18,7 @@
 
 #include "bnb/bnb-seq.hpp"
 #include "bnb/bnb-par.hpp"
+#include "bnb/bnb-dist.hpp"
 #include "bnb/macros.hpp"
 
 // 64 bit words
@@ -167,9 +168,11 @@ int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
 HPX_PLAIN_ACTION(generateChoices, generateChoices_act);
 HPX_PLAIN_ACTION(upperBound, upperBound_act);
 YEWPAR_CREATE_BNB_PAR_ACTION(par_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act);
+YEWPAR_CREATE_BNB_DIST_ACTION(dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act);
 
 typedef BitSet<NWORDS> bitsetType;
 REGISTER_INCUMBENT(MCSol, int, bitsetType);
+REGISTER_REGISTRY(BitGraph<NWORDS>, int);
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto inputFile = opts["input-file"].as<std::string>();
@@ -178,7 +181,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
-  const std::vector<std::string> skeletonTypes = {"seq", "par"};
+  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist"};
 
   auto skeletonType = opts["skeleton-type"].as<std::string>();
   auto found = std::find(std::begin(skeletonTypes), std::end(skeletonTypes), skeletonType);
@@ -217,6 +220,11 @@ int hpx_main(boost::program_options::variables_map & opts) {
   if (skeletonType == "par") {
     sol = skeletons::BnB::Par::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
                                       generateChoices_act, upperBound_act, par_act>
+      (spawnDepth, graph, root);
+  }
+  if (skeletonType == "dist") {
+    sol = skeletons::BnB::Dist::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                      generateChoices_act, upperBound_act, dist_act>
       (spawnDepth, graph, root);
   }
 

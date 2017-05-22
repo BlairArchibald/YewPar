@@ -26,29 +26,33 @@ expand(unsigned spawnDepth,
 
   auto reg = skeletons::BnB::Components::Registry<Space,Bnd>::gReg;
 
-  Gen gen;
-  std::vector< hpx::util::tuple<Sol, Bnd, Cand> > newCands = gen(hpx::find_here(), reg->space_, n);
+  auto newCands = Gen::invoke(0, reg->space_, n);
 
   std::vector<hpx::future<void> > childFuts;
   if (spawnDepth > 0) {
-    childFuts.reserve(newCands.size());
+    childFuts.reserve(newCands.numChildren);
   }
 
-  for (auto const & c : newCands) {
+  for (auto i = 0; i < newCands.numChildren; ++i) {
+    auto c = newCands.next(reg->space_, n);
     auto lbnd = reg->localBound_.load();
 
     /* Prune if required */
-    Bound ubound;
-    if (ubound(hpx::find_here(), reg->space_, c) < lbnd) {
-      continue;
+    auto ubound = Bound::invoke(0, reg->space_, c);
+    if (ubound <= lbnd) {
+      //continue;
+      break; // Prune Level Optimisation
     }
 
     /* Update incumbent if required */
     if (hpx::util::get<1>(c) > lbnd) {
       typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action act;
       hpx::async<act>(reg->globalIncumbent_, c).get();
+      // This isn't quite right since we need to ensure monotonic updates
+      // FIXME: Write as a CAS operation
       reg->localBound_.store(hpx::util::get<1>(c));
       hpx::lcos::broadcast<updateRegistryBound_act>(hpx::find_all_localities(), hpx::util::get<1>(c));
+      std::cout << "Updated Incumbent: " << hpx::util::get<1>(c) << std::endl;
     }
 
     /* Search the child nodes */
@@ -64,7 +68,7 @@ expand(unsigned spawnDepth,
 
       childFuts.push_back(std::move(pfut));
     } else {
-      expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask>(spawnDepth - 1, c);
+      expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask>(0, c);
     }
   }
 
