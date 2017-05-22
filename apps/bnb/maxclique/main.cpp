@@ -21,11 +21,11 @@
 #include "bnb/bnb-dist.hpp"
 #include "bnb/macros.hpp"
 
-// 64 bit words
-// 8 words covers 400 vertices
-// 13 words covers 800 vertices
-// Later we can specialise this at compile time
+// Number of Words to use in our bitset representation
+// Possible to specify at compile to to handler bigger graphs if required
+#ifndef NWORDS
 #define NWORDS 8
+#endif
 
 // Order a graphFromFile and return an ordered graph alongside a map to invert
 // the vertex numbering at the end.
