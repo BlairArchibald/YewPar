@@ -17,6 +17,8 @@
 #include "BitSet.hpp"
 
 #include "bnb/bnb-seq.hpp"
+#include "bnb/bnb-par.hpp"
+#include "bnb/macros.hpp"
 
 // 64 bit words
 // 8 words covers 400 vertices
@@ -106,9 +108,7 @@ struct MCSol {
 
 using MCNode = hpx::util::tuple<MCSol, int, BitSet<NWORDS> >;
 
-struct GenNode : skeletons::BnB::NodeGenerator<MCSol, int, BitSet<NWORDS> > {
-  const BitGraph<NWORDS> & graph;
-  const MCNode & n;
+struct GenNode : skeletons::BnB::NodeGenerator<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS> > {
   std::array<unsigned, NWORDS * bits_per_word> p_order;
   std::array<unsigned, NWORDS * bits_per_word> colourClass;
 
@@ -117,11 +117,12 @@ struct GenNode : skeletons::BnB::NodeGenerator<MCSol, int, BitSet<NWORDS> > {
   BitSet<NWORDS> p;
 
   int v;
-  GenNode(const BitGraph<NWORDS> & graph,
-          const MCNode & n,
+
+  GenNode() {};
+  GenNode(const MCNode & n,
           const std::array<unsigned, NWORDS * bits_per_word> p_order,
           const std::array<unsigned, NWORDS * bits_per_word> colourClass)
-    : graph(graph), n(n), p_order(p_order), colourClass(colourClass) {
+    : p_order(p_order), colourClass(colourClass) {
 
     childSol = hpx::util::get<0>(n);
     childBnd = hpx::util::get<1>(n) + 1;
@@ -131,7 +132,7 @@ struct GenNode : skeletons::BnB::NodeGenerator<MCSol, int, BitSet<NWORDS> > {
   }
 
   // Get the next value
-  MCNode next() override {
+  MCNode next(const BitGraph<NWORDS> & graph, const MCNode & n) override {
     auto sol = childSol;
     sol.members.push_back(p_order[v]);
     sol.colours = colourClass[v] - 1;
@@ -155,7 +156,7 @@ generateChoices(const BitGraph<NWORDS> & graph, const MCNode & n) {
 
   colour_class_order(graph, p, p_order, colourClass);
 
-  GenNode g(graph, n, std::move(p_order), std::move(colourClass));
+  GenNode g(n, std::move(p_order), std::move(colourClass));
   return g;
 }
 
@@ -163,6 +164,12 @@ int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
   return hpx::util::get<1>(n) + hpx::util::get<0>(n).colours;
 }
 
+HPX_PLAIN_ACTION(generateChoices, generateChoices_act);
+HPX_PLAIN_ACTION(upperBound, upperBound_act);
+YEWPAR_CREATE_BNB_PAR_ACTION(par_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act);
+
+typedef BitSet<NWORDS> bitsetType;
+REGISTER_INCUMBENT(MCSol, int, bitsetType);
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto inputFile = opts["input-file"].as<std::string>();
@@ -171,7 +178,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
-  const std::vector<std::string> skeletonTypes = {"seq"};
+  const std::vector<std::string> skeletonTypes = {"seq", "par"};
 
   auto skeletonType = opts["skeleton-type"].as<std::string>();
   auto found = std::find(std::begin(skeletonTypes), std::end(skeletonTypes), skeletonType);
@@ -205,6 +212,11 @@ int hpx_main(boost::program_options::variables_map & opts) {
   if (skeletonType == "seq") {
     sol = skeletons::BnB::Seq::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS> >
       (graph, root, generateChoices, upperBound);
+  }
+  if (skeletonType == "par") {
+    sol = skeletons::BnB::Par::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                      generateChoices_act, upperBound_act, par_act>
+      (0, graph, root);
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>

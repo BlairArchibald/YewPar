@@ -6,6 +6,7 @@
 
 #include "registry.hpp"
 #include "incumbent.hpp"
+#include "nodegenerator.hpp"
 
 namespace skeletons { namespace BnB { namespace Par {
 
@@ -23,34 +24,39 @@ expand(unsigned spawnDepth,
   auto reg = skeletons::BnB::Components::Registry<Space,Bnd>::gReg;
 
   Gen gen;
-  std::vector< hpx::util::tuple<Sol, Bnd, Cand> > newCands = gen(hpx::find_here(), reg->space_, n);
+  auto newCands = gen(hpx::find_here(), reg->space_, n);
 
   std::vector<hpx::future<void> > childFuts;
   if (spawnDepth > 0) {
-    childFuts.reserve(newCands.size());
+    childFuts.reserve(newCands.numChildren);
   }
 
-  for (auto const & c : newCands) {
+  for (auto i = 0; i < newCands.numChildren; ++i) {
+    auto c = newCands.next(reg->space_, n);
     auto lbnd = reg->localBound_.load();
 
     /* Prune if required */
     Bound ubound;
-    if (ubound(hpx::find_here(), reg->space_, c) < lbnd) {
-      continue;
+    if (ubound(hpx::find_here(), reg->space_, c) <= lbnd) {
+      //continue;
+      break; // Prune Level Optimisation
     }
 
     /* Update incumbent if required */
     if (hpx::util::get<1>(c) > lbnd) {
       typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action updateInc;
+      // This isn't quite right since we need to ensure monotonic updates
+      // FIXME: Write as a CAS operation
       reg->localBound_.store(hpx::util::get<1>(c));
       hpx::async<updateInc>(reg->globalIncumbent_, c).get();
+      std::cout << "Updated Incumbent: " << hpx::util::get<1>(c) << std::endl;
     }
 
     /* Search the child nodes */
     if (spawnDepth > 0) {
       childFuts.push_back(hpx::async<ChildTask>(hpx::find_here(), spawnDepth - 1, c));
     } else {
-      expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask>(spawnDepth - 1, c);
+      expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask>(0, c);
     }
   }
 

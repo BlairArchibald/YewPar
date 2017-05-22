@@ -27,7 +27,7 @@ expand(const Space & space,
   numExpands++;
 
   for (auto i = 0; i < newCands.numChildren; ++i) {
-    auto c = newCands.next();
+    auto c = newCands.next(space, n);
 
     /* Prune if required */
     if (ubound(space, c) <= hpx::util::get<1>(incumbent)) {
