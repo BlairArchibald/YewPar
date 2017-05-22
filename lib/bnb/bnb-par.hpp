@@ -48,7 +48,6 @@ expand(unsigned spawnDepth,
       // FIXME: Write as a CAS operation
       reg->localBound_.store(hpx::util::get<1>(c));
       hpx::async<updateInc>(reg->globalIncumbent_, c).get();
-      std::cout << "Updated Incumbent: " << hpx::util::get<1>(c) << std::endl;
     }
 
     /* Search the child nodes */
