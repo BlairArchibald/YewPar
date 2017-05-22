@@ -26,7 +26,16 @@ namespace skeletons { namespace BnB { namespace Components {
       template <typename Space, typename Bnd>
       void updateRegistryBound(Bnd bnd) {
         auto reg = Registry<Space,Bnd>::gReg;
-        reg->localBound_.store(bnd);
+        while (true) {
+          auto curBound = reg->localBound_.load();
+          if (bnd < curBound) {
+            break;
+          }
+
+          if (reg->localBound_.compare_exchange_weak(curBound, bnd)) {
+            break;
+          }
+        }
       }
 }}}
 

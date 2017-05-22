@@ -43,10 +43,9 @@ expand(unsigned spawnDepth,
 
     /* Update incumbent if required */
     if (hpx::util::get<1>(c) > lbnd) {
+      skeletons::BnB::Components::updateRegistryBound<Space, Bnd>(hpx::util::get<1>(c));
+
       typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action updateInc;
-      // This isn't quite right since we need to ensure monotonic updates
-      // FIXME: Write as a CAS operation
-      reg->localBound_.store(hpx::util::get<1>(c));
       hpx::async<updateInc>(reg->globalIncumbent_, c).get();
     }
 

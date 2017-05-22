@@ -46,13 +46,11 @@ expand(unsigned spawnDepth,
 
     /* Update incumbent if required */
     if (hpx::util::get<1>(c) > lbnd) {
+      skeletons::BnB::Components::updateRegistryBound<Space, Bnd>(hpx::util::get<1>(c));
+      hpx::lcos::broadcast<updateRegistryBound_act>(hpx::find_all_localities(), hpx::util::get<1>(c));
+
       typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action act;
       hpx::async<act>(reg->globalIncumbent_, c).get();
-      // This isn't quite right since we need to ensure monotonic updates
-      // FIXME: Write as a CAS operation
-      reg->localBound_.store(hpx::util::get<1>(c));
-      hpx::lcos::broadcast<updateRegistryBound_act>(hpx::find_all_localities(), hpx::util::get<1>(c));
-      std::cout << "Updated Incumbent: " << hpx::util::get<1>(c) << std::endl;
     }
 
     /* Search the child nodes */
