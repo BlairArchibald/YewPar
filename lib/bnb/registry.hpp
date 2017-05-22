@@ -34,18 +34,18 @@ HPX_DECLARE_PLAIN_ACTION(skeletons::BnB::Components::initialiseRegistry, initReg
 HPX_DECLARE_PLAIN_ACTION(skeletons::BnB::Components::updateRegistryBound, updateRegistryBound_act);
 
 #define COMMA ,
-#define REGISTER_REGISTRY(sol,bnd)                                                   \
+#define REGISTER_REGISTRY(space,bnd)                                                 \
   struct initRegistry_act : hpx::actions::make_action<                               \
-    decltype(&skeletons::BnB::Components::initialiseRegistry<sol COMMA bnd >),             \
-    &skeletons::BnB::Components::initialiseRegistry<sol COMMA bnd >,                       \
+    decltype(&skeletons::BnB::Components::initialiseRegistry<space COMMA bnd >),     \
+    &skeletons::BnB::Components::initialiseRegistry<space COMMA bnd >,               \
     initRegistry_act>::type {};                                                      \
                                                                                      \
   HPX_REGISTER_ACTION_DECLARATION(initRegistry_act, initRegistry_act);               \
   HPX_REGISTER_ACTION(initRegistry_act, initRegistry_act);                           \
                                                                                      \
   struct updateRegistryBound_act : hpx::actions::make_action<                        \
-    decltype(&skeletons::BnB::Components::updateRegistryBound<sol COMMA bnd >),            \
-    &skeletons::BnB::Components::updateRegistryBound<sol COMMA bnd >,                      \
+    decltype(&skeletons::BnB::Components::updateRegistryBound<space COMMA bnd >),    \
+    &skeletons::BnB::Components::updateRegistryBound<space COMMA bnd >,              \
     updateRegistryBound_act>::type {};                                               \
                                                                                      \
   HPX_REGISTER_ACTION_DECLARATION(updateRegistryBound_act, updateRegistryBound_act); \
