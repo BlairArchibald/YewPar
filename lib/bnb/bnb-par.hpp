@@ -16,10 +16,12 @@ template <typename Space,
           typename Cand,
           typename Gen,
           typename Bound,
-          typename ChildTask>
+          typename ChildTask,
+          bool PruneLevel>
 void
 expand(unsigned spawnDepth,
        const hpx::util::tuple<Sol, Bnd, Cand> & n) {
+  constexpr bool const prunelevel = PruneLevel;
 
   auto reg = skeletons::BnB::Components::Registry<Space,Bnd>::gReg;
 
@@ -37,8 +39,11 @@ expand(unsigned spawnDepth,
     /* Prune if required */
     auto ubound = Bound::invoke(0, reg->space_, c);
     if (ubound <= lbnd) {
-      //continue;
-      break; // Prune Level Optimisation
+      if (prunelevel) {
+        break;
+      } else {
+        continue;
+      }
     }
 
     /* Update incumbent if required */
@@ -53,7 +58,7 @@ expand(unsigned spawnDepth,
     if (spawnDepth > 0) {
       childFuts.push_back(hpx::async<ChildTask>(hpx::find_here(), spawnDepth - 1, c));
     } else {
-      expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask>(0, c);
+      expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(0, c);
     }
   }
 
@@ -64,12 +69,13 @@ expand(unsigned spawnDepth,
 
 /* Non-distributed Branch and Bound Search using HPX internal work scheduling policies */
 template <typename Space,
-        typename Sol,
-        typename Bnd,
-        typename Cand,
-        typename Gen,
-        typename Bound,
-        typename ChildTask>
+          typename Sol,
+          typename Bnd,
+          typename Cand,
+          typename Gen,
+          typename Bound,
+          typename ChildTask,
+          bool PruneLevel = false>
 hpx::util::tuple<Sol, Bnd, Cand>
 search(unsigned spawnDepth,
        const Space & space,
@@ -82,7 +88,7 @@ search(unsigned spawnDepth,
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action updateInc;
   hpx::async<updateInc>(incumbent, root).get();
 
-  expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask>(spawnDepth, root);
+  expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(spawnDepth, root);
 
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::getIncumbent_action getInc;
   return hpx::async<getInc>(incumbent).get();
@@ -95,11 +101,12 @@ template <typename Space,
           typename Cand,
           typename Gen,
           typename Bound,
-          typename ChildTask>
+          typename ChildTask,
+          bool PruneLevel = false>
 void
 searchChildTask(unsigned spawnDepth,
                 hpx::util::tuple<Sol, Bnd, Cand> c) {
-  expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask>(spawnDepth, c);
+  expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(spawnDepth, c);
 }
 
 }}}

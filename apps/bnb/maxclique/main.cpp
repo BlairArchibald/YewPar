@@ -167,8 +167,8 @@ int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
 
 HPX_PLAIN_ACTION(generateChoices, generateChoices_act);
 HPX_PLAIN_ACTION(upperBound, upperBound_act);
-YEWPAR_CREATE_BNB_PAR_ACTION(par_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act);
-YEWPAR_CREATE_BNB_DIST_ACTION(dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act);
+YEWPAR_CREATE_BNB_PAR_ACTION(par_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
+YEWPAR_CREATE_BNB_DIST_ACTION(dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 
 typedef BitSet<NWORDS> bitsetType;
 REGISTER_INCUMBENT(MCSol, int, bitsetType);
@@ -213,18 +213,18 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto sol = root;
   if (skeletonType == "seq") {
-    sol = skeletons::BnB::Seq::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS> >
+    sol = skeletons::BnB::Seq::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, decltype(generateChoices), decltype(upperBound), true>
       (graph, root, generateChoices, upperBound);
     std::cout << "Exapnds = " << skeletons::BnB::Seq::numExpands << std::endl;
   }
   if (skeletonType == "par") {
     sol = skeletons::BnB::Par::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                      generateChoices_act, upperBound_act, par_act>
+                                      generateChoices_act, upperBound_act, par_act, true>
       (spawnDepth, graph, root);
   }
   if (skeletonType == "dist") {
     sol = skeletons::BnB::Dist::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                      generateChoices_act, upperBound_act, dist_act>
+                                       generateChoices_act, upperBound_act, dist_act, true>
       (spawnDepth, graph, root);
   }
 

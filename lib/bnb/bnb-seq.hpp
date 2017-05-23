@@ -15,13 +15,15 @@ template <typename Space,
           typename Bnd,
           typename Cand,
           typename Gen,
-          typename Bound>
+          typename Bound,
+          bool PruneLevel>
 void
 expand(const Space & space,
       hpx::util::tuple<Sol, Bnd, Cand> & incumbent,
       const hpx::util::tuple<Sol, Bnd, Cand> & n,
       const Gen && gen,
       const Bound && ubound) {
+  constexpr bool const prunelevel = PruneLevel;
 
   auto newCands = gen(space, n);
   numExpands++;
@@ -31,8 +33,12 @@ expand(const Space & space,
 
     /* Prune if required */
     if (ubound(space, c) <= hpx::util::get<1>(incumbent)) {
-      //continue;
-      break; // Prune Level Optimisation
+      // TODO: check this is optimised away
+      if (prunelevel) {
+        break;
+      } else {
+        continue;
+      }
     }
 
     /* Update incumbent if required */
@@ -41,7 +47,7 @@ expand(const Space & space,
     }
 
     /* Search the child nodes */
-    expand(space, incumbent, c, gen, ubound);
+    expand<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(space, incumbent, c, gen, ubound);
   }
 }
 
@@ -50,14 +56,15 @@ template <typename Space,
           typename Bnd,
           typename Cand,
           typename Gen,
-          typename Bound>
+          typename Bound,
+          bool PruneLevel = false>
 hpx::util::tuple<Sol, Bnd, Cand>
 search(const Space & space,
        const hpx::util::tuple<Sol, Bnd, Cand> & root,
        const Gen && gen,
        const Bound && ubound) {
   auto incumbent = root;
-  expand(space, incumbent, root, gen, ubound);
+  expand<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(space, incumbent, root, gen, ubound);
   return incumbent;
 }
 
