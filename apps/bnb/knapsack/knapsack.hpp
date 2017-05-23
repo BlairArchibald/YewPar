@@ -37,7 +37,33 @@ template <unsigned numItems>
 using KPSpace = std::pair< std::array<int, numItems>, std::array<int, numItems> >;
 
 template <unsigned numItems>
-std::vector<KPNode> generateChoices(const KPSpace<numItems> & space, const KPNode & n) {
+struct GenNode : skeletons::BnB::NodeGenerator<KPSpace<numItems>, KPSolution, int, std::vector<int> > {
+  std::vector<int> items;
+  int pos;
+
+  GenNode () {};
+  GenNode (std::vector<int> items) : items(items), pos(0) {
+    this->numChildren = items.size();
+  }
+
+  KPNode next(const KPSpace<numItems> & space, const KPNode & n) override {
+    auto i = items[pos];
+
+    auto newSol = hpx::util::get<0>(n);
+    newSol.items.push_back(i);
+    newSol.profit += std::get<0>(space)[i];
+    newSol.weight += std::get<1>(space)[i];
+
+    auto newCands = hpx::util::get<2>(n);
+    newCands.erase(std::remove(newCands.begin(), newCands.end(), i), newCands.end());
+
+    pos++;
+    return hpx::util::make_tuple(std::move(newSol), newSol.profit, std::move(newCands));
+  }
+};
+
+template <unsigned numItems>
+GenNode<numItems> generateChoices(const KPSpace<numItems> & space, const KPNode & n) {
   auto cands = hpx::util::get<2>(n);
 
   // Get potential choices - those that don't exceed the capacity
@@ -46,22 +72,7 @@ std::vector<KPNode> generateChoices(const KPSpace<numItems> & space, const KPNod
       return hpx::util::get<0>(n).weight + std::get<1>(space)[i] <= hpx::util::get<0>(n).capacity;
     });
 
-  // Create new search  nodes for each potential choice
-  std::vector< hpx::util::tuple<KPSolution, int, std::vector<int> > > ret;
-  for (const auto & i : items) {
-
-    auto newSol = hpx::util::get<0>(n);
-    newSol.items.push_back(i);
-    newSol.profit += std::get<0>(space)[i];
-    newSol.weight += std::get<1>(space)[i];
-
-    auto newCands = cands;
-    newCands.erase(std::remove(newCands.begin(), newCands.end(), i), newCands.end());
-
-    ret.push_back(hpx::util::make_tuple(newSol, newSol.profit, newCands));
-  }
-
-  return ret;
+  return GenNode<numItems>(std::move(items));
 }
 
 template <unsigned numItems>
