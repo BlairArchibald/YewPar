@@ -56,6 +56,9 @@ void scheduler(std::vector<hpx::naming::id_type> workqueues,
     if (distributed && !task) {
       if (last_remote != here) {
         task = hpx::async<workstealing::workqueue::steal_action>(last_remote).get();
+        if (task) {
+          perf_distSteals++;
+        }
       }
 
       if (!task) {
@@ -64,6 +67,7 @@ void scheduler(std::vector<hpx::naming::id_type> workqueues,
 
         task = hpx::async<workstealing::workqueue::steal_action>(*victim).get();
         if (task) {
+          perf_distSteals++;
           last_remote = *victim;
         } else {
           last_remote = here;
@@ -74,17 +78,35 @@ void scheduler(std::vector<hpx::naming::id_type> workqueues,
     if (task) {
       scheduler.add(hpx::util::bind(task, here));
     } else {
+      perf_failedSteals++;
       hpx::this_thread::suspend(10);
       tasks_required_sem.signal();
     }
   }
 }
 
-
+// FIXME: Abstract these counter functions into a single function parameterised
+// by the atomic counter (couldn't get this idea to compile correctly)
 std::int64_t getLocalSteals(bool reset) {
   auto res = perf_localSteals.load();
   if (reset) {
     perf_localSteals.store(0);
+  }
+  return res;
+}
+
+std::int64_t getDistSteals(bool reset) {
+  auto res = perf_distSteals.load();
+  if (reset) {
+    perf_distSteals.store(0);
+  }
+  return res;
+}
+
+std::int64_t getFailedSteals(bool reset) {
+  auto res = perf_failedSteals.load();
+  if (reset) {
+    perf_failedSteals.store(0);
   }
   return res;
 }
@@ -94,6 +116,16 @@ void registerPerformanceCounters() {
     "/workstealing/localsteals",
     &getLocalSteals,
     "Returns the number of tasks converted from the local workqueue"
+    );
+  hpx::performance_counters::install_counter_type(
+    "/workstealing/diststeals",
+    &getDistSteals,
+    "Returns the number of tasks converted from a distributed workqueue"
+    );
+  hpx::performance_counters::install_counter_type(
+    "/workstealing/failedsteals",
+    &getFailedSteals,
+    "Returns the number of failed steals"
     );
 }
 

@@ -18,6 +18,8 @@ namespace workstealing {
 
   // Performance Counters
   std::atomic<std::int64_t> perf_localSteals(0);
+  std::atomic<std::int64_t> perf_distSteals(0);
+  std::atomic<std::int64_t> perf_failedSteals(0);
   void registerPerformanceCounters();
 }
 
