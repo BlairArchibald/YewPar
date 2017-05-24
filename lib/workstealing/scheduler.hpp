@@ -15,6 +15,10 @@ namespace workstealing {
   void stopScheduler();
 
   void scheduler(std::vector<hpx::naming::id_type> workqueues, std::shared_ptr<hpx::promise<void> >readyPromise);
+
+  // Performance Counters
+  std::atomic<std::int64_t> perf_localSteals(0);
+  void registerPerformanceCounters();
 }
 
 HPX_PLAIN_ACTION(workstealing::stopScheduler, stopScheduler_action);

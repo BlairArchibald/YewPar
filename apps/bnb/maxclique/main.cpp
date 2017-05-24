@@ -257,6 +257,8 @@ int main (int argc, char* argv[]) {
       "Which skeleton to use"
       );
 
+  hpx::register_startup_function(&workstealing::registerPerformanceCounters);
+
   return hpx::init(desc_commandline, argc, argv);
 }
 

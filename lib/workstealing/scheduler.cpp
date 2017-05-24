@@ -52,6 +52,7 @@ void scheduler(std::vector<hpx::naming::id_type> workqueues,
     // Try local queue first then distributed
     hpx::util::function<void(hpx::naming::id_type)> task;
     task = hpx::async<workstealing::workqueue::steal_action>(local_workqueue).get();
+    if (task) { perf_localSteals++; }
     if (distributed && !task) {
       if (last_remote != here) {
         task = hpx::async<workstealing::workqueue::steal_action>(last_remote).get();
@@ -78,4 +79,22 @@ void scheduler(std::vector<hpx::naming::id_type> workqueues,
     }
   }
 }
+
+
+std::int64_t getLocalSteals(bool reset) {
+  auto res = perf_localSteals.load();
+  if (reset) {
+    perf_localSteals.store(0);
+  }
+  return res;
+}
+
+void registerPerformanceCounters() {
+  hpx::performance_counters::install_counter_type(
+    "/workstealing/localsteals",
+    &getLocalSteals,
+    "Returns the number of tasks converted from the local workqueue"
+    );
+}
+
 }
