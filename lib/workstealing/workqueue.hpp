@@ -4,7 +4,7 @@
 #include <hpx/hpx.hpp>
 #include <hpx/include/components.hpp>
 
-#include <queue>
+#include <deque>
 
 namespace workstealing
 {
@@ -14,9 +14,11 @@ namespace workstealing
     {
     private:
       using funcType = hpx::util::function<void(hpx::naming::id_type)>;
-      std::queue<funcType> tasks;
+      std::deque<funcType> tasks;
 
     public:
+      funcType getLocal();
+      HPX_DEFINE_COMPONENT_ACTION(workqueue, getLocal);
       funcType steal();
       HPX_DEFINE_COMPONENT_ACTION(workqueue, steal);
       void addWork(funcType task);
@@ -24,6 +26,7 @@ namespace workstealing
     };
 }
 
+HPX_REGISTER_ACTION_DECLARATION(workstealing::workqueue::getLocal_action, workqueue_getLocal_action);
 HPX_REGISTER_ACTION_DECLARATION(workstealing::workqueue::steal_action, workqueue_steal_action);
 HPX_REGISTER_ACTION_DECLARATION(workstealing::workqueue::addWork_action, workqueue_addWork_action);
 

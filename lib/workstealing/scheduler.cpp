@@ -51,7 +51,7 @@ void scheduler(std::vector<hpx::naming::id_type> workqueues,
 
     // Try local queue first then distributed
     hpx::util::function<void(hpx::naming::id_type)> task;
-    task = hpx::async<workstealing::workqueue::steal_action>(local_workqueue).get();
+    task = hpx::async<workstealing::workqueue::getLocal_action>(local_workqueue).get();
     if (task) { perf_localSteals++; }
     if (distributed && !task) {
       if (last_remote != here) {
