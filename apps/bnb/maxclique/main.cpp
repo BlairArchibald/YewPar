@@ -19,6 +19,7 @@
 #include "bnb/bnb-seq.hpp"
 #include "bnb/bnb-par.hpp"
 #include "bnb/bnb-dist.hpp"
+#include "bnb/bnb-decision-seq.hpp"
 #include "bnb/macros.hpp"
 
 // Number of Words to use in our bitset representation
@@ -181,7 +182,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
-  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist"};
+  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision"};
 
   auto skeletonType = opts["skeleton-type"].as<std::string>();
   auto found = std::find(std::begin(skeletonTypes), std::end(skeletonTypes), skeletonType);
@@ -227,6 +228,12 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                        generateChoices_act, upperBound_act, dist_act, true>
       (spawnDepth, graph, root);
   }
+  if (skeletonType == "seq-decision") {
+    auto decisionBound = opts["decisionBound"].as<std::uint64_t>();
+    sol = skeletons::BnB::Decision::Seq::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, decltype(generateChoices), decltype(upperBound), true>
+      (graph, root, decisionBound, generateChoices, upperBound);
+    std::cout << "Expands = " << skeletons::BnB::Decision::Seq::numExpands << std::endl;
+  }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
     (std::chrono::steady_clock::now() - start_time);
@@ -255,7 +262,11 @@ int main (int argc, char* argv[]) {
     ( "skeleton-type",
       boost::program_options::value<std::string>()->default_value("seq"),
       "Which skeleton to use"
-      );
+      )
+    ( "decisionBound",
+    boost::program_options::value<std::uint64_t>()->default_value(0),
+    "For Decision Skeletons. Size of the clique to search for"
+    );
 
   hpx::register_startup_function(&workstealing::registerPerformanceCounters);
 
