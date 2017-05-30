@@ -19,6 +19,7 @@
 #include "bnb/bnb-seq.hpp"
 #include "bnb/bnb-par.hpp"
 #include "bnb/bnb-dist.hpp"
+#include "bnb/ordered.hpp"
 #include "bnb/macros.hpp"
 
 // Number of Words to use in our bitset representation
@@ -181,7 +182,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
-  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist"};
+  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "ordered"};
 
   auto skeletonType = opts["skeleton-type"].as<std::string>();
   auto found = std::find(std::begin(skeletonTypes), std::end(skeletonTypes), skeletonType);
@@ -224,6 +225,11 @@ int hpx_main(boost::program_options::variables_map & opts) {
   }
   if (skeletonType == "dist") {
     sol = skeletons::BnB::Dist::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                       generateChoices_act, upperBound_act, dist_act, true>
+      (spawnDepth, graph, root);
+  }
+  if (skeletonType == "ordered") {
+    sol = skeletons::BnB::Ordered::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
                                        generateChoices_act, upperBound_act, dist_act, true>
       (spawnDepth, graph, root);
   }
