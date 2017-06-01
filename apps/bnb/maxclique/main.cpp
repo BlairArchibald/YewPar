@@ -21,6 +21,7 @@
 #include "bnb/bnb-dist.hpp"
 #include "bnb/bnb-decision-seq.hpp"
 #include "bnb/bnb-decision-par.hpp"
+#include "bnb/bnb-decision-dist.hpp"
 #include "bnb/macros.hpp"
 
 // Number of Words to use in our bitset representation
@@ -172,6 +173,7 @@ HPX_PLAIN_ACTION(upperBound, upperBound_act);
 YEWPAR_CREATE_BNB_PAR_ACTION(par_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 YEWPAR_CREATE_BNB_DECISION_PAR_ACTION(decision_par_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 YEWPAR_CREATE_BNB_DIST_ACTION(dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
+YEWPAR_CREATE_BNB_DECISION_DIST_ACTION(decision_dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 
 typedef BitSet<NWORDS> bitsetType;
 REGISTER_INCUMBENT(MCSol, int, bitsetType);
@@ -184,7 +186,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
-  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision"};
+  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision", "dist-decision"};
 
   auto skeletonType = opts["skeleton-type"].as<std::string>();
   auto found = std::find(std::begin(skeletonTypes), std::end(skeletonTypes), skeletonType);
@@ -240,6 +242,12 @@ int hpx_main(boost::program_options::variables_map & opts) {
     auto decisionBound = opts["decisionBound"].as<int>();
     sol = skeletons::BnB::Decision::Par::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
                                       generateChoices_act, upperBound_act, decision_par_act, true>
+      (spawnDepth, graph, root, decisionBound);
+  }
+  if (skeletonType == "dist-decision") {
+    auto decisionBound = opts["decisionBound"].as<int>();
+    sol = skeletons::BnB::Decision::Dist::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                                generateChoices_act, upperBound_act, decision_dist_act, true>
       (spawnDepth, graph, root, decisionBound);
   }
 
