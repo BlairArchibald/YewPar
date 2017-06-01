@@ -120,6 +120,13 @@ search(unsigned spawnDepth,
 
   foundFut.get(); // Block main thread until we get a result
 
+  // Kill all threads
+  hpx::threads::enumerate_threads([](hpx::threads::thread_id_type tid) -> bool {
+      if (tid != hpx::threads::get_self_id()) {
+        hpx::threads::interrupt_thread(tid, true);
+      }
+    }, hpx::threads::active);
+
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::getIncumbent_action getInc;
   return hpx::async<getInc>(incumbent).get();
 }
