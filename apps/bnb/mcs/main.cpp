@@ -217,8 +217,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
   auto patternF = opts["pattern-file"].as<std::string>();
   auto targetF  = opts["target-file"].as<std::string>();
 
-  auto patternG = read_vf(patternF, false, false, false);
-  auto targetG = read_vf(targetF, false, false, false);
+  auto patternG = read_vf(patternF, opts.count("unlabelled"), opts.count("no-edge-labels"), opts.count("undirected"));
+  auto targetG = read_vf(targetF, opts.count("unlabelled"), opts.count("no-edge-labels"), opts.count("undirected"));
 
   auto prod = modular_product(patternG, targetG);
 
@@ -308,7 +308,10 @@ int main (int argc, char* argv[]) {
     ( "target-file",
       boost::program_options::value<std::string>(),
       "VF formatted input graph"
-      );
+    )
+    ("unlabelled", "Make the graph unlabelled")
+    ("no-edge-labels", "Get rid of edge labels, but keep vertex labels")
+    ("undirected", "Make the graph undirected");
 
   hpx::register_startup_function(&workstealing::registerPerformanceCounters);
 
