@@ -10,6 +10,9 @@ namespace skeletons { namespace BnB { namespace Components {
         Space space_;
         std::atomic<Bnd> localBound_;
         hpx::naming::id_type globalIncumbent_;
+
+        // For decision based problems
+        std::atomic<bool> stopSearch_ {false};
       };
 
       template<typename Space, typename Bnd>
@@ -37,10 +40,17 @@ namespace skeletons { namespace BnB { namespace Components {
           }
         }
       }
+
+      template <typename Space, typename Bnd>
+      void stopSearch() {
+        auto reg = Registry<Space,Bnd>::gReg;
+        reg->stopSearch_.store(true);
+      }
 }}}
 
 HPX_DECLARE_PLAIN_ACTION(skeletons::BnB::Components::initialiseRegistry, initRegistry_act);
 HPX_DECLARE_PLAIN_ACTION(skeletons::BnB::Components::updateRegistryBound, updateRegistryBound_act);
+HPX_DECLARE_PLAIN_ACTION(skeletons::BnB::Components::stopSearch, stopSearch_act);
 
 #define COMMA ,
 #define REGISTER_REGISTRY(space,bnd)                                                 \

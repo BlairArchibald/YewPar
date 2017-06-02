@@ -27,6 +27,9 @@ expand(unsigned spawnDepth,
   constexpr bool const prunelevel = PruneLevel;
 
   auto reg = skeletons::BnB::Components::Registry<Space,Bnd>::gReg;
+  if (reg->stopSearch_) {
+    return;
+  }
 
   auto newCands = Gen::invoke(0, reg->space_, n);
 
@@ -120,12 +123,8 @@ search(unsigned spawnDepth,
 
   foundFut.get(); // Block main thread until we get a result
 
-  // Kill all threads
-  hpx::threads::enumerate_threads([](hpx::threads::thread_id_type tid) -> bool {
-      if (tid != hpx::threads::get_self_id()) {
-        hpx::threads::interrupt_thread(tid, true);
-      }
-    }, hpx::threads::active);
+  // Signal for all searches to stop (non-blocking)
+  skeletons::BnB::Components::stopSearch<Space, Bnd>();
 
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::getIncumbent_action getInc;
   return hpx::async<getInc>(incumbent).get();
