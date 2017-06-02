@@ -1,6 +1,9 @@
 #ifndef YEWPAR_MACROS_HPP
 #define YEWPAR_MACROS_HPP
 
+#include "bnb-par.hpp"
+#include "bnb-dist.hpp"
+
 #define COMMA ,
 
 #define YEWPAR_CREATE_BNB_PAR_ACTION(...)                                                                                               \
