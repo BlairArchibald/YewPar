@@ -176,6 +176,8 @@ YEWPAR_CREATE_BNB_DECISION_PAR_ACTION(decision_par_act, BitGraph<NWORDS>, MCSol,
 YEWPAR_CREATE_BNB_DIST_ACTION(dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 YEWPAR_CREATE_BNB_DECISION_DIST_ACTION(decision_dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 
+YEWPAR_CREATE_BNB_ORDERED_ACTION(ordered_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
+
 typedef BitSet<NWORDS> bitsetType;
 REGISTER_INCUMBENT(MCSol, int, bitsetType);
 REGISTER_REGISTRY(BitGraph<NWORDS>, int);
@@ -253,7 +255,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   }
   if (skeletonType == "ordered") {
     sol = skeletons::BnB::Ordered::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                       generateChoices_act, upperBound_act, dist_act, true>
+                                       generateChoices_act, upperBound_act, ordered_act, true>
       (spawnDepth, graph, root);
   }
 
