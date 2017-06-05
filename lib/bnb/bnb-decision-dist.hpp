@@ -97,12 +97,14 @@ template <typename Space,
           bool PruneLevel = false>
 void
 doSearch(unsigned spawnDepth,
-          hpx::util::tuple<Sol, Bnd, Cand> c,
-          const hpx::naming::id_type foundProm) {
+         hpx::util::tuple<Sol, Bnd, Cand> c,
+         const hpx::naming::id_type foundProm,
+         std::shared_ptr<hpx::promise<void> > done) {
   expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(spawnDepth, c, foundProm);
 
   // Search finished without finding a solution, wake up the main thread to finalise everything
   hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(foundProm, true).get();
+  done->set_value();
 }
 
 template <typename Space,
@@ -141,11 +143,20 @@ search(unsigned spawnDepth,
   auto foundPromId = foundProm.get_id();
   auto foundId = hpx::new_<YewPar::util::DoubleWritePromise<bool> >(hpx::find_here(), foundPromId).get();
 
-  hpx::apply(hpx::util::bind(&doSearch<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>, spawnDepth, root, foundId));
+  std::shared_ptr<hpx::promise<void> > donePromise = std::make_shared<hpx::promise<void> >();
+
+  hpx::apply(hpx::util::bind(&doSearch<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>, spawnDepth, root, foundId, donePromise));
 
   foundFut.get();
 
-  // Stop all work stealing schedulers
+  // Signal for all searches to stop
+
+  // FIXME: For some reason this isn't able to deduce the right type of
+  // the template in the function which is why we (currently) pass the fake arg.
+  hpx::wait_all(hpx::lcos::broadcast<setStopSearchFlag_act>(hpx::find_all_localities(), Bnd()));
+
+  // Wait for all workqueues to flush before stopping them
+  donePromise->get_future().get();
   hpx::wait_all(hpx::lcos::broadcast<stopScheduler_action>(hpx::find_all_localities()));
 
   // Read the result form the global incumbent

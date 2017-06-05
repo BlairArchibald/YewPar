@@ -124,7 +124,7 @@ search(unsigned spawnDepth,
   foundFut.get(); // Block main thread until we get a result
 
   // Signal for all searches to stop (non-blocking)
-  skeletons::BnB::Components::stopSearch<Space, Bnd>();
+  skeletons::BnB::Components::setStopSearchFlag<Space, Bnd>(Bnd());
 
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::getIncumbent_action getInc;
   return hpx::async<getInc>(incumbent).get();

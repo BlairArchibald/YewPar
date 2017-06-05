@@ -41,8 +41,9 @@ namespace skeletons { namespace BnB { namespace Components {
         }
       }
 
+      // FIXME: Fake arg needed for the action to find the correct function. Not sure why.
       template <typename Space, typename Bnd>
-      void stopSearch() {
+      void setStopSearchFlag(Bnd fake) {
         auto reg = Registry<Space,Bnd>::gReg;
         reg->stopSearch_.store(true);
       }
@@ -50,7 +51,7 @@ namespace skeletons { namespace BnB { namespace Components {
 
 HPX_DECLARE_PLAIN_ACTION(skeletons::BnB::Components::initialiseRegistry, initRegistry_act);
 HPX_DECLARE_PLAIN_ACTION(skeletons::BnB::Components::updateRegistryBound, updateRegistryBound_act);
-HPX_DECLARE_PLAIN_ACTION(skeletons::BnB::Components::stopSearch, stopSearch_act);
+HPX_DECLARE_PLAIN_ACTION(skeletons::BnB::Components::setStopSearchFlag, setStopSearchFlag_act);
 
 #define COMMA ,
 #define REGISTER_REGISTRY(space,bnd)                                                 \
@@ -69,5 +70,13 @@ HPX_DECLARE_PLAIN_ACTION(skeletons::BnB::Components::stopSearch, stopSearch_act)
                                                                                      \
   HPX_REGISTER_ACTION_DECLARATION(updateRegistryBound_act, updateRegistryBound_act); \
   HPX_REGISTER_ACTION(updateRegistryBound_act, updateRegistryBound_act);             \
+                                                                                     \
+  struct setStopSearchFlag_act : hpx::actions::make_action<                          \
+    decltype(&skeletons::BnB::Components::setStopSearchFlag<space COMMA bnd >),      \
+      &skeletons::BnB::Components::setStopSearchFlag<space COMMA bnd >,              \
+      setStopSearchFlag_act>::type {};                                               \
+                                                                                     \
+  HPX_REGISTER_ACTION_DECLARATION(setStopSearchFlag_act, setStopSearchFlag_act);     \
+  HPX_REGISTER_ACTION(setStopSearchFlag_act, setStopSearchFlag_act);                 \
 
 #endif
