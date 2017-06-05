@@ -9,16 +9,15 @@
 namespace workstealing { namespace priority {
   std::atomic<bool> running(true);
   hpx::lcos::local::counting_semaphore tasks_required_sem;
-  hpx::naming::id_type local_workqueue;
+  hpx::naming::id_type global_workqueue;
 
-  void startScheduler(std::vector<hpx::naming::id_type> workqueues);
+  void startScheduler(hpx::naming::id_type globalWorkqueue);
   void stopScheduler();
 
-  void scheduler(std::vector<hpx::naming::id_type> workqueues, std::shared_ptr<hpx::promise<void> >readyPromise);
+  void scheduler();
 
   // Performance Counters
-  std::atomic<std::int64_t> perf_localSteals(0);
-  std::atomic<std::int64_t> perf_distSteals(0);
+  std::atomic<std::int64_t> perf_steals(0);
   std::atomic<std::int64_t> perf_failedSteals(0);
   void registerPerformanceCounters();
 }}

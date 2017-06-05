@@ -103,13 +103,11 @@ search(unsigned spawnDepth,
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action updateInc;
   hpx::async<updateInc>(inc, root).get();
 
-  // Start work stealing schedulers on all localities
-  std::vector<hpx::naming::id_type> workqueues;
-  for (auto const& loc : hpx::find_all_localities()) {
-    workqueues.push_back(hpx::new_<workstealing::priorityworkqueue>(loc).get());
-  }
-  hpx::wait_all(hpx::lcos::broadcast<priority_startScheduler_action>(hpx::find_all_localities(), workqueues));
+  // Ordered skeleton uses a single, global, priority workqueue
+  auto globalWorkqueue = hpx::new_<workstealing::priorityworkqueue>(hpx::find_here()).get();
+  hpx::wait_all(hpx::lcos::broadcast<priority_startScheduler_action>(hpx::find_all_localities(), globalWorkqueue));
 
+  // spawnTasks(spawnDepth, root)
   expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(spawnDepth, root);
 
   // Stop all work stealing schedulers
