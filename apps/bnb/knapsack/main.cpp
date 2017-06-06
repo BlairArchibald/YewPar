@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <string>
+#include <regex>
+#include <exception>
 
 #include <hpx/hpx.hpp>
 #include <hpx/hpx_init.hpp>
@@ -11,20 +13,63 @@
 
 #include "knapsack.hpp"
 
-auto const numItems = 10;
+#ifndef NUMITEMS
+#define NUMITEMS 50
+#endif
 
 // Actions for HPX (PAR)
-HPX_PLAIN_ACTION(generateChoices<numItems>, gen_action)
-HPX_PLAIN_ACTION(upperBound<numItems>, bnd_action)
-YEWPAR_CREATE_BNB_PAR_ACTION(childTask_act, KPSpace<numItems>, KPSolution, int, std::vector<int>, gen_action, bnd_action)
+HPX_PLAIN_ACTION(generateChoices<NUMITEMS>, gen_action)
+HPX_PLAIN_ACTION(upperBound<NUMITEMS>, bnd_action)
+YEWPAR_CREATE_BNB_PAR_ACTION(childTask_act, KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_action, bnd_action)
 
 typedef std::vector<int> vecint;
 REGISTER_INCUMBENT(KPSolution, int, vecint);
 
 // Actions for HPX (DIST)
-YEWPAR_CREATE_BNB_DIST_ACTION(childTaskDist_act, KPSpace<numItems>, KPSolution, int, std::vector<int>, gen_action, bnd_action)
+YEWPAR_CREATE_BNB_DIST_ACTION(childTaskDist_act, KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_action, bnd_action)
 
-REGISTER_REGISTRY(KPSpace<numItems>, int);
+REGISTER_REGISTRY(KPSpace<NUMITEMS>, int);
+
+struct knapsackData {
+  int capacity = 0;
+  int expectedResult = 0;
+  std::vector<std::pair<int,int> > items;
+};
+
+knapsackData read_knapsack(const std::string & filename) {
+  std::ifstream infile { filename };
+  if (!infile) {
+    throw "Unable to open file";
+  }
+
+  knapsackData kp;
+  std::string line;
+
+  // Capacity
+  if (std::getline(infile, line)) {
+    kp.capacity = std::stoi(line);
+  } else {
+    throw "Could not read capacity from file";
+  }
+
+  // Expected Result
+  if (std::getline(infile, line)) {
+    kp.expectedResult = std::stoi(line);
+  } else {
+    throw "Could not read expected result from file";
+  }
+
+  // Read the items
+  while (std::getline(infile, line)) {
+    const std::regex item { R"((\d+)\s+(\d+)\s*)" };
+    std::smatch match;
+    if (regex_match(line, match, item)) {
+      kp.items.push_back(std::make_pair(std::stoi(match.str(1)), std::stoi(match.str(2))));
+    }
+  }
+
+  return kp;
+}
 
 int hpx_main(boost::program_options::variables_map & opts) {
   // TODO: Proper lower case conversion
@@ -38,23 +83,44 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
-  // TODO: Read instances from file, simple test case for now
-  /* Simple test params P01 from https://people.sc.fsu.edu/~jburkardt/datasets/knapsack_01/knapsack_01.html/ */
-  auto const capacity = 165;
+  knapsackData problem;
+  auto inputFile = opts["input-file"].as<std::string>();
+  try {
+    problem = read_knapsack(inputFile);
+  } catch (std::string e) {
+    std::cout << "Error in file parsing" << std::endl;
+    hpx::finalize();
+    return EXIT_FAILURE;
+  }
 
-  // Sol: 1 1 1 1 0 1 0 0 0 0
-  std::array<int, numItems> profits = {92, 57, 49, 68, 60, 43, 67, 84, 87, 72};
-  std::array<int, numItems> weights = {23, 31, 29, 44, 53, 38, 63, 85, 89, 82};
+  // Pack the problem into a more efficient format
+  std::array<int, NUMITEMS> profits;
+  std::array<int, NUMITEMS> weights;
+  int i = 0;
+  for (auto const & item : problem.items) {
+    int profit = std::get<0>(item);
+    int weight = std::get<1>(item);
+
+    profits[i] = profit;
+    weights[i] = weight;
+
+    i++;
+  }
+
   auto space = std::make_pair(profits, weights);
+
+  int numItems = problem.items.size();
 
   // Check profit density ordering (required for bounding to work correctly)
   for (int i = 0; i < numItems - 1; i++) {
     if (profits[i] / weights[i] < profits[i+1] / weights[i+1]) {
-      std::cout << "Warning: Input not in profit density ordering" << std::endl;
+      std::cout << "Input not in profit density ordering" << std::endl;
+      hpx::finalize();
+      return EXIT_FAILURE;
     }
   }
 
-  KPSolution initSol = {numItems, capacity, std::vector<int>(), 0, 0};
+  KPSolution initSol = {numItems, problem.capacity, std::vector<int>(), 0, 0};
 
   std::vector<int> initRem;
   for (int i = 0; i < numItems; i++) {
@@ -64,25 +130,26 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto sol = root;
   if (skeletonType == "seq") {
-    sol = skeletons::BnB::Seq::search<KPSpace<numItems>, KPSolution, int, std::vector<int> >
-      (space, root, generateChoices<numItems>, upperBound<numItems>);
+    sol = skeletons::BnB::Seq::search<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int> >
+      (space, root, generateChoices<NUMITEMS>, upperBound<NUMITEMS>);
   }
 
   if (skeletonType == "par") {
-    auto spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
-    sol = skeletons::BnB::Par::search<KPSpace<numItems>, KPSolution, int, std::vector<int>, gen_action, bnd_action, childTask_act >
+    auto spawnDepth = opts["spawn-depth"].as<int>();
+    sol = skeletons::BnB::Par::search<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_action, bnd_action, childTask_act >
       (spawnDepth, space, root);
   }
 
   if (skeletonType == "dist") {
-    auto spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
-    sol = skeletons::BnB::Dist::search<KPSpace<numItems>, KPSolution, int, std::vector<int>, gen_action, bnd_action, childTaskDist_act>
+    auto spawnDepth = opts["spawn-depth"].as<int>();
+    sol = skeletons::BnB::Dist::search<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_action, bnd_action, childTaskDist_act>
       (spawnDepth, space, root);
   }
 
   auto finalSol = hpx::util::get<0>(sol);
   std::cout << "Final Profit: " << finalSol.profit << std::endl;
   std::cout << "Final Weight: " << finalSol.weight << std::endl;
+  std::cout << "Expected Result: " << std::boolalpha << (finalSol.profit == problem.expectedResult) << std::endl;
   std::cout << "Items: ";
   for (auto const & i : finalSol.items) {
     std::cout << i << " ";
@@ -100,6 +167,10 @@ int main(int argc, char* argv[]) {
     ( "spawn-depth,d",
       boost::program_options::value<std::uint64_t>()->default_value(0),
       "Depth in the tree to spawn until (for parallel skeletons only)"
+      )
+    ( "input-file,f",
+      boost::program_options::value<std::string>(),
+      "Input problem"
       )
     ( "skeleton",
       boost::program_options::value<std::string>()->default_value("seq"),
