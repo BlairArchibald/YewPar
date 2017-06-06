@@ -30,8 +30,6 @@ expand(unsigned spawnDepth,
   constexpr bool const prunelevel = PruneLevel;
 
   auto reg = skeletons::BnB::Components::Registry<Space,Bnd>::gReg;
-
-  auto reg = skeletons::BnB::Components::Registry<Space,Bnd>::gReg;
   if (reg->stopSearch_) {
     return;
   }
