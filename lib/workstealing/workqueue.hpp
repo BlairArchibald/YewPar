@@ -4,17 +4,14 @@
 #include <hpx/hpx.hpp>
 #include <hpx/include/components.hpp>
 
-#include <deque>
+#include <hpx/util/lockfree/deque.hpp>
 
 namespace workstealing
 {
-  class workqueue : public hpx::components::locking_hook<
-    hpx::components::component_base<workqueue>
-    >
-    {
+  class workqueue : public hpx::components::component_base<workqueue> {
     private:
       using funcType = hpx::util::function<void(hpx::naming::id_type)>;
-      std::deque<funcType> tasks;
+      boost::lockfree::deque<funcType> tasks; // From HPX
 
     public:
       funcType getLocal();

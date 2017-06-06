@@ -21,15 +21,18 @@ public:
   DoubleWritePromise() : written(false) {};
   DoubleWritePromise(hpx::naming::id_type prom) : promId (prom), written(false) {};
 
-  void set_value(T t) {
+  bool set_value(T t) {
     if (!written) {
       typedef typename hpx::lcos::base_lco_with_value<T>::set_value_action setAct;
       hpx::async<setAct>(promId, std::move(t)).get();
       written = true;
+      return true;
     }
+    return false;
     // Ignore multiple writes
   }
   HPX_DEFINE_COMPONENT_ACTION(DoubleWritePromise, set_value);
+
 };
 
 }}

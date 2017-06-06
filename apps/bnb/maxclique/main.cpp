@@ -22,6 +22,7 @@
 #include "bnb/bnb-decision-seq.hpp"
 #include "bnb/bnb-decision-par.hpp"
 #include "bnb/bnb-decision-dist.hpp"
+#include "bnb/ordered.hpp"
 #include "bnb/macros.hpp"
 
 // Number of Words to use in our bitset representation
@@ -175,6 +176,8 @@ YEWPAR_CREATE_BNB_DECISION_PAR_ACTION(decision_par_act, BitGraph<NWORDS>, MCSol,
 YEWPAR_CREATE_BNB_DIST_ACTION(dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 YEWPAR_CREATE_BNB_DECISION_DIST_ACTION(decision_dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 
+YEWPAR_CREATE_BNB_ORDERED_ACTION(ordered_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
+
 typedef BitSet<NWORDS> bitsetType;
 REGISTER_INCUMBENT(MCSol, int, bitsetType);
 REGISTER_REGISTRY(BitGraph<NWORDS>, int);
@@ -186,7 +189,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
-  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision", "dist-decision"};
+  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision", "dist-decision", "ordered"};
 
   auto skeletonType = opts["skeleton-type"].as<std::string>();
   auto found = std::find(std::begin(skeletonTypes), std::end(skeletonTypes), skeletonType);
@@ -249,6 +252,11 @@ int hpx_main(boost::program_options::variables_map & opts) {
     sol = skeletons::BnB::Decision::Dist::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
                                                 generateChoices_act, upperBound_act, decision_dist_act, true>
       (spawnDepth, graph, root, decisionBound);
+  }
+  if (skeletonType == "ordered") {
+    sol = skeletons::BnB::Ordered::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                       generateChoices_act, upperBound_act, ordered_act, true>
+      (spawnDepth, graph, root);
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
