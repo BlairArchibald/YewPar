@@ -31,6 +31,11 @@ expand(unsigned spawnDepth,
 
   auto reg = skeletons::BnB::Components::Registry<Space,Bnd>::gReg;
 
+  auto reg = skeletons::BnB::Components::Registry<Space,Bnd>::gReg;
+  if (reg->stopSearch_) {
+    return;
+  }
+
   auto newCands = Gen::invoke(0, reg->space_, n);
 
   std::vector<hpx::future<void> > childFuts;
