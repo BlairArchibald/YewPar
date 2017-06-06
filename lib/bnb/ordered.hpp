@@ -18,25 +18,19 @@ namespace skeletons { namespace BnB { namespace Ordered {
 template <typename Sol, typename Bnd, typename Cand>
 struct OrderedTask {
   OrderedTask(hpx::util::tuple<Sol, Bnd, Cand> n, unsigned priority) : node(n), priority(priority) {
-    startedFut = started.get_future();
-    finishedFut = finished.get_future();
+    started.get_future();
     startedPromise = hpx::new_<YewPar::util::DoubleWritePromise<bool> >(hpx::find_here(), started.get_id()).get();
-    finishedPromise = hpx::new_<YewPar::util::DoubleWritePromise<bool> >(hpx::find_here(), finished.get_id()).get();
   }
 
   hpx::promise<bool> started;
-  hpx::promise<bool> finished;
-  hpx::future<bool> startedFut;
-  hpx::future<bool> finishedFut;
-
   hpx::naming::id_type startedPromise; // YewPar::Util::DoubleWritePromise
-  hpx::naming::id_type finishedPromise; // YewPar::Util::DoubleWritePromise
 
   hpx::util::tuple<Sol, Bnd, Cand> node;
   unsigned priority;
 };
 
 // Spawn tasks in a discrepancy search fashion
+// Discrepancy search priority based on number of discrepancies taken
 // Invariant: spawnDepth > 0
 template <typename Space,
           typename Sol,
@@ -50,21 +44,20 @@ prioritiseTasks(const Space & space,
                 const hpx::util::tuple<Sol, Bnd, Cand> & root) {
   std::vector<OrderedTask<Sol, Bnd, Cand> > tasks;
 
-  std::function<void(unsigned, hpx::util::tuple<Sol, Bnd, Cand>)>
-    fn = [&](unsigned depth, hpx::util::tuple<Sol, Bnd, Cand> n) {
-    auto newCands = Gen::invoke(0, space, n);
-    for (auto i = 0; i < newCands.numChildren; ++i) {
-      auto node = newCands.next(space, n);
+  std::function<void(unsigned, unsigned, const hpx::util::tuple<Sol, Bnd, Cand>&)>
+    fn = [&](unsigned depth, unsigned numDisc, const hpx::util::tuple<Sol, Bnd, Cand>& n) {
       if (depth == 0) {
-        // TODO: Discrepancy ordering
-        tasks.push_back(OrderedTask<Sol, Bnd, Cand>(node, 0));
+        tasks.push_back(std::move(OrderedTask<Sol, Bnd, Cand>(n, numDisc)));
       } else {
-        fn(depth - 1, node);
+        auto newCands = Gen::invoke(0, space, n);
+        for (auto i = 0; i < newCands.numChildren; ++i) {
+          auto node = newCands.next(space, n);
+          fn(depth - 1, numDisc + i, node);
+        }
       }
-    }
-  };
+    };
 
-  fn(spawnDepth, root);
+  fn(spawnDepth, 0, root);
 
   return tasks;
 }
@@ -143,27 +136,23 @@ search(unsigned spawnDepth,
       // Spawn the tasks
       ChildTask child;
       hpx::util::function<void(hpx::naming::id_type)> task;
-      task = hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedPromise, t.finishedPromise);
+      task = hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedPromise);
 
-      hpx::apply<workstealing::priorityworkqueue::addWork_action>(globalWorkqueue, t.priority, task);
+      hpx::apply<workstealing::priorityworkqueue::addWork_action>(globalWorkqueue, t.priority, std::move(task));
     }
-  hpx::wait_all(hpx::lcos::broadcast<priority_startScheduler_action>(hpx::find_all_localities(), globalWorkqueue));
 
-  // Sequential thread of execution
-  for (auto & t : tasks) {
-    auto weStarted = hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(t.startedPromise, true).get();
-    if (weStarted) {
-      expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(t.node);
-    } else {
-      // Someone else is handling this sub-tree. Wait until they finish (to
-      // maintain the ordering). TODO: Technically the ordering is maintained as
-      // long as *one* thread is doing it, so we theoretically could move on.
-      t.finishedFut.get();
+    hpx::wait_all(hpx::lcos::broadcast<priority_startScheduler_action>(hpx::find_all_localities(), globalWorkqueue));
+
+    // Sequential thread of execution
+    for (auto & t : tasks) {
+      auto weStarted = hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(t.startedPromise, true).get();
+      if (weStarted) {
+        expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(t.node);
+      }
     }
-  }
 
-  // Stop all work stealing schedulers
-  hpx::wait_all(hpx::lcos::broadcast<priority_stopScheduler_action>(hpx::find_all_localities()));
+    // Stop all work stealing schedulers
+    hpx::wait_all(hpx::lcos::broadcast<priority_stopScheduler_action>(hpx::find_all_localities()));
   }
 
   // Read the result form the global incumbent
@@ -181,13 +170,11 @@ template <typename Space,
           bool PruneLevel = false>
 void
 searchChildTask(hpx::util::tuple<Sol, Bnd, Cand> c,
-                const hpx::naming::id_type started,
-                const hpx::naming::id_type finished) {
+                const hpx::naming::id_type started) {
   auto weStarted = hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(started, true).get();
   // Sequential thread has beaten us to this task. Don't bother executing it again.
   if (weStarted) {
     expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(c);
-    hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(finished, true).get();
   }
   workstealing::tasks_required_sem.signal();
 }
