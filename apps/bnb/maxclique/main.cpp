@@ -19,6 +19,9 @@
 #include "bnb/bnb-seq.hpp"
 #include "bnb/bnb-par.hpp"
 #include "bnb/bnb-dist.hpp"
+#include "bnb/bnb-decision-seq.hpp"
+#include "bnb/bnb-decision-par.hpp"
+#include "bnb/bnb-decision-dist.hpp"
 #include "bnb/macros.hpp"
 
 // Number of Words to use in our bitset representation
@@ -168,7 +171,9 @@ int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
 HPX_PLAIN_ACTION(generateChoices, generateChoices_act);
 HPX_PLAIN_ACTION(upperBound, upperBound_act);
 YEWPAR_CREATE_BNB_PAR_ACTION(par_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
+YEWPAR_CREATE_BNB_DECISION_PAR_ACTION(decision_par_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 YEWPAR_CREATE_BNB_DIST_ACTION(dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
+YEWPAR_CREATE_BNB_DECISION_DIST_ACTION(decision_dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 
 typedef BitSet<NWORDS> bitsetType;
 REGISTER_INCUMBENT(MCSol, int, bitsetType);
@@ -181,7 +186,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
-  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist"};
+  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision", "dist-decision"};
 
   auto skeletonType = opts["skeleton-type"].as<std::string>();
   auto found = std::find(std::begin(skeletonTypes), std::end(skeletonTypes), skeletonType);
@@ -227,6 +232,24 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                        generateChoices_act, upperBound_act, dist_act, true>
       (spawnDepth, graph, root);
   }
+  if (skeletonType == "seq-decision") {
+    auto decisionBound = opts["decisionBound"].as<int>();
+    sol = skeletons::BnB::Decision::Seq::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, decltype(generateChoices), decltype(upperBound), true>
+      (graph, root, decisionBound, generateChoices, upperBound);
+    std::cout << "Expands = " << skeletons::BnB::Decision::Seq::numExpands << std::endl;
+  }
+  if (skeletonType == "par-decision") {
+    auto decisionBound = opts["decisionBound"].as<int>();
+    sol = skeletons::BnB::Decision::Par::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                      generateChoices_act, upperBound_act, decision_par_act, true>
+      (spawnDepth, graph, root, decisionBound);
+  }
+  if (skeletonType == "dist-decision") {
+    auto decisionBound = opts["decisionBound"].as<int>();
+    sol = skeletons::BnB::Decision::Dist::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                                generateChoices_act, upperBound_act, decision_dist_act, true>
+      (spawnDepth, graph, root, decisionBound);
+  }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
     (std::chrono::steady_clock::now() - start_time);
@@ -236,7 +259,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   std::cout << "MaxClique Size = " << maxCliqueSize << std::endl;
   std::cout << "cpu = " << overall_time.count() << std::endl;
 
-  return hpx::finalize();
+  return hpx::finalize(0); // End instantly. Required as the decision skeleton currently can't kill all threads.
 }
 
 int main (int argc, char* argv[]) {
@@ -255,7 +278,11 @@ int main (int argc, char* argv[]) {
     ( "skeleton-type",
       boost::program_options::value<std::string>()->default_value("seq"),
       "Which skeleton to use"
-      );
+      )
+    ( "decisionBound",
+    boost::program_options::value<int>()->default_value(0),
+    "For Decision Skeletons. Size of the clique to search for"
+    );
 
   hpx::register_startup_function(&workstealing::registerPerformanceCounters);
 
