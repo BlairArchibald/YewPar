@@ -43,6 +43,12 @@ We support three types of search:
 2. Decision Branch and Bound - Does a solution with bound *X* exist?
 3. Optimisation Branch and Bound - Find a solution maximising an objective function
 
+Special Skeletons:
+
+1. Ordered Skeleton for Branch and Bound Search - From
+   https://arxiv.org/abs/1703.05647 with a slightly different discrepancy order
+   (count discrepancies, no accounting for the depth they occur at)
+
 ## Sample Applications
 
 YewPar currently comes with a couple of example applications that are built
