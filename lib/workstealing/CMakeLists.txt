@@ -5,7 +5,3 @@ add_hpx_component(workqueue
 add_hpx_component(priorityworkqueue
     SOURCES priorityworkqueue.cpp
     HEADERS priorityworkqueue.hpp)
-
-add_hpx_library(workstealing
-  SOURCES workstealing.cpp scheduler.cpp priorityscheduler.cpp
-)
