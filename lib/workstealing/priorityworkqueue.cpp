@@ -20,7 +20,7 @@ HPX_REGISTER_COMPONENT_MODULE();
 
 typedef hpx::components::component<workstealing::priorityworkqueue> workqueue_type;
 
-HPX_REGISTER_COMPONENT(workqueue_type, workqueue);
+HPX_REGISTER_COMPONENT(workqueue_type, priority_workqueue);
 
 HPX_REGISTER_ACTION(workstealing::priorityworkqueue::steal_action, workqueue_steal_action);
 HPX_REGISTER_ACTION(workstealing::priorityworkqueue::addWork_action, workqueue_addWork_action);
