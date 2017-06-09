@@ -119,7 +119,8 @@ search(unsigned spawnDepth,
   auto foundPromId = foundProm.get_id();
   auto foundId = hpx::new_<YewPar::util::DoubleWritePromise<bool> >(hpx::find_here(), foundPromId).get();
 
-  hpx::apply(hpx::util::bind(&doSearch<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>, spawnDepth, root, foundId));
+  hpx::threads::executors::default_executor exe(hpx::threads::thread_stacksize_large);
+  hpx::apply(exe, hpx::util::bind(&doSearch<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>, spawnDepth, root, foundId));
 
   foundFut.get(); // Block main thread until we get a result
 

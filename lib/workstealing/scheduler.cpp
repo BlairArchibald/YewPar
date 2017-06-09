@@ -12,10 +12,12 @@ void startScheduler(std::vector<hpx::naming::id_type> workqueues) {
   auto schedulerReady = std::make_shared<hpx::promise<void> >();
 
   if (hpx::get_os_thread_count() > 1) {
-    hpx::threads::executors::default_executor high_priority_executor(hpx::threads::thread_priority_critical);
+    hpx::threads::executors::default_executor high_priority_executor(hpx::threads::thread_priority_critical,
+                                                                     hpx::threads::thread_stacksize_large);
     hpx::apply(high_priority_executor, &scheduler, workqueues, schedulerReady);
   } else {
-    hpx::apply(&scheduler, workqueues, schedulerReady);
+    hpx::threads::executors::default_executor exe(hpx::threads::thread_stacksize_large);
+    hpx::apply(exe, &scheduler, workqueues, schedulerReady);
   }
 
   schedulerReady->get_future().get();
@@ -76,7 +78,11 @@ void scheduler(std::vector<hpx::naming::id_type> workqueues,
     }
 
     if (task) {
-      scheduler.add(hpx::util::bind(task, here));
+      scheduler.add(hpx::util::bind(task, here),
+                    "YewPar Task",
+                    hpx::threads::pending,
+                    true,
+                    hpx::threads::thread_stacksize_huge);
     } else {
       perf_failedSteals++;
       hpx::this_thread::suspend(10);

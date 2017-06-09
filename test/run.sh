@@ -40,8 +40,46 @@ for b in ${MCBenchmark[*]}; do
     fi
 done
 
+for b in ${MCBenchmark[*]}; do
+    cmd="${MCBinary} --skeleton-type seq-decision --decisionBound 21 --input-file ${b} --hpx:threads 1"
+    eval ${cmd} &>/dev/null
+    if [[ $? != 0 ]]; then
+        FAILED=$((FAILED + 1))
+        FAILED_CMDS+=("${cmd}")
+    fi
+done
+
+for b in ${MCBenchmark[*]}; do
+    cmd="${MCBinary} --skeleton-type dist-decision --decisionBound 21 --input-file ${b} --hpx:threads 1"
+    eval ${cmd} &>/dev/null
+    if [[ $? != 0 ]]; then
+        FAILED=$((FAILED + 1))
+        FAILED_CMDS+=("${cmd}")
+    fi
+done
+
+for b in ${MCBenchmark[*]}; do
+    cmd="${MCBinary} --skeleton-type par-decision --decisionBound 21 --input-file ${b} --hpx:threads 1"
+    eval ${cmd} &>/dev/null
+    if [[ $? != 0 ]]; then
+        FAILED=$((FAILED + 1))
+        FAILED_CMDS+=("${cmd}")
+    fi
+done
+
+for b in ${MCBenchmark[*]}; do
+    cmd="${MCBinary} --skeleton-type ordered --input-file ${b} --hpx:threads 1"
+    eval ${cmd} &>/dev/null
+    if [[ $? != 0 ]]; then
+        FAILED=$((FAILED + 1))
+        FAILED_CMDS+=("${cmd}")
+    fi
+done
+
 if [[ ${FAILED} -gt 0 ]]; then
     echo "${FAILED} TESTS FAILED"
+else
+    echo "TESTS SUCCESSFUL"
 fi
 
 for f in ${FAILED_CMDS[*]}; do

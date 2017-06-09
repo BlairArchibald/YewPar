@@ -148,7 +148,9 @@ search(unsigned spawnDepth,
 
   std::shared_ptr<hpx::promise<void> > donePromise = std::make_shared<hpx::promise<void> >();
 
-  hpx::apply(hpx::util::bind(&doSearch<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>, spawnDepth, root, foundId, donePromise));
+
+  hpx::threads::executors::default_executor exe(hpx::threads::thread_stacksize_large);
+  hpx::apply(exe, hpx::util::bind(&doSearch<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>, spawnDepth, root, foundId, donePromise));
 
   foundFut.get();
 
