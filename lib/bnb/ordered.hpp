@@ -176,7 +176,7 @@ searchChildTask(hpx::util::tuple<Sol, Bnd, Cand> c,
   if (weStarted) {
     expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(c);
   }
-  workstealing::tasks_required_sem.signal();
+  workstealing::priority::tasks_required_sem.signal();
 }
 
 }}}
