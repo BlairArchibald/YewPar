@@ -23,7 +23,7 @@ expand(unsigned spawnDepth,
        const hpx::util::tuple<Sol, Bnd, Cand> & n) {
   constexpr bool const prunelevel = PruneLevel;
 
-  auto reg = skeletons::BnB::Components::Registry<Space,Bnd>::gReg;
+  auto reg = skeletons::BnB::Components::Registry<Space, Sol, Bnd, Cand>::gReg;
 
   auto newCands = Gen::invoke(0, reg->space_, n);
 
@@ -48,7 +48,7 @@ expand(unsigned spawnDepth,
 
     /* Update incumbent if required */
     if (hpx::util::get<1>(c) > lbnd) {
-      skeletons::BnB::Components::updateRegistryBound<Space, Bnd>(hpx::util::get<1>(c));
+      skeletons::BnB::Components::updateRegistryBound<Space, Sol, Bnd, Cand>(hpx::util::get<1>(c));
 
       typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action updateInc;
       hpx::async<updateInc>(reg->globalIncumbent_, c).get();
@@ -83,7 +83,7 @@ search(unsigned spawnDepth,
 
   auto initialBnd = hpx::util::get<1>(root);
   auto incumbent  = hpx::new_<bounds::Incumbent<Sol, Bnd, Cand> >(hpx::find_here()).get();
-  skeletons::BnB::Components::initialiseRegistry(space, initialBnd, incumbent);
+  skeletons::BnB::Components::initialiseRegistry(space, initialBnd, incumbent, root);
 
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action updateInc;
   hpx::async<updateInc>(incumbent, root).get();

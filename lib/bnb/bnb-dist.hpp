@@ -26,7 +26,7 @@ expand(unsigned spawnDepth,
        const hpx::util::tuple<Sol, Bnd, Cand> & n) {
   constexpr bool const prunelevel = PruneLevel;
 
-  auto reg = skeletons::BnB::Components::Registry<Space,Bnd>::gReg;
+  auto reg = skeletons::BnB::Components::Registry<Space, Sol, Bnd, Cand>::gReg;
 
   auto newCands = Gen::invoke(0, reg->space_, n);
 
@@ -51,7 +51,7 @@ expand(unsigned spawnDepth,
 
     /* Update incumbent if required */
     if (hpx::util::get<1>(c) > lbnd) {
-      skeletons::BnB::Components::updateRegistryBound<Space, Bnd>(hpx::util::get<1>(c));
+      skeletons::BnB::Components::updateRegistryBound<Space, Sol, Bnd, Cand>(hpx::util::get<1>(c));
       hpx::lcos::broadcast<updateRegistryBound_act>(hpx::find_all_localities(), hpx::util::get<1>(c));
 
       typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action act;
@@ -97,7 +97,7 @@ search(unsigned spawnDepth,
   // Initialise the registries on all localities
   auto bnd = hpx::util::get<1>(root);
   auto inc = hpx::new_<bounds::Incumbent<Sol, Bnd, Cand> >(hpx::find_here()).get();
-  hpx::wait_all(hpx::lcos::broadcast<initRegistry_act>(hpx::find_all_localities(), space, bnd, inc));
+  hpx::wait_all(hpx::lcos::broadcast<initRegistry_act>(hpx::find_all_localities(), space, bnd, inc, root));
 
   // Initialise the global incumbent
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action updateInc;
