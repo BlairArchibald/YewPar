@@ -22,6 +22,15 @@ struct NodeGenerator {
   void serialize(Archive & ar, const unsigned int version) {
     ar & numChildren;
   }
+
+  // Default implementation. Can be overriden if the problem supports a fast way to compute just the Nth child
+  virtual hpx::util::tuple<Sol, Bnd, Cand> nth(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & node, unsigned n) {
+    hpx::util::tuple<Sol, Bnd, Cand> c;
+    for (auto i = 0; i <= n; ++i) {
+      c = next(space, node);
+    }
+    return c;
+  };
 };
 
 }}

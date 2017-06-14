@@ -1,5 +1,5 @@
-#ifndef SKELETONS_BNB_DIST_HPP
-#define SKELETONS_BNB_DIST_HPP
+#ifndef SKELETONS_BNB_DIST_RECOMPUTE_HPP
+#define SKELETONS_BNB_DIST_RECOMPUTE_HPP
 
 #include <vector>
 #include <hpx/util/tuple.hpp>
@@ -11,7 +11,10 @@
 #include "workstealing/scheduler.hpp"
 #include "workstealing/workqueue.hpp"
 
-namespace skeletons { namespace BnB { namespace Dist {
+// Same as the depth-bounded skeleton but uses computation instead of sending
+// full node structures. This lets us assess the trade-off between computation
+// and communication
+namespace skeletons { namespace BnB { namespace DistRecompute {
 
 template <typename Space,
           typename Sol,
@@ -23,7 +26,8 @@ template <typename Space,
           bool PruneLevel>
 void
 expand(unsigned spawnDepth,
-       const hpx::util::tuple<Sol, Bnd, Cand> & n) {
+       const hpx::util::tuple<Sol, Bnd, Cand> & n,
+       std::vector<unsigned> & path) {
   constexpr bool const prunelevel = PruneLevel;
 
   auto reg = skeletons::BnB::Components::Registry<Space, Sol, Bnd, Cand>::gReg;
@@ -58,6 +62,8 @@ expand(unsigned spawnDepth,
       hpx::async<act>(reg->globalIncumbent_, c).get();
     }
 
+    path.push_back(i);
+
     /* Search the child nodes */
     if (spawnDepth > 0) {
       hpx::lcos::promise<void> prom;
@@ -66,13 +72,15 @@ expand(unsigned spawnDepth,
 
       ChildTask t;
       hpx::util::function<void(hpx::naming::id_type)> task;
-      task = hpx::util::bind(t, hpx::util::placeholders::_1, spawnDepth - 1, c, pid);
+      task = hpx::util::bind(t, hpx::util::placeholders::_1, spawnDepth - 1, path, pid);
       hpx::apply<workstealing::workqueue::addWork_action>(workstealing::local_workqueue, task);
 
       childFuts.push_back(std::move(pfut));
     } else {
-      expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(0, c);
+      expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(0, c, path);
     }
+
+    path.pop_back();
   }
 
   if (spawnDepth > 0) {
@@ -110,7 +118,8 @@ search(unsigned spawnDepth,
   }
   hpx::wait_all(hpx::lcos::broadcast<startScheduler_action>(hpx::find_all_localities(), workqueues));
 
-  expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(spawnDepth, root);
+  std::vector<unsigned> path;
+  expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(spawnDepth, root, path);
 
   // Stop all work stealing schedulers
   hpx::wait_all(hpx::lcos::broadcast<stopScheduler_action>(hpx::find_all_localities()));
@@ -126,13 +135,34 @@ template <typename Space,
           typename Cand,
           typename Gen,
           typename Bound,
+          typename ChildTask>
+hpx::util::tuple<Sol, Bnd, Cand>
+getStartingNode(std::vector<unsigned> & path) {
+  auto reg = skeletons::BnB::Components::Registry<Space, Sol, Bnd, Cand>::gReg;
+  auto node =  reg->root_;
+
+  for (auto const & p : path) {
+    auto newCands = Gen::invoke(0, reg->space_, node);
+    node = newCands.nth(reg->space_, node, p);
+  }
+
+  return node;
+}
+
+template <typename Space,
+          typename Sol,
+          typename Bnd,
+          typename Cand,
+          typename Gen,
+          typename Bound,
           typename ChildTask,
           bool PruneLevel = false>
 void
 searchChildTask(unsigned spawnDepth,
-                hpx::util::tuple<Sol, Bnd, Cand> c,
+                std::vector<unsigned> path,
                 hpx::naming::id_type p) {
-  expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(spawnDepth, c);
+  auto c = getStartingNode<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask>(path);
+  expand<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>(spawnDepth, c, path);
   workstealing::tasks_required_sem.signal();
   hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
 }

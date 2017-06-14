@@ -26,7 +26,7 @@ expand(unsigned spawnDepth,
        const hpx::naming::id_type foundProm) {
   constexpr bool const prunelevel = PruneLevel;
 
-  auto reg = skeletons::BnB::Components::Registry<Space,Bnd>::gReg;
+  auto reg = skeletons::BnB::Components::Registry<Space, Sol, Bnd, Cand>::gReg;
   if (reg->stopSearch_) {
     return;
   }
@@ -109,7 +109,7 @@ search(unsigned spawnDepth,
 
   /* Registry stores the bound we are searching for */
   auto incumbent  = hpx::new_<bounds::Incumbent<Sol, Bnd, Cand> >(hpx::find_here()).get();
-  skeletons::BnB::Components::initialiseRegistry(space, decisionBound, incumbent);
+  skeletons::BnB::Components::initialiseRegistry(space, decisionBound, incumbent, root);
 
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action updateInc;
   hpx::async<updateInc>(incumbent, root).get();
@@ -125,7 +125,7 @@ search(unsigned spawnDepth,
   foundFut.get(); // Block main thread until we get a result
 
   // Signal for all searches to stop (non-blocking)
-  skeletons::BnB::Components::setStopSearchFlag<Space, Bnd>(Bnd());
+  skeletons::BnB::Components::setStopSearchFlag<Space, Sol, Bnd, Cand>(Bnd());
 
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::getIncumbent_action getInc;
   return hpx::async<getInc>(incumbent).get();

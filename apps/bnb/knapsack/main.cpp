@@ -28,7 +28,7 @@ REGISTER_INCUMBENT(KPSolution, int, vecint);
 // Actions for HPX (DIST)
 YEWPAR_CREATE_BNB_DIST_ACTION(childTaskDist_act, KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_action, bnd_action)
 
-REGISTER_REGISTRY(KPSpace<NUMITEMS>, int);
+REGISTER_REGISTRY(KPSpace<NUMITEMS>, KPSolution, int, vecint);
 
 struct knapsackData {
   int capacity = 0;
