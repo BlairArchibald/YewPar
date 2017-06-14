@@ -22,6 +22,7 @@
 #include "bnb/bnb-decision-seq.hpp"
 #include "bnb/bnb-decision-par.hpp"
 #include "bnb/bnb-decision-dist.hpp"
+#include "bnb/bnb-recompute.hpp"
 #include "bnb/ordered.hpp"
 #include "bnb/macros.hpp"
 
@@ -151,6 +152,25 @@ struct GenNode : skeletons::BnB::NodeGenerator<BitGraph<NWORDS>, MCSol, int, Bit
 
     return hpx::util::make_tuple(std::move(sol), childBnd, std::move(cands));
   }
+
+  MCNode nth(const BitGraph<NWORDS> & graph, const MCNode & node, unsigned n) override {
+    auto pos = v - n;
+
+
+    auto sol = childSol;
+    sol.members.push_back(p_order[pos]);
+    sol.colours = colourClass[pos] - 1;
+
+    auto cands = p;
+    // Remove all choices from the left "left" of the one we care about
+    for (auto i = v; i > pos; --i) {
+      cands.unset(p_order[i]);
+    }
+
+    graph.intersect_with_row(p_order[pos], cands);
+
+    return hpx::util::make_tuple(std::move(sol), childBnd, std::move(cands));
+  }
 };
 
 GenNode
@@ -178,9 +198,11 @@ YEWPAR_CREATE_BNB_DECISION_DIST_ACTION(decision_dist_act, BitGraph<NWORDS>, MCSo
 
 YEWPAR_CREATE_BNB_ORDERED_ACTION(ordered_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 
+YEWPAR_CREATE_BNB_RECOMPUTE_ACTION(recompute_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
+
 typedef BitSet<NWORDS> bitsetType;
 REGISTER_INCUMBENT(MCSol, int, bitsetType);
-REGISTER_REGISTRY(BitGraph<NWORDS>, int);
+REGISTER_REGISTRY(BitGraph<NWORDS>, MCSol, int, bitsetType);
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto inputFile = opts["input-file"].as<std::string>();
@@ -189,7 +211,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
-  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision", "dist-decision", "ordered"};
+  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision", "dist-decision", "ordered", "dist-recompute"};
 
   auto skeletonType = opts["skeleton-type"].as<std::string>();
   auto found = std::find(std::begin(skeletonTypes), std::end(skeletonTypes), skeletonType);
@@ -256,6 +278,11 @@ int hpx_main(boost::program_options::variables_map & opts) {
   if (skeletonType == "ordered") {
     sol = skeletons::BnB::Ordered::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
                                        generateChoices_act, upperBound_act, ordered_act, true>
+      (spawnDepth, graph, root);
+  }
+  if (skeletonType == "dist-recompute") {
+    sol = skeletons::BnB::DistRecompute::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                                generateChoices_act, upperBound_act, recompute_act, true>
       (spawnDepth, graph, root);
   }
 
