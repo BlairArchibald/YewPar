@@ -15,12 +15,14 @@
 #define YEWPAR_CREATE_BNB_DECISION_DIST_ACTION(...)                                                                                               \
   HPX_UTIL_EXPAND_(BOOST_PP_CAT(YEWPAR_CREATE_BNB_DECISION_DIST_ACTION_, HPX_UTIL_PP_NARG(__VA_ARGS__)))(__VA_ARGS__)                             \
 
-
 #define YEWPAR_CREATE_BNB_ORDERED_ACTION(...)                                                                                                     \
   HPX_UTIL_EXPAND_(BOOST_PP_CAT(YEWPAR_CREATE_BNB_ORDERED_ACTION_, HPX_UTIL_PP_NARG(__VA_ARGS__)))(__VA_ARGS__)                                   \
 
 #define YEWPAR_CREATE_BNB_RECOMPUTE_ACTION(...)                                                                                                   \
   HPX_UTIL_EXPAND_(BOOST_PP_CAT(YEWPAR_CREATE_BNB_RECOMPUTE_ACTION_, HPX_UTIL_PP_NARG(__VA_ARGS__)))(__VA_ARGS__)                                 \
+
+#define YEWPAR_CREATE_BNB_INDEXED_ACTION(...)                       \
+HPX_UTIL_EXPAND_(BOOST_PP_CAT(YEWPAR_CREATE_BNB_INDEXED_ACTION_, HPX_UTIL_PP_NARG(__VA_ARGS__)))(__VA_ARGS__) \
 
 #define YEWPAR_CREATE_BNB_PAR_ACTION_7(name, space, sol, bnd, cands, genf, bndf)                                                                  \
   struct name;                                                                                                                                    \
@@ -153,6 +155,30 @@
   &skeletons::BnB::DistRecompute::searchChildTask<space COMMA sol COMMA bnd COMMA cands COMMA genf COMMA bndf COMMA name COMMA prune>,            \
   name>::type {};                                                                                                                                 \
   HPX_REGISTER_ACTION_DECLARATION(name, name);                                                                                                    \
-  HPX_REGISTER_ACTION(name, name);                                                                                                                \
+  HPX_REGISTER_ACTION(name, name);                                                                                                         \
+
+#define YEWPAR_CREATE_BNB_INDEXED_ACTION_7(name, space, sol, bnd, cands, genf, bndf)                                                       \
+  struct name;                                                                                                                             \
+  HPX_ACTION_USES_LARGE_STACK(name);                                                                                                       \
+                                                                                                                                           \
+  struct name : hpx::actions::make_action<                                                                                                 \
+  decltype(&skeletons::BnB::Indexed::searchChildTask<space COMMA sol COMMA bnd COMMA cands COMMA genf COMMA bndf COMMA name>),             \
+  &skeletons::BnB::Ordered::Indexed<space COMMA sol COMMA bnd COMMA cands COMMA genf COMMA bndf COMMA name>,                               \
+  name>::type {};                                                                                                                          \
+  HPX_REGISTER_ACTION_DECLARATION(name, name);                                                                                             \
+  HPX_REGISTER_ACTION(name, name);                                                                                                         \
+  HPX_PLAIN_ACTION(workstealing::indexed::startScheduler<name>, startScheduler_indexed_action);                                            \
+
+#define YEWPAR_CREATE_BNB_INDEXED_ACTION_8(name, space, sol, bnd, cands, genf, bndf, prune)                                                \
+  struct name;                                                                                                                             \
+  HPX_ACTION_USES_LARGE_STACK(name);                                                                                                       \
+                                                                                                                                           \
+  struct name : hpx::actions::make_action<                                                                                                 \
+  decltype(&skeletons::BnB::Indexed::searchChildTask<space COMMA sol COMMA bnd COMMA cands COMMA genf COMMA bndf COMMA prune>), \
+  &skeletons::BnB::Indexed::searchChildTask<space COMMA sol COMMA bnd COMMA cands COMMA genf COMMA bndf COMMA prune>,           \
+  name>::type {};                                                                                                                          \
+  HPX_REGISTER_ACTION_DECLARATION(name, name);                                                                                             \
+  HPX_REGISTER_ACTION(name, name);                                                                                                         \
+  HPX_PLAIN_ACTION(workstealing::indexed::startScheduler<name>, startScheduler_indexed_action);                                            \
 
 #endif

@@ -5,6 +5,7 @@
 #include <mutex>
 #include <hpx/hpx.hpp>
 #include <hpx/util/spinlock.hpp>
+#include <boost/serialization/access.hpp>
 
 class positionIndex {
 private:
@@ -126,6 +127,9 @@ public:
       return std::make_pair(res, pid);
     }
   }
+
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {}
 };
 
 #endif

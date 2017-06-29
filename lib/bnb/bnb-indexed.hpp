@@ -5,6 +5,7 @@
 #include <hpx/util/tuple.hpp>
 #include <hpx/lcos/broadcast.hpp>
 #include <hpx/runtime/components/new.hpp>
+#include <hpx/include/serialization.hpp>
 
 #include "registry.hpp"
 #include "incumbent.hpp"
@@ -14,15 +15,6 @@
 #include "workstealing/posManager.hpp"
 
 namespace skeletons { namespace BnB { namespace Indexed {
-
-template <typename Space,
-          typename Sol,
-          typename Bnd,
-          typename Cand,
-          typename Gen,
-          typename Bound,
-          bool PruneLevel = false>
-void searchChildTask(std::shared_ptr<positionIndex> posIdx, hpx::naming::id_type p);
 
 template <typename Space,
           typename Sol,
@@ -92,7 +84,8 @@ template <typename Space,
           typename Cand,
           typename Gen,
           typename Bound,
-          bool PruneLevel = false>
+          bool PruneLevel = false,
+          typename ChildTask>
 hpx::util::tuple<Sol, Bnd, Cand>
 search(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & root) {
 
@@ -106,11 +99,10 @@ search(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & root) {
   hpx::async<updateInc>(inc, root).get();
 
   // Workstealing structures
-  auto childFn = std::make_unique<hpx::util::function<void(std::shared_ptr<positionIndex>, hpx::naming::id_type)> >(searchChildTask<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>);
-  auto posMgr = hpx::components::local_new<workstealing::indexed::posManager>(std::move(childFn)).get();
+  auto posMgr = hpx::components::local_new<workstealing::indexed::posManager>().get();
 
   // Start work stealing schedulers on all localities
-  hpx::async<startScheduler_indexed_action>(hpx::find_here(), posMgr).get();
+  hpx::async<ChildTask>(hpx::find_here(), posMgr).get();
 
   positionIndex pos;
   expand<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(pos, root);
@@ -155,8 +147,8 @@ template <typename Space,
           typename Bound,
           bool PruneLevel = false>
 void
-searchChildTask(std::shared_ptr<positionIndex> posIdx,
-                hpx::naming::id_type p) {
+searchChildTask(const std::shared_ptr<positionIndex> posIdx,
+                const hpx::naming::id_type p) {
   auto c = getStartingNode<Space, Sol, Bnd, Cand, Gen, Bound>(posIdx->getPath());
   expand<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(*posIdx, c);
   workstealing::indexed::tasks_required_sem.signal();
