@@ -167,7 +167,6 @@ HPX_UTIL_EXPAND_(BOOST_PP_CAT(YEWPAR_CREATE_BNB_INDEXED_ACTION_, HPX_UTIL_PP_NAR
   name>::type {};                                                                                                                          \
   HPX_REGISTER_ACTION_DECLARATION(name, name);                                                                                             \
   HPX_REGISTER_ACTION(name, name);                                                                                                         \
-  HPX_PLAIN_ACTION(workstealing::indexed::startScheduler<name>, startScheduler_indexed_action);                                            \
 
 #define YEWPAR_CREATE_BNB_INDEXED_ACTION_8(name, space, sol, bnd, cands, genf, bndf, prune)                                                \
   struct name;                                                                                                                             \
@@ -179,6 +178,5 @@ HPX_UTIL_EXPAND_(BOOST_PP_CAT(YEWPAR_CREATE_BNB_INDEXED_ACTION_, HPX_UTIL_PP_NAR
   name>::type {};                                                                                                                          \
   HPX_REGISTER_ACTION_DECLARATION(name, name);                                                                                             \
   HPX_REGISTER_ACTION(name, name);                                                                                                         \
-  HPX_PLAIN_ACTION(workstealing::indexed::startScheduler<name>, startScheduler_indexed_action);                                            \
 
 #endif

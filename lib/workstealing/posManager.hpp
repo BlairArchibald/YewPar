@@ -3,6 +3,7 @@
 
 #include <hpx/hpx.hpp>
 #include <hpx/include/components.hpp>
+#include <hpx/include/serialization.hpp>
 #include <memory>
 
 #include "bnb/positionIndex.hpp"
@@ -10,14 +11,17 @@
 namespace workstealing { namespace indexed {
 
     class posManager : public hpx::components::locking_hook<
-      hpx::components::component_base<posManager> > {
+      hpx::components::component_base<posManager > > {
     private:
       std::vector<std::shared_ptr<positionIndex> > active; // Active position indices for stealing
 
+      using funcType = hpx::util::function<void(const std::shared_ptr<positionIndex>, const hpx::naming::id_type)>;
+      std::unique_ptr<funcType> fn;
+
     public:
       posManager() {};
+      posManager(std::unique_ptr<funcType> f) : fn(std::move(f)) {};
 
-      template <typename Fn>
       bool getWork() {
         if (active.empty()) {
           return false;
@@ -38,19 +42,16 @@ namespace workstealing { namespace indexed {
           active.push_back(posIdx);
 
           hpx::threads::executors::current_executor scheduler;
-          scheduler.add(hpx::util::bind(Fn(), posIdx, prom));
+          scheduler.add(hpx::util::bind(*fn, posIdx, prom));
 
           // How do we know when we can remove this from active, a future with callback?
           return true;
         }
       }
-      template <typename T>
-      struct getWork_action
-        : hpx::actions::make_action<
-          decltype(&getWork<T>),
-          &getWork<T>,
-          getWork_action<T> > {};
+      HPX_DEFINE_COMPONENT_ACTION(posManager, getWork);
     };
 }}
+
+HPX_REGISTER_ACTION_DECLARATION(workstealing::indexed::posManager::getWork_action, posManager_getWork_action);
 
 #endif

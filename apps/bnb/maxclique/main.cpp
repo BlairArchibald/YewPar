@@ -199,7 +199,7 @@ YEWPAR_CREATE_BNB_DECISION_DIST_ACTION(decision_dist_act, BitGraph<NWORDS>, MCSo
 YEWPAR_CREATE_BNB_ORDERED_ACTION(ordered_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 
 YEWPAR_CREATE_BNB_RECOMPUTE_ACTION(recompute_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
-YEWPAR_CREATE_BNB_INDEXED_ACTION(indexed_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
+//YEWPAR_CREATE_BNB_INDEXED_ACTION(indexed_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 
 typedef BitSet<NWORDS> bitsetType;
 REGISTER_INCUMBENT(MCSol, int, bitsetType);
@@ -288,7 +288,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   // }
   if (skeletonType == "indexed") {
     sol = skeletons::BnB::Indexed::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                          generateChoices_act, upperBound_act, true, startScheduler_indexed_action>
+                                          generateChoices_act, upperBound_act, true>
       (graph, root);
   }
 

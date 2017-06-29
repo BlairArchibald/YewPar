@@ -22,6 +22,28 @@ template <typename Space,
           typename Cand,
           typename Gen,
           typename Bound,
+          bool PruneLevel = false>
+void
+searchChildTask(const std::shared_ptr<positionIndex> posIdx, const hpx::naming::id_type p);
+
+template <typename Space,
+          typename Sol,
+          typename Bnd,
+          typename Cand,
+          typename Gen,
+          typename Bound,
+          bool PruneLevel = false>
+struct indexed_act : hpx::actions::make_action<
+  decltype(&searchChildTask<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>),
+  &searchChildTask<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>,
+  indexed_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel> > ::type {};
+
+template <typename Space,
+          typename Sol,
+          typename Bnd,
+          typename Cand,
+          typename Gen,
+          typename Bound,
           bool PruneLevel>
 void
 expand(positionIndex & pos, const hpx::util::tuple<Sol, Bnd, Cand> & n) {
@@ -84,8 +106,7 @@ template <typename Space,
           typename Cand,
           typename Gen,
           typename Bound,
-          bool PruneLevel = false,
-          typename ChildTask>
+          bool PruneLevel = false>
 hpx::util::tuple<Sol, Bnd, Cand>
 search(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & root) {
 
@@ -99,10 +120,14 @@ search(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & root) {
   hpx::async<updateInc>(inc, root).get();
 
   // Workstealing structures
-  auto posMgr = hpx::components::local_new<workstealing::indexed::posManager>().get();
+  //auto fn = indexed_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>();
+  using funcType = hpx::util::function<void(const std::shared_ptr<positionIndex>, const hpx::naming::id_type)>;
+  //auto fn = std::make_unique<funcType>(&searchChildTask<Space,Sol,Bnd,Cand,Gen,Bound,PruneLevel>);
+  auto fn = std::make_unique<funcType>(hpx::util::bind(indexed_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(), hpx::find_here(), hpx::util::placeholders::_1, hpx::util::placeholders::_2));
+  auto posMgr = hpx::components::local_new<workstealing::indexed::posManager>(std::move(fn)).get();
 
   // Start work stealing schedulers on all localities
-  hpx::async<ChildTask>(hpx::find_here(), posMgr).get();
+  hpx::async<startScheduler_indexed_action>(hpx::find_here(), posMgr).get();
 
   positionIndex pos;
   expand<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(pos, root);
