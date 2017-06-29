@@ -37,6 +37,11 @@ public:
       children.push_back(0);
       nextIndex.push_back(-1);
     }
+
+    // Where we start from
+    children.push_back(-1);
+    nextIndex.push_back(-1);
+
   }
 
   std::vector<unsigned> getPath() {

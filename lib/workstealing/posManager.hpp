@@ -49,9 +49,19 @@ namespace workstealing { namespace indexed {
         }
       }
       HPX_DEFINE_COMPONENT_ACTION(posManager, getWork);
+
+      void addWork(std::vector<unsigned> path, hpx::naming::id_type prom) {
+        auto posIdx = std::make_shared<positionIndex>(path);
+        active.push_back(posIdx);
+        hpx::threads::executors::current_executor scheduler;
+        scheduler.add(hpx::util::bind(*fn, posIdx, prom));
+      }
+      HPX_DEFINE_COMPONENT_ACTION(posManager, addWork);
     };
 }}
 
 HPX_REGISTER_ACTION_DECLARATION(workstealing::indexed::posManager::getWork_action, posManager_getWork_action);
+HPX_REGISTER_ACTION_DECLARATION(workstealing::indexed::posManager::addWork_action, posManager_addWork_action);
+
 
 #endif

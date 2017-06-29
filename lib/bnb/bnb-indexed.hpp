@@ -129,8 +129,16 @@ search(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & root) {
   // Start work stealing schedulers on all localities
   hpx::async<startScheduler_indexed_action>(hpx::find_here(), posMgr).get();
 
-  positionIndex pos;
-  expand<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(pos, root);
+  // positionIndex pos;
+  // expand<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(pos, root);
+  std::vector<unsigned> path;
+  hpx::promise<void> prom;
+  auto f = prom.get_future();
+  auto pid = prom.get_id();
+  hpx::async<workstealing::indexed::posManager::addWork_action>(posMgr, path, pid);
+
+  // Wait completion of the main task
+  f.get();
 
   // Stop all work stealing schedulers
   hpx::wait_all(hpx::lcos::broadcast<stopScheduler_indexed_action>(hpx::find_all_localities()));
@@ -151,11 +159,12 @@ getStartingNode(std::vector<unsigned> path) {
   auto reg = skeletons::BnB::Components::Registry<Space, Sol, Bnd, Cand>::gReg;
   auto node =  reg->root_;
 
-  // Paths have a leading 0 (representing root, we don't need this).
-  if (!path.empty()) {
-    path.erase(path.begin());
+  if (path.empty()) {
+    return reg->root_;
   }
 
+  // Paths have a leading 0 (representing root, we don't need this).
+  path.erase(path.begin());
   for (auto const & p : path) {
     auto newCands = Gen::invoke(0, reg->space_, node);
     node = newCands.nth(reg->space_, node, p);

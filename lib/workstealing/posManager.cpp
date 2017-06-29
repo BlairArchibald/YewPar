@@ -6,3 +6,4 @@ typedef hpx::components::component<workstealing::indexed::posManager> posMgr_typ
 HPX_REGISTER_COMPONENT(posMgr_type, posManager);
 
 HPX_REGISTER_ACTION(workstealing::indexed::posManager::getWork_action, posManager_getWork_action);
+HPX_REGISTER_ACTION(workstealing::indexed::posManager::addWork_action, posManager_addWork_action);
