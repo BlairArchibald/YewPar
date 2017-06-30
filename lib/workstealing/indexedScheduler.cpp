@@ -29,11 +29,15 @@ void scheduler(hpx::naming::id_type posManager, std::shared_ptr<hpx::promise<voi
   // Workqueue variables are set up, we can start generating tasks
   readyPromise->set_value();
 
-  auto threads = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 1;
+  auto threads = hpx::get_os_thread_count();
   hpx::threads::executors::current_executor scheduler;
 
   // Pre-init the sem
-  tasks_required_sem.signal(threads);
+  if (threads > 1) {
+    // Don't both scheduling in the one thread case since we never need more
+    // work in the indexed scheme
+    tasks_required_sem.signal(threads - 1);
+  }
 
   while (running) {
     tasks_required_sem.wait();

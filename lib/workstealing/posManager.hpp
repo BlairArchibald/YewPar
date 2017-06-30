@@ -15,7 +15,10 @@ namespace workstealing { namespace indexed {
     private:
       std::vector<std::shared_ptr<positionIndex> > active; // Active position indices for stealing
 
-      using funcType = hpx::util::function<void(const std::shared_ptr<positionIndex>, const hpx::naming::id_type)>;
+      using funcType = hpx::util::function<void(const std::shared_ptr<positionIndex>,
+                                                const hpx::naming::id_type,
+                                                const int,
+                                                const hpx::naming::id_type)>;
       std::unique_ptr<funcType> fn;
 
     public:
@@ -37,12 +40,20 @@ namespace workstealing { namespace indexed {
         if (path.empty()) {
           return false;
         } else {
+
+          // Debugging
+          std::cout << "Stole path: ";
+          for (const auto & elem : path) {
+            std::cout << elem << ",";
+          }
+          std::cout << std::endl;
+
           // Build the action
           auto posIdx = std::make_shared<positionIndex>(path);
           active.push_back(posIdx);
 
           hpx::threads::executors::current_executor scheduler;
-          scheduler.add(hpx::util::bind(*fn, posIdx, prom));
+          scheduler.add(hpx::util::bind(*fn, posIdx, prom, active.size() - 1, this->get_id()));
 
           // How do we know when we can remove this from active, a future with callback?
           return true;
@@ -54,14 +65,20 @@ namespace workstealing { namespace indexed {
         auto posIdx = std::make_shared<positionIndex>(path);
         active.push_back(posIdx);
         hpx::threads::executors::current_executor scheduler;
-        scheduler.add(hpx::util::bind(*fn, posIdx, prom));
+        scheduler.add(hpx::util::bind(*fn, posIdx, prom, active.size() - 1, this->get_id()));
       }
       HPX_DEFINE_COMPONENT_ACTION(posManager, addWork);
+
+      void done(int pos) {
+        active.erase(active.begin() + pos);
+      }
+      HPX_DEFINE_COMPONENT_ACTION(posManager, done);
     };
 }}
 
 HPX_REGISTER_ACTION_DECLARATION(workstealing::indexed::posManager::getWork_action, posManager_getWork_action);
 HPX_REGISTER_ACTION_DECLARATION(workstealing::indexed::posManager::addWork_action, posManager_addWork_action);
+HPX_REGISTER_ACTION_DECLARATION(workstealing::indexed::posManager::done_action, posManager_done_action);
 
 
 #endif

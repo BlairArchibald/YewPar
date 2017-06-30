@@ -24,7 +24,8 @@ template <typename Space,
           typename Bound,
           bool PruneLevel = false>
 void
-searchChildTask(const std::shared_ptr<positionIndex> posIdx, const hpx::naming::id_type p);
+searchChildTask(const std::shared_ptr<positionIndex> posIdx, const hpx::naming::id_type p,
+                      const int idx, const hpx::naming::id_type posMgr);
 
 template <typename Space,
           typename Sol,
@@ -120,17 +121,23 @@ search(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & root) {
   hpx::async<updateInc>(inc, root).get();
 
   // Workstealing structures
-  //auto fn = indexed_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>();
-  using funcType = hpx::util::function<void(const std::shared_ptr<positionIndex>, const hpx::naming::id_type)>;
-  //auto fn = std::make_unique<funcType>(&searchChildTask<Space,Sol,Bnd,Cand,Gen,Bound,PruneLevel>);
-  auto fn = std::make_unique<funcType>(hpx::util::bind(indexed_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(), hpx::find_here(), hpx::util::placeholders::_1, hpx::util::placeholders::_2));
+  using funcType = hpx::util::function<void(const std::shared_ptr<positionIndex>,
+                                            const hpx::naming::id_type,
+                                            const int,
+                                            const hpx::naming::id_type)>;
+
+  auto fn = std::make_unique<funcType>(hpx::util::bind(indexed_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(),
+                                                       hpx::find_here(),
+                                                       hpx::util::placeholders::_1,
+                                                       hpx::util::placeholders::_2,
+                                                       hpx::util::placeholders::_3,
+                                                       hpx::util::placeholders::_4));
+
   auto posMgr = hpx::components::local_new<workstealing::indexed::posManager>(std::move(fn)).get();
 
   // Start work stealing schedulers on all localities
   hpx::async<startScheduler_indexed_action>(hpx::find_here(), posMgr).get();
 
-  // positionIndex pos;
-  // expand<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(pos, root);
   std::vector<unsigned> path;
   hpx::promise<void> prom;
   auto f = prom.get_future();
@@ -182,11 +189,14 @@ template <typename Space,
           bool PruneLevel = false>
 void
 searchChildTask(const std::shared_ptr<positionIndex> posIdx,
-                const hpx::naming::id_type p) {
+                const hpx::naming::id_type p,
+                const int idx,
+                const hpx::naming::id_type posMgr) {
   auto c = getStartingNode<Space, Sol, Bnd, Cand, Gen, Bound>(posIdx->getPath());
   expand<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(*posIdx, c);
-  workstealing::indexed::tasks_required_sem.signal();
   hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
+  hpx::async<workstealing::indexed::posManager::done_action>(posMgr, idx).get();
+  workstealing::indexed::tasks_required_sem.signal();
 }
 
 }}}
