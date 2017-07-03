@@ -57,7 +57,7 @@ expand(positionIndex & pos, const hpx::util::tuple<Sol, Bnd, Cand> & n) {
 
   auto i = 0;
   int nextPos;
-  while ((nextPos = pos.getNextPosition()) > 0) {
+  while ((nextPos = pos.getNextPosition()) >= 0) {
     auto c = newCands.next(reg->space_, n);
 
     // TODO: Can probably write this neater. Also might want to "skip" via generator functionality
@@ -78,6 +78,7 @@ expand(positionIndex & pos, const hpx::util::tuple<Sol, Bnd, Cand> & n) {
         pos.pruneLevel();
         break; // numberChildren = 0?
       } else {
+        ++i;
         continue;
       }
     }
@@ -139,6 +140,8 @@ search(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & root) {
   hpx::async<startScheduler_indexed_action>(hpx::find_here(), posMgr).get();
 
   std::vector<unsigned> path;
+  path.reserve(30);
+  path.push_back(0);
   hpx::promise<void> prom;
   auto f = prom.get_future();
   auto pid = prom.get_id();
@@ -166,12 +169,14 @@ getStartingNode(std::vector<unsigned> path) {
   auto reg = skeletons::BnB::Components::Registry<Space, Sol, Bnd, Cand>::gReg;
   auto node =  reg->root_;
 
-  if (path.empty()) {
-    return reg->root_;
-  }
 
   // Paths have a leading 0 (representing root, we don't need this).
   path.erase(path.begin());
+
+  if (path.empty()) {
+    return node;
+  }
+
   for (auto const & p : path) {
     auto newCands = Gen::invoke(0, reg->space_, node);
     node = newCands.nth(reg->space_, node, p);

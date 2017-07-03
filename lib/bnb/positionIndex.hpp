@@ -28,19 +28,24 @@ public:
     nextIndex.push_back(-1);
   }
 
-  positionIndex(std::vector<unsigned> path) : depth(path.size()) {
-    path = path;
-
+  positionIndex(std::vector<unsigned> path) : path(path), depth(path.size() - 1) {
+    path.reserve(30);
     nextIndex.reserve(30);
     children.reserve(30);
-    for (auto i = 0; i < path.size(); i++) {
-      children.push_back(0);
+
+    // Root element only
+    if (path.size() == 1) {
+      children.push_back(-1);
+      nextIndex.push_back(-1);
+    } else{
+      for (auto i = 0; i < depth; i++) {
+        children.push_back(0);
+        nextIndex.push_back(-1);
+      }
+      // Where we start from - Do I need this? probably
+      children.push_back(-1);
       nextIndex.push_back(-1);
     }
-
-    // Where we start from
-    children.push_back(-1);
-    nextIndex.push_back(-1);
 
   }
 
@@ -71,7 +76,7 @@ public:
       return -1;
     } else {
       children[depth]--; // We have "taken" this node
-      return ++nextIndex[depth]; //Does this account for stolen futures. I think so.
+      return nextIndex[depth]++; //Does this account for stolen futures. I think so.
     }
   }
 
@@ -120,7 +125,8 @@ public:
       for (auto i = 0; i <= highest; ++i) {
         res.push_back(path[i]);
       }
-      auto idx = ++nextIndex[highest];
+      auto idx = nextIndex[highest];
+      nextIndex[highest]++;
       res.push_back(idx);
 
       hpx::promise<void> prom;

@@ -287,6 +287,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
   //     (spawnDepth, graph, root);
   // }
   if (skeletonType == "indexed") {
+    // sol = skeletons::BnB::Indexed::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+    //                                       generateChoices_act, upperBound_act, true>
     sol = skeletons::BnB::Indexed::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
                                           generateChoices_act, upperBound_act, true>
       (graph, root);
