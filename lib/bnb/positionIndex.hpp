@@ -13,7 +13,7 @@ private:
   std::vector<unsigned> path;
   std::vector<int> children;
   std::vector<int> nextIndex;
-  std::map<unsigned, std::vector<hpx::future<void> > > futures;
+  std::vector<hpx::future<void> > futures;
   hpx::util::spinlock mtx;
 
 public:
@@ -22,6 +22,7 @@ public:
     path.reserve(30);
     children.reserve(30);
     nextIndex.reserve(30);
+    futures.reserve(30);
 
     path.push_back(0);
     children.push_back(-1);
@@ -32,6 +33,7 @@ public:
     path.reserve(30);
     nextIndex.reserve(30);
     children.reserve(30);
+    futures.reserve(30);
 
     // Root element only
     if (path.size() == 1) {
@@ -78,12 +80,6 @@ public:
       children[depth]--; // We have "taken" this node
       return nextIndex[depth]++; //Does this account for stolen futures. I think so.
     }
-  }
-
-  // TODO: Does this need to be thread safe since it should only be called once
-  // there are no positions left? (we don't really want to block with the lock...)
-  void waitFutures() {
-    hpx::wait_all(futures[depth]);
   }
 
   void preExpand(unsigned i) {
@@ -133,10 +129,17 @@ public:
       auto f = prom.get_future();
       auto pid = prom.get_id();
 
-      futures[highest].push_back(std::move(f));
+      futures.push_back(std::move(f));
 
       return std::make_pair(res, pid);
     }
+  }
+
+  void waitFutures() {
+    // We don't want to hold the lock here. Only called once we are done
+    // everything else so no steals will succeed and no one else can modify the
+    // index so this is safe
+    hpx::wait_all(futures);
   }
 
   template <class Archive>

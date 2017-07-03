@@ -98,8 +98,6 @@ expand(positionIndex & pos, const hpx::util::tuple<Sol, Bnd, Cand> & n) {
 
     ++i;
   }
-
-  pos.waitFutures(); // Wait for any futures to fill before backtracking
 }
 
 template <typename Space,
@@ -201,7 +199,10 @@ searchChildTask(const std::shared_ptr<positionIndex> posIdx,
   expand<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(*posIdx, c);
   hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
   hpx::async<workstealing::indexed::posManager::done_action>(posMgr, idx).get();
+
+  // Don't fully finish until we determine all children are also finished - Termination detection
   workstealing::indexed::tasks_required_sem.signal();
+  posIdx->waitFutures();
 }
 
 }}}
