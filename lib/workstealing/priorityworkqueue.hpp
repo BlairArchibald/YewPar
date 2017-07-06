@@ -40,7 +40,7 @@ namespace workstealing
     };
 }
 
-HPX_REGISTER_ACTION_DECLARATION(workstealing::priorityworkqueue::steal_action, workqueue_steal_action);
-HPX_REGISTER_ACTION_DECLARATION(workstealing::priorityworkqueue::addWork_action, workqueue_addWork_action);
+HPX_REGISTER_ACTION_DECLARATION(workstealing::priorityworkqueue::steal_action, workqueue_prio_steal_action);
+HPX_REGISTER_ACTION_DECLARATION(workstealing::priorityworkqueue::addWork_action, workqueue_prio_addWork_action);
 
 #endif

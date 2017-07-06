@@ -22,5 +22,5 @@ typedef hpx::components::component<workstealing::priorityworkqueue> workqueue_ty
 
 HPX_REGISTER_COMPONENT(workqueue_type, priority_workqueue);
 
-HPX_REGISTER_ACTION(workstealing::priorityworkqueue::steal_action, workqueue_steal_action);
-HPX_REGISTER_ACTION(workstealing::priorityworkqueue::addWork_action, workqueue_addWork_action);
+HPX_REGISTER_ACTION(workstealing::priorityworkqueue::steal_action, workqueue_prio_steal_action);
+HPX_REGISTER_ACTION(workstealing::priorityworkqueue::addWork_action, workqueue_prio_addWork_action);
