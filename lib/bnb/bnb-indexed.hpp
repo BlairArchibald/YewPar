@@ -60,11 +60,9 @@ expand(positionIndex & pos, const hpx::util::tuple<Sol, Bnd, Cand> & n) {
   while ((nextPos = pos.getNextPosition()) >= 0) {
     auto c = newCands.next(reg->space_, n);
 
-    // TODO: Can probably write this neater. Also might want to "skip" via generator functionality
-    // Make up the distance if the nextPos isn't i
     if (nextPos != i) {
       for (auto j = 0; j < nextPos - i; ++j) {
-        auto c = newCands.next(reg->space_, n);
+        c = newCands.next(reg->space_, n);
       }
       i += nextPos - i;
     }

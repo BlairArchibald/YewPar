@@ -78,7 +78,9 @@ public:
       return -1;
     } else {
       children[depth]--; // We have "taken" this node
-      return nextIndex[depth]++; //Does this account for stolen futures. I think so.
+      auto idx = nextIndex[depth];
+      nextIndex[depth]++;
+      return idx;
     }
   }
 

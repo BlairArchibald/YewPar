@@ -40,14 +40,6 @@ namespace workstealing { namespace indexed {
         if (path.empty()) {
           return false;
         } else {
-
-          // Debugging
-          std::cout << "Stole path: ";
-          for (const auto & elem : path) {
-            std::cout << elem << ",";
-          }
-          std::cout << std::endl;
-
           // Build the action
           auto posIdx = std::make_shared<positionIndex>(path);
           active.push_back(posIdx);
