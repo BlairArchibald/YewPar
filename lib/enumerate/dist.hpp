@@ -19,27 +19,19 @@ namespace skeletons { namespace Enum { namespace Dist {
 
 template <typename Space,
           typename Sol,
-          typename Cand,
           typename Gen,
           typename ChildTask>
 expand(unsigned spawnDepth,
-       const hpx::util::tuple<Sol, Cand> & n
+       const Sol & n
        std::uint64_t & cnt) {
-  auto reg = skeletons::Enum::Components::Registry<Space, Sol, Cand>::gReg;
+  auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
 
   auto newCands = Gen::invoke(0, reg->space_, n);
-
-  // Handle count updates
-  if (newCands.isLeaf) {
-    cnt++;
-    return;
-  }
 
   std::vector<hpx::future<void> > childFuts;
   if (spawnDepth > 0) {
     childFuts.reserve(newCands.numChildren);
   }
-
 
   for (auto i = 0; i < newCands.numChildren; ++i) {
     auto c = newCands.next(reg->space_, n);
@@ -57,7 +49,7 @@ expand(unsigned spawnDepth,
 
       childFuts.push_back(std::move(pfut));
     } else {
-      expand<Space, Sol, Cand, Gen, ChildTask>(0, c);
+      expand<Space, Sol, Gen, ChildTask>(0, c);
     }
   }
 
