@@ -5,15 +5,13 @@
 #include <hpx/util/tuple.hpp>
 #include <hpx/lcos/broadcast.hpp>
 #include <cstdint>
+#include <map>
 
-#include "registry.hpp"
+#include "enumRegistry.hpp"
 #include "counter.hpp"
 
 #include "workstealing/scheduler.hpp"
 #include "workstealing/workqueue.hpp"
-
-/* Counts the number of leaf search nodes. Up to the user to add depth bounding if required:
-   e.g Store the depth in Sol and return no children once it is reached */
 
 namespace skeletons { namespace Enum { namespace Dist {
 
@@ -21,16 +19,28 @@ template <typename Space,
           typename Sol,
           typename Gen,
           typename ChildTask>
-expand(unsigned spawnDepth,
-       const Sol & n
-       std::uint64_t & cnt) {
-  auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
+void expand(unsigned spawnDepth,
+            const unsigned maxDepth,
+            unsigned depth,
+            const Sol & n,
+            std::map<unsigned, std::uint64_t> & cntMap) {
+  auto reg = Components::Registry<Space, Sol>::gReg;
 
   auto newCands = Gen::invoke(0, reg->space_, n);
 
   std::vector<hpx::future<void> > childFuts;
   if (spawnDepth > 0) {
     childFuts.reserve(newCands.numChildren);
+  }
+
+  if (cntMap[depth]) {
+    cntMap[depth] += newCands.numChildren;
+  } else {
+    cntMap[depth] = newCands.numChildren;
+  }
+
+  if (maxDepth == depth) {
+    return;
   }
 
   for (auto i = 0; i < newCands.numChildren; ++i) {
@@ -44,12 +54,12 @@ expand(unsigned spawnDepth,
 
       ChildTask t;
       hpx::util::function<void(hpx::naming::id_type)> task;
-      task = hpx::util::bind(t, hpx::util::placeholders::_1, spawnDepth - 1, c, pid);
+      task = hpx::util::bind(t, hpx::util::placeholders::_1, spawnDepth - 1, maxDepth, depth + 1, c, pid);
       hpx::apply<workstealing::workqueue::addWork_action>(workstealing::local_workqueue, task);
 
       childFuts.push_back(std::move(pfut));
     } else {
-      expand<Space, Sol, Gen, ChildTask>(0, c);
+      expand<Space, Sol, Gen, ChildTask>(0, maxDepth, depth + 1, c, cntMap);
     }
   }
 
@@ -57,22 +67,20 @@ expand(unsigned spawnDepth,
     workstealing::tasks_required_sem.signal(); // Going to sleep, get more tasks
     hpx::wait_all(childFuts);
   }
-
-  return 0;
 }
 
 template <typename Space,
           typename Sol,
-          typename Cand,
           typename Gen,
           typename ChildTask>
-hpx::util::tuple<Sol, Cand>
-search(unsigned spawnDepth,
-       const Space & space,
-       const hpx::util::tuple<Sol, Cand> & root) {
+std::map<unsigned, uint64_t>
+count(unsigned spawnDepth,
+      const unsigned maxDepth,
+      const Space & space,
+      const Sol   & root) {
 
   // TODO: Allow this component take any numerical type
-  auto counter = hpx::new_<Enum::Counter>(hpx::find_here()).get();
+  auto counter = hpx::new_<Components::Counter>(hpx::find_here()).get();
 
   hpx::wait_all(hpx::lcos::broadcast<enum_initRegistry_act>(hpx::find_all_localities(), space, counter, root));
 
@@ -82,16 +90,37 @@ search(unsigned spawnDepth,
   }
   hpx::wait_all(hpx::lcos::broadcast<startScheduler_action>(hpx::find_all_localities(), workqueues));
 
-  std::uint64_t cnt;
-  expand<Space, Sol, Cand, Gen, ChildTask>(spawnDepth, root, cnt);
+  std::map<unsigned, uint64_t> cntMap;
+  cntMap[0] = 1; // Count root node
+  expand<Space, Sol, Gen, ChildTask>(spawnDepth, maxDepth, 1, root, cntMap);
+
+  hpx::wait_all(hpx::lcos::broadcast<stopScheduler_action>(hpx::find_all_localities()));
 
   // Add the count of the "main" thread (since this doesn't return the same way the other tasks do)
-  auto reg = skeletons::Enum::Components::Registry<Space, Sol, Cand>::gReg;
-  hpx::async<enum_add_action>(reg->globalCounter_, cnt).get();
+  auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
+  hpx::async<Components::Counter::add_action>(reg->globalCounter, cntMap).get();
+
+  return hpx::async<Components::Counter::getCountMap_action>(reg->globalCounter).get();
+}
+
+template <typename Space,
+          typename Sol,
+          typename Gen,
+          typename ChildTask>
+void
+searchChildTask(unsigned spawnDepth,
+                const unsigned maxDepth,
+                unsigned depth,
+                Sol c,
+                hpx::naming::id_type p) {
+  std::map<unsigned, uint64_t> cntMap;
+  expand<Space, Sol, Gen, ChildTask>(spawnDepth, maxDepth, depth, c, cntMap);
+
+  auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
+  hpx::async<Components::Counter::add_action>(reg->globalCounter, cntMap).get();
 
   workstealing::tasks_required_sem.signal();
   hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
-
 }
 
 }}}
