@@ -69,5 +69,8 @@ int main(int argc, char* argv[]) {
       boost::program_options::value<unsigned>()->default_value(0),
       "Depth in the tree to count until"
     );
+
+  hpx::register_startup_function(&workstealing::registerPerformanceCounters);
+
   return hpx::init(desc_commandline, argc, argv);
 }

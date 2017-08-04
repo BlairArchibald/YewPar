@@ -8,7 +8,6 @@
 #include <map>
 
 #include "enumRegistry.hpp"
-#include "counter.hpp"
 
 #include "workstealing/scheduler.hpp"
 #include "workstealing/workqueue.hpp"
@@ -78,11 +77,7 @@ count(unsigned spawnDepth,
       const unsigned maxDepth,
       const Space & space,
       const Sol   & root) {
-
-  // TODO: Allow this component take any numerical type
-  auto counter = hpx::new_<Components::Counter>(hpx::find_here()).get();
-
-  hpx::wait_all(hpx::lcos::broadcast<enum_initRegistry_act>(hpx::find_all_localities(), space, counter, root));
+  hpx::wait_all(hpx::lcos::broadcast<enum_initRegistry_act>(hpx::find_all_localities(), space, maxDepth, root));
 
   std::vector<hpx::naming::id_type> workqueues;
   for (auto const& loc : hpx::find_all_localities()) {
@@ -98,9 +93,21 @@ count(unsigned spawnDepth,
 
   // Add the count of the "main" thread (since this doesn't return the same way the other tasks do)
   auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
-  hpx::async<Components::Counter::add_action>(reg->globalCounter, cntMap).get();
+  reg->updateCounts(cntMap);
 
-  return hpx::async<Components::Counter::getCountMap_action>(reg->globalCounter).get();
+  // Gather the counts
+  std::vector<std::map<unsigned, uint64_t> > cntList;
+  cntList = hpx::lcos::broadcast(enum_getCounts_act(), hpx::find_all_localities(), Space(), root).get();
+  std::map<unsigned, uint64_t> res;
+  for (unsigned i = 0; i <= maxDepth; ++i) {
+    std::uint64_t totalCnt = 0;
+    for (const auto & cnt : cntList) {
+      totalCnt += cnt.at(i);
+    }
+    res[i] = totalCnt;
+  }
+
+  return res;
 }
 
 template <typename Space,
@@ -116,8 +123,9 @@ searchChildTask(unsigned spawnDepth,
   std::map<unsigned, uint64_t> cntMap;
   expand<Space, Sol, Gen, ChildTask>(spawnDepth, maxDepth, depth, c, cntMap);
 
+  // Atomically updates the (process) local counter
   auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
-  hpx::async<Components::Counter::add_action>(reg->globalCounter, cntMap).get();
+  reg->updateCounts(cntMap);
 
   workstealing::tasks_required_sem.signal();
   hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
