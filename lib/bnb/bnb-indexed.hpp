@@ -45,6 +45,42 @@ template <typename Space,
           typename Cand,
           typename Gen,
           typename Bound,
+          bool PruneLevel = false>
+hpx::naming::id_type
+initPosMgr() {
+  using funcType = hpx::util::function<void(const std::shared_ptr<positionIndex>,
+                                            const hpx::naming::id_type,
+                                            const int,
+                                            const hpx::naming::id_type)>;
+
+  auto fn = std::make_unique<funcType>(hpx::util::bind(indexed_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(),
+                                                       hpx::find_here(),
+                                                       hpx::util::placeholders::_1,
+                                                       hpx::util::placeholders::_2,
+                                                       hpx::util::placeholders::_3,
+                                                       hpx::util::placeholders::_4));
+
+  return hpx::components::local_new<workstealing::indexed::posManager>(std::move(fn)).get();
+}
+
+template <typename Space,
+          typename Sol,
+          typename Bnd,
+          typename Cand,
+          typename Gen,
+          typename Bound,
+          bool PruneLevel = false>
+struct initPosMgr_act : hpx::actions::make_action<
+  decltype(&initPosMgr<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>),
+  &initPosMgr<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>,
+  initPosMgr_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel> > ::type {};
+
+template <typename Space,
+          typename Sol,
+          typename Bnd,
+          typename Cand,
+          typename Gen,
+          typename Bound,
           bool PruneLevel>
 void
 expand(positionIndex & pos, const hpx::util::tuple<Sol, Bnd, Cand> & n) {
@@ -117,23 +153,20 @@ search(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & root) {
   typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action updateInc;
   hpx::async<updateInc>(inc, root).get();
 
-  // Workstealing structures
-  using funcType = hpx::util::function<void(const std::shared_ptr<positionIndex>,
-                                            const hpx::naming::id_type,
-                                            const int,
-                                            const hpx::naming::id_type)>;
+  // Initialise positionManagers on each node to handle steals
+  auto posMgrs = hpx::lcos::broadcast<initPosMgr_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel> >(hpx::find_all_localities()).get();
 
-  auto fn = std::make_unique<funcType>(hpx::util::bind(indexed_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(),
-                                                       hpx::find_here(),
-                                                       hpx::util::placeholders::_1,
-                                                       hpx::util::placeholders::_2,
-                                                       hpx::util::placeholders::_3,
-                                                       hpx::util::placeholders::_4));
-
-  auto posMgr = hpx::components::local_new<workstealing::indexed::posManager>(std::move(fn)).get();
+  // TODO: Track this on each node when we init the managers
+  hpx::naming::id_type localPosMgr;
+  for (auto it = posMgrs.begin(); it != posMgrs.end(); ++it) {
+    if (hpx::get_colocation_id(*it).get() == hpx::find_here()) {
+      localPosMgr = *it;
+      break;
+    }
+  }
 
   // Start work stealing schedulers on all localities
-  hpx::async<startScheduler_indexed_action>(hpx::find_here(), posMgr).get();
+  hpx::async<startScheduler_indexed_action>(hpx::find_here(), posMgrs).get();
 
   std::vector<unsigned> path;
   path.reserve(30);
@@ -141,7 +174,7 @@ search(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & root) {
   hpx::promise<void> prom;
   auto f = prom.get_future();
   auto pid = prom.get_id();
-  hpx::async<workstealing::indexed::posManager::addWork_action>(posMgr, path, pid);
+  hpx::async<workstealing::indexed::posManager::addWork_action>(localPosMgr, path, pid);
 
   // Wait completion of the main task
   f.get();

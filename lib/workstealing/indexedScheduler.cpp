@@ -8,25 +8,36 @@ void stopScheduler() {
   tasks_required_sem.signal(1);
 }
 
-void startScheduler(hpx::naming::id_type posManager) {
+void startScheduler(std::vector<hpx::naming::id_type> posManagers) {
   auto schedulerReady = std::make_shared<hpx::promise<void> >();
 
   if (hpx::get_os_thread_count() > 1) {
     hpx::threads::executors::default_executor high_priority_executor(hpx::threads::thread_priority_critical,
                                                                      hpx::threads::thread_stacksize_large);
-    hpx::apply(high_priority_executor, &scheduler, posManager, schedulerReady);
+    hpx::apply(high_priority_executor, &scheduler, posManagers, schedulerReady);
   } else {
     hpx::threads::executors::default_executor exe(hpx::threads::thread_stacksize_large);
-    hpx::apply(exe, &scheduler, posManager, schedulerReady);
+    hpx::apply(exe, &scheduler, posManagers, schedulerReady);
   }
 
   schedulerReady->get_future().get();
 }
 
-void scheduler(hpx::naming::id_type posManager, std::shared_ptr<hpx::promise<void> >readyPromise) {
+void scheduler(std::vector<hpx::naming::id_type> posManagers, std::shared_ptr<hpx::promise<void> >readyPromise) {
   auto here = hpx::find_here();
+  hpx::naming::id_type posManager;
 
-  // Workqueue variables are set up, we can start generating tasks
+  // Find the local posManager
+  for (auto it = posManagers.begin(); it != posManagers.end(); ++it) {
+    if (hpx::get_colocation_id(*it).get() == here) {
+      posManager = *it;
+      posManagers.erase(it);
+      break;
+    }
+  }
+  // TODO: register posManager PosManagers with list of all distributed manangers (has to happen after construction)
+
+  // posManager variables are set up, we can start generating tasks
   readyPromise->set_value();
 
   auto threads = hpx::get_os_thread_count();

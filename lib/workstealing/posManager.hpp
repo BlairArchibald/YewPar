@@ -14,6 +14,7 @@ namespace workstealing { namespace indexed {
       hpx::components::component_base<posManager > > {
     private:
       std::vector<std::shared_ptr<positionIndex> > active; // Active position indices for stealing
+      std::vector<hpx::naming::id_type> distributedMgrs;
 
       using funcType = hpx::util::function<void(const std::shared_ptr<positionIndex>,
                                                 const hpx::naming::id_type,
@@ -24,6 +25,11 @@ namespace workstealing { namespace indexed {
     public:
       posManager() {};
       posManager(std::unique_ptr<funcType> f) : fn(std::move(f)) {};
+
+      void registerDistributedManagers(std::vector<hpx::naming::id_type> distributedPosMgrs) {
+        distributedMgrs = distributedPosMgrs;
+      }
+      HPX_DEFINE_COMPONENT_ACTION(posManager, registerDistributedManagers);
 
       bool getWork() {
         if (active.empty()) {
@@ -68,6 +74,7 @@ namespace workstealing { namespace indexed {
     };
 }}
 
+HPX_REGISTER_ACTION_DECLARATION(workstealing::indexed::posManager::registerDistributedManagers_action, posManager_registerDistributedManagers_action);
 HPX_REGISTER_ACTION_DECLARATION(workstealing::indexed::posManager::getWork_action, posManager_getWork_action);
 HPX_REGISTER_ACTION_DECLARATION(workstealing::indexed::posManager::addWork_action, posManager_addWork_action);
 HPX_REGISTER_ACTION_DECLARATION(workstealing::indexed::posManager::done_action, posManager_done_action);

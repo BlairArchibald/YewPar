@@ -11,10 +11,9 @@ namespace workstealing { namespace indexed {
   hpx::lcos::local::counting_semaphore tasks_required_sem;
   hpx::naming::id_type local_workqueue;
 
-  void startScheduler(hpx::naming::id_type posManager);
+  void startScheduler(std::vector<hpx::naming::id_type> posManagers);
   void stopScheduler();
-
-  void scheduler(hpx::naming::id_type posManager, std::shared_ptr<hpx::promise<void> >readyPromise);
+  void scheduler(std::vector<hpx::naming::id_type> posManagers, std::shared_ptr<hpx::promise<void> >readyPromise);
 }}
 
 HPX_PLAIN_ACTION(workstealing::indexed::stopScheduler, stopScheduler_indexed_action);
