@@ -35,7 +35,9 @@ void scheduler(std::vector<hpx::naming::id_type> posManagers, std::shared_ptr<hp
       break;
     }
   }
-  // TODO: register posManager PosManagers with list of all distributed manangers (has to happen after construction)
+
+  // Register all other posManagers with the local manager
+  hpx::async<workstealing::indexed::posManager::registerDistributedManagers_action>(posManager, posManagers);
 
   // posManager variables are set up, we can start generating tasks
   readyPromise->set_value();
