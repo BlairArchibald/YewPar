@@ -43,7 +43,6 @@ struct Monoid
   template <class Archive>
   void serialize(Archive & ar, const unsigned int version) {
     ar & decs;
-    ar & blocks;
     ar & conductor;
     ar & min;
     ar & genus;
