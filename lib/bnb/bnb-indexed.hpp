@@ -22,29 +22,7 @@ template <typename Space,
           typename Cand,
           typename Gen,
           typename Bound,
-          bool PruneLevel = false>
-void
-searchChildTask(const std::shared_ptr<positionIndex> posIdx, const hpx::naming::id_type p,
-                      const int idx, const hpx::naming::id_type posMgr);
-
-template <typename Space,
-          typename Sol,
-          typename Bnd,
-          typename Cand,
-          typename Gen,
-          typename Bound,
-          bool PruneLevel = false>
-struct indexed_act : hpx::actions::make_action<
-  decltype(&searchChildTask<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>),
-  &searchChildTask<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>,
-  indexed_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel> > ::type {};
-
-template <typename Space,
-          typename Sol,
-          typename Bnd,
-          typename Cand,
-          typename Gen,
-          typename Bound,
+          typename ChildTask,
           bool PruneLevel = false>
 hpx::naming::id_type
 initPosMgr() {
@@ -53,7 +31,7 @@ initPosMgr() {
                                             const int,
                                             const hpx::naming::id_type)>;
 
-  auto fn = std::make_unique<funcType>(hpx::util::bind(indexed_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(),
+  auto fn = std::make_unique<funcType>(hpx::util::bind(ChildTask(),
                                                        hpx::find_here(),
                                                        hpx::util::placeholders::_1,
                                                        hpx::util::placeholders::_2,
@@ -69,11 +47,12 @@ template <typename Space,
           typename Cand,
           typename Gen,
           typename Bound,
+          typename ChildTask,
           bool PruneLevel = false>
 struct initPosMgr_act : hpx::actions::make_action<
-  decltype(&initPosMgr<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>),
-  &initPosMgr<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>,
-  initPosMgr_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel> > ::type {};
+  decltype(&initPosMgr<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>),
+  &initPosMgr<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>,
+  initPosMgr_act<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel> > ::type {};
 
 template <typename Space,
           typename Sol,
@@ -140,6 +119,7 @@ template <typename Space,
           typename Cand,
           typename Gen,
           typename Bound,
+          typename ChildTask,
           bool PruneLevel = false>
 hpx::util::tuple<Sol, Bnd, Cand>
 search(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & root) {
@@ -154,7 +134,7 @@ search(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & root) {
   hpx::async<updateInc>(inc, root).get();
 
   // Initialise positionManagers on each node to handle steals
-  auto posMgrs = hpx::lcos::broadcast<initPosMgr_act<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel> >(hpx::find_all_localities()).get();
+  auto posMgrs = hpx::lcos::broadcast<initPosMgr_act<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel> >(hpx::find_all_localities()).get();
 
   // TODO: Track this on each node when we init the managers
   hpx::naming::id_type localPosMgr;
