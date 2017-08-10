@@ -31,6 +31,7 @@ namespace skeletons { namespace Enum { namespace Components {
         auto reg = Registry<Space, Sol>::gReg;
         reg->space_ = space;
         reg->maxDepth = maxDepth;
+        reg->root_ = root;
         for (auto i = 0; i <= maxDepth; ++i) {
           reg->counts[i] = 0;
         }

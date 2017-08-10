@@ -6,6 +6,8 @@
 #include <hpx/hpx_init.hpp>
 
 #include "enumerate/dist.hpp"
+#include "enumerate/dist-indexed.hpp"
+
 #include "enumerate/macros.hpp"
 #include "enumerate/nodegenerator.hpp"
 
@@ -40,16 +42,23 @@ NodeGen generateChildren(const Empty & space, const Monoid & s) {
 
 HPX_PLAIN_ACTION(generateChildren, gen_action)
 YEWPAR_CREATE_ENUM_ACTION(childTask_act, Empty, Monoid, gen_action)
+YEWPAR_CREATE_ENUM_INDEXED_ACTION(indexed_act, Empty, Monoid, gen_action)
 REGISTER_ENUM_REGISTRY(Empty, Monoid)
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto maxDepth   = opts["until-depth"].as<unsigned>();
+  auto skeleton   = opts["skeleton-type"].as<std::string>();
 
   Monoid root;
   init_full_N(root);
 
-  auto counts = skeletons::Enum::Dist::count<Empty, Monoid, gen_action, childTask_act>(spawnDepth, maxDepth, Empty(), root);
+  std::map<unsigned, std::uint64_t> counts;
+  if (skeleton == "dist") {
+    counts = skeletons::Enum::Dist::count<Empty, Monoid, gen_action, childTask_act>(spawnDepth, maxDepth, Empty(), root);
+  } else {
+    counts = skeletons::Enum::Indexed::count<Empty, Monoid, gen_action, indexed_act>(spawnDepth, maxDepth, Empty(), root);
+  }
 
   std::cout << "Results Table: " << std::endl;
   for (const auto & elem : counts) {
@@ -65,6 +74,10 @@ int main(int argc, char* argv[]) {
     desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
+    ( "skeleton-type",
+      boost::program_options::value<std::string>()->default_value("dist"),
+      "Which skeleton to use"
+    )
     ( "spawn-depth,s",
       boost::program_options::value<unsigned>()->default_value(0),
       "Depth in the tree to spawn until (for parallel skeletons only)"

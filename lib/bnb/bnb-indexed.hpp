@@ -9,50 +9,12 @@
 
 #include "registry.hpp"
 #include "incumbent.hpp"
-#include "positionIndex.hpp"
+#include "util/positionIndex.hpp"
 
 #include "workstealing/indexedScheduler.hpp"
 #include "workstealing/posManager.hpp"
 
 namespace skeletons { namespace BnB { namespace Indexed {
-
-template <typename Space,
-          typename Sol,
-          typename Bnd,
-          typename Cand,
-          typename Gen,
-          typename Bound,
-          typename ChildTask,
-          bool PruneLevel = false>
-hpx::naming::id_type
-initPosMgr() {
-  using funcType = hpx::util::function<void(const std::shared_ptr<positionIndex>,
-                                            const hpx::naming::id_type,
-                                            const int,
-                                            const hpx::naming::id_type)>;
-
-  auto fn = std::make_unique<funcType>(hpx::util::bind(ChildTask(),
-                                                       hpx::find_here(),
-                                                       hpx::util::placeholders::_1,
-                                                       hpx::util::placeholders::_2,
-                                                       hpx::util::placeholders::_3,
-                                                       hpx::util::placeholders::_4));
-
-  return hpx::components::local_new<workstealing::indexed::posManager>(std::move(fn)).get();
-}
-
-template <typename Space,
-          typename Sol,
-          typename Bnd,
-          typename Cand,
-          typename Gen,
-          typename Bound,
-          typename ChildTask,
-          bool PruneLevel = false>
-struct initPosMgr_act : hpx::actions::make_action<
-  decltype(&initPosMgr<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>),
-  &initPosMgr<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel>,
-  initPosMgr_act<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel> > ::type {};
 
 template <typename Space,
           typename Sol,
@@ -134,7 +96,7 @@ search(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & root) {
   hpx::async<updateInc>(inc, root).get();
 
   // Initialise positionManagers on each node to handle steals
-  auto posMgrs = hpx::lcos::broadcast<initPosMgr_act<Space, Sol, Bnd, Cand, Gen, Bound, ChildTask, PruneLevel> >(hpx::find_all_localities()).get();
+  auto posMgrs = hpx::lcos::broadcast<workstealing::indexed::initPosMgr_act<ChildTask> >(hpx::find_all_localities()).get();
 
   // TODO: Track this on each node when we init the managers
   hpx::naming::id_type localPosMgr;

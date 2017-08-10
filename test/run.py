@@ -42,6 +42,7 @@ for inst in MCBenchmarks:
     runMaxClique("dist-decision", inst, "--decisionBound 21 -- spawn-depth 1")
     runMaxClique("ordered", inst, "--spawn-depth 1")
     runMaxClique("dist-recompute", inst, "--spawn-depth 1")
+    runMaxClique("indexed", inst)
 
 # Output Results
 if len(FAILED) > 0:
