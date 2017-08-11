@@ -49,6 +49,7 @@ void scheduler(std::vector<hpx::naming::id_type> posManagers, std::shared_ptr<hp
   if (threads > 1) {
     // Don't both scheduling in the one thread case since we never need more
     // work in the indexed scheme
+    // FIXME: Why not just return?
     tasks_required_sem.signal(threads - 1);
   }
 
@@ -56,10 +57,42 @@ void scheduler(std::vector<hpx::naming::id_type> posManagers, std::shared_ptr<hp
     tasks_required_sem.wait();
 
     auto scheduled = hpx::async<workstealing::indexed::posManager::getWork_action>(posManager).get();
-    if (!scheduled) {
+    if (scheduled) {
+      perf_steals++;
+    } else {
+      perf_failedSteals++;
       hpx::this_thread::suspend(10);
       tasks_required_sem.signal();
     }
   }
+}
+
+std::int64_t getSteals(bool reset) {
+  auto res = perf_steals.load();
+  if (reset) {
+    perf_steals.store(0);
+  }
+  return res;
+}
+
+std::int64_t getFailedSteals(bool reset) {
+  auto res = perf_failedSteals.load();
+  if (reset) {
+    perf_failedSteals.store(0);
+  }
+  return res;
+}
+
+void registerPerformanceCounters() {
+  hpx::performance_counters::install_counter_type(
+      "/workstealing/indexed/steals",
+      &getSteals,
+      "Returns the number of tasks stolen from another thread"
+                                                  );
+  hpx::performance_counters::install_counter_type(
+      "/workstealing/indexed/failedsteals",
+      &getFailedSteals,
+      "Returns the number of failed steals from another thread"
+  );
 }
 }}
