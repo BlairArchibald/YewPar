@@ -163,11 +163,11 @@ searchChildTask(const std::shared_ptr<positionIndex> posIdx,
   // Atomically updates the (process) local counter
   reg->updateCounts(cntMap);
 
-  hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
   hpx::async<workstealing::indexed::posManager::done_action>(posMgr, idx).get();
-
   workstealing::indexed::tasks_required_sem.signal();
+
   posIdx->waitFutures();
+  hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
 }
 
 }}}
