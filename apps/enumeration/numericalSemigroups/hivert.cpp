@@ -1,4 +1,4 @@
-/* Code by Florent Hivert: https://www.lri.fr/~hivert/
+/* Original Numerical Semigroups Code by Florent Hivert: https://www.lri.fr/~hivert/
    Link: https://github.com/hivert/NumericMonoid/blob/master/src/Cilk++/monoid.hpp
  */
 
@@ -15,7 +15,6 @@
 #include "enumerate/nodegenerator.hpp"
 
 #include "monoid.hpp"
-
 
 // Numerical Semigroups don't have a space
 struct Empty {};
@@ -60,17 +59,17 @@ int hpx_main(boost::program_options::variables_map & opts) {
   std::unordered_map<unsigned, std::uint64_t> counts;
   if (skeleton == "seq") {
     counts = skeletons::Enum::Seq::count<Empty, Monoid, gen_action>(maxDepth, Empty(), root);
-  // } else if (skeleton == "dist") {
-  //   counts = skeletons::Enum::Dist::count<Empty, Monoid, gen_action, childTask_act>(spawnDepth, maxDepth, Empty(), root);
-  // } else if (skeleton == "indexed"){
-  //   counts = skeletons::Enum::Indexed::count<Empty, Monoid, gen_action, indexed_act>(spawnDepth, maxDepth, Empty(), root);
+  } else if (skeleton == "dist") {
+    counts = skeletons::Enum::Dist::count<Empty, Monoid, gen_action, childTask_act>(spawnDepth, maxDepth, Empty(), root);
+  } else if (skeleton == "indexed"){
+    counts = skeletons::Enum::Indexed::count<Empty, Monoid, gen_action, indexed_act>(spawnDepth, maxDepth, Empty(), root);
   } else {
     std::cout << "Invalid skeleton type: " << skeleton << std::endl;
     return hpx::finalize();
   }
 
   std::cout << "Results Table: " << std::endl;
-  for (auto i = 0; i < maxDepth; ++i) {
+  for (auto i = 0; i <= maxDepth; ++i) {
     std::cout << i << ": " << counts[i] << std::endl;
   }
   std::cout << "=====" << std::endl;

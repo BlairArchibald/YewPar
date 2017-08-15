@@ -5,7 +5,7 @@
 
 #include <vector>
 #include <cstdint>
-#include <map>
+#include <unordered_map>
 
 #include "enumRegistry.hpp"
 
@@ -23,17 +23,13 @@ void expand(positionIndex & pos,
             const unsigned maxDepth,
             unsigned depth,
             const Sol & n,
-            std::map<unsigned, std::uint64_t> & cntMap) {
+            std::unordered_map<unsigned, std::uint64_t> & cntMap) {
   auto reg = Components::Registry<Space, Sol>::gReg;
 
   auto newCands = Gen::invoke(0, reg->space_, n);
   pos.setNumChildren(newCands.numChildren);
 
-  if (cntMap[depth]) {
-    cntMap[depth] += newCands.numChildren;
-  } else {
-    cntMap[depth] = newCands.numChildren;
-  }
+  cntMap[depth] += newCands.numChildren;
 
   if (maxDepth == depth) {
     return;
@@ -63,7 +59,7 @@ template <typename Space,
           typename Sol,
           typename Gen,
           typename ChildTask>
-std::map<unsigned, uint64_t>
+std::unordered_map<unsigned, uint64_t>
 count(unsigned spawnDepth,
       const unsigned maxDepth,
       const Space & space,
@@ -102,9 +98,9 @@ count(unsigned spawnDepth,
   hpx::wait_all(hpx::lcos::broadcast<stopScheduler_indexed_action>(hpx::find_all_localities()));
 
   // Gather the counts
-  std::vector<std::map<unsigned, uint64_t> > cntList;
+  std::vector<std::unordered_map<unsigned, uint64_t> > cntList;
   cntList = hpx::lcos::broadcast(enum_getCounts_act(), hpx::find_all_localities(), Space(), root).get();
-  std::map<unsigned, uint64_t> res;
+  std::unordered_map<unsigned, uint64_t> res;
   for (unsigned i = 0; i <= maxDepth; ++i) {
     std::uint64_t totalCnt = 0;
     for (const auto & cnt : cntList) {
@@ -153,7 +149,12 @@ searchChildTask(const std::shared_ptr<positionIndex> posIdx,
   auto depth = path.size();
   auto c = getStartingNode<Space, Sol, Gen>(path);
 
-  std::map<unsigned, uint64_t> cntMap;
+  std::unordered_map<unsigned, uint64_t> cntMap;
+  cntMap.reserve(reg->maxDepth);
+  for (auto i = 0; i <= reg->maxDepth; ++i) {
+    cntMap[i] = 0;
+  }
+
   // Account for the root node (paths always include 0 so we need to subtract one to test if we are the root)
   if (depth - 1 == 0) {
     cntMap[0] = 1;

@@ -1,6 +1,9 @@
 #ifndef ENUM_REGISTRY_HPP
 #define ENUM_REGISTRY_HPP
 
+#include <unordered_map>
+#include <hpx/runtime/serialization/unordered_map.hpp>
+
 namespace skeletons { namespace Enum { namespace Components {
 
       template <typename Space, typename Sol>
@@ -10,12 +13,12 @@ namespace skeletons { namespace Enum { namespace Components {
         Space space_;
 
         unsigned maxDepth;
-        std::map<unsigned, std::atomic<uint64_t> > counts;
+        std::unordered_map<unsigned, std::atomic<uint64_t> > counts;
 
         // For recompute we need to store the root
         Sol root_;
 
-        void updateCounts(std::map<unsigned, uint64_t> & cntMap) {
+        void updateCounts(std::unordered_map<unsigned, uint64_t> & cntMap) {
           for (auto const &elm : cntMap) {
             // Addition happens atomically
             counts[elm.first] += elm.second;
@@ -39,9 +42,9 @@ namespace skeletons { namespace Enum { namespace Components {
 
       // Faketypes needed so we can typecheck before full action initialisation
       template <typename Space, typename Sol>
-      std::map<unsigned, uint64_t> getCounts(Space fake1, Sol fake2) {
+      std::unordered_map<unsigned, uint64_t> getCounts(Space fake1, Sol fake2) {
         auto reg = Registry<Space, Sol>::gReg;
-        std::map<unsigned, uint64_t> res;
+        std::unordered_map<unsigned, uint64_t> res;
 
         // Convert std::atomic<uint64_t> -> uint64_t by loading it
         for (const auto & elm : reg->counts) {

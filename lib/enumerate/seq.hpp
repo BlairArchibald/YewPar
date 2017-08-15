@@ -37,7 +37,7 @@ count(const unsigned maxDepth,
       const Sol   & root) {
   std::unordered_map<unsigned, uint64_t> cntMap;
   cntMap.reserve(maxDepth);
-  for (auto i = 1; i < maxDepth; ++i) {
+  for (auto i = 1; i <= maxDepth; ++i) {
     cntMap[i] = 0;
   }
   cntMap[0] = 1; // Count root node

@@ -5,7 +5,7 @@
 #include <hpx/util/tuple.hpp>
 #include <hpx/lcos/broadcast.hpp>
 #include <cstdint>
-#include <map>
+#include <unordered_map>
 
 #include "enumRegistry.hpp"
 
@@ -22,7 +22,7 @@ void expand(unsigned spawnDepth,
             const unsigned maxDepth,
             unsigned depth,
             const Sol & n,
-            std::map<unsigned, std::uint64_t> & cntMap) {
+            std::unordered_map<unsigned, std::uint64_t> & cntMap) {
   auto reg = Components::Registry<Space, Sol>::gReg;
 
   auto newCands = Gen::invoke(0, reg->space_, n);
@@ -32,11 +32,7 @@ void expand(unsigned spawnDepth,
     childFuts.reserve(newCands.numChildren);
   }
 
-  if (cntMap[depth]) {
-    cntMap[depth] += newCands.numChildren;
-  } else {
-    cntMap[depth] = newCands.numChildren;
-  }
+  cntMap[depth] += newCands.numChildren;
 
   if (maxDepth == depth) {
     return;
@@ -72,7 +68,7 @@ template <typename Space,
           typename Sol,
           typename Gen,
           typename ChildTask>
-std::map<unsigned, uint64_t>
+std::unordered_map<unsigned, uint64_t>
 count(unsigned spawnDepth,
       const unsigned maxDepth,
       const Space & space,
@@ -85,7 +81,7 @@ count(unsigned spawnDepth,
   }
   hpx::wait_all(hpx::lcos::broadcast<startScheduler_action>(hpx::find_all_localities(), workqueues));
 
-  std::map<unsigned, uint64_t> cntMap;
+  std::unordered_map<unsigned, uint64_t> cntMap;
   cntMap[0] = 1; // Count root node
   expand<Space, Sol, Gen, ChildTask>(spawnDepth, maxDepth, 1, root, cntMap);
 
@@ -96,9 +92,9 @@ count(unsigned spawnDepth,
   reg->updateCounts(cntMap);
 
   // Gather the counts
-  std::vector<std::map<unsigned, uint64_t> > cntList;
+  std::vector<std::unordered_map<unsigned, uint64_t> > cntList;
   cntList = hpx::lcos::broadcast(enum_getCounts_act(), hpx::find_all_localities(), Space(), root).get();
-  std::map<unsigned, uint64_t> res;
+  std::unordered_map<unsigned, uint64_t> res;
   for (unsigned i = 0; i <= maxDepth; ++i) {
     std::uint64_t totalCnt = 0;
     for (const auto & cnt : cntList) {
@@ -120,7 +116,11 @@ searchChildTask(unsigned spawnDepth,
                 unsigned depth,
                 Sol c,
                 hpx::naming::id_type p) {
-  std::map<unsigned, uint64_t> cntMap;
+  std::unordered_map<unsigned, uint64_t> cntMap;
+  cntMap.reserve(maxDepth);
+  for (auto i = 0; i <= maxDepth; ++i) {
+    cntMap[i] = 0;
+  }
   expand<Space, Sol, Gen, ChildTask>(spawnDepth, maxDepth, depth, c, cntMap);
 
   // Atomically updates the (process) local counter
