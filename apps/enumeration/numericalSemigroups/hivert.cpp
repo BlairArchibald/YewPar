@@ -5,6 +5,7 @@
 #include <hpx/hpx.hpp>
 #include <hpx/hpx_init.hpp>
 
+#include "enumerate/seq.hpp"
 #include "enumerate/dist.hpp"
 #include "enumerate/dist-indexed.hpp"
 
@@ -54,10 +55,15 @@ int hpx_main(boost::program_options::variables_map & opts) {
   init_full_N(root);
 
   std::map<unsigned, std::uint64_t> counts;
-  if (skeleton == "dist") {
+  if (skeleton == "seq") {
+    counts = skeletons::Enum::Seq::count<Empty, Monoid, gen_action>(maxDepth, Empty(), root);
+  } else if (skeleton == "dist") {
     counts = skeletons::Enum::Dist::count<Empty, Monoid, gen_action, childTask_act>(spawnDepth, maxDepth, Empty(), root);
-  } else {
+  } else if (skeleton == "indexed"){
     counts = skeletons::Enum::Indexed::count<Empty, Monoid, gen_action, indexed_act>(spawnDepth, maxDepth, Empty(), root);
+  } else {
+    std::cout << "Invalid skeleton type: " << skeleton << std::endl;
+    return hpx::finalize();
   }
 
   std::cout << "Results Table: " << std::endl;
