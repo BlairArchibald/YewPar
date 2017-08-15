@@ -170,12 +170,12 @@ searchChildTask(const std::shared_ptr<positionIndex> posIdx,
                 const hpx::naming::id_type posMgr) {
   auto c = getStartingNode<Space, Sol, Bnd, Cand, Gen, Bound>(posIdx->getPath());
   expand<Space, Sol, Bnd, Cand, Gen, Bound, PruneLevel>(*posIdx, c);
-  hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
   hpx::async<workstealing::indexed::posManager::done_action>(posMgr, idx).get();
 
   // Don't fully finish until we determine all children are also finished - Termination detection
   workstealing::indexed::tasks_required_sem.signal();
   posIdx->waitFutures();
+  hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
 }
 
 }}}
