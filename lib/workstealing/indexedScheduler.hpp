@@ -3,6 +3,7 @@
 
 #include <atomic>
 #include <memory>
+#include <cstdint>
 
 #include <hpx/hpx.hpp>
 
@@ -14,6 +15,10 @@ namespace workstealing { namespace indexed {
   void startScheduler(std::vector<hpx::naming::id_type> posManagers);
   void stopScheduler();
   void scheduler(std::vector<hpx::naming::id_type> posManagers, std::shared_ptr<hpx::promise<void> >readyPromise);
+
+  std::atomic<std::uint64_t> perf_steals(0);
+  std::atomic<std::uint64_t> perf_failedSteals(0);
+  void registerPerformanceCounters();
 }}
 
 HPX_PLAIN_ACTION(workstealing::indexed::stopScheduler, stopScheduler_indexed_action);
