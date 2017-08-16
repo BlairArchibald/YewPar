@@ -120,8 +120,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
   auto counts = skeletons::Enum::Dist::count<Empty, SemiGroup, gen_action, childTask_act>(spawnDepth, maxDepth, Empty(), SemiGroup());
 
   std::cout << "Results Table: " << std::endl;
-  for (const auto & elem : counts) {
-    std::cout << elem.first << ": " << elem.second << std::endl;
+  for (auto i = 0; i <= maxDepth; ++i) {
+    std::cout << i << ": " << counts[i] << std::endl;
   }
   std::cout << "=====" << std::endl;
 

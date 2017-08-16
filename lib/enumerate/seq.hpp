@@ -2,7 +2,7 @@
 #define SKELETONS_ENUM_SEQ_HPP
 
 #include <cstdint>
-#include <unordered_map>
+#include <vector>
 
 namespace skeletons { namespace Enum { namespace Seq {
 
@@ -11,7 +11,7 @@ template <typename Space,
           typename Gen>
 void expand(const unsigned maxDepth,
             const Space & space,
-            std::unordered_map<unsigned, std::uint64_t> & cntMap,
+            std::vector<std::uint64_t> & cntMap,
             const unsigned childDepth,
             const Sol & n) {
   auto newCands = Gen::invoke(0, space, n);
@@ -31,12 +31,11 @@ void expand(const unsigned maxDepth,
 template <typename Space,
           typename Sol,
           typename Gen>
-std::unordered_map<unsigned, std::uint64_t>
-count(const unsigned maxDepth,
-      const Space & space,
-      const Sol   & root) {
-  std::unordered_map<unsigned, uint64_t> cntMap;
-  cntMap.reserve(maxDepth);
+std::vector<std::uint64_t> count(const unsigned maxDepth,
+                                 const Space & space,
+                                 const Sol   & root) {
+  std::vector<std::uint64_t> cntMap;
+  cntMap.resize(maxDepth);
   for (auto i = 1; i <= maxDepth; ++i) {
     cntMap[i] = 0;
   }

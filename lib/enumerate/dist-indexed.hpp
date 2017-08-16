@@ -5,7 +5,6 @@
 
 #include <vector>
 #include <cstdint>
-#include <unordered_map>
 
 #include "enumRegistry.hpp"
 
@@ -23,7 +22,7 @@ void expand(positionIndex & pos,
             const unsigned maxDepth,
             unsigned depth,
             const Sol & n,
-            std::unordered_map<unsigned, std::uint64_t> & cntMap) {
+            std::vector<std::uint64_t> & cntMap) {
   auto reg = Components::Registry<Space, Sol>::gReg;
 
   auto newCands = Gen::invoke(0, reg->space_, n);
@@ -59,11 +58,10 @@ template <typename Space,
           typename Sol,
           typename Gen,
           typename ChildTask>
-std::unordered_map<unsigned, uint64_t>
-count(unsigned spawnDepth,
-      const unsigned maxDepth,
-      const Space & space,
-      const Sol   & root) {
+std::vector<std::uint64_t> count(unsigned spawnDepth,
+                                 const unsigned maxDepth,
+                                 const Space & space,
+                                 const Sol   & root) {
   hpx::wait_all(hpx::lcos::broadcast<enum_initRegistry_act>(hpx::find_all_localities(), space, maxDepth, root));
 
   auto posMgrs = hpx::lcos::broadcast<workstealing::indexed::initPosMgr_act<ChildTask> >(hpx::find_all_localities()).get();
@@ -98,13 +96,14 @@ count(unsigned spawnDepth,
   hpx::wait_all(hpx::lcos::broadcast<stopScheduler_indexed_action>(hpx::find_all_localities()));
 
   // Gather the counts
-  std::vector<std::unordered_map<unsigned, uint64_t> > cntList;
+  std::vector<std::vector<uint64_t> > cntList;
   cntList = hpx::lcos::broadcast(enum_getCounts_act(), hpx::find_all_localities(), Space(), root).get();
-  std::unordered_map<unsigned, uint64_t> res;
-  for (unsigned i = 0; i <= maxDepth; ++i) {
+  std::vector<uint64_t> res;
+  res.resize(maxDepth + 1);
+  for (auto i = 0; i <= maxDepth; ++i) {
     std::uint64_t totalCnt = 0;
     for (const auto & cnt : cntList) {
-      totalCnt += cnt.at(i);
+      totalCnt += cnt[i];
     }
     res[i] = totalCnt;
   }
@@ -149,8 +148,8 @@ searchChildTask(const std::shared_ptr<positionIndex> posIdx,
   auto depth = path.size();
   auto c = getStartingNode<Space, Sol, Gen>(path);
 
-  std::unordered_map<unsigned, uint64_t> cntMap;
-  cntMap.reserve(reg->maxDepth);
+  std::vector<std::uint64_t> cntMap;
+  cntMap.resize(reg->maxDepth + 1);
   for (auto i = 0; i <= reg->maxDepth; ++i) {
     cntMap[i] = 0;
   }

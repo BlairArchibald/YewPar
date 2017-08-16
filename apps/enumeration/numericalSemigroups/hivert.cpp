@@ -5,7 +5,7 @@
 #include <hpx/hpx.hpp>
 #include <hpx/hpx_init.hpp>
 
-#include <unordered_map>
+#include <vector>
 
 #include "enumerate/seq.hpp"
 #include "enumerate/dist.hpp"
@@ -56,7 +56,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   Monoid root;
   init_full_N(root);
 
-  std::unordered_map<unsigned, std::uint64_t> counts;
+  std::vector<std::uint64_t> counts(maxDepth);
   if (skeleton == "seq") {
     counts = skeletons::Enum::Seq::count<Empty, Monoid, gen_action>(maxDepth, Empty(), root);
   } else if (skeleton == "dist") {
@@ -95,8 +95,8 @@ int main(int argc, char* argv[]) {
       "Depth in the tree to count until"
     );
 
-  hpx::register_startup_function(&workstealing::registerPerformanceCounters);
-  hpx::register_startup_function(&workstealing::indexed::registerPerformanceCounters);
+  // hpx::register_startup_function(&workstealing::registerPerformanceCounters);
+  // hpx::register_startup_function(&workstealing::indexed::registerPerformanceCounters);
 
   return hpx::init(desc_commandline, argc, argv);
 }
