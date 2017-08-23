@@ -35,7 +35,7 @@ std::vector<std::uint64_t> count(const unsigned maxDepth,
                                  const Space & space,
                                  const Sol   & root) {
   std::vector<std::uint64_t> cntMap;
-  cntMap.resize(maxDepth);
+  cntMap.resize(maxDepth + 1);
   for (auto i = 1; i <= maxDepth; ++i) {
     cntMap[i] = 0;
   }

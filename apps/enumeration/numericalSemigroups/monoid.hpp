@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <array>
+#include <functional>
 
 // We cant have those as C++ constant because of the #define used below in
 // remove_generator manual loop unrolling. I don't know if the unrolling is
@@ -68,13 +69,11 @@ class CHILDREN {};
 template <class T> class generator_iter
 {
 private:
-
-  const Monoid &m;
+  std::reference_wrapper<const Monoid> m;
   unsigned int mask;   // movemask_epi8 returns a 32 bits values
   ind_t iblock, gen, bound;
 
 public:
-
   generator_iter(const Monoid &mon);
   bool move_next();
   uint8_t count();
@@ -144,24 +143,23 @@ const epi8 mask16[16] =
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,m1,m1},
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,m1} };
 
-
 template<> inline generator_iter<ALL>::generator_iter(const Monoid &mon)
-  : m(mon), bound((mon.conductor+mon.min+15) >> 4)
+  : m(std::ref(mon)), bound((mon.conductor+mon.min+15) >> 4)
 {
   epi8 block;
   iblock = 0;
-  block = m.blocks[0];
+  block = m.get().blocks[0];
   mask  = movemask_epi8(block == block1);
   mask &= 0xFFFE; // 0 is not a generator
   gen = - 1;
 };
 
 template<> inline generator_iter<CHILDREN>::generator_iter(const Monoid &mon)
-  : m(mon), bound((mon.conductor+mon.min+15) >> 4)
+  : m(std::ref(mon)), bound((mon.conductor+mon.min+15) >> 4)
 {
   epi8 block;
-  iblock = m.conductor >> 4;
-  block = m.blocks[iblock] & mask16[m.conductor & 0xF];
+  iblock = m.get().conductor >> 4;
+  block = m.get().blocks[iblock] & mask16[m.get().conductor & 0xF];
   mask  = movemask_epi8(block == block1);
   gen = (iblock << 4) - 1;
 };
@@ -170,7 +168,7 @@ template <class T> inline uint8_t generator_iter<T>::count()
 {
   uint8_t nbr = _mm_popcnt_u32(mask); // popcnt returns a 8 bits value
   for (ind_t ib = iblock+1; ib < bound; ib++)
-    nbr += _mm_popcnt_u32(movemask_epi8(m.blocks[ib] == block1));
+    nbr += _mm_popcnt_u32(movemask_epi8(m.get().blocks[ib] == block1));
   return nbr;
 };
 
@@ -181,7 +179,7 @@ template <class T> inline bool generator_iter<T>::move_next()
       iblock++;
       if (iblock > bound) return false;
       gen = (iblock << 4) - 1;
-      mask  = movemask_epi8(m.blocks[iblock] == block1);
+      mask  = movemask_epi8(m.get().blocks[iblock] == block1);
     }
   unsigned char shift = __bsfd (mask) + 1; // Bit Scan Forward
   gen += shift;

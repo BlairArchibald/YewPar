@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "enumerate/seq.hpp"
+#include "enumerate/seq-stack.hpp"
 #include "enumerate/dist.hpp"
 #include "enumerate/dist-indexed.hpp"
 
@@ -59,6 +60,9 @@ int hpx_main(boost::program_options::variables_map & opts) {
   std::vector<std::uint64_t> counts(maxDepth);
   if (skeleton == "seq") {
     counts = skeletons::Enum::Seq::count<Empty, Monoid, gen_action>(maxDepth, Empty(), root);
+  } else
+  if (skeleton == "seq-stack") {
+    counts = skeletons::Enum::SeqStack::count<Empty, Monoid, gen_action, MAX_GENUS>(maxDepth, Empty(), root);
   } else if (skeleton == "dist") {
     counts = skeletons::Enum::Dist::count<Empty, Monoid, gen_action, childTask_act>(spawnDepth, maxDepth, Empty(), root);
   } else if (skeleton == "indexed"){
