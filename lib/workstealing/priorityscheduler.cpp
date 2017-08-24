@@ -1,6 +1,8 @@
 #include "priorityscheduler.hpp"
 #include "priorityworkqueue.hpp"
 
+#include "ExponentialBackoff.hpp"
+
 namespace workstealing { namespace priority {
 
 void stopScheduler() {
@@ -26,6 +28,8 @@ void scheduler() {
   // Pre-init the sem
   tasks_required_sem.signal(threads);
 
+  ExponentialBackoff backoff;
+
   while (running) {
     tasks_required_sem.wait();
 
@@ -35,9 +39,13 @@ void scheduler() {
     if (task) {
       perf_steals++;
       scheduler.add(hpx::util::bind(task, hpx::find_here()));
+      backoff.reset();
     } else {
       perf_failedSteals++;
-      hpx::this_thread::suspend(10);
+
+      backoff.failed();
+      hpx::this_thread::suspend(backoff.getSleepTime());
+
       tasks_required_sem.signal();
     }
   }

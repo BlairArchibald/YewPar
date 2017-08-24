@@ -1,6 +1,8 @@
 #include "scheduler.hpp"
 #include "workqueue.hpp"
 
+#include "ExponentialBackoff.hpp"
+
 namespace workstealing {
 
 void stopScheduler() {
@@ -48,6 +50,9 @@ void scheduler(std::vector<hpx::naming::id_type> workqueues,
   // Pre-init the sem
   tasks_required_sem.signal(threads);
 
+  // Exponential backoff
+  ExponentialBackoff backoff;
+
   while (running) {
     tasks_required_sem.wait();
 
@@ -83,9 +88,13 @@ void scheduler(std::vector<hpx::naming::id_type> workqueues,
                     hpx::threads::pending,
                     true,
                     hpx::threads::thread_stacksize_huge);
+      backoff.reset();
     } else {
       perf_failedSteals++;
-      hpx::this_thread::suspend(10);
+
+      backoff.failed();
+      hpx::this_thread::suspend(backoff.getSleepTime());
+
       tasks_required_sem.signal();
     }
   }

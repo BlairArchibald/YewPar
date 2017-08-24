@@ -1,6 +1,8 @@
 #include "indexedScheduler.hpp"
 #include "posManager.hpp"
 
+#include "ExponentialBackoff.hpp"
+
 namespace workstealing { namespace indexed {
 
 void stopScheduler() {
@@ -53,15 +55,21 @@ void scheduler(std::vector<hpx::naming::id_type> posManagers, std::shared_ptr<hp
     tasks_required_sem.signal(threads - 1);
   }
 
+  ExponentialBackoff backoff;
+
   while (running) {
     tasks_required_sem.wait();
 
     auto scheduled = hpx::async<workstealing::indexed::posManager::getWork_action>(posManager).get();
     if (scheduled) {
       perf_steals++;
+      backoff.reset();
     } else {
       perf_failedSteals++;
-      hpx::this_thread::suspend(10);
+
+      backoff.failed();
+      hpx::this_thread::suspend(backoff.getSleepTime());
+
       tasks_required_sem.signal();
     }
   }
