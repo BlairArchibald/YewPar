@@ -5,6 +5,7 @@
 #include <hpx/include/components.hpp>
 #include <hpx/include/serialization.hpp>
 #include <memory>
+#include <random>
 
 #include "util/positionIndex.hpp"
 
@@ -35,7 +36,11 @@ public:
     std::pair<std::vector<unsigned>, hpx::naming::id_type> empty;
     if (active.size() > 0) {
       auto victim = active.begin();
-      std::advance(victim, std::rand () % active.size());
+
+      std::uniform_int_distribution<int> rand(0, active.size() - 1);
+      std::default_random_engine randGenerator;
+      std::advance(victim, rand(randGenerator));
+
       return (*victim)->steal();
     }
     return empty;
@@ -58,7 +63,11 @@ public:
 
   std::pair<std::vector<unsigned>, hpx::naming::id_type> tryDistSteal() {
     auto victim = distributedMgrs.begin();
-    std::advance(victim, std::rand() % distributedMgrs.size());
+
+    std::uniform_int_distribution<int> rand(0, distributedMgrs.size() - 1);
+    std::default_random_engine randGenerator;
+    std::advance(victim, rand(randGenerator));
+
     return hpx::async<getLocalWork_action>(*victim).get();
   }
 

@@ -1,6 +1,8 @@
 #include "scheduler.hpp"
 #include "workqueue.hpp"
 
+#include <random>
+
 #include "ExponentialBackoff.hpp"
 
 namespace workstealing {
@@ -53,6 +55,10 @@ void scheduler(std::vector<hpx::naming::id_type> workqueues,
   // Exponential backoff
   ExponentialBackoff backoff;
 
+  // Randomness for victim selection
+  std::default_random_engine randGenerator;
+  std::uniform_int_distribution<int> rand(0, workqueues.size() - 1);
+
   while (running) {
     tasks_required_sem.wait();
 
@@ -70,7 +76,8 @@ void scheduler(std::vector<hpx::naming::id_type> workqueues,
 
       if (!task) {
         auto victim = workqueues.begin();
-        std::advance(victim, std::rand() % workqueues.size());
+
+        std::advance(victim, rand(randGenerator));
 
         task = hpx::async<workstealing::workqueue::steal_action>(*victim).get();
         if (task) {
