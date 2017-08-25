@@ -80,7 +80,7 @@ std::vector<std::uint64_t> count(unsigned spawnDepth,
   hpx::wait_all(hpx::lcos::broadcast<startScheduler_action>(hpx::find_all_localities(), workqueues));
 
   std::vector<std::uint64_t> cntMap;
-  cntMap.resize(maxDepth);
+  cntMap.resize(maxDepth + 1);
   for (auto i = 1; i <= maxDepth; ++i) {
     cntMap[i] = 0;
   }
