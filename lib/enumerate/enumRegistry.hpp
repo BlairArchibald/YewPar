@@ -37,7 +37,7 @@ namespace skeletons { namespace Enum { namespace Components {
 
         // FIXME: Technically a memory leak
         // FIXME: Should we just move to fixed size arrays for this?
-        reg->counts = new std::vector<std::atomic<std::uint64_t>>(maxDepth);
+        reg->counts = new std::vector<std::atomic<std::uint64_t>>(maxDepth + 1);
         for (auto i = 0; i <= reg->maxDepth; ++i) {
           (*reg->counts)[i] = 0;
         }
