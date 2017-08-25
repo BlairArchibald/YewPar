@@ -3,9 +3,7 @@
 #include <hpx/hpx.hpp>
 #include <hpx/hpx_init.hpp>
 
-#include "enumerate/dist.hpp"
-#include "enumerate/macros.hpp"
-#include "enumerate/nodegenerator.hpp"
+#include "enumerate/skeletons.hpp"
 
 typedef unsigned char uchar;
 typedef unsigned short int usint;
@@ -110,14 +108,21 @@ NodeGen generateChildren(const Empty & space, const SemiGroup & s) {
 }
 
 HPX_PLAIN_ACTION(generateChildren, gen_action)
-YEWPAR_CREATE_ENUM_ACTION(childTask_act, Empty, SemiGroup, gen_action)
 REGISTER_ENUM_REGISTRY(Empty, SemiGroup)
+
+namespace hpx { namespace traits {
+  template <>
+  struct action_stacksize<skeletons::Enum::DistCount<Empty, SemiGroup, gen_action>::ChildTask> {
+    enum { value = threads::thread_stacksize_large };
+  };
+}}
+
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto maxDepth   = opts["until-depth"].as<unsigned>();
 
-  auto counts = skeletons::Enum::Dist::count<Empty, SemiGroup, gen_action, childTask_act>(spawnDepth, maxDepth, Empty(), SemiGroup());
+  auto counts = skeletons::Enum::DistCount<Empty, SemiGroup, gen_action>::count(spawnDepth, maxDepth, Empty(), SemiGroup());
 
   std::cout << "Results Table: " << std::endl;
   for (auto i = 0; i <= maxDepth; ++i) {

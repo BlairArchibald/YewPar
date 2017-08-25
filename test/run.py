@@ -11,6 +11,7 @@ MCBenchmarks=["data/brock200_1.clq", "data/brock200_2.clq", "data/brock200_3.clq
 
 ldpath = os.environ['LD_LIBRARY_PATH']
 MCBinary="LD_LIBRARY_PATH={}:{}/install/lib {}/install/bin/maxclique-4".format(ldpath, INSTALL_LOC, INSTALL_LOC)
+NSBinary="LD_LIBRARY_PATH={}:{}/install/lib {}/install/bin/NS-hivert".format(ldpath, INSTALL_LOC, INSTALL_LOC)
 
 FAILED = []
 
@@ -33,6 +34,25 @@ def runMaxClique(skeleton, instance, additionalArgs = ""):
     if not found:
         FAILED.append(cmd)
 
+def runNumericalSemigroups(skeleton, depth, additionalArgs = ""):
+    cmd = "{} --skeleton-type {} -d {} --hpx:threads 1 {}"\
+             .format(NSBinary, skeleton, depth, additionalArgs)
+    try:
+        res = subprocess.check_output(cmd, shell=True)
+    except subprocess.CalledProcessError:
+        FAILED.append(cmd)
+        return
+
+    # Just check it outputs something we expect (rather than a real result for now)
+    found = False
+    for line in res.decode("utf-8").splitlines():
+        match = re.search("Results Table:", line)
+        if match:
+            found = True
+
+    if not found:
+        FAILED.append(cmd)
+
 for inst in MCBenchmarks:
     runMaxClique("seq" , inst)
     runMaxClique("par" , inst, "--spawn-depth 1")
@@ -43,6 +63,11 @@ for inst in MCBenchmarks:
     runMaxClique("ordered", inst, "--spawn-depth 1")
     runMaxClique("dist-recompute", inst, "--spawn-depth 1")
     runMaxClique("indexed", inst)
+
+runNumericalSemigroups("seq", 30)
+runNumericalSemigroups("seq-stack", 30)
+runNumericalSemigroups("dist", 30)
+runNumericalSemigroups("indexed", 30)
 
 # Output Results
 if len(FAILED) > 0:

@@ -7,13 +7,7 @@
 
 #include <vector>
 
-#include "enumerate/seq.hpp"
-#include "enumerate/seq-stack.hpp"
-#include "enumerate/dist.hpp"
-#include "enumerate/dist-indexed.hpp"
-
-#include "enumerate/macros.hpp"
-#include "enumerate/nodegenerator.hpp"
+#include "enumerate/skeletons.hpp"
 
 #include "monoid.hpp"
 
@@ -45,9 +39,20 @@ NodeGen generateChildren(const Empty & space, const Monoid & s) {
 }
 
 HPX_PLAIN_ACTION(generateChildren, gen_action)
-YEWPAR_CREATE_ENUM_ACTION(childTask_act, Empty, Monoid, gen_action)
-YEWPAR_CREATE_ENUM_INDEXED_ACTION(indexed_act, Empty, Monoid, gen_action)
 REGISTER_ENUM_REGISTRY(Empty, Monoid)
+
+// Annoying way to get large stack sizes by default (hide this if possible)
+namespace hpx { namespace traits {
+  template <>
+  struct action_stacksize<skeletons::Enum::DistCount<Empty, Monoid, gen_action>::ChildTask> {
+    enum { value = threads::thread_stacksize_large };
+  };
+
+  template <>
+  struct action_stacksize<skeletons::Enum::DistCount<Empty, Monoid, gen_action, skeletons::Enum::Indexed>::ChildTask> {
+    enum { value = threads::thread_stacksize_large };
+  };
+}};
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
@@ -59,14 +64,14 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   std::vector<std::uint64_t> counts(maxDepth);
   if (skeleton == "seq") {
-    counts = skeletons::Enum::Seq::count<Empty, Monoid, gen_action>(maxDepth, Empty(), root);
+    counts = skeletons::Enum::Count<Empty, Monoid, gen_action>::search(maxDepth, Empty(), root);
   } else
   if (skeleton == "seq-stack") {
-    counts = skeletons::Enum::SeqStack::count<Empty, Monoid, gen_action, MAX_GENUS>(maxDepth, Empty(), root);
+    counts = skeletons::Enum::Count<Empty, Monoid, gen_action, skeletons::Enum::Stack, std::integral_constant<std::size_t, MAX_GENUS> >::search(maxDepth, Empty(), root);
   } else if (skeleton == "dist") {
-    counts = skeletons::Enum::Dist::count<Empty, Monoid, gen_action, childTask_act>(spawnDepth, maxDepth, Empty(), root);
+    counts = skeletons::Enum::DistCount<Empty, Monoid, gen_action>::count(spawnDepth, maxDepth, Empty(), root);
   } else if (skeleton == "indexed"){
-    counts = skeletons::Enum::Indexed::count<Empty, Monoid, gen_action, indexed_act>(spawnDepth, maxDepth, Empty(), root);
+    counts = skeletons::Enum::DistCount<Empty, Monoid, gen_action, skeletons::Enum::Indexed>::count(maxDepth, Empty(), root);
   } else {
     std::cout << "Invalid skeleton type: " << skeleton << std::endl;
     return hpx::finalize();

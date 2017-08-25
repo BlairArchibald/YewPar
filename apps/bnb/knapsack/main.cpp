@@ -130,8 +130,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto sol = root;
   if (skeletonType == "seq") {
-    sol = skeletons::BnB::Seq::search<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int> >
-      (space, root, generateChoices<NUMITEMS>, upperBound<NUMITEMS>);
+    sol = skeletons::BnB::Seq::BranchAndBound<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, decltype(generateChoices<NUMITEMS>), decltype(upperBound<NUMITEMS>)>
+          ::search(space, root, generateChoices<NUMITEMS>, upperBound<NUMITEMS>);
   }
 
   if (skeletonType == "par") {

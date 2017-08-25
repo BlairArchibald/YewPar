@@ -25,7 +25,6 @@
 #include "bnb/bnb-recompute.hpp"
 #include "bnb/bnb-indexed.hpp"
 #include "bnb/ordered.hpp"
-#include "bnb/macros.hpp"
 
 // Number of Words to use in our bitset representation
 // Possible to specify at compile to to handler bigger graphs if required
@@ -192,15 +191,22 @@ int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
 
 HPX_PLAIN_ACTION(generateChoices, generateChoices_act);
 HPX_PLAIN_ACTION(upperBound, upperBound_act);
-YEWPAR_CREATE_BNB_PAR_ACTION(par_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
-YEWPAR_CREATE_BNB_DECISION_PAR_ACTION(decision_par_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
-YEWPAR_CREATE_BNB_DIST_ACTION(dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
-YEWPAR_CREATE_BNB_DECISION_DIST_ACTION(decision_dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
 
-YEWPAR_CREATE_BNB_ORDERED_ACTION(ordered_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
-
-YEWPAR_CREATE_BNB_RECOMPUTE_ACTION(recompute_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
-YEWPAR_CREATE_BNB_INDEXED_ACTION(indexed_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
+// We want large stacks for everything
+using par_act = skeletons::BnB::Par::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true>::ChildTask;
+HPX_ACTION_USES_LARGE_STACK(par_act);
+using decision_par_act = skeletons::BnB::Par::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true>::ChildTask;
+HPX_ACTION_USES_LARGE_STACK(decision_par_act);
+using dist_act = skeletons::BnB::Dist::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true>::ChildTask;
+HPX_ACTION_USES_LARGE_STACK(dist_act);
+using decision_dist_act = skeletons::BnB::Dist::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true>::ChildTask;
+HPX_ACTION_USES_LARGE_STACK(decision_dist_act);
+using ordered_act = skeletons::BnB::Ordered::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true>::ChildTask;
+HPX_ACTION_USES_LARGE_STACK(ordered_act);
+using recompute_act = skeletons::BnB::DistRecompute::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true>::ChildTask;
+HPX_ACTION_USES_LARGE_STACK(recompute_act);
+using indexed_act = skeletons::BnB::Indexed::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true>::ChildTask;
+HPX_ACTION_USES_LARGE_STACK(indexed_act);
 
 typedef BitSet<NWORDS> bitsetType;
 REGISTER_INCUMBENT(MCSol, int, bitsetType);
@@ -245,52 +251,49 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto sol = root;
   if (skeletonType == "seq") {
-    sol = skeletons::BnB::Seq::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, decltype(generateChoices), decltype(upperBound), true>
-      (graph, root, generateChoices, upperBound);
-    std::cout << "Exapnds = " << skeletons::BnB::Seq::numExpands << std::endl;
+    sol = skeletons::BnB::Seq::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, decltype(generateChoices), decltype(upperBound), true>
+          ::search (graph, root, generateChoices, upperBound);
   }
   if (skeletonType == "par") {
-    sol = skeletons::BnB::Par::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                      generateChoices_act, upperBound_act, par_act, true>
-      (spawnDepth, graph, root);
+    sol = skeletons::BnB::Par::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true>
+          ::search(spawnDepth, graph, root);
   }
   if (skeletonType == "dist") {
-    sol = skeletons::BnB::Dist::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                       generateChoices_act, upperBound_act, dist_act, true>
-      (spawnDepth, graph, root);
+    sol = skeletons::BnB::Dist::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                       generateChoices_act, upperBound_act, true>
+          ::search(spawnDepth, graph, root);
   }
   if (skeletonType == "seq-decision") {
     auto decisionBound = opts["decisionBound"].as<int>();
-    sol = skeletons::BnB::Decision::Seq::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, decltype(generateChoices), decltype(upperBound), true>
-      (graph, root, decisionBound, generateChoices, upperBound);
-    std::cout << "Expands = " << skeletons::BnB::Decision::Seq::numExpands << std::endl;
+    sol = skeletons::BnB::Seq::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, decltype(generateChoices), decltype(upperBound), true>
+          ::search(graph, root, decisionBound, generateChoices, upperBound);
   }
   if (skeletonType == "par-decision") {
     auto decisionBound = opts["decisionBound"].as<int>();
-    sol = skeletons::BnB::Decision::Par::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                      generateChoices_act, upperBound_act, decision_par_act, true>
-      (spawnDepth, graph, root, decisionBound);
+    sol = skeletons::BnB::Par::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                                 generateChoices_act, upperBound_act, true>
+          ::search(spawnDepth, graph, root, decisionBound);
   }
   if (skeletonType == "dist-decision") {
     auto decisionBound = opts["decisionBound"].as<int>();
-    sol = skeletons::BnB::Decision::Dist::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                                generateChoices_act, upperBound_act, decision_dist_act, true>
-      (spawnDepth, graph, root, decisionBound);
+    sol = skeletons::BnB::Dist::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                                  generateChoices_act, upperBound_act, true>
+          ::search(spawnDepth, graph, root, decisionBound);
   }
   if (skeletonType == "ordered") {
-    sol = skeletons::BnB::Ordered::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                       generateChoices_act, upperBound_act, ordered_act, true>
-      (spawnDepth, graph, root);
+    sol = skeletons::BnB::Ordered::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                                     generateChoices_act, upperBound_act, true>
+          ::search(spawnDepth, graph, root);
   }
   if (skeletonType == "dist-recompute") {
-    sol = skeletons::BnB::DistRecompute::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                                generateChoices_act, upperBound_act, recompute_act, true>
-      (spawnDepth, graph, root);
+    sol = skeletons::BnB::DistRecompute::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                                           generateChoices_act, upperBound_act, true>
+          ::search(spawnDepth, graph, root);
   }
   if (skeletonType == "indexed") {
-    sol = skeletons::BnB::Indexed::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                          generateChoices_act, upperBound_act, indexed_act, true>
-      (graph, root);
+    sol = skeletons::BnB::Indexed::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                                     generateChoices_act, upperBound_act, true>
+          ::search(graph, root);
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
