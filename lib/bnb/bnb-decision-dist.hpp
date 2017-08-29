@@ -33,7 +33,7 @@ struct BranchAndBoundSat {
       return;
     }
 
-    auto newCands = Gen::invoke(0, reg->space_, n);
+    auto newCands = Gen::invoke(reg->space_, n);
 
     std::vector<hpx::future<void> > childFuts;
     if (spawnDepth > 0) {
@@ -41,11 +41,11 @@ struct BranchAndBoundSat {
     }
 
     for (auto i = 0; i < newCands.numChildren; ++i) {
-      auto c = newCands.next(reg->space_, n);
+      auto c = newCands.next();
       auto lbnd = reg->localBound_.load();
 
       /* Prune if required */
-      auto ubound = Bound::invoke(0, reg->space_, c);
+      auto ubound = Bound::invoke(reg->space_, c);
       if (ubound < lbnd) {
         if (prunelevel) {
           break;

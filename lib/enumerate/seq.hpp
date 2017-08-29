@@ -21,7 +21,7 @@ struct Count<Space, Sol, Gen, Rec> {
               std::vector<std::uint64_t> & cntMap,
               const unsigned childDepth,
               const Sol & n) {
-    auto newCands = Gen::invoke(0, space, n);
+    auto newCands = Gen::invoke(space, n);
 
     cntMap[childDepth] += newCands.numChildren;
 
@@ -30,7 +30,7 @@ struct Count<Space, Sol, Gen, Rec> {
     }
 
     for (auto i = 0; i < newCands.numChildren; ++i) {
-        auto c = newCands.next(space, n);
+        auto c = newCands.next();
         expand(maxDepth, space, cntMap, childDepth + 1, c);
       }
   }
@@ -61,13 +61,13 @@ struct Count<Space, Sol, Gen, Stack, std::integral_constant<std::size_t, maxStac
     auto depth = 0;
 
     // Setup the stack
-    auto gen = Gen::invoke(0, space, root);
+    auto gen = Gen::invoke(space, root);
 
-    using stackType = std::tuple<unsigned , Sol, decltype(gen)>;
+    using stackType = std::tuple<unsigned, decltype(gen)>;
     std::array<stackType, maxStackDepth_> generatorStack;
-    generatorStack[depth] = std::make_tuple(gen.numChildren, root, gen);
+    generatorStack[depth] = std::make_tuple(gen.numChildren, gen);
 
-    cntMap[1] += std::get<2>(generatorStack[depth]).numChildren;
+    cntMap[1] += std::get<1>(generatorStack[depth]).numChildren;
 
     // Don't enter the loop unless there is work to do
     if (maxDepth == 1) {
@@ -82,12 +82,12 @@ struct Count<Space, Sol, Gen, Stack, std::integral_constant<std::size_t, maxStac
       }
 
       // Ge the next child
-      auto node = std::get<2>(generatorStack[depth]).next(space, std::get<1>(generatorStack[depth]));
+      auto node = std::get<1>(generatorStack[depth]).next();
       std::get<0>(generatorStack[depth])--;
       depth++;
 
       // Construct it's generator and count the children
-      auto gen = Gen::invoke(0, space, node);
+      auto gen = Gen::invoke(space, node);
       cntMap[depth + 1] += gen.numChildren;
 
       // If we are deep enough then go back up the stack without pushing the generator
@@ -96,7 +96,7 @@ struct Count<Space, Sol, Gen, Stack, std::integral_constant<std::size_t, maxStac
         continue;
       }
 
-      generatorStack[depth] = std::make_tuple(gen.numChildren, node, gen);
+      generatorStack[depth] = std::make_tuple(gen.numChildren, std::move(gen));
     }
   }
 

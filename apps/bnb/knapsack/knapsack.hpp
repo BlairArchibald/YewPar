@@ -41,12 +41,15 @@ struct GenNode : skeletons::BnB::NodeGenerator<KPSpace<numItems>, KPSolution, in
   std::vector<int> items;
   int pos;
 
-  GenNode () {};
-  GenNode (std::vector<int> items) : items(items), pos(0) {
+  const KPSpace<numItems> & space;
+  const KPNode & n;
+
+  GenNode (const KPSpace<numItems> & space, const KPNode & n, std::vector<int> items) :
+      items(items), pos(0), space(space), n(n) {
     this->numChildren = items.size();
   }
 
-  KPNode next(const KPSpace<numItems> & space, const KPNode & n) override {
+  KPNode next() override {
     auto i = items[pos];
 
     auto newSol = hpx::util::get<0>(n);
@@ -72,7 +75,7 @@ GenNode<numItems> generateChoices(const KPSpace<numItems> & space, const KPNode 
       return hpx::util::get<0>(n).weight + std::get<1>(space)[i] <= hpx::util::get<0>(n).capacity;
     });
 
-  return GenNode<numItems>(std::move(items));
+  return GenNode<numItems>(space, n, std::move(items));
 }
 
 template <unsigned numItems>

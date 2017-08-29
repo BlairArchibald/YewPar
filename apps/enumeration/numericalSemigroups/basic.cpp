@@ -4,6 +4,7 @@
 #include <hpx/hpx_init.hpp>
 
 #include "enumerate/skeletons.hpp"
+#include "util/func.hpp"
 
 typedef unsigned char uchar;
 typedef unsigned short int usint;
@@ -73,12 +74,10 @@ SemiGroup::SemiGroup(const SemiGroup& S,uchar x){
 struct Empty {};
 
 struct NodeGen : skeletons::Enum::NodeGenerator<Empty, SemiGroup> {
-  SemiGroup group;
+  const SemiGroup & group;
   unsigned it;
-  NodeGen() { this->numChildren = 0; }
 
-  NodeGen(const SemiGroup & s) {
-    group = s;
+  NodeGen(const SemiGroup & s) : group(s) {
     it = group.c;
 
     // TODO: Factor into SemiGroup functionality
@@ -91,14 +90,14 @@ struct NodeGen : skeletons::Enum::NodeGenerator<Empty, SemiGroup> {
     this->numChildren = children;
   }
 
-  SemiGroup next(const Empty & space, const SemiGroup & n) override {
+  SemiGroup next() override {
     if (group.tab[it] == 1) {
       auto s = SemiGroup(group, it);
       it++;
       return s;
     } else {
       it++;
-      return next(space, n);
+      return next();
     }
   }
 };
@@ -107,12 +106,12 @@ NodeGen generateChildren(const Empty & space, const SemiGroup & s) {
   return NodeGen(s);
 }
 
-HPX_PLAIN_ACTION(generateChildren, gen_action)
+typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
 REGISTER_ENUM_REGISTRY(Empty, SemiGroup)
 
 namespace hpx { namespace traits {
   template <>
-  struct action_stacksize<skeletons::Enum::DistCount<Empty, SemiGroup, gen_action>::ChildTask> {
+  struct action_stacksize<skeletons::Enum::DistCount<Empty, SemiGroup, genChildren_func>::ChildTask> {
     enum { value = threads::thread_stacksize_large };
   };
 }}
@@ -122,7 +121,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto maxDepth   = opts["until-depth"].as<unsigned>();
 
-  auto counts = skeletons::Enum::DistCount<Empty, SemiGroup, gen_action>::count(spawnDepth, maxDepth, Empty(), SemiGroup());
+  auto counts = skeletons::Enum::DistCount<Empty, SemiGroup, genChildren_func>::count(spawnDepth, maxDepth, Empty(), SemiGroup());
 
   std::cout << "Results Table: " << std::endl;
   for (auto i = 0; i <= maxDepth; ++i) {

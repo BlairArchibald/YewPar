@@ -32,7 +32,7 @@ struct BranchAndBoundOpt {
 
     auto reg = skeletons::BnB::Components::Registry<Space, Sol, Bnd, Cand>::gReg;
 
-    auto newCands = Gen::invoke(0, reg->space_, n);
+    auto newCands = Gen::invoke(reg->space_, n);
 
     std::vector<hpx::future<void> > childFuts;
     if (spawnDepth > 0) {
@@ -40,11 +40,11 @@ struct BranchAndBoundOpt {
     }
 
     for (auto i = 0; i < newCands.numChildren; ++i) {
-      auto c = newCands.next(reg->space_, n);
+      auto c = newCands.next();
       auto lbnd = reg->localBound_.load();
 
       /* Prune if required */
-      auto ubound = Bound::invoke(0, reg->space_, c);
+      auto ubound = Bound::invoke(reg->space_, c);
       if (ubound <= lbnd) {
         if (prunelevel) {
           break;
@@ -125,8 +125,8 @@ struct BranchAndBoundOpt {
     auto node =  reg->root_;
 
     for (auto const & p : path) {
-      auto newCands = Gen::invoke(0, reg->space_, node);
-      node = newCands.nth(reg->space_, node, p);
+      auto newCands = Gen::invoke(reg->space_, node);
+      node = newCands.nth(p);
     }
 
     return node;

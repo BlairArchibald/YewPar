@@ -16,18 +16,13 @@ template<typename Space,
          typename Cand>
 struct NodeGenerator {
   int numChildren;
-  virtual hpx::util::tuple<Sol, Bnd, Cand> next(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & n) = 0;
-
-  template <class Archive>
-  void serialize(Archive & ar, const unsigned int version) {
-    ar & numChildren;
-  }
+  virtual hpx::util::tuple<Sol, Bnd, Cand> next() = 0;
 
   // Default implementation. Can be overriden if the problem supports a fast way to compute just the Nth child
-  virtual hpx::util::tuple<Sol, Bnd, Cand> nth(const Space & space, const hpx::util::tuple<Sol, Bnd, Cand> & node, unsigned n) {
+  virtual hpx::util::tuple<Sol, Bnd, Cand> nth(unsigned n) {
     hpx::util::tuple<Sol, Bnd, Cand> c;
     for (auto i = 0; i <= n; ++i) {
-      c = next(space, node);
+      c = next();
     }
     return c;
   };

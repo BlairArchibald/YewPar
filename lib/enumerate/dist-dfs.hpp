@@ -48,7 +48,7 @@ struct DistCount<Space, Sol, Gen> {
                      std::vector<std::uint64_t> & cntMap) {
     auto reg = Components::Registry<Space, Sol>::gReg;
 
-    auto newCands = Gen::invoke(0, reg->space_, n);
+    auto newCands = Gen::invoke(reg->space_, n);
 
     std::vector<hpx::future<void> > childFuts;
     if (spawnDepth > 0) {
@@ -62,7 +62,7 @@ struct DistCount<Space, Sol, Gen> {
     }
 
     for (auto i = 0; i < newCands.numChildren; ++i) {
-      auto c = newCands.next(reg->space_, n);
+      auto c = newCands.next();
 
       /* Search the child nodes */
       if (spawnDepth > 0) {

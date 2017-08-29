@@ -62,7 +62,7 @@ struct DistCount<Space, Sol, Gen, Indexed> {
                      std::vector<std::uint64_t> & cntMap) {
     auto reg = Components::Registry<Space, Sol>::gReg;
 
-    auto newCands = Gen::invoke(0, reg->space_, n);
+    auto newCands = Gen::invoke(reg->space_, n);
     pos.setNumChildren(newCands.numChildren);
 
     cntMap[depth] += newCands.numChildren;
@@ -74,11 +74,11 @@ struct DistCount<Space, Sol, Gen, Indexed> {
     auto i = 0;
     int nextPos;
     while ((nextPos = pos.getNextPosition()) >= 0) {
-      auto c = newCands.next(reg->space_, n);
+      auto c = newCands.next();
 
       if (nextPos != i) {
         for (auto j = 0; j < nextPos - i; ++j) {
-          c = newCands.next(reg->space_, n);
+          c = newCands.next();
         }
         i += nextPos - i;
       }
@@ -151,8 +151,8 @@ struct DistCount<Space, Sol, Gen, Indexed> {
     }
 
     for (auto const & p : path) {
-      auto newCands = Gen::invoke(0, reg->space_, node);
-      node = newCands.nth(reg->space_, node, p);
+      auto newCands = Gen::invoke(reg->space_, node);
+      node = newCands.nth(p);
     }
 
     return node;

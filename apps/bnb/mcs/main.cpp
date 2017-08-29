@@ -20,6 +20,8 @@
 #include "bnb/nodegenerator.hpp"
 #include "bnb/bnb-dist.hpp"
 
+#include "util/func.hpp"
+
 // Number of Words to use in our bitset representation
 // Possible to specify at compile to to handler bigger graphs if required
 #ifndef NWORDS
@@ -57,7 +59,7 @@ buildGraph(const std::pair<Association, AssociatedEdges> & g) {
   for (auto & f : g.second)
     graph.add_edge(invorder[f.first], invorder[f.second]);
 
-  return { graph, order, invorder };
+  return std::make_tuple(graph, order, invorder);
 }
 
 
@@ -152,17 +154,19 @@ struct GenNode : skeletons::BnB::NodeGenerator<BitGraph<NWORDS>, MCSol, int, Bit
   std::array<unsigned, NWORDS * bits_per_word> p_order;
   std::array<unsigned, NWORDS * bits_per_word> colourClass;
 
+  const BitGraph<NWORDS> & graph;
+
   MCSol childSol;
   int childBnd;
   BitSet<NWORDS> p;
 
   int v;
 
-  GenNode() {};
-  GenNode(const MCNode & n,
+  GenNode(const BitGraph<NWORDS> & graph,
+          const MCNode & n,
           const std::array<unsigned, NWORDS * bits_per_word> p_order,
           const std::array<unsigned, NWORDS * bits_per_word> colourClass)
-    : p_order(p_order), colourClass(colourClass) {
+      : graph(graph), p_order(p_order), colourClass(colourClass) {
 
     childSol = hpx::util::get<0>(n);
     childBnd = hpx::util::get<1>(n) + 1;
@@ -172,7 +176,7 @@ struct GenNode : skeletons::BnB::NodeGenerator<BitGraph<NWORDS>, MCSol, int, Bit
   }
 
   // Get the next value
-  MCNode next(const BitGraph<NWORDS> & graph, const MCNode & n) override {
+  MCNode next() override {
     auto sol = childSol;
     sol.members.push_back(p_order[v]);
     sol.colours = colourClass[v] - 1;
@@ -196,7 +200,7 @@ generateChoices(const BitGraph<NWORDS> & graph, const MCNode & n) {
 
   colour_class_order(graph, p, p_order, colourClass);
 
-  GenNode g(n, std::move(p_order), std::move(colourClass));
+  GenNode g(graph, n, std::move(p_order), std::move(colourClass));
   return g;
 }
 
@@ -204,10 +208,10 @@ int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
   return hpx::util::get<1>(n) + hpx::util::get<0>(n).colours;
 }
 
-HPX_PLAIN_ACTION(generateChoices, generateChoices_act);
-HPX_PLAIN_ACTION(upperBound, upperBound_act);
+typedef func<decltype(&generateChoices), &generateChoices> generateChoices_func;
+typedef func<decltype(&upperBound), &upperBound> upperBound_func;
 
-using dist_act = skeletons::BnB::Dist::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true>::ChildTask;
+using dist_act = skeletons::BnB::Dist::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
 HPX_ACTION_USES_LARGE_STACK(dist_act);
 
 typedef BitSet<NWORDS> bitsetType;
@@ -246,7 +250,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   auto root = hpx::util::make_tuple(mcsol, 0, cands);
 
   auto result = skeletons::BnB::Dist::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                                        generateChoices_act, upperBound_act, true>
+                                                        generateChoices_func, upperBound_func, true>
                 ::search(spawnDepth, graph, root);
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>

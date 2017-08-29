@@ -16,18 +16,16 @@ template <typename Space,
 struct BranchAndBoundOpt {
   static void expand(const Space & space,
                      hpx::util::tuple<Sol, Bnd, Cand> & incumbent,
-                     const hpx::util::tuple<Sol, Bnd, Cand> & n,
-                     const Gen && gen,
-                     const Bound && ubound) {
+                     const hpx::util::tuple<Sol, Bnd, Cand> & n) {
     constexpr bool const prunelevel = PruneLevel;
 
-    auto newCands = gen(space, n);
+    auto newCands = Gen::invoke(space, n);
 
     for (auto i = 0; i < newCands.numChildren; ++i) {
-      auto c = newCands.next(space, n);
+      auto c = newCands.next();
 
       /* Prune if required */
-      if (ubound(space, c) <= hpx::util::get<1>(incumbent)) {
+      if (Bound::invoke(space, c) <= hpx::util::get<1>(incumbent)) {
         // TODO: check this is optimised away
         if (prunelevel) {
           break;
@@ -42,16 +40,14 @@ struct BranchAndBoundOpt {
       }
 
       /* Search the child nodes */
-      expand(space, incumbent, c, gen, ubound);
+      expand(space, incumbent, c);
     }
   }
 
   static hpx::util::tuple<Sol, Bnd, Cand> search(const Space & space,
-                                                 const hpx::util::tuple<Sol, Bnd, Cand> & root,
-                                                 const Gen && gen,
-                                                 const Bound && ubound) {
+                                                 const hpx::util::tuple<Sol, Bnd, Cand> & root) {
     auto incumbent = root;
-    expand(space, incumbent, root, gen, ubound);
+    expand(space, incumbent, root);
     return incumbent;
   }
 

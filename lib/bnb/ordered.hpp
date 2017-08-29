@@ -49,9 +49,9 @@ struct BranchAndBoundOpt {
       if (depth == 0) {
         tasks.push_back(std::move(OrderedTask(n, numDisc)));
       } else {
-        auto newCands = Gen::invoke(0, space, n);
+        auto newCands = Gen::invoke(space, n);
         for (auto i = 0; i < newCands.numChildren; ++i) {
-          auto node = newCands.next(space, n);
+          auto node = newCands.next();
           fn(depth - 1, numDisc + i, node);
         }
       }
@@ -67,14 +67,14 @@ struct BranchAndBoundOpt {
 
     auto reg = skeletons::BnB::Components::Registry<Space, Sol, Bnd, Cand>::gReg;
 
-    auto newCands = Gen::invoke(0, reg->space_, n);
+    auto newCands = Gen::invoke(reg->space_, n);
 
     for (auto i = 0; i < newCands.numChildren; ++i) {
-      auto c = newCands.next(reg->space_, n);
+      auto c = newCands.next();
       auto lbnd = reg->localBound_.load();
 
       /* Prune if required */
-      auto ubound = Bound::invoke(0, reg->space_, c);
+      auto ubound = Bound::invoke(reg->space_, c);
       if (ubound <= lbnd) {
         if (prunelevel) {
           break;

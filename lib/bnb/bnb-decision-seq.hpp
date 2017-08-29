@@ -18,18 +18,16 @@ struct BranchAndBoundSat {
   static bool expand(const Space & space,
                      hpx::util::tuple<Sol, Bnd, Cand> & incumbent,
                      const hpx::util::tuple<Sol, Bnd, Cand> & n,
-                     const Bnd & expectedBound,
-                     const Gen && gen,
-                     const Bound && ubound) {
+                     const Bnd & expectedBound) {
     constexpr bool const prunelevel = PruneLevel;
 
-    auto newCands = gen(space, n);
+    auto newCands = Gen::invoke(space, n);
 
     for (auto i = 0; i < newCands.numChildren; ++i) {
-      auto c = newCands.next(space, n);
+      auto c = newCands.next();
 
       /* Prune if required */
-      if (ubound(space, c) < expectedBound) {
+      if (Bound::invoke(space, c) < expectedBound) {
         if (prunelevel) {
           break;
         } else {
@@ -44,7 +42,7 @@ struct BranchAndBoundSat {
       }
 
       /* Search the child nodes */
-      auto found = expand(space, incumbent, c, expectedBound, gen, ubound);
+      auto found = expand(space, incumbent, c, expectedBound);
       if (found) {
         return true; // Propagate the fact we have found the solution up the stack.
       }
@@ -55,11 +53,9 @@ struct BranchAndBoundSat {
 
   static hpx::util::tuple<Sol, Bnd, Cand> search(const Space & space,
                                                  const hpx::util::tuple<Sol, Bnd, Cand> & root,
-                                                 const Bnd & expectedBound,
-                                                 const Gen && gen,
-                                                 const Bound && ubound) {
+                                                 const Bnd & expectedBound) {
     auto incumbent = root;
-    expand(space, incumbent, root, expectedBound, gen, ubound);
+    expand(space, incumbent, root, expectedBound);
     return incumbent;
   }
 

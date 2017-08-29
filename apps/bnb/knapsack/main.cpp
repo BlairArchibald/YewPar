@@ -12,13 +12,15 @@
 
 #include "knapsack.hpp"
 
+#include "util/func.hpp"
+
 #ifndef NUMITEMS
 #define NUMITEMS 50
 #endif
 
 // Actions for HPX (PAR)
-HPX_PLAIN_ACTION(generateChoices<NUMITEMS>, gen_action)
-HPX_PLAIN_ACTION(upperBound<NUMITEMS>, bnd_action)
+typedef func<decltype(&generateChoices<NUMITEMS>), &generateChoices<NUMITEMS> > gen_func;
+typedef func<decltype(&upperBound<NUMITEMS>), &upperBound<NUMITEMS> > bnd_func;
 
 typedef std::vector<int> vecint;
 REGISTER_INCUMBENT(KPSolution, int, vecint);
@@ -124,19 +126,24 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto sol = root;
   if (skeletonType == "seq") {
-    sol = skeletons::BnB::Seq::BranchAndBoundOpt<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, decltype(generateChoices<NUMITEMS>), decltype(upperBound<NUMITEMS>)>
-          ::search(space, root, generateChoices<NUMITEMS>, upperBound<NUMITEMS>);
+    sol = skeletons::BnB::Seq::BranchAndBoundOpt<KPSpace<NUMITEMS>,
+                                                 KPSolution,
+                                                 int,
+                                                 std::vector<int>,
+                                                 gen_func,
+                                                 bnd_func>
+          ::search(space, root);
   }
 
   if (skeletonType == "par") {
     auto spawnDepth = opts["spawn-depth"].as<int>();
-    sol = skeletons::BnB::Par::BranchAndBoundOpt<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_action, bnd_action>
+    sol = skeletons::BnB::Par::BranchAndBoundOpt<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_func, bnd_func>
           ::search(spawnDepth, space, root);
   }
 
   if (skeletonType == "dist") {
     auto spawnDepth = opts["spawn-depth"].as<int>();
-    sol = skeletons::BnB::Dist::BranchAndBoundOpt<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_action, bnd_action>
+    sol = skeletons::BnB::Dist::BranchAndBoundOpt<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_func, bnd_func>
           ::search(spawnDepth, space, root);
   }
 

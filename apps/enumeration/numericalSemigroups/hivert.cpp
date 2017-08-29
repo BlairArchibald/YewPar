@@ -10,15 +10,17 @@
 #include "enumerate/skeletons.hpp"
 
 #include "monoid.hpp"
+#include "util/func.hpp"
 
 // Numerical Semigroups don't have a space
 struct Empty {};
 
 struct NodeGen : skeletons::Enum::NodeGenerator<Empty, Monoid> {
+  // TODO: Ideally we want this to be a reference type
   Monoid group;
   generator_iter<CHILDREN> it;
 
-  NodeGen() : it(generator_iter<CHILDREN>(Monoid())) {
+  NodeGen() : group(Monoid()), it(generator_iter<CHILDREN>(Monoid())) {
     this->numChildren = 0;
   }
 
@@ -27,7 +29,7 @@ struct NodeGen : skeletons::Enum::NodeGenerator<Empty, Monoid> {
     it.move_next(); // Original code skips begin
   }
 
-  Monoid next(const Empty & space, const Monoid & n) override {
+  Monoid next() override {
     auto res = remove_generator(group, it.get_gen());
     it.move_next();
     return res;
@@ -38,18 +40,18 @@ NodeGen generateChildren(const Empty & space, const Monoid & s) {
   return NodeGen(s);
 }
 
-HPX_PLAIN_ACTION(generateChildren, gen_action)
+typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
 REGISTER_ENUM_REGISTRY(Empty, Monoid)
 
 // Annoying way to get large stack sizes by default (hide this if possible)
 namespace hpx { namespace traits {
   template <>
-  struct action_stacksize<skeletons::Enum::DistCount<Empty, Monoid, gen_action>::ChildTask> {
+  struct action_stacksize<skeletons::Enum::DistCount<Empty, Monoid, genChildren_func>::ChildTask> {
     enum { value = threads::thread_stacksize_large };
   };
 
   template <>
-  struct action_stacksize<skeletons::Enum::DistCount<Empty, Monoid, gen_action, skeletons::Enum::Indexed>::ChildTask> {
+  struct action_stacksize<skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::Indexed>::ChildTask> {
     enum { value = threads::thread_stacksize_large };
   };
 }};
@@ -64,14 +66,14 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   std::vector<std::uint64_t> counts(maxDepth);
   if (skeleton == "seq") {
-    counts = skeletons::Enum::Count<Empty, Monoid, gen_action>::search(maxDepth, Empty(), root);
+    counts = skeletons::Enum::Count<Empty, Monoid, genChildren_func>::search(maxDepth, Empty(), root);
   } else
   if (skeleton == "seq-stack") {
-    counts = skeletons::Enum::Count<Empty, Monoid, gen_action, skeletons::Enum::Stack, std::integral_constant<std::size_t, MAX_GENUS> >::search(maxDepth, Empty(), root);
+    counts = skeletons::Enum::Count<Empty, Monoid, genChildren_func, skeletons::Enum::Stack, std::integral_constant<std::size_t, MAX_GENUS> >::search(maxDepth, Empty(), root);
   } else if (skeleton == "dist") {
-    counts = skeletons::Enum::DistCount<Empty, Monoid, gen_action>::count(spawnDepth, maxDepth, Empty(), root);
+    counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func>::count(spawnDepth, maxDepth, Empty(), root);
   } else if (skeleton == "indexed"){
-    counts = skeletons::Enum::DistCount<Empty, Monoid, gen_action, skeletons::Enum::Indexed>::count(maxDepth, Empty(), root);
+    counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::Indexed>::count(maxDepth, Empty(), root);
   } else {
     std::cout << "Invalid skeleton type: " << skeleton << std::endl;
     return hpx::finalize();
