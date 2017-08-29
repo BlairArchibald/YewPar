@@ -9,7 +9,6 @@
 #include "bnb/bnb-seq.hpp"
 #include "bnb/bnb-par.hpp"
 #include "bnb/bnb-dist.hpp"
-#include "bnb/macros.hpp"
 
 #include "knapsack.hpp"
 
@@ -20,14 +19,9 @@
 // Actions for HPX (PAR)
 HPX_PLAIN_ACTION(generateChoices<NUMITEMS>, gen_action)
 HPX_PLAIN_ACTION(upperBound<NUMITEMS>, bnd_action)
-YEWPAR_CREATE_BNB_PAR_ACTION(childTask_act, KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_action, bnd_action)
 
 typedef std::vector<int> vecint;
 REGISTER_INCUMBENT(KPSolution, int, vecint);
-
-// Actions for HPX (DIST)
-YEWPAR_CREATE_BNB_DIST_ACTION(childTaskDist_act, KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_action, bnd_action)
-
 REGISTER_REGISTRY(KPSpace<NUMITEMS>, KPSolution, int, vecint);
 
 struct knapsackData {
@@ -130,20 +124,20 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto sol = root;
   if (skeletonType == "seq") {
-    sol = skeletons::BnB::Seq::BranchAndBound<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, decltype(generateChoices<NUMITEMS>), decltype(upperBound<NUMITEMS>)>
+    sol = skeletons::BnB::Seq::BranchAndBoundOpt<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, decltype(generateChoices<NUMITEMS>), decltype(upperBound<NUMITEMS>)>
           ::search(space, root, generateChoices<NUMITEMS>, upperBound<NUMITEMS>);
   }
 
   if (skeletonType == "par") {
     auto spawnDepth = opts["spawn-depth"].as<int>();
-    sol = skeletons::BnB::Par::search<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_action, bnd_action, childTask_act >
-      (spawnDepth, space, root);
+    sol = skeletons::BnB::Par::BranchAndBoundOpt<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_action, bnd_action>
+          ::search(spawnDepth, space, root);
   }
 
   if (skeletonType == "dist") {
     auto spawnDepth = opts["spawn-depth"].as<int>();
-    sol = skeletons::BnB::Dist::search<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_action, bnd_action, childTaskDist_act>
-      (spawnDepth, space, root);
+    sol = skeletons::BnB::Dist::BranchAndBoundOpt<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_action, bnd_action>
+          ::search(spawnDepth, space, root);
   }
 
   auto finalSol = hpx::util::get<0>(sol);

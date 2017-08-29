@@ -19,7 +19,6 @@
 
 #include "bnb/nodegenerator.hpp"
 #include "bnb/bnb-dist.hpp"
-#include "bnb/macros.hpp"
 
 // Number of Words to use in our bitset representation
 // Possible to specify at compile to to handler bigger graphs if required
@@ -207,7 +206,9 @@ int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
 
 HPX_PLAIN_ACTION(generateChoices, generateChoices_act);
 HPX_PLAIN_ACTION(upperBound, upperBound_act);
-YEWPAR_CREATE_BNB_DIST_ACTION(dist_act, BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true);
+
+using dist_act = skeletons::BnB::Dist::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_act, upperBound_act, true>::ChildTask;
+HPX_ACTION_USES_LARGE_STACK(dist_act);
 
 typedef BitSet<NWORDS> bitsetType;
 REGISTER_INCUMBENT(MCSol, int, bitsetType);
@@ -244,9 +245,9 @@ int hpx_main(boost::program_options::variables_map & opts) {
   cands.set_all();
   auto root = hpx::util::make_tuple(mcsol, 0, cands);
 
-  auto result = skeletons::BnB::Dist::search<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                     generateChoices_act, upperBound_act, dist_act, true>
-      (spawnDepth, graph, root);
+  auto result = skeletons::BnB::Dist::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                                        generateChoices_act, upperBound_act, true>
+                ::search(spawnDepth, graph, root);
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
     (std::chrono::steady_clock::now() - start_time);
