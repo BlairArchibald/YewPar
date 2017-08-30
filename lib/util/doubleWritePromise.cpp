@@ -1,3 +1,7 @@
 #include "doubleWritePromise.hpp"
 
 HPX_REGISTER_COMPONENT_MODULE();
+
+// Some common types
+REGISTER_DOUBLE_WRITE_PROMISE(bool)
+REGISTER_DOUBLE_WRITE_PROMISE(int)

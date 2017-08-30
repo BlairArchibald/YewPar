@@ -3,9 +3,9 @@
 
 #include <vector>
 #include <hpx/util/tuple.hpp>
+#include <hpx/lcos/promise.hpp>
 #include <hpx/lcos/broadcast.hpp>
 #include <hpx/runtime/components/new.hpp>
-#include <hpx/include/serialization.hpp>
 
 #include "registry.hpp"
 #include "incumbent.hpp"

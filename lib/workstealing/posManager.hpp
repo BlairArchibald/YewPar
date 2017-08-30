@@ -1,11 +1,20 @@
 #ifndef POSMANAGER_COMPONENT_HPP
 #define POSMANAGER_COMPONENT_HPP
 
-#include <hpx/hpx.hpp>
-#include <hpx/include/components.hpp>
-#include <hpx/include/serialization.hpp>
+#include <vector>
 #include <memory>
 #include <random>
+
+#include <hpx/performance_counters/manage_counter_type.hpp>
+#include <hpx/runtime/components/server/component_base.hpp>
+#include <hpx/runtime/components/server/component.hpp>
+#include <hpx/runtime/components/server/locking_hook.hpp>
+#include <hpx/runtime/components/new.hpp>
+#include <hpx/runtime/actions/plain_action.hpp>
+#include <hpx/runtime/actions/component_action.hpp>
+#include <hpx/runtime/find_here.hpp>
+#include <hpx/runtime/threads/executors/current_executor.hpp>
+#include <hpx/lcos/async.hpp>
 
 #include "util/positionIndex.hpp"
 

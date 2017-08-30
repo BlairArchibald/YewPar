@@ -2,7 +2,6 @@
 #define SKELETONS_BNB_SEQ_HPP
 
 #include <hpx/util/tuple.hpp>
-#include "nodegenerator.hpp"
 
 namespace skeletons { namespace BnB { namespace Seq {
 

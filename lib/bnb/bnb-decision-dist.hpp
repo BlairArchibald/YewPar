@@ -2,16 +2,18 @@
 #define SKELETONS_BNB_DECISION_DIST_HPP
 
 #include <vector>
-#include <hpx/util/tuple.hpp>
+#include <hpx/lcos/promise.hpp>
 #include <hpx/lcos/broadcast.hpp>
+#include <hpx/runtime/naming_fwd.hpp>
+#include <hpx/util/tuple.hpp>
 
 #include "registry.hpp"
 #include "incumbent.hpp"
 
+#include "util/doubleWritePromise.hpp"
+
 #include "workstealing/scheduler.hpp"
 #include "workstealing/workqueue.hpp"
-
-#include "util/doubleWritePromise.hpp"
 
 namespace skeletons { namespace BnB { namespace Dist {
 

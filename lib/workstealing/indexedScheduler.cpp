@@ -1,7 +1,8 @@
 #include "indexedScheduler.hpp"
 #include "posManager.hpp"
-
 #include "ExponentialBackoff.hpp"
+
+#include <hpx/runtime/threads/executors/default_executor.hpp>
 
 namespace workstealing { namespace indexed {
 

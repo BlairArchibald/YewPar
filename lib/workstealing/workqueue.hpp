@@ -1,8 +1,8 @@
 #ifndef WORKQUEUE_COMPONENT_HPP
 #define WORKQUEUE_COMPONENT_HPP
 
-#include <hpx/hpx.hpp>
-#include <hpx/include/components.hpp>
+#include <hpx/runtime/components/server/component_base.hpp>
+#include <hpx/performance_counters/manage_counter_type.hpp>
 
 #include <hpx/util/lockfree/deque.hpp>
 

@@ -2,11 +2,16 @@
 #define SKELETONS_BNB_DIST_HPP
 
 #include <vector>
-#include <hpx/util/tuple.hpp>
-#include <hpx/lcos/broadcast.hpp>
 
-#include "registry.hpp"
+#include <hpx/lcos/broadcast.hpp>
+#include <hpx/lcos/promise.hpp>
+#include <hpx/runtime/naming_fwd.hpp>
+#include <hpx/runtime/actions/plain_action.hpp>
+#include <hpx/runtime/components/new.hpp>
+#include <hpx/util/tuple.hpp>
+
 #include "incumbent.hpp"
+#include "registry.hpp"
 
 #include "workstealing/scheduler.hpp"
 #include "workstealing/workqueue.hpp"
