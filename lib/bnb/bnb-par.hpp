@@ -1,8 +1,11 @@
 #ifndef SKELETONS_BNB_PAR_HPP
 #define SKELETONS_BNB_PAR_HPP
 
+#include <atomic>
 #include <vector>
+
 #include <hpx/util/tuple.hpp>
+#include <hpx/runtime/naming/id_type.hpp>
 
 #include "registry.hpp"
 #include "incumbent.hpp"

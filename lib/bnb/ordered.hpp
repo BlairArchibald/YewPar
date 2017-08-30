@@ -11,6 +11,8 @@
 #include "workstealing/priorityscheduler.hpp"
 #include "workstealing/priorityworkqueue.hpp"
 
+#include "util/doubleWritePromise.hpp"
+
 namespace skeletons { namespace BnB { namespace Ordered {
 
 template <typename Space,
