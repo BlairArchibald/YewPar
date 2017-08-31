@@ -1,11 +1,6 @@
 #ifndef BNB_REGISTRY_HPP
 #define BNB_REGISTRY_HPP
 
-#include <atomic>
-
-#include <hpx/runtime/naming/id_type.hpp>
-#include <hpx/runtime/actions/plain_action.hpp>
-
 namespace skeletons { namespace BnB { namespace Components {
 
       template <typename Space, typename Sol, typename Bnd, typename Cand>

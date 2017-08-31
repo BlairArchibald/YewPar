@@ -1,11 +1,7 @@
 #ifndef YEWPAR_DOUBLE_WRITE_PROMISE_HPP
 #define YEWPAR_DOUBLE_WRITE_PROMISE_HPP
 
-#include <hpx/runtime/actions/component_action.hpp>
-#include <hpx/runtime/components/server/component_base.hpp>
-#include <hpx/runtime/components/server/locking_hook.hpp>
-#include <hpx/runtime/components/server/component.hpp>
-#include <hpx/include/lcos.hpp>
+#include <hpx/hpx.hpp>
 
 // Wraps a promise object (by id) and ensures multiple writes to the promise are
 // ignored Useful for creating racing tasks and global flags. Calling code
@@ -51,9 +47,8 @@ public:
                                                                               \
   HPX_REGISTER_COMPONENT(BOOST_PP_CAT(__DoubleWritePromise_, type))           \
 
-// // Some common types
-// TODO: Check this still works after moving to .cpp
-// REGISTER_DOUBLE_WRITE_PROMISE(bool)
-// REGISTER_DOUBLE_WRITE_PROMISE(int)
+// Some common types
+REGISTER_DOUBLE_WRITE_PROMISE(bool)
+REGISTER_DOUBLE_WRITE_PROMISE(int)
 
 #endif

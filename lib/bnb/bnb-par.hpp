@@ -2,9 +2,7 @@
 #define SKELETONS_BNB_PAR_HPP
 
 #include <vector>
-
 #include <hpx/util/tuple.hpp>
-#include <hpx/runtime/components/new.hpp>
 
 #include "registry.hpp"
 #include "incumbent.hpp"

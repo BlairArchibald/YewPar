@@ -1,7 +1,5 @@
 #include "posManager.hpp"
 
-#include <hpx/runtime/components/component_factory.hpp>
-
 HPX_REGISTER_COMPONENT_MODULE();
 
 typedef hpx::components::component<workstealing::indexed::posManager> posMgr_type;

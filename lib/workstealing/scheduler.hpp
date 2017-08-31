@@ -4,10 +4,7 @@
 #include <atomic>
 #include <memory>
 
-#include <hpx/lcos/promise.hpp>
-#include <hpx/lcos/local/counting_semaphore.hpp>
-#include <hpx/runtime/actions/plain_action.hpp>
-#include <hpx/runtime/naming/id_type.hpp>
+#include <hpx/hpx.hpp>
 
 namespace workstealing {
   std::atomic<bool> running(true);

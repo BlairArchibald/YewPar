@@ -3,8 +3,9 @@
 
 #include <vector>
 #include <mutex>
-#include <hpx/lcos/promise.hpp>
+#include <hpx/hpx.hpp>
 #include <hpx/util/spinlock.hpp>
+#include <boost/serialization/access.hpp>
 
 class positionIndex {
 private:
@@ -142,6 +143,9 @@ public:
     // index so this is safe
     hpx::wait_all(futures);
   }
+
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {}
 };
 
 #endif

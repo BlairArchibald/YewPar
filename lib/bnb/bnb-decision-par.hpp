@@ -2,14 +2,13 @@
 #define SKELETONS_BNB_DECISION_PAR_HPP
 
 #include <vector>
-
-#include <hpx/runtime/threads/executors/default_executor.hpp>
+#include <memory>
 #include <hpx/util/tuple.hpp>
-
-#include "util/doubleWritePromise.hpp"
 
 #include "registry.hpp"
 #include "incumbent.hpp"
+#include "nodegenerator.hpp"
+#include "util/doubleWritePromise.hpp"
 
 namespace skeletons { namespace BnB { namespace Par {
 
