@@ -1,10 +1,13 @@
 #ifndef BNB_INCUMBENT_HPP
 #define BNB_INCUMBENT_HPP
 
-#include <hpx/hpx.hpp>
-#include <hpx/include/components.hpp>
-
-#include <hpx/util/tuple.hpp>
+#include <boost/preprocessor/cat.hpp>                      // for BOOST_PP_CAT
+#include <hpx/util/tuple.hpp>                              // for tuple, get
+#include "hpx/runtime/actions/basic_action.hpp"            // for HPX_REGIST...
+#include "hpx/runtime/actions/component_action.hpp"        // for HPX_DEFINE...
+#include "hpx/runtime/components/component_factory.hpp"    // for HPX_REGIST...
+#include "hpx/runtime/components/server/locking_hook.hpp"  // for locking_hook
+namespace hpx { namespace components { template <typename Component> class component_base; } }
 
 namespace bounds
 {

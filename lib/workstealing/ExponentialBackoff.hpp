@@ -1,5 +1,5 @@
 #ifndef YEWPAR_EXPONENTIAL_BACKOFF_HPP
-#define YEWPART_EXPONENTIAL_BACKOFF_HPP
+#define YEWPAR_EXPONENTIAL_BACKOFF_HPP
 
 #include <chrono>
 #include <cstdint>
