@@ -50,100 +50,33 @@ public:
   posManager() {};
   posManager(std::unique_ptr<funcType> f) : fn(std::move(f)) {};
 
-  void registerDistributedManagers(std::vector<hpx::naming::id_type> distributedPosMgrs) {
-    distributedMgrs = distributedPosMgrs;
-  }
+  void registerDistributedManagers(std::vector<hpx::naming::id_type> distributedPosMgrs);
   HPX_DEFINE_COMPONENT_ACTION(posManager, registerDistributedManagers);
 
-  std::pair<std::vector<unsigned>, hpx::naming::id_type> getLocalWork() {
-    std::pair<std::vector<unsigned>, hpx::naming::id_type> empty;
-    if (active.size() > 0) {
-      auto victim = active.begin();
-
-      std::uniform_int_distribution<int> rand(0, active.size() - 1);
-      std::default_random_engine randGenerator;
-      std::advance(victim, rand(randGenerator));
-
-      return (*victim)->steal();
-    }
-    return empty;
-  }
+  std::pair<std::vector<unsigned>, hpx::naming::id_type> getLocalWork();
 
   struct getLocalWork_action : hpx::actions::make_action<
     decltype(&workstealing::indexed::posManager::getLocalWork),
     &workstealing::indexed::posManager::getLocalWork,
     getLocalWork_action> ::type {};
 
-  std::pair<std::vector<unsigned>, hpx::naming::id_type> steal() {
-    hpx::naming::id_type na;
-    std::pair<std::vector<unsigned>, hpx::naming::id_type> empty;
-    if (active.empty()) {
-      return empty; // Nothing to steal
-    } else {
-      return getLocalWork();
-    }
-  }
+  std::pair<std::vector<unsigned>, hpx::naming::id_type> steal();
 
-  std::pair<std::vector<unsigned>, hpx::naming::id_type> tryDistSteal() {
-    auto victim = distributedMgrs.begin();
+  std::pair<std::vector<unsigned>, hpx::naming::id_type> tryDistSteal();
 
-    std::uniform_int_distribution<int> rand(0, distributedMgrs.size() - 1);
-    std::default_random_engine randGenerator;
-    std::advance(victim, rand(randGenerator));
-
-    return hpx::async<getLocalWork_action>(*victim).get();
-  }
-
-  bool getWork() {
-    std::pair<std::vector<unsigned>, hpx::naming::id_type> p;
-    if (active.empty()) {
-      // Steal distributed if there is no local work
-      if (distributedMgrs.size() > 0) {
-        p = tryDistSteal();
-      } else {
-        return false;
-      }
-    } else {
-      p = getLocalWork();
-    }
-
-    auto path = std::get<0>(p);
-    auto prom = std::get<1>(p);
-
-    if (path.empty()) {
-      // Couldn't schedule anything locally
-      return false;
-    } else {
-      // Build the action
-      auto posIdx = std::make_shared<positionIndex>(path);
-      active.push_back(posIdx);
-
-      hpx::threads::executors::current_executor scheduler;
-      scheduler.add(hpx::util::bind(*fn, posIdx, prom, active.size() - 1, this->get_id()));
-
-      return true;
-    }
-  }
+  bool getWork();
   HPX_DEFINE_COMPONENT_ACTION(posManager, getWork);
 
-  void addWork(std::vector<unsigned> path, hpx::naming::id_type prom) {
-    auto posIdx = std::make_shared<positionIndex>(path);
-    active.push_back(posIdx);
-    hpx::threads::executors::current_executor scheduler;
-    scheduler.add(hpx::util::bind(*fn, posIdx, prom, active.size() - 1, this->get_id()));
-  }
+  void addWork(std::vector<unsigned> path, hpx::naming::id_type prom);
   HPX_DEFINE_COMPONENT_ACTION(posManager, addWork);
 
-  void done(int pos) {
-    active.erase(active.begin() + pos);
-  }
+  void done(int pos);
   HPX_DEFINE_COMPONENT_ACTION(posManager, done);
 };
 
 // Helpers for initialising positionManagers with the given task to run on a steal
 template <typename ChildTask>
-hpx::naming::id_type
-initPosMgr() {
+hpx::naming::id_type initPosMgr() {
   using funcType = hpx::util::function<void(const std::shared_ptr<positionIndex>,
                                             const hpx::naming::id_type,
                                             const int,
