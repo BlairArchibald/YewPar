@@ -9,3 +9,7 @@ add_hpx_component(priorityworkqueue
 add_hpx_component(posManager
     SOURCES posManager.cpp
     HEADERS posManager.hpp)
+
+add_hpx_component(NodeStackManager
+    SOURCES NodeStackManager.cpp
+    HEADERS NodeStackManager.hpp)

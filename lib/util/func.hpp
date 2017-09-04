@@ -8,6 +8,11 @@ struct func;
 
 template <typename Ret, typename ...Args, Ret(*F)(Args...)>
 struct func<Ret(*)(Args...), F> {
+  using return_type = Ret;
+  using func_type = Ret(Args...);
+
+  static constexpr auto fn_ptr = F;
+
   static Ret invoke(Args... xs) {
     return F(std::forward<Args>(xs)...);
   }

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "enumerate/skeletons.hpp"
+#include "enumerate/dist-nodegen-stack.hpp"
 
 #include "monoid.hpp"
 #include "util/func.hpp"
@@ -42,6 +43,8 @@ NodeGen generateChildren(const Empty & space, const Monoid & s) {
 
 typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
 REGISTER_ENUM_REGISTRY(Empty, Monoid)
+using cFunc = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS> >::ChildTask;
+REGISTER_NODESTACKMANAGER(Monoid, NodeGen, MAX_GENUS, cFunc)
 
 // Annoying way to get large stack sizes by default (hide this if possible)
 namespace hpx { namespace traits {
@@ -74,6 +77,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
     counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func>::count(spawnDepth, maxDepth, Empty(), root);
   } else if (skeleton == "indexed"){
     counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::Indexed>::count(maxDepth, Empty(), root);
+  } else if (skeleton == "genstack"){
+    counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS> >::count(maxDepth, Empty(), root);
   } else {
     std::cout << "Invalid skeleton type: " << skeleton << std::endl;
     return hpx::finalize();
