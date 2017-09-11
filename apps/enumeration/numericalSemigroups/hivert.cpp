@@ -6,6 +6,7 @@
 #include <hpx/hpx_init.hpp>
 
 #include <vector>
+#include <chrono>
 
 #include "enumerate/skeletons.hpp"
 #include "enumerate/dist-nodegen-stack.hpp"
@@ -67,6 +68,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
   Monoid root;
   init_full_N(root);
 
+  auto start_time = std::chrono::steady_clock::now();
+
   std::vector<std::uint64_t> counts(maxDepth);
   if (skeleton == "seq") {
     counts = skeletons::Enum::Count<Empty, Monoid, genChildren_func>::search(maxDepth, Empty(), root);
@@ -84,11 +87,15 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return hpx::finalize();
   }
 
+  auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
+                      (std::chrono::steady_clock::now() - start_time);
+
   std::cout << "Results Table: " << std::endl;
   for (auto i = 0; i <= maxDepth; ++i) {
     std::cout << i << ": " << counts[i] << std::endl;
   }
   std::cout << "=====" << std::endl;
+  std::cout << "cpu = " << overall_time.count() << std::endl;
 
   return hpx::finalize();
 }
