@@ -54,49 +54,48 @@ struct Count<Space, Sol, Gen, Rec> {
 //template <typename Space, typename Sol, typename Gen, std::size_t maxStackDepth_>
 template <typename Space, typename Sol, typename Gen, std::size_t maxStackDepth_>
 struct Count<Space, Sol, Gen, Stack, std::integral_constant<std::size_t, maxStackDepth_>>{
+  struct StackElem {
+    unsigned seen;
+    typename Gen::return_type generator;
+  };
+
   static void expand(const unsigned maxDepth,
                      const Space & space,
                      std::vector<std::uint64_t> & cntMap,
                      const Sol & root) {
-    auto depth = 0;
+    std::array<StackElem, maxStackDepth_> generatorStack;
 
-    // Setup the stack
-    auto gen = Gen::invoke(space, root);
+    // Setup the stack with root node
+    auto rootGen = Gen::invoke(space, root);
+    cntMap[1] += rootGen.numChildren;
+    generatorStack[0].seen = 0;
+    generatorStack[0].generator = std::move(rootGen);
 
-    using stackType = std::tuple<unsigned, decltype(gen)>;
-    std::array<stackType, maxStackDepth_> generatorStack;
-    generatorStack[depth] = std::make_tuple(gen.numChildren, gen);
-
-    cntMap[1] += std::get<1>(generatorStack[depth]).numChildren;
-
-    // Don't enter the loop unless there is work to do
-    if (maxDepth == 1) {
-      return;
-    }
-
+    int depth = 0;
     while (depth >= 0) {
-      // No more children at this depth, backtrack
-      if (std::get<0>(generatorStack[depth]) == 0) {
+      // If there's still children at this depth we move into them
+      if (generatorStack[depth].seen < generatorStack[depth].generator.numChildren) {
+        // Get the next child at this depth
+        const auto child = generatorStack[depth].generator.next();
+        generatorStack[depth].seen++;
+
+        // Going down
+        depth++;
+
+        // Get the child's generator
+        const auto childGen = Gen::invoke(space, child);
+        cntMap[depth + 1] += childGen.numChildren;
+
+        // We don't even need to store the generator if we are just counting the children
+        if (depth + 1 == maxDepth) {
           depth--;
-          continue;
-      }
-
-      // Ge the next child
-      auto node = std::get<1>(generatorStack[depth]).next();
-      std::get<0>(generatorStack[depth])--;
-      depth++;
-
-      // Construct it's generator and count the children
-      auto gen = Gen::invoke(space, node);
-      cntMap[depth + 1] += gen.numChildren;
-
-      // If we are deep enough then go back up the stack without pushing the generator
-      if (maxDepth == depth + 1) {
+        } else {
+          generatorStack[depth].seen = 0;
+          generatorStack[depth].generator = std::move(childGen);
+        }
+      } else {
         depth--;
-        continue;
       }
-
-      generatorStack[depth] = std::make_tuple(gen.numChildren, std::move(gen));
     }
   }
 
