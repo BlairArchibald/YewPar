@@ -82,7 +82,11 @@ void scheduler(std::vector<hpx::naming::id_type> posManagers, std::shared_ptr<hp
   while (running) {
     tasks_required_sem.wait();
 
+    auto start_time = std::chrono::steady_clock::now();
     auto scheduled = hpx::async<workstealing::indexed::posManager::getWork_action>(posManager).get();
+    auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
+                        (std::chrono::steady_clock::now() - start_time);
+    std::cout << "scheduling cpu = " << overall_time.count() << std::endl;
     if (scheduled) {
       perf_steals++;
       backoff.reset();

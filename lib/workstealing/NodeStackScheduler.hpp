@@ -30,7 +30,7 @@ std::atomic<std::uint64_t> perf_steals(0);
 std::atomic<std::uint64_t> perf_failedSteals(0);
 void registerPerformanceCounters();
 
-template <typename Sol, typename GenType, std::size_t N, typename ChildFunc>
+template <typename Sol, typename ChildFunc>
 void scheduler(std::vector<hpx::naming::id_type> nodeStackMgrs, std::shared_ptr<hpx::promise<void> >readyPromise) {
   auto here = hpx::find_here();
   hpx::naming::id_type nodeStackMgr;
@@ -45,7 +45,7 @@ void scheduler(std::vector<hpx::naming::id_type> nodeStackMgrs, std::shared_ptr<
   }
 
   // Register all other posManagers with the local manager
-  typedef typename NodeStackManager<Sol, GenType, N, ChildFunc>::registerDistributedManagers_action regDistMgrsAct;
+  typedef typename NodeStackManager<Sol, ChildFunc>::registerDistributedManagers_action regDistMgrsAct;
   hpx::async<regDistMgrsAct>(nodeStackMgr, nodeStackMgrs);
 
   // posManager variables are set up, we can start generating tasks
@@ -63,10 +63,14 @@ void scheduler(std::vector<hpx::naming::id_type> nodeStackMgrs, std::shared_ptr<
 
   ExponentialBackoff backoff;
 
-  while (running) {
+  for (;;) {
     tasks_required_sem.wait();
 
-    typedef typename NodeStackManager<Sol, GenType, N, ChildFunc>::getWork_action getWorkAct;
+    if (!running) {
+      break;
+    }
+
+    typedef typename NodeStackManager<Sol, ChildFunc>::getWork_action getWorkAct;
     auto scheduled = hpx::async<getWorkAct>(nodeStackMgr).get();
     if (scheduled) {
       perf_steals++;
@@ -82,28 +86,27 @@ void scheduler(std::vector<hpx::naming::id_type> nodeStackMgrs, std::shared_ptr<
   }
 }
 
-template <typename Sol, typename GenType, std::size_t N, typename ChildFunc>
+template <typename Sol, typename ChildFunc>
 void startScheduler(std::vector<hpx::naming::id_type> nodeStackMgrs) {
   auto schedulerReady = std::make_shared<hpx::promise<void> >();
 
   if (hpx::get_os_thread_count() > 1) {
     hpx::threads::executors::default_executor high_priority_executor(hpx::threads::thread_priority_critical,
                                                                      hpx::threads::thread_stacksize_large);
-    hpx::apply(high_priority_executor, &scheduler<Sol, GenType, N, ChildFunc>, nodeStackMgrs, schedulerReady);
+    hpx::apply(high_priority_executor, &scheduler<Sol, ChildFunc>, nodeStackMgrs, schedulerReady);
   } else {
     hpx::threads::executors::default_executor exe(hpx::threads::thread_stacksize_large);
-    hpx::apply(exe, &scheduler<Sol, GenType, N, ChildFunc>, nodeStackMgrs, schedulerReady);
+    hpx::apply(exe, &scheduler<Sol, ChildFunc>, nodeStackMgrs, schedulerReady);
   }
 
   schedulerReady->get_future().get();
 }
 
-template <typename Sol, typename GenType, std::size_t N, typename ChildFunc>
+template <typename Sol, typename ChildFunc>
 struct startSchedulerAct : hpx::actions::make_action<
-  decltype(&startScheduler<Sol, GenType, N, ChildFunc>),
-      &startScheduler<Sol, GenType, N, ChildFunc>,
-      startSchedulerAct<Sol, GenType, N, ChildFunc> >::type {};
-
+  decltype(&startScheduler<Sol, ChildFunc>),
+      &startScheduler<Sol, ChildFunc>,
+      startSchedulerAct<Sol, ChildFunc> >::type {};
 }}
 
 HPX_PLAIN_ACTION(workstealing::NodeStackSched::stopScheduler, stopScheduler_NodeStack_action);

@@ -11,10 +11,12 @@ struct func<Ret(*)(Args...), F> {
   using return_type = Ret;
   using func_type = Ret(Args...);
 
-  static constexpr auto fn_ptr = F;
-
   static Ret invoke(Args... xs) {
     return F(std::forward<Args>(xs)...);
+  }
+
+  static auto fn_ptr() {
+    return F;
   }
 };
 
