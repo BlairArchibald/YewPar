@@ -38,11 +38,8 @@ struct Count<Space, Sol, Gen, Rec> {
   static std::vector<std::uint64_t> search(const unsigned maxDepth,
                                     const Space & space,
                                     const Sol   & root) {
-    std::vector<std::uint64_t> cntMap;
-    cntMap.resize(maxDepth + 1);
-    for (auto i = 1; i <= maxDepth; ++i) {
-      cntMap[i] = 0;
-    }
+    std::vector<std::uint64_t> cntMap(maxDepth + 1);
+
     cntMap[0] = 1; // Count root node
 
     expand(maxDepth, space, cntMap, 1, root);
@@ -102,11 +99,8 @@ struct Count<Space, Sol, Gen, Stack, std::integral_constant<std::size_t, maxStac
   static std::vector<std::uint64_t> search(const unsigned maxDepth,
                                           const Space & space,
                                           const Sol   & root) {
-    std::vector<std::uint64_t> cntMap;
-    cntMap.resize(maxDepth + 1);
-    for (auto i = 1; i <= maxDepth; ++i) {
-      cntMap[i] = 0;
-    }
+    std::vector<std::uint64_t> cntMap(maxDepth + 1);
+
     cntMap[0] = 1; // Count root node
 
     expand(maxDepth, space, cntMap, root);
