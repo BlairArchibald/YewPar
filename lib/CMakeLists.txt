@@ -8,12 +8,12 @@ add_hpx_library(YewPar
   workstealing/scheduler.cpp
   workstealing/priorityscheduler.cpp
   workstealing/indexedScheduler.cpp
-  workstealing/NodeStackScheduler.cpp
+  workstealing/SearchManagerScheduler.cpp
 
   COMPONENT_DEPENDENCIES
   workqueue
   priorityworkqueue
   incumbent
   posManager
-  NodeStackManager
+  SearchManager
 )
