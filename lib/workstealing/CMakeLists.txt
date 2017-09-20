@@ -13,3 +13,6 @@ add_hpx_component(posManager
 add_hpx_component(NodeStackManager
     SOURCES NodeStackManager.cpp
     HEADERS NodeStackManager.hpp)
+add_hpx_component(SearchManager
+    SOURCES SearchManager.cpp
+    HEADERS SearchManager.hpp)
