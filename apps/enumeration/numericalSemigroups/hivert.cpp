@@ -44,18 +44,18 @@ NodeGen generateChildren(const Empty & space, const Monoid & s) {
 
 typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
 REGISTER_ENUM_REGISTRY(Empty, Monoid)
+
 using cFunc = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS> >::ChildTask;
 REGISTER_SEARCHMANAGER(Monoid, cFunc)
+
+using indexedFunc = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::Indexed>::ChildTask;
+using pathType = std::vector<unsigned>;
+REGISTER_SEARCHMANAGER(pathType, indexedFunc)
 
 // Annoying way to get large stack sizes by default (hide this if possible)
 namespace hpx { namespace traits {
   template <>
   struct action_stacksize<skeletons::Enum::DistCount<Empty, Monoid, genChildren_func>::ChildTask> {
-    enum { value = threads::thread_stacksize_large };
-  };
-
-  template <>
-  struct action_stacksize<skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::Indexed>::ChildTask> {
     enum { value = threads::thread_stacksize_large };
   };
 }};

@@ -8,59 +8,64 @@
 
 #include "enumRegistry.hpp"
 
+#include "util/func.hpp"
 #include "util/positionIndex.hpp"
 
-#include "workstealing/indexedScheduler.hpp"
-#include "workstealing/posManager.hpp"
+#include "workstealing/SearchManager.hpp"
+#include "workstealing/SearchManagerScheduler.hpp"
 
 namespace skeletons { namespace Enum {
 
 template <typename Space, typename Sol, typename Gen>
 struct DistCount<Space, Sol, Gen, Indexed> {
+  using Response_t    = boost::optional<hpx::util::tuple<std::vector<unsigned>, int, hpx::naming::id_type> >;
+  using SharedState_t = std::pair<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response_t> >;
 
-  static void searchChildTask(const std::shared_ptr<positionIndex> posIdx,
-                              const hpx::naming::id_type p,
+  static void searchChildTask(std::vector<unsigned> path,
+                              const int depth,
+                              std::shared_ptr<SharedState_t> stealRequest,
+                              const hpx::naming::id_type doneProm,
                               const int idx,
-                              const hpx::naming::id_type posMgr) {
+                              const hpx::naming::id_type searchMgr) {
     auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
 
-    auto path = posIdx->getPath();
-    auto depth = path.size();
+    auto posIdx = positionIndex(path);
     auto c = getStartingNode(path);
 
     std::vector<std::uint64_t> cntMap;
     cntMap.resize(reg->maxDepth + 1);
-    for (auto i = 0; i <= reg->maxDepth; ++i) {
-      cntMap[i] = 0;
-    }
 
-    // Account for the root node (paths always include 0 so we need to subtract one to test if we are the root)
-    if (depth - 1 == 0) {
-      cntMap[0] = 1;
-    }
-    expand(*posIdx, reg->maxDepth, depth, c, cntMap);
+    expand(posIdx, reg->maxDepth, depth, c, stealRequest, cntMap);
 
     // Atomically updates the (process) local counter
     reg->updateCounts(cntMap);
 
-    hpx::async<workstealing::indexed::posManager::done_action>(posMgr, idx).get();
-    workstealing::indexed::tasks_required_sem.signal();
+    typedef typename workstealing::SearchManager<std::vector<unsigned>, ChildTask>::done_action doneAct;
+    hpx::async<doneAct>(searchMgr, idx).get();
 
-    posIdx->waitFutures();
-    hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
+    workstealing::SearchManagerSched::tasks_required_sem.signal();
+
+    posIdx.waitFutures();
+    hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(doneProm, true).get();
   }
 
-  struct ChildTask : hpx::actions::make_action<
+  using ChildTask = func<
     decltype(&DistCount<Space, Sol, Gen, Indexed>::searchChildTask),
-    &DistCount<Space, Sol, Gen, Indexed>::searchChildTask,
-    ChildTask>::type {};
+    &DistCount<Space, Sol, Gen, Indexed>::searchChildTask>;
 
   static void expand(positionIndex & pos,
                      const unsigned maxDepth,
                      unsigned depth,
                      const Sol & n,
+                     std::shared_ptr<SharedState_t> stealRequest,
                      std::vector<std::uint64_t> & cntMap) {
-    auto reg = Components::Registry<Space, Sol>::gReg;
+    auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
+
+    // Handle Steal requests before processing a node
+    if (std::get<0>(*stealRequest)) {
+      std::get<1>(*stealRequest).set(pos.steal());
+      std::get<0>(*stealRequest).store(false);
+    }
 
     auto newCands = Gen::invoke(reg->space_, n);
     pos.setNumChildren(newCands.numChildren);
@@ -84,7 +89,7 @@ struct DistCount<Space, Sol, Gen, Indexed> {
       }
 
       pos.preExpand(i);
-      expand(pos, maxDepth, depth + 1, c, cntMap);
+      expand(pos, maxDepth, depth + 1, c, stealRequest, cntMap);
       pos.postExpand();
 
       ++i;
@@ -95,33 +100,35 @@ struct DistCount<Space, Sol, Gen, Indexed> {
                                           const Space & space,
                                           const Sol   & root) {
     hpx::wait_all(hpx::lcos::broadcast<enum_initRegistry_act>(hpx::find_all_localities(), space, maxDepth, root));
-
-    auto posMgrs = hpx::lcos::broadcast<workstealing::indexed::initPosMgr_act<ChildTask> >(hpx::find_all_localities()).get();
-
-    hpx::naming::id_type localPosMgr;
-    for (auto it = posMgrs.begin(); it != posMgrs.end(); ++it) {
-      if (hpx::get_colocation_id(*it).get() == hpx::find_here()) {
-        localPosMgr = *it;
-        break;
+    hpx::naming::id_type localSearchManager;
+    std::vector<hpx::naming::id_type> searchManagers;
+    for (auto const& loc : hpx::find_all_localities()) {
+      auto mgr = hpx::new_<workstealing::SearchManager<std::vector<unsigned>, ChildTask> >(loc).get();
+      searchManagers.push_back(mgr);
+      if (loc == hpx::find_here()) {
+        localSearchManager = mgr;
       }
     }
 
-    hpx::async<startScheduler_indexed_action>(hpx::find_here(), posMgrs).get();
+    typedef typename workstealing::SearchManagerSched::startSchedulerAct<std::vector<unsigned>, ChildTask> startSchedulerAct;
+    hpx::wait_all(hpx::lcos::broadcast<startSchedulerAct>(hpx::find_all_localities(), searchManagers));
 
-    // Push the root node as a task to the posMgr
+    // Push the root node as a task to the searchManager
     std::vector<unsigned> path;
     path.reserve(30);
     path.push_back(0);
     hpx::promise<void> prom;
     auto f = prom.get_future();
     auto pid = prom.get_id();
-    hpx::async<workstealing::indexed::posManager::addWork_action>(localPosMgr, path, pid);
+
+    typedef typename workstealing::SearchManager<std::vector<unsigned>, ChildTask>::addWork_action addWorkAct;
+    hpx::async<addWorkAct>(localSearchManager, path, 1, pid);
 
     // Wait completion of the main task
     f.get();
 
     // Stop the schedulers everywhere
-    hpx::wait_all(hpx::lcos::broadcast<stopScheduler_indexed_action>(hpx::find_all_localities()));
+    hpx::wait_all(hpx::lcos::broadcast<stopScheduler_SearchManager_action>(hpx::find_all_localities()));
 
     // Gather the counts
     std::vector<std::vector<uint64_t> > cntList;
@@ -135,6 +142,7 @@ struct DistCount<Space, Sol, Gen, Indexed> {
       }
       res[i] = totalCnt;
     }
+    res[0] = 1; //Account for root node
 
     return res;
   }

@@ -201,33 +201,33 @@ class SearchManager: public hpx::components::locking_hook<
 
 }
 
-#define REGISTER_SEARCHMANAGER(searchInfo,Func)                                    \
-  typedef workstealing::SearchManager<searchInfo, Func > __searchmgr_type_;        \
-                                                                                   \
-  HPX_REGISTER_ACTION(__searchmgr_type_::registerDistributedManagers_action,       \
-                      BOOST_PP_CAT(__searchmgr_registerDistributedManagers_action, \
-                                   BOOST_PP_CAT(searchInfo, Func)));               \
-                                                                                   \
-  HPX_REGISTER_ACTION(__searchmgr_type_::getWork_action,                           \
-                      BOOST_PP_CAT(__searchmgr_getWork_action,                     \
-                                   BOOST_PP_CAT(searchInfo, Func)));               \
-                                                                                   \
-  HPX_REGISTER_ACTION(__searchmgr_type_::addWork_action,                           \
-                      BOOST_PP_CAT(__searchmgr_addWork_action,                     \
-                                   BOOST_PP_CAT(searchInfo, Func)));               \
-                                                                                   \
-  HPX_REGISTER_ACTION(__searchmgr_type_::done_action,                              \
-                      BOOST_PP_CAT(__searchmgr_done_action,                        \
-                                   BOOST_PP_CAT(searchInfo, Func)));               \
-                                                                                   \
-  HPX_REGISTER_ACTION(__searchmgr_type_::getLocalWork_action,                      \
-                      BOOST_PP_CAT(__searchmgr_getLocalWork_action,                \
-                                   BOOST_PP_CAT(searchInfo, Func)));               \
-                                                                                   \
-  typedef ::hpx::components::component<__searchmgr_type_ >                         \
-  BOOST_PP_CAT(__searchmgr_, BOOST_PP_CAT(searchInfo, Func));                      \
-                                                                                   \
-  HPX_REGISTER_COMPONENT(BOOST_PP_CAT(__searchmgr_,                                \
-                                      BOOST_PP_CAT(searchInfo, Func)));            \
+#define REGISTER_SEARCHMANAGER(searchInfo,Func)                                                        \
+  typedef workstealing::SearchManager<searchInfo, Func > BOOST_PP_CAT(__searchmgr_type_, searchInfo);  \
+                                                                                                       \
+  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, searchInfo)::registerDistributedManagers_action, \
+                      BOOST_PP_CAT(__searchmgr_registerDistributedManagers_action,                     \
+                                   BOOST_PP_CAT(searchInfo, Func)));                                   \
+                                                                                                       \
+  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, searchInfo)::getWork_action,                     \
+                      BOOST_PP_CAT(__searchmgr_getWork_action,                                         \
+                                   BOOST_PP_CAT(searchInfo, Func)));                                   \
+                                                                                                       \
+  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, searchInfo)::addWork_action,                     \
+                      BOOST_PP_CAT(__searchmgr_addWork_action,                                         \
+                                   BOOST_PP_CAT(searchInfo, Func)));                                   \
+                                                                                                       \
+  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, searchInfo)::done_action,                        \
+                      BOOST_PP_CAT(__searchmgr_done_action,                                            \
+                                   BOOST_PP_CAT(searchInfo, Func)));                                   \
+                                                                                                       \
+  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, searchInfo)::getLocalWork_action,                \
+                      BOOST_PP_CAT(__searchmgr_getLocalWork_action,                                    \
+                                   BOOST_PP_CAT(searchInfo, Func)));                                   \
+                                                                                                       \
+  typedef ::hpx::components::component<BOOST_PP_CAT(__searchmgr_type_, searchInfo) >                   \
+  BOOST_PP_CAT(__searchmgr_, BOOST_PP_CAT(searchInfo, Func));                                          \
+                                                                                                       \
+  HPX_REGISTER_COMPONENT(BOOST_PP_CAT(__searchmgr_,                                                    \
+                                      BOOST_PP_CAT(searchInfo, Func)));                                \
 
 #endif

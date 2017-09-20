@@ -125,7 +125,9 @@ class positionIndex {
     futures.push_back(std::move(f));
 
     // FIXME: Should path size be returned here?
-    return hpx::util::make_tuple(std::move(res), res.size(), pid);
+    int stealDepth = res.size();
+    auto stealRes = hpx::util::make_tuple(std::move(res), stealDepth, pid);
+    return stealRes;
   }
 
   void waitFutures() {
