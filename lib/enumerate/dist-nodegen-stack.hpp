@@ -13,8 +13,8 @@
 #include "enumRegistry.hpp"
 #include "util/func.hpp"
 
-#include "workstealing/NodeStackManager.hpp"
-#include "workstealing/NodeStackScheduler.hpp"
+#include "workstealing/SearchManager.hpp"
+#include "workstealing/SearchManagerScheduler.hpp"
 
 // Represent the search tree as a stealable stack of nodegens
 namespace skeletons { namespace Enum {
@@ -29,7 +29,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     typename Gen::return_type generator;
   };
 
-  using Response_t = boost::optional<hpx::util::tuple<Sol, int, hpx::naming::id_type> >;
+  using Response_t    = boost::optional<hpx::util::tuple<Sol, int, hpx::naming::id_type> >;
   using SharedState_t = std::pair<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response_t> >;
 
   static void expandFromDepth(const int startingDepth,
@@ -53,8 +53,8 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     while (stackDepth >= 0) {
       // Handle steals first
       if (std::get<0>(*stealRequest)) {
+
         // We steal from the highest possible generator with work
-        // FIXME: Something is wrong with the memory here
         bool responded = false;
         for (auto i = 0; i < stackDepth; ++i) {
           if (generatorStack[i].seen < generatorStack[i].generator.numChildren) {
@@ -110,33 +110,32 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
   static std::vector<std::uint64_t> count(const unsigned maxDepth,
                                           const Space & space,
                                           const Sol   & root) {
-    //FIXME: Sequential version for now
     hpx::wait_all(hpx::lcos::broadcast<enum_initRegistry_act>(hpx::find_all_localities(), space, maxDepth, root));
 
-    hpx::naming::id_type localMgr;
-    std::vector<hpx::naming::id_type> mgrs;
+    hpx::naming::id_type localSearchManager;
+    std::vector<hpx::naming::id_type> searchManagers;
     for (auto const& loc : hpx::find_all_localities()) {
-      auto mgr = hpx::new_<workstealing::NodeStackManager<Sol, ChildTask> >(loc).get();
-      mgrs.push_back(mgr);
+      auto mgr = hpx::new_<workstealing::SearchManager<Sol, ChildTask> >(loc).get();
+      searchManagers.push_back(mgr);
       if (loc == hpx::find_here()) {
-        localMgr = mgr;
+        localSearchManager = mgr;
       }
     }
 
-    typedef typename workstealing::NodeStackSched::startSchedulerAct<Sol, ChildTask> startSchedulerAct;
-    hpx::wait_all(hpx::lcos::broadcast<startSchedulerAct>(hpx::find_all_localities(), mgrs));
+    typedef typename workstealing::SearchManagerSched::startSchedulerAct<Sol, ChildTask> startSchedulerAct;
+    hpx::wait_all(hpx::lcos::broadcast<startSchedulerAct>(hpx::find_all_localities(), searchManagers));
 
     // Add the root task as some work
     hpx::promise<void> prom;
     auto f = prom.get_future();
     auto pid = prom.get_id();
 
-    typedef typename workstealing::NodeStackManager<Sol, ChildTask>::addWork_action addWorkAct;
-    hpx::async<addWorkAct>(localMgr, root, pid);
+    typedef typename workstealing::SearchManager<Sol, ChildTask>::addWork_action addWorkAct;
+    hpx::async<addWorkAct>(localSearchManager, root, 1, pid);
 
     f.get();
 
-    hpx::wait_all(hpx::lcos::broadcast<stopScheduler_NodeStack_action>(hpx::find_all_localities()));
+    hpx::wait_all(hpx::lcos::broadcast<stopScheduler_SearchManager_action>(hpx::find_all_localities()));
 
     std::vector<std::vector<uint64_t> > cntList;
     cntList = hpx::lcos::broadcast(enum_getCounts_act(), hpx::find_all_localities(), Space(), root).get();
@@ -158,7 +157,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
                          const std::shared_ptr<SharedState_t> stealRequest,
                          const hpx::naming::id_type p,
                          const unsigned idx,
-                         const hpx::naming::id_type NodeStackMgr) {
+                         const hpx::naming::id_type searchManager) {
     auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
 
     std::vector<std::uint64_t> cntMap(reg->maxDepth + 1);
@@ -169,10 +168,10 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     // Atomically updates the (process) local counter
     reg->updateCounts(cntMap);
 
-    typedef typename workstealing::NodeStackManager<Sol, ChildTask>::done_action doneAct;
-    hpx::async<doneAct>(NodeStackMgr, idx).get();
+    typedef typename workstealing::SearchManager<Sol, ChildTask>::done_action doneAct;
+    hpx::async<doneAct>(searchManager, idx).get();
 
-    workstealing::NodeStackSched::tasks_required_sem.signal();
+    workstealing::SearchManagerSched::tasks_required_sem.signal();
     hpx::wait_all(futures);
 
     hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
@@ -182,8 +181,6 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     decltype(&DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size_t, maxStackDepth_> >::runFromSol),
     &DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size_t, maxStackDepth_> >::runFromSol >;
 };
-
-
 
 }}
 

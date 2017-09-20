@@ -45,7 +45,7 @@ NodeGen generateChildren(const Empty & space, const Monoid & s) {
 typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
 REGISTER_ENUM_REGISTRY(Empty, Monoid)
 using cFunc = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS> >::ChildTask;
-REGISTER_NODESTACKMANAGER(Monoid, cFunc)
+REGISTER_SEARCHMANAGER(Monoid, cFunc)
 
 // Annoying way to get large stack sizes by default (hide this if possible)
 namespace hpx { namespace traits {
