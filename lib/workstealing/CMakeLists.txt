@@ -6,10 +6,6 @@ add_hpx_component(priorityworkqueue
     SOURCES priorityworkqueue.cpp
     HEADERS priorityworkqueue.hpp)
 
-add_hpx_component(posManager
-    SOURCES posManager.cpp
-    HEADERS posManager.hpp)
-
 add_hpx_component(SearchManager
     SOURCES SearchManager.cpp
     HEADERS SearchManager.hpp)
