@@ -209,12 +209,14 @@ using ordered_act = skeletons::BnB::Ordered::BranchAndBoundOpt<BitGraph<NWORDS>,
 HPX_ACTION_USES_LARGE_STACK(ordered_act);
 using recompute_act = skeletons::BnB::DistRecompute::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
 HPX_ACTION_USES_LARGE_STACK(recompute_act);
-using indexed_act = skeletons::BnB::Indexed::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
-HPX_ACTION_USES_LARGE_STACK(indexed_act);
 
 typedef BitSet<NWORDS> bitsetType;
 REGISTER_INCUMBENT(MCSol, int, bitsetType);
 REGISTER_REGISTRY(BitGraph<NWORDS>, MCSol, int, bitsetType);
+
+using indexedFunc = skeletons::BnB::Indexed::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
+using pathType = std::vector<unsigned>;
+REGISTER_SEARCHMANAGER(pathType, indexedFunc)
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto inputFile = opts["input-file"].as<std::string>();

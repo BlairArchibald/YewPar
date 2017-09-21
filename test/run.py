@@ -10,7 +10,7 @@ INSTALL_LOC = "../build"
 MCBenchmarks=["data/brock200_1.clq", "data/brock200_2.clq", "data/brock200_3.clq", "data/brock200_4.clq"]
 
 ldpath = os.environ['LD_LIBRARY_PATH']
-MCBinary="LD_LIBRARY_PATH={}:{}/install/lib {}/install/bin/maxclique-4".format(ldpath, INSTALL_LOC, INSTALL_LOC)
+MCBinary="LD_LIBRARY_PATH={}:{}/install/lib {}/install/bin/maxclique-8".format(ldpath, INSTALL_LOC, INSTALL_LOC)
 NSBinary="LD_LIBRARY_PATH={}:{}/install/lib {}/install/bin/NS-hivert".format(ldpath, INSTALL_LOC, INSTALL_LOC)
 
 FAILED = []

@@ -165,7 +165,11 @@ class SearchManager: public hpx::components::locking_hook<
       active[nextId] = shared_state;
 
       hpx::threads::executors::current_executor scheduler;
-      scheduler.add(hpx::util::bind(FuncToCall::fn_ptr(), searchInfo, depth, shared_state, prom, nextId, this->get_id()));
+      scheduler.add(hpx::util::bind(FuncToCall::fn_ptr(), searchInfo, depth, shared_state, prom, nextId, this->get_id()),
+                                    hpx::util::thread_description(),
+                                    hpx::threads::pending,
+                                    true,
+                                    hpx::threads::thread_stacksize_large);
       return true;
     }
   }
@@ -179,7 +183,11 @@ class SearchManager: public hpx::components::locking_hook<
     active[nextId] = shared_state;
 
     hpx::threads::executors::current_executor scheduler;
-    scheduler.add(hpx::util::bind(FuncToCall::fn_ptr(), info, depth, shared_state, prom, nextId, this->get_id()));
+    scheduler.add(hpx::util::bind(FuncToCall::fn_ptr(), info, depth, shared_state, prom, nextId, this->get_id()),
+                                  hpx::util::thread_description(),
+                                  hpx::threads::pending,
+                                  true,
+                                  hpx::threads::thread_stacksize_large);
   }
   HPX_DEFINE_COMPONENT_ACTION(SearchManager, addWork);
 
