@@ -18,7 +18,6 @@
 struct Empty {};
 
 struct NodeGen : skeletons::Enum::NodeGenerator<Empty, Monoid> {
-  // TODO: Ideally we want this to be a reference type
   Monoid group;
   generator_iter<CHILDREN> it;
 
@@ -27,13 +26,13 @@ struct NodeGen : skeletons::Enum::NodeGenerator<Empty, Monoid> {
   }
 
   NodeGen(const Monoid & s) : group(s), it(generator_iter<CHILDREN>(s)){
-    this->numChildren = it.count();
-    it.move_next(); // Original code skips begin
+    this->numChildren = it.count(group);
+    it.move_next(group); // Original code skips begin
   }
 
   Monoid next() override {
     auto res = remove_generator(group, it.get_gen());
-    it.move_next();
+    it.move_next(group);
     return res;
   }
 };
