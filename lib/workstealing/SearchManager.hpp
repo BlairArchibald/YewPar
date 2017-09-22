@@ -74,12 +74,14 @@ class SearchManager: public hpx::components::locking_hook<
   // Pointers to SearchManagers on other localities
   std::vector<hpx::naming::id_type> distributedSearchManagers;
 
+  // random number generator
+  std::mt19937 randGenerator;
+
   // Try to steal from a thread on another (random) locality
   Response_t tryDistributedSteal() {
     auto victim = distributedSearchManagers.begin();
 
-    std::uniform_int_distribution<int> rand(0, distributedSearchManagers.size() - 1);
-    std::default_random_engine randGenerator;
+    std::uniform_int_distribution<> rand(0, distributedSearchManagers.size() - 1);
     std::advance(victim, rand(randGenerator));
 
     return hpx::async<getLocalWork_action>(*victim).get();
@@ -91,6 +93,8 @@ class SearchManager: public hpx::components::locking_hook<
     for (auto i = 0; i < hpx::get_os_thread_count(); ++i) {
       activeIds.push(i);
     }
+    std::random_device rd;
+    randGenerator.seed(rd());
   }
 
   // Notify this search manager of the globalId's of potential steal victims
@@ -106,8 +110,7 @@ class SearchManager: public hpx::components::locking_hook<
     }
     auto victim = active.begin();
 
-    std::uniform_int_distribution<int> rand(0, active.size() - 1);
-    std::default_random_engine randGenerator;
+    std::uniform_int_distribution<> rand(0, active.size() - 1);
     std::advance(victim, rand(randGenerator));
 
     auto pos         = victim->first;

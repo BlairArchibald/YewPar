@@ -80,7 +80,8 @@ void scheduler(std::vector<hpx::naming::id_type> workqueues,
   ExponentialBackoff backoff;
 
   // Randomness for victim selection
-  std::default_random_engine randGenerator;
+  std::random_device rd;
+  std::mt19937 randGenerator(rd());
   std::uniform_int_distribution<int> rand(0, workqueues.size() - 1);
 
   while (running) {
