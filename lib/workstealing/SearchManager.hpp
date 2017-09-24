@@ -77,14 +77,29 @@ class SearchManager: public hpx::components::locking_hook<
   // random number generator
   std::mt19937 randGenerator;
 
+  // Are we currently doing a distributed steal?
+  bool isStealingDistributed = false;
+
   // Try to steal from a thread on another (random) locality
   Response_t tryDistributedSteal() {
+    // We only allow one distributed steal to happen at a time (to make sure we
+    // don't overload the communication)
+    if (isStealingDistributed) {
+      return {};
+    }
+
+    isStealingDistributed = true;
+
     auto victim = distributedSearchManagers.begin();
 
     std::uniform_int_distribution<> rand(0, distributedSearchManagers.size() - 1);
     std::advance(victim, rand(randGenerator));
 
-    return hpx::async<getLocalWork_action>(*victim).get();
+    auto res = hpx::async<getLocalWork_action>(*victim).get();
+
+    isStealingDistributed = false;
+
+    return res;
   }
 
  public:
