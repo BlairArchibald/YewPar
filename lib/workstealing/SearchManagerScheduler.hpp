@@ -52,11 +52,11 @@ void scheduler(std::vector<hpx::naming::id_type> searchManagers, std::shared_ptr
   auto threads = hpx::get_os_thread_count();
   hpx::threads::executors::current_executor scheduler;
 
-  // FIXME: Currently assumes one thread per locality is initialised with work via SearchManager::addWork(..)
-  if (threads == 1) {
-    return;
-  }
-  tasks_required_sem.signal(threads - 1);
+  // // FIXME: Currently assumes one thread per locality is initialised with work via SearchManager::addWork(..)
+  // if (threads == 1) {
+  //   return;
+  // }
+  // tasks_required_sem.signal(threads - 1);
 
   ExponentialBackoff backoff;
   for (;;) {

@@ -258,6 +258,16 @@ class SearchManager: public hpx::components::locking_hook<
     activeIds.push(activeId);
   }
   HPX_DEFINE_COMPONENT_ACTION(SearchManager, done);
+
+  // Generate a new stealRequest pair that can be used with an existing thread to add steals to it
+  // Used for master-threads initialising work while maintaining a stack
+  std::pair<std::shared_ptr<SharedState_t>, unsigned> registerThread() {
+    auto shared_state = std::make_shared<SharedState_t>();
+    auto nextId = activeIds.front();
+    activeIds.pop();
+    active[nextId] = shared_state;
+    return std::make_pair(shared_state, nextId);
+  }
 };
 
 }

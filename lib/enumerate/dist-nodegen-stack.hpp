@@ -9,12 +9,15 @@
 #include <boost/optional.hpp>
 
 #include <hpx/lcos/broadcast.hpp>
+#include <hpx/runtime/get_ptr.hpp>
 
 #include "enumRegistry.hpp"
 #include "util/func.hpp"
 
 #include "workstealing/SearchManager.hpp"
 #include "workstealing/SearchManagerScheduler.hpp"
+
+#include "seq.hpp"
 
 // Represent the search tree as a stealable stack of nodegens
 namespace skeletons { namespace Enum {
@@ -32,24 +35,23 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
   using Response_t    = boost::optional<hpx::util::tuple<Sol, int, hpx::naming::id_type> >;
   using SharedState_t = std::pair<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response_t> >;
 
-  static void expandFromDepth(const int startingDepth,
-                              const unsigned maxDepth,
-                              const Space & space,
-                              const Sol & startingNode,
-                              std::shared_ptr<SharedState_t> stealRequest,
-                              std::vector<std::uint64_t> & cntMap,
-                              std::vector<hpx::future<void> > & futures) {
-    std::array<StackElem, maxStackDepth_> generatorStack;
+  // Run with a pre-initialised stack. Used for the master thread once it pushes work
+  static void runWithStack(const int startingDepth,
+                           const unsigned maxDepth,
+                           const Space & space,
+                           std::array<StackElem, maxStackDepth_> & generatorStack,
+                           std::shared_ptr<SharedState_t> stealRequest,
+                           std::vector<std::uint64_t> & cntMap,
+                           std::vector<hpx::future<void> > & futures,
+                           int stackDepth = 0,
+                           int depth = -1) {
     std::vector<hpx::promise<void> > promises;
 
-    // Setup the stack with root node
-    auto rootGen = Gen::invoke(space, startingNode);
-    cntMap[startingDepth] += rootGen.numChildren;
-    generatorStack[0].seen = 0;
-    generatorStack[0].generator = std::move(rootGen);
+    // We do this because arguments can't default initialise to themselves
+    if (depth == -1) {
+      depth = startingDepth;
+    }
 
-    unsigned depth = startingDepth;
-    int stackDepth = 0;
     while (stackDepth >= 0) {
       // Handle steals first
       if (std::get<0>(*stealRequest)) {
@@ -107,6 +109,159 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     }
   }
 
+  static void expandFromDepth(const int startingDepth,
+                              const unsigned maxDepth,
+                              const Space & space,
+                              const Sol & startingNode,
+                              std::shared_ptr<SharedState_t> stealRequest,
+                              std::vector<std::uint64_t> & cntMap,
+                              std::vector<hpx::future<void> > & futures) {
+    std::array<StackElem, maxStackDepth_> generatorStack;
+
+    // Setup the stack with root node
+    auto rootGen = Gen::invoke(space, startingNode);
+    cntMap[startingDepth] += rootGen.numChildren;
+    generatorStack[0].seen = 0;
+    generatorStack[0].generator = std::move(rootGen);
+
+    runWithStack(startingDepth, maxDepth, space, generatorStack, stealRequest, cntMap, futures);
+  }
+
+  static unsigned getCountAt(const Space & space, const Sol & root, unsigned depth) {
+    // Call the sequential skeleton to get a node count for the top levels
+    auto cntMap = Count<Space, Sol, Gen>::search(depth, space, root);
+    return cntMap[depth];
+  }
+
+  static void spawnInitialWork(unsigned depthRequired,
+                               unsigned totalThreads,
+                               int & stackDepth,
+                               int & depth,
+                               const Space & space,
+                               std::array<StackElem, maxStackDepth_> & generatorStack,
+                               std::vector<std::uint64_t> & cntMap,
+                               std::vector<hpx::future<void> > & futures,
+                               std::vector<hpx::naming::id_type> & searchMgrs){
+    auto tasksSpawned = 0;
+
+    while (stackDepth >= 0) {
+      // If there's still children at this stackDepth we move into them
+      if (generatorStack[stackDepth].seen < generatorStack[stackDepth].generator.numChildren) {
+        // Get the next child at this stackDepth
+        const auto child = generatorStack[stackDepth].generator.next();
+        generatorStack[stackDepth].seen++;
+
+        // Going down
+        stackDepth++;
+        depth++;
+
+        // Push anything at this depth as a task
+        if (stackDepth == depthRequired) {
+          hpx::promise<void> prom;
+          auto f = prom.get_future();
+          auto pid = prom.get_id();
+          futures.push_back(std::move(f));
+
+          auto mgr = tasksSpawned % searchMgrs.size();
+          typedef typename workstealing::SearchManager<Sol, ChildTask>::addWork_action addWorkAct;
+          hpx::async<addWorkAct>(searchMgrs[mgr], child, depth, pid);
+
+          stackDepth--;
+          depth--;
+          ++tasksSpawned;
+
+          // We keep a spare thread for ourselves to execute as
+          if (tasksSpawned == totalThreads - 1) {
+            break;
+          }
+        } else {
+          // Get the child's generator
+          const auto childGen = Gen::invoke(space, child);
+          cntMap[depth] += childGen.numChildren;
+          generatorStack[stackDepth].seen = 0;
+          generatorStack[stackDepth].generator = std::move(childGen);
+        }
+      } else {
+        stackDepth--;
+        depth--;
+      }
+    }
+  }
+
+  // Push a node to each thread in the system
+  static void doCount(const unsigned maxDepth,
+                      const Space & space,
+                      const Sol & root,
+                      std::vector<hpx::naming::id_type> & searchMgrs) {
+    auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
+
+    std::vector<hpx::future<void> > futures;
+    std::vector<std::uint64_t> cntMap(maxDepth + 1);
+
+    // Push work
+    // FIXME: Assumes homogeneous machines
+    auto totalThreads = hpx::find_all_localities().size() * hpx::get_os_thread_count();
+
+    // Assumes we always have a local manager in the list
+    auto localSearchMgr = *(std::find_if(searchMgrs.begin(), searchMgrs.end(), [](const auto & id){
+          return hpx::get_colocation_id(hpx::launch::sync, id) == hpx::find_here();
+        }));
+
+    if (totalThreads == 1) {
+      auto localSearchManagerPtr = hpx::get_ptr<workstealing::SearchManager<Sol, ChildTask> >(hpx::launch::sync, localSearchMgr);
+      auto searchMgrInfo = localSearchManagerPtr->registerThread();
+      auto stealRequest  = std::get<0>(searchMgrInfo);
+
+      expandFromDepth(1, maxDepth, space, root, stealRequest, cntMap, futures);
+      reg->updateCounts(cntMap);
+
+      return;
+    }
+
+    // Find the required depth to get "totalThreads" tasks
+    // Just runs the top level counts multiple times for ease
+    auto depthRequired = 1;
+    while (depthRequired <= maxDepth) {
+      auto numNodes = getCountAt(space, root, depthRequired);
+      if (numNodes >= totalThreads) {
+        break;
+      }
+      ++depthRequired;
+    }
+
+    // Potulate initial stack
+    std::array<StackElem, maxStackDepth_> generatorStack;
+    auto rootGen = Gen::invoke(space, root);
+    cntMap[1] += rootGen.numChildren;
+    generatorStack[0].seen = 0;
+    generatorStack[0].generator = std::move(rootGen);
+
+    // Local searchManager should be at the back of the searchMgrs since it only spawns threads - 1
+    searchMgrs.erase(std::remove(searchMgrs.begin(), searchMgrs.end(), localSearchMgr), searchMgrs.end());
+    searchMgrs.push_back(localSearchMgr);
+    assert(localSearchMgr == searchMgrs.back());
+
+    auto stackDepth = 0;
+    auto depth = 1;
+    spawnInitialWork(depthRequired, totalThreads, stackDepth, depth, space, generatorStack, cntMap, futures, searchMgrs);
+
+    // Register the rest of the work from the main thread with the generator
+    auto localSearchManagerPtr = hpx::get_ptr<workstealing::SearchManager<Sol, ChildTask> >(hpx::launch::sync, localSearchMgr);
+    auto searchMgrInfo = localSearchManagerPtr->registerThread();
+    auto stealRequest  = std::get<0>(searchMgrInfo);
+
+    // Continue the actual work
+    runWithStack(1, maxDepth, space, generatorStack, stealRequest, cntMap, futures, stackDepth, depth);
+
+    reg->updateCounts(cntMap);
+
+    typedef typename workstealing::SearchManager<Sol, ChildTask>::done_action doneAct;
+    hpx::async<doneAct>(localSearchMgr, std::get<1>(searchMgrInfo)).get();
+
+    // Wait for everything to complete including the initial tasks
+    hpx::wait_all(futures);
+  }
+
   static std::vector<std::uint64_t> count(const unsigned maxDepth,
                                           const Space & space,
                                           const Sol   & root) {
@@ -125,15 +280,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     typedef typename workstealing::SearchManagerSched::startSchedulerAct<Sol, ChildTask> startSchedulerAct;
     hpx::wait_all(hpx::lcos::broadcast<startSchedulerAct>(hpx::find_all_localities(), searchManagers));
 
-    // Add the root task as some work
-    hpx::promise<void> prom;
-    auto f = prom.get_future();
-    auto pid = prom.get_id();
-
-    typedef typename workstealing::SearchManager<Sol, ChildTask>::addWork_action addWorkAct;
-    hpx::async<addWorkAct>(localSearchManager, root, 1, pid);
-
-    f.get();
+    doCount(maxDepth, space, root, searchManagers);
 
     hpx::wait_all(hpx::lcos::broadcast<stopScheduler_SearchManager_action>(hpx::find_all_localities()));
 
