@@ -26,6 +26,7 @@
 #include "hpx/runtime/serialization/binary_filter.hpp"           // for bina...
 #include "hpx/runtime/serialization/serialize.hpp"               // for oper...
 #include "hpx/runtime/serialization/shared_ptr.hpp"
+#include "hpx/runtime/serialization/variant.hpp"
 #include "hpx/runtime/threads/executors/current_executor.hpp"    // for curr...
 #include "hpx/runtime/threads/thread_data_fwd.hpp"               // for get_...
 #include "hpx/traits/is_action.hpp"                              // for is_a...
@@ -35,13 +36,7 @@
 #include "hpx/util/unused.hpp"                                   // for unus...
 #include "hpx/util/tuple.hpp"
 #include <boost/optional.hpp>
-#include <boost/serialization/optional.hpp>
-
-namespace hpx { namespace serialization {
-    template <typename Archive, typename SearchInfo>
-    void serialize(Archive & ar, boost::optional<hpx::util::tuple<SearchInfo, int, hpx::naming::id_type> > & x, const unsigned int version) {
-  ar & x;
-}}}
+#include <boost/variant.hpp>
 
 namespace workstealing {
 
@@ -57,7 +52,41 @@ class SearchManager: public hpx::components::locking_hook<
  private:
 
   // Information returned on a steal from a thread
-  using Response_t    = boost::optional<hpx::util::tuple<SearchInfo, int, hpx::naming::id_type> >;
+  using Response_t = boost::optional<hpx::util::tuple<SearchInfo, int, hpx::naming::id_type> >;
+
+  // For serialization we wrap the Response_t in a struct
+  struct DistResponse_t {
+    // Serialising an optional isn't (currently) supported by HPX
+    // Instead we pass around boost variants which are supported
+    // FIXME: Move back to optional if/once support is added in HPX
+    using T_type = hpx::util::tuple<SearchInfo, int, hpx::naming::id_type>;
+    boost::variant<T_type, bool> var;
+
+    DistResponse_t () = default;
+    DistResponse_t (Response_t res) {
+      if (res) {
+        var = *res;
+      } else {
+        var = false;
+      }
+    };
+
+    Response_t getResponse() {
+      switch(var.which()) {
+        // Success
+        case 0: return boost::get<T_type>(var);
+        // Failed steal
+        case 1: return {};
+      }
+    }
+
+    friend class hpx::serialization::access;
+    template <typename Archive>
+    void serialize(Archive & ar, const unsigned int version) {
+      ar & var;
+    }
+  };
+
 
   // Information shared between a thread and the manager. We set the atomic on a steal and then use the channel to await a response
   using SharedState_t = std::pair<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response_t> >;
@@ -95,11 +124,11 @@ class SearchManager: public hpx::components::locking_hook<
     std::uniform_int_distribution<> rand(0, distributedSearchManagers.size() - 1);
     std::advance(victim, rand(randGenerator));
 
-    auto res = hpx::async<getLocalWork_action>(*victim).get();
+    auto res = hpx::async<getDistributedWork_action>(*victim).get();
 
     isStealingDistributed = false;
 
-    return res;
+    return res.getResponse();
   }
 
  public:
@@ -117,6 +146,13 @@ class SearchManager: public hpx::components::locking_hook<
     distributedSearchManagers = distributedSearchMgrs;
   }
   HPX_DEFINE_COMPONENT_ACTION(SearchManager, registerDistributedManagers);
+
+  // Try to get work from a (random) thread running on this locality and wrap it
+  // back up for serializing over the network
+  DistResponse_t getDistributedWork() {
+    return DistResponse_t(getLocalWork());
+  }
+  HPX_DEFINE_COMPONENT_ACTION(SearchManager, getDistributedWork);
 
   // Try to get work from a (random) thread running on this locality
   Response_t getLocalWork() {
@@ -151,7 +187,6 @@ class SearchManager: public hpx::components::locking_hook<
     inactive.erase(pos);
     return res;
   }
-  HPX_DEFINE_COMPONENT_ACTION(SearchManager, getLocalWork);
 
   // Called by the scheduler to ask the searchManager to add more work
   // TODO: This should return a task type (or nullptr) like other schedulers
@@ -246,8 +281,8 @@ class SearchManager: public hpx::components::locking_hook<
                       BOOST_PP_CAT(__searchmgr_done_action,                                            \
                                    BOOST_PP_CAT(searchInfo, Func)));                                   \
                                                                                                        \
-  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, searchInfo)::getLocalWork_action,                \
-                      BOOST_PP_CAT(__searchmgr_getLocalWork_action,                                    \
+  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, searchInfo)::getDistributedWork_action,          \
+                      BOOST_PP_CAT(__searchmgr_getDistributedWork_action,                              \
                                    BOOST_PP_CAT(searchInfo, Func)));                                   \
                                                                                                        \
   typedef ::hpx::components::component<BOOST_PP_CAT(__searchmgr_type_, searchInfo) >                   \
