@@ -191,7 +191,7 @@ template <class T> inline bool generator_iter<T>::move_next(const Monoid & mon)
 inline __attribute__((always_inline))
 void copy_blocks(dec_blocks &dst, dec_blocks const &src)
 {
-  for (ind_t i=0; i<NBLOCKS; i++) dst[i] = src[i];
+  dst = src;
 }
 
 
