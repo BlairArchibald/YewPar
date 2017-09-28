@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
     );
 
   // hpx::register_startup_function(&workstealing::registerPerformanceCounters);
-  // hpx::register_startup_function(&workstealing::indexed::registerPerformanceCounters);
+  hpx::register_startup_function(&workstealing::SearchManagerSched::registerPerformanceCounters);
 
   return hpx::init(desc_commandline, argc, argv);
 }

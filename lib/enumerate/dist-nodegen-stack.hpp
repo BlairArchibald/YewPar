@@ -258,6 +258,8 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     typedef typename workstealing::SearchManager<Sol, ChildTask>::done_action doneAct;
     hpx::async<doneAct>(localSearchMgr, std::get<1>(searchMgrInfo)).get();
 
+    workstealing::SearchManagerSched::tasks_required_sem.signal();
+
     // Wait for everything to complete including the initial tasks
     hpx::wait_all(futures);
   }
