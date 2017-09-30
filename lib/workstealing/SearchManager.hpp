@@ -13,6 +13,7 @@
 #include "hpx/lcos/detail/promise_lco.hpp"                       // for prom...
 #include "hpx/lcos/future.hpp"                                   // for future
 #include "hpx/lcos/local/channel.hpp"                            // for future
+#include "hpx/lcos/local/spinlock.hpp"
 #include "hpx/runtime/actions/basic_action.hpp"                  // for make...
 #include "hpx/runtime/actions/component_action.hpp"              // for HPX_...
 #include "hpx/runtime/actions/transfer_action.hpp"               // for tran...
@@ -46,10 +47,13 @@ namespace workstealing {
 // response is generic allowing responses to be enumeration Nodes, B&B Nodes or
 // even paths for recompute based skeletons
 template <typename SearchInfo, typename FuncToCall>
-class SearchManager: public hpx::components::locking_hook<
-  hpx::components::component_base<SearchManager<SearchInfo, FuncToCall> > > {
+class SearchManager: public hpx::components::component_base<SearchManager<SearchInfo, FuncToCall> > {
 
  private:
+  // Lock to protect the component
+  // We don't use locking_hook here since we also need to protect the local only "registerThread" function
+  using MutexT = hpx::lcos::local::spinlock;
+  MutexT mtx;
 
   // Information returned on a steal from a thread
   using Response_t = boost::optional<hpx::util::tuple<SearchInfo, int, hpx::naming::id_type> >;
@@ -111,6 +115,9 @@ class SearchManager: public hpx::components::locking_hook<
 
   // Try to steal from a thread on another (random) locality
   Response_t tryDistributedSteal() {
+    // Lock should already be held in the calling function so adopt it
+    std::unique_lock<MutexT> l(mtx, std::adopt_lock);
+
     // We only allow one distributed steal to happen at a time (to make sure we
     // don't overload the communication)
     if (isStealingDistributed) {
@@ -124,7 +131,9 @@ class SearchManager: public hpx::components::locking_hook<
     std::uniform_int_distribution<> rand(0, distributedSearchManagers.size() - 1);
     std::advance(victim, rand(randGenerator));
 
+    l.unlock();
     auto res = hpx::async<getDistributedWork_action>(*victim).get();
+    l.lock();
 
     isStealingDistributed = false;
 
@@ -143,6 +152,7 @@ class SearchManager: public hpx::components::locking_hook<
 
   // Notify this search manager of the globalId's of potential steal victims
   void registerDistributedManagers(std::vector<hpx::naming::id_type> distributedSearchMgrs) {
+    std::lock_guard<MutexT> l(mtx);
     distributedSearchManagers = distributedSearchMgrs;
   }
   HPX_DEFINE_COMPONENT_ACTION(SearchManager, registerDistributedManagers);
@@ -156,6 +166,8 @@ class SearchManager: public hpx::components::locking_hook<
 
   // Try to get work from a (random) thread running on this locality
   Response_t getLocalWork() {
+    // Lock should already be held in the calling function so adopt it
+    std::unique_lock<MutexT> l(mtx, std::adopt_lock);
     if (active.empty()) {
       return {};
     }
@@ -175,7 +187,9 @@ class SearchManager: public hpx::components::locking_hook<
     // Signal the thread that we need work from it and wait for some (or Nothing)
     std::get<0>(*stealReqPtr).store(true);
     auto resF = std::get<1>(*stealReqPtr).get();
+    l.unlock();
     auto res = resF.get();
+    l.lock();
 
     // -1 depth signals that the thread we tried to steal from has finished it's search
     if (res && hpx::util::get<1>(*res) == -1) {
@@ -191,6 +205,7 @@ class SearchManager: public hpx::components::locking_hook<
   // Called by the scheduler to ask the searchManager to add more work
   // TODO: This should return a task type (or nullptr) like other schedulers
   bool getWork() {
+    std::lock_guard<MutexT> l(mtx);
     Response_t maybeStolen;
     if (active.empty()) {
       // No local threads running, steal distributed
@@ -230,6 +245,7 @@ class SearchManager: public hpx::components::locking_hook<
 
   // Action to allow work to be pushed eagerly to this searchManager
   void addWork(SearchInfo info, int depth, hpx::naming::id_type prom) {
+    std::lock_guard<MutexT> l(mtx);
     auto shared_state = std::make_shared<SharedState_t>();
     auto nextId = activeIds.front();
     activeIds.pop();
@@ -246,6 +262,7 @@ class SearchManager: public hpx::components::locking_hook<
 
   // Signal the searchManager that a local thread is now finished working and should be removed from active
   void done(unsigned activeId) {
+    std::lock_guard<MutexT> l(mtx);
     if (active.find(activeId) != active.end()) {
       active.erase(activeId);
     } else {
@@ -262,6 +279,7 @@ class SearchManager: public hpx::components::locking_hook<
   // Generate a new stealRequest pair that can be used with an existing thread to add steals to it
   // Used for master-threads initialising work while maintaining a stack
   std::pair<std::shared_ptr<SharedState_t>, unsigned> registerThread() {
+    std::lock_guard<MutexT> l(mtx);
     auto shared_state = std::make_shared<SharedState_t>();
     auto nextId = activeIds.front();
     activeIds.pop();
