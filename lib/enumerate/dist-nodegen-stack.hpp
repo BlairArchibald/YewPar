@@ -109,24 +109,6 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     }
   }
 
-  static void expandFromDepth(const int startingDepth,
-                              const unsigned maxDepth,
-                              const Space & space,
-                              const Sol & startingNode,
-                              std::shared_ptr<SharedState_t> stealRequest,
-                              std::vector<std::uint64_t> & cntMap,
-                              std::vector<hpx::future<void> > & futures) {
-    std::array<StackElem, maxStackDepth_> generatorStack;
-
-    // Setup the stack with root node
-    auto rootGen = Gen::invoke(space, startingNode);
-    cntMap[startingDepth] += rootGen.numChildren;
-    generatorStack[0].seen = 0;
-    generatorStack[0].generator = std::move(rootGen);
-
-    runWithStack(startingDepth, maxDepth, space, generatorStack, stealRequest, cntMap, futures);
-  }
-
   static unsigned getCountAt(const Space & space, const Sol & root, unsigned depth) {
     // Call the sequential skeleton to get a node count for the top levels
     auto cntMap = Count<Space, Sol, Gen>::search(depth, space, root);
@@ -208,12 +190,15 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
         }));
 
     if (totalThreads == 1) {
-      auto localSearchManagerPtr = hpx::get_ptr<workstealing::SearchManager<Sol, ChildTask> >(hpx::launch::sync, localSearchMgr);
-      auto searchMgrInfo = localSearchManagerPtr->registerThread();
-      auto stealRequest  = std::get<0>(searchMgrInfo);
+      hpx::promise<void> prom;
+      auto f = prom.get_future();
+      auto pid = prom.get_id();
+      futures.push_back(std::move(f));
 
-      expandFromDepth(1, maxDepth, space, root, stealRequest, cntMap, futures);
-      reg->updateCounts(cntMap);
+      typedef typename workstealing::SearchManager<Sol, ChildTask>::addWork_action addWorkAct;
+      hpx::async<addWorkAct>(localSearchMgr, root, 1, pid);
+
+      f.get();
 
       return;
     }
@@ -251,16 +236,29 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     auto stealRequest  = std::get<0>(searchMgrInfo);
 
     // Continue the actual work
-    runWithStack(1, maxDepth, space, generatorStack, stealRequest, cntMap, futures, stackDepth, depth);
+    hpx::promise<void> prom;
+    auto f = prom.get_future();
+    auto pid = prom.get_id();
 
-    reg->updateCounts(cntMap);
+    hpx::threads::executors::current_executor scheduler;
+    scheduler.add(hpx::util::bind(&runTaskFromStack,
+                                  1,
+                                  maxDepth,
+                                  space,
+                                  generatorStack,
+                                  stealRequest,
+                                  cntMap,
+                                  pid,
+                                  std::get<1>(searchMgrInfo),
+                                  localSearchMgr,
+                                  stackDepth,
+                                  depth),
+                  hpx::util::thread_description(),
+                  hpx::threads::pending,
+                  true,
+                  hpx::threads::thread_stacksize_large);
 
-    typedef typename workstealing::SearchManager<Sol, ChildTask>::done_action doneAct;
-    hpx::async<doneAct>(localSearchMgr, std::get<1>(searchMgrInfo)).get();
-
-    workstealing::SearchManagerSched::tasks_required_sem.signal();
-
-    // Wait for everything to complete including the initial tasks
+    futures.push_back(std::move(f));
     hpx::wait_all(futures);
   }
 
@@ -309,21 +307,44 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
                          const hpx::naming::id_type searchManager) {
     auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
 
+    std::array<StackElem, maxStackDepth_> generatorStack;
     std::vector<std::uint64_t> cntMap(reg->maxDepth + 1);
+
+    // Setup the stack with root node
+    auto rootGen = Gen::invoke(reg->space_, initNode);
+    cntMap[depth] += rootGen.numChildren;
+    generatorStack[0].seen = 0;
+    generatorStack[0].generator = std::move(rootGen);
+
+    runTaskFromStack(depth, reg->maxDepth, reg->space_, generatorStack, stealRequest, cntMap, p, idx, searchManager);
+  }
+
+  static void runTaskFromStack (const unsigned startingDepth,
+                                const unsigned maxDepth,
+                                const Space & space,
+                                std::array<StackElem, maxStackDepth_> & generatorStack,
+                                const std::shared_ptr<SharedState_t> stealRequest,
+                                std::vector<std::uint64_t> & cntMap,
+                                const hpx::naming::id_type donePromise,
+                                const unsigned searchManagerId,
+                                const hpx::naming::id_type searchManager,
+                                const int stackDepth = 0,
+                                const int depth = -1) {
+    auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
     std::vector<hpx::future<void> > futures;
 
-    expandFromDepth(depth, reg->maxDepth, reg->space_, initNode, stealRequest, cntMap, futures);
+    runWithStack(startingDepth, maxDepth, space, generatorStack, stealRequest, cntMap, futures, stackDepth, depth);
 
     // Atomically updates the (process) local counter
     reg->updateCounts(cntMap);
 
     typedef typename workstealing::SearchManager<Sol, ChildTask>::done_action doneAct;
-    hpx::async<doneAct>(searchManager, idx).get();
+    hpx::async<doneAct>(searchManager, searchManagerId).get();
 
     workstealing::SearchManagerSched::tasks_required_sem.signal();
     hpx::wait_all(futures);
 
-    hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
+    hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromise, true).get();
   }
 
   using ChildTask = func<
