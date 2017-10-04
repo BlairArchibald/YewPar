@@ -193,7 +193,6 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
       hpx::promise<void> prom;
       auto f = prom.get_future();
       auto pid = prom.get_id();
-      futures.push_back(std::move(f));
 
       typedef typename workstealing::SearchManager<Sol, ChildTask>::addWork_action addWorkAct;
       hpx::async<addWorkAct>(localSearchMgr, root, 1, pid);
