@@ -240,23 +240,9 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     auto f = prom.get_future();
     auto pid = prom.get_id();
 
-    hpx::threads::executors::current_executor scheduler;
-    scheduler.add(hpx::util::bind(&runTaskFromStack,
-                                  1,
-                                  maxDepth,
-                                  space,
-                                  generatorStack,
-                                  stealRequest,
-                                  cntMap,
-                                  pid,
-                                  std::get<1>(searchMgrInfo),
-                                  localSearchMgr,
-                                  stackDepth,
-                                  depth),
-                  hpx::util::thread_description(),
-                  hpx::threads::pending,
-                  true,
-                  hpx::threads::thread_stacksize_large);
+    hpx::threads::executors::default_executor exe(hpx::threads::thread_stacksize_large);
+    hpx::apply(exe, hpx::util::bind(&runTaskFromStack, 1, maxDepth, space, generatorStack, stealRequest,
+                                    cntMap, pid, std::get<1>(searchMgrInfo), localSearchMgr, stackDepth, depth));
 
     futures.push_back(std::move(f));
     hpx::wait_all(futures);

@@ -13,7 +13,7 @@
 #include "hpx/lcos/detail/promise_lco.hpp"                       // for prom...
 #include "hpx/lcos/future.hpp"                                   // for future
 #include "hpx/lcos/local/channel.hpp"                            // for future
-#include "hpx/lcos/local/spinlock.hpp"
+#include "hpx/lcos/local/mutex.hpp"
 #include "hpx/runtime/actions/basic_action.hpp"                  // for make...
 #include "hpx/runtime/actions/component_action.hpp"              // for HPX_...
 #include "hpx/runtime/actions/transfer_action.hpp"               // for tran...
@@ -28,7 +28,7 @@
 #include "hpx/runtime/serialization/serialize.hpp"               // for oper...
 #include "hpx/runtime/serialization/shared_ptr.hpp"
 #include "hpx/runtime/serialization/variant.hpp"
-#include "hpx/runtime/threads/executors/current_executor.hpp"    // for curr...
+#include "hpx/runtime/threads/executors/default_executor.hpp"
 #include "hpx/runtime/threads/thread_data_fwd.hpp"               // for get_...
 #include "hpx/traits/is_action.hpp"                              // for is_a...
 #include "hpx/traits/needs_automatic_registration.hpp"           // for need...
@@ -52,7 +52,7 @@ class SearchManager: public hpx::components::component_base<SearchManager<Search
  private:
   // Lock to protect the component
   // We don't use locking_hook here since we also need to protect the local only "registerThread" function
-  using MutexT = hpx::lcos::local::spinlock;
+  using MutexT = hpx::lcos::local::mutex;
   MutexT mtx;
 
   // Information returned on a steal from a thread
@@ -114,10 +114,7 @@ class SearchManager: public hpx::components::component_base<SearchManager<Search
   bool isStealingDistributed = false;
 
   // Try to steal from a thread on another (random) locality
-  Response_t tryDistributedSteal() {
-    // Lock should already be held in the calling function so adopt it
-    std::unique_lock<MutexT> l(mtx, std::adopt_lock);
-
+  Response_t tryDistributedSteal(std::unique_lock<MutexT> & l) {
     // We only allow one distributed steal to happen at a time (to make sure we
     // don't overload the communication)
     if (isStealingDistributed) {
@@ -160,14 +157,13 @@ class SearchManager: public hpx::components::component_base<SearchManager<Search
   // Try to get work from a (random) thread running on this locality and wrap it
   // back up for serializing over the network
   DistResponse_t getDistributedWork() {
-    return DistResponse_t(getLocalWork());
+    std::unique_lock<MutexT> l(mtx);
+    return DistResponse_t(getLocalWork(l));
   }
   HPX_DEFINE_COMPONENT_ACTION(SearchManager, getDistributedWork);
 
   // Try to get work from a (random) thread running on this locality
-  Response_t getLocalWork() {
-    // Lock should already be held in the calling function so adopt it
-    std::unique_lock<MutexT> l(mtx, std::adopt_lock);
+  Response_t getLocalWork(std::unique_lock<MutexT> & l) {
     if (active.empty()) {
       return {};
     }
@@ -205,17 +201,17 @@ class SearchManager: public hpx::components::component_base<SearchManager<Search
   // Called by the scheduler to ask the searchManager to add more work
   // TODO: This should return a task type (or nullptr) like other schedulers
   bool getWork() {
-    std::lock_guard<MutexT> l(mtx);
+    std::unique_lock<MutexT> l(mtx);
     Response_t maybeStolen;
     if (active.empty()) {
       // No local threads running, steal distributed
       if (!distributedSearchManagers.empty()) {
-        maybeStolen = tryDistributedSteal();
+        maybeStolen = tryDistributedSteal(l);
       } else {
         return false;
       }
     } else {
-      maybeStolen = getLocalWork();
+      maybeStolen = getLocalWork(l);
     }
 
     if (!maybeStolen) {
@@ -232,12 +228,9 @@ class SearchManager: public hpx::components::component_base<SearchManager<Search
       activeIds.pop();
       active[nextId] = shared_state;
 
-      hpx::threads::executors::current_executor scheduler;
-      scheduler.add(hpx::util::bind(FuncToCall::fn_ptr(), searchInfo, depth, shared_state, prom, nextId, this->get_id()),
-                                    hpx::util::thread_description(),
-                                    hpx::threads::pending,
-                                    true,
-                                    hpx::threads::thread_stacksize_large);
+      hpx::threads::executors::default_executor exe(hpx::threads::thread_stacksize_large);
+      hpx::apply(exe, FuncToCall::fn_ptr(), searchInfo, depth, shared_state, prom, nextId, this->get_id());
+
       return true;
     }
   }
@@ -251,12 +244,8 @@ class SearchManager: public hpx::components::component_base<SearchManager<Search
     activeIds.pop();
     active[nextId] = shared_state;
 
-    hpx::threads::executors::current_executor scheduler;
-    scheduler.add(hpx::util::bind(FuncToCall::fn_ptr(), info, depth, shared_state, prom, nextId, this->get_id()),
-                                  hpx::util::thread_description(),
-                                  hpx::threads::pending,
-                                  true,
-                                  hpx::threads::thread_stacksize_large);
+    hpx::threads::executors::default_executor exe(hpx::threads::thread_stacksize_large);
+    hpx::apply(exe, FuncToCall::fn_ptr(), info, depth, shared_state, prom, nextId, this->get_id());
   }
   HPX_DEFINE_COMPONENT_ACTION(SearchManager, addWork);
 
