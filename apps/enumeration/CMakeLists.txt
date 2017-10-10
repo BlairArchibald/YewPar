@@ -1,1 +1,2 @@
 add_subdirectory(numericalSemigroups)
+add_subdirectory(fib)
