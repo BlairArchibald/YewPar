@@ -15,8 +15,13 @@ set(YEWPAR_LIBRARY_ONLY "OFF" CACHE BOOL "Build YewPar without any applications"
 set(YEWPAR_BUILD_DNC_APPS "ON" CACHE BOOL "Build Divide and Conquer apps for YewPar")
 set(YEWPAR_BUILD_BNB_APPS "ON" CACHE BOOL "Build Branch and Bound apps for YewPar")
 set(YEWPAR_BUILD_ENUMERATION_APPS "ON" CACHE BOOL "Build Enumeration apps for YewPar")
+set(YEWPAR_BUILD_TEST_APPS "ON" CACHE BOOL "Create tests for YewPar apps")
 
 include_directories(lib)
+
+if (YEWPAR_BUILD_TEST_APPS)
+  enable_testing()
+endif(YEWPAR_BUILD_TEST_APPS)
 
 add_subdirectory(lib)
 if(NOT YEWPAR_LIBRARY_ONLY)

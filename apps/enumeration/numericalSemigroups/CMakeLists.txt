@@ -6,6 +6,14 @@ if (YEWPAR_BUILD_ENUMERATION_APPS_NS_BASIC)
 add_hpx_executable(NS-basic
   SOURCES basic.cpp
   DEPENDENCIES YewPar_lib)
+
+if (YEWPAR_BUILD_TEST_APPS)
+  add_test(NS_BASIC_DIST_1T NS-basic -d 30 -s 10 --hpx:threads 1)
+  set_tests_properties(NS_BASIC_DIST_1T PROPERTIES PASS_REGULAR_EXPRESSION "30: 5646773")
+  add_test(NS_BASIC_DIST_4T NS-basic -d 30 -s 10 --hpx:threads 4)
+  set_tests_properties(NS_BASIC_DIST_4T PROPERTIES PASS_REGULAR_EXPRESSION "30: 5646773")
+endif (YEWPAR_BUILD_TEST_APPS)
+
 endif (YEWPAR_BUILD_ENUMERATION_APPS_NS_BASIC)
 
 if (YEWPAR_BUILD_ENUMERATION_APPS_NS_HIVERT)
@@ -13,4 +21,24 @@ add_hpx_executable(NS-hivert
   SOURCES hivert.cpp monoid.cpp
   COMPILE_FLAGS "-DMAX_GENUS=${YEWPAR_BUILD_ENUMERATION_APPS_NS_HIVERT_MAXGENUS}"
   DEPENDENCIES YewPar_lib)
+
+if (YEWPAR_BUILD_TEST_APPS)
+  add_test(NS_HIVERT_SEQ_1T NS-hivert --skeleton-type seq -d 30 --hpx:threads 1)
+  set_tests_properties(NS_HIVERT_SEQ_1T PROPERTIES PASS_REGULAR_EXPRESSION "30: 5646773")
+  add_test(NS_HIVERT_SEQSTACK_1T NS-hivert --skeleton-type seq-stack -d 30 --hpx:threads 1)
+  set_tests_properties(NS_HIVERT_SEQSTACK_1T PROPERTIES PASS_REGULAR_EXPRESSION "30: 5646773")
+  add_test(NS_HIVERT_DIST_1T NS-hivert --skeleton-type dist -d 30 -s 10 --hpx:threads 1)
+  set_tests_properties(NS_HIVERT_DIST_1T PROPERTIES PASS_REGULAR_EXPRESSION "30: 5646773")
+  add_test(NS_HIVERT_DIST_4T NS-hivert --skeleton-type dist -d 30 -s 10 --hpx:threads 4)
+  set_tests_properties(NS_HIVERT_DIST_4T PROPERTIES PASS_REGULAR_EXPRESSION "30: 5646773")
+  add_test(NS_HIVERT_INDEXED_1T NS-hivert --skeleton-type indexed -d 30 --hpx:threads 1)
+  set_tests_properties(NS_HIVERT_INDEXED_1T PROPERTIES PASS_REGULAR_EXPRESSION "30: 5646773")
+  add_test(NS_HIVERT_INDEXED_4T NS-hivert --skeleton-type indexed -d 30 --hpx:threads 4)
+  set_tests_properties(NS_HIVERT_INDEXED_1T PROPERTIES PASS_REGULAR_EXPRESSION "30: 5646773")
+  add_test(NS_HIVERT_GENSTACK_1T NS-hivert --skeleton-type genstack -d 30 --hpx:threads 1)
+  set_tests_properties(NS_HIVERT_GENSTACK_1T PROPERTIES PASS_REGULAR_EXPRESSION "30: 5646773")
+  add_test(NS_HIVERT_GENSTACK_4T NS-hivert --skeleton-type genstack -d 30 --hpx:threads 4)
+  set_tests_properties(NS_HIVERT_GENSTACK_4T PROPERTIES PASS_REGULAR_EXPRESSION "30: 5646773")
+endif (YEWPAR_BUILD_TEST_APPS)
+
 endif (YEWPAR_BUILD_ENUMERATION_APPS_NS_HIVERT)
