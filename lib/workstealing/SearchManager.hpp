@@ -263,7 +263,7 @@ class SearchManager: public hpx::components::component_base<SearchManager<Search
     }
     activeIds.push(activeId);
   }
-  HPX_DEFINE_COMPONENT_ACTION(SearchManager, done);
+  HPX_DEFINE_COMPONENT_DIRECT_ACTION(SearchManager, done);
 
   // Generate a new stealRequest pair that can be used with an existing thread to add steals to it
   // Used for master-threads initialising work while maintaining a stack
