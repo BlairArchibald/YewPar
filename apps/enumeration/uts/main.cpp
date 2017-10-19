@@ -10,8 +10,19 @@
 #define BRG_RNG
 #include "uts-rng/rng.h"
 
-// UTS doesn't have a space
-struct Empty {};
+// UTS state stores program parameters
+struct UTSState {
+  int rootBF;
+  int nonLeafBF;
+  double nonLeafProb;
+
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & rootBF;
+    ar & nonLeafBF;
+    ar & nonLeafProb;
+  }
+};
 
 enum TreeType {
   BINOMIAL
@@ -24,8 +35,6 @@ void serialize(Archive & ar, state_t & x, const unsigned int version) {
   ar & x;
 }}}
 
-// FIXME: We might also need to carry the height since some nodes have functions based on heights
-// UTS Nodes only need to carry RNG state
 struct UTSNode {
   bool isRoot;
   state_t rngstate; //rng state (uint_8t state[20])
@@ -42,14 +51,10 @@ template <TreeType TreeType>
 struct NodeGen;
 
 template <>
-struct NodeGen<BINOMIAL> : skeletons::Enum::NodeGenerator<Empty, UTSNode> {
+struct NodeGen<BINOMIAL> : skeletons::Enum::NodeGenerator<UTSState, UTSNode> {
   UTSNode parent;
+  UTSState params;
   int i = 0;
-
-  // FIXME: Put this in the local state instead of hardcoding?
-  const int leafBF = 4;
-  const int nonLeafBF = 4;
-  const double nonLeafProb = 15.0 / 64.0;
 
   // Interpret 32 bit positive integer as value on [0,1)
   // From UTS Codebase
@@ -62,14 +67,14 @@ struct NodeGen<BINOMIAL> : skeletons::Enum::NodeGenerator<Empty, UTSNode> {
 
   int calcNumChildren() {
     if (parent.isRoot) {
-      return leafBF;
+      return params.rootBF;
     } else {
       double d = rng_toProb(rng_rand(parent.rngstate.state));
-      return (d < nonLeafProb) ? nonLeafBF : 0;
+      return (d < params.nonLeafProb) ? params.nonLeafBF : 0;
     }
   }
 
-  NodeGen(const UTSNode & parent) : parent(parent) {
+  NodeGen(const UTSState & params, const UTSNode & parent) : params(params), parent(parent) {
     this->numChildren = calcNumChildren();
   }
 
@@ -83,15 +88,15 @@ struct NodeGen<BINOMIAL> : skeletons::Enum::NodeGenerator<Empty, UTSNode> {
 };
 
 //template <TreeType TreeType>
-auto generateChildren(const Empty & space, const UTSNode & n) {
-  return NodeGen<BINOMIAL>(n);
+auto generateChildren(const UTSState & space, const UTSNode & n) {
+  return NodeGen<BINOMIAL>(space, n);
   // constexpr if(TreeType == BINOMIAL) {
   //   return NodeGen<BINOMIAL>(n);
   // }
 }
 
 typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
-REGISTER_ENUM_REGISTRY(Empty, UTSNode)
+REGISTER_ENUM_REGISTRY(UTSState, UTSNode)
 
 std::vector<std::string> treeTypes = {"binomial"};
 
@@ -102,12 +107,14 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto start_time = std::chrono::steady_clock::now();
 
+  UTSState params { opts["uts-b"].as<int>(), opts["uts-m"].as<int>(), opts["uts-q"].as<double>() };
+
   UTSNode root { true };
-  rng_init(root.rngstate.state, 0);
+  rng_init(root.rngstate.state, opts["uts-r"].as<int>());
 
   std::vector<std::uint64_t> counts(maxDepth);
   if (skeleton == "seq") {
-    counts = skeletons::Enum::Count<Empty, UTSNode, genChildren_func>::search(maxDepth, Empty(), root);
+    counts = skeletons::Enum::Count<UTSState, UTSNode, genChildren_func>::search(maxDepth, params, root);
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
@@ -132,10 +139,6 @@ int main(int argc, char* argv[]) {
         boost::program_options::value<std::string>()->default_value("seq"),
         "Which skeleton to use"
         )
-      ( "tree-type",
-        boost::program_options::value<std::string>()->default_value("binomial"),
-        "Which skeleton to use"
-        )
       ( "spawn-depth,s",
         boost::program_options::value<unsigned>()->default_value(0),
         "Depth in the tree to spawn until (for parallel skeletons only)"
@@ -143,7 +146,14 @@ int main(int argc, char* argv[]) {
       ( "until-depth,d",
         boost::program_options::value<unsigned>()->default_value(0),
         "Depth in the tree to count until"
-        );
+        )
+      // UTS Options
+      ( "uts-t", boost::program_options::value<std::string>()->default_value("binomial"), "Which tree type to use" )
+      ( "uts-b", boost::program_options::value<int>()->default_value(4), "Root branching factor" )
+      ( "uts-q", boost::program_options::value<double>()->default_value(15.0 / 64.0), "BIN: Probability of non-leaf node" )
+      ( "uts-m", boost::program_options::value<int>()->default_value(4), "BIN: Number of children for non-leaf node" )
+      ( "uts-r", boost::program_options::value<int>()->default_value(0), "root seed" )
+      ;
 
   hpx::register_startup_function(&workstealing::SearchManagerSched::registerPerformanceCounters);
 
