@@ -74,6 +74,8 @@ struct NodeGen<BINOMIAL> : skeletons::Enum::NodeGenerator<UTSState, UTSNode> {
     }
   }
 
+  NodeGen() { this->numChildren = 0; }
+
   NodeGen(const UTSState & params, const UTSNode & parent) : params(params), parent(parent) {
     this->numChildren = calcNumChildren();
   }
@@ -98,6 +100,13 @@ auto generateChildren(const UTSState & space, const UTSNode & n) {
 typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
 REGISTER_ENUM_REGISTRY(UTSState, UTSNode)
 
+#ifndef UTS_MAX_TREE_DEPTH
+#define UTS_MAX_TREE_DEPTH 2000
+#endif
+
+using cFunc = skeletons::Enum::DistCount<UTSState, UTSNode, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, UTS_MAX_TREE_DEPTH> >::ChildTask;
+REGISTER_SEARCHMANAGER(UTSNode, cFunc)
+
 std::vector<std::string> treeTypes = {"binomial"};
 
 int hpx_main(boost::program_options::variables_map & opts) {
@@ -115,6 +124,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
   std::vector<std::uint64_t> counts(maxDepth);
   if (skeleton == "seq") {
     counts = skeletons::Enum::Count<UTSState, UTSNode, genChildren_func>::search(maxDepth, params, root);
+  } else if (skeleton == "genstack") {
+    counts = skeletons::Enum::DistCount<UTSState, UTSNode, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, UTS_MAX_TREE_DEPTH> >::count(maxDepth, params, root);
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
