@@ -9,7 +9,6 @@
 #include <chrono>
 
 #include "enumerate/skeletons.hpp"
-#include "enumerate/dist-nodegen-stack.hpp"
 
 #include "monoid.hpp"
 #include "util/func.hpp"
@@ -17,13 +16,11 @@
 // Numerical Semigroups don't have a space
 struct Empty {};
 
-struct NodeGen : skeletons::Enum::NodeGenerator<Empty, Monoid> {
+struct NodeGen : YewPar::NodeGenerator<Monoid> {
   Monoid group;
   generator_iter<CHILDREN> it;
 
-  NodeGen() : group(Monoid()), it(generator_iter<CHILDREN>(Monoid())) {
-    this->numChildren = 0;
-  }
+  NodeGen() : group(Monoid()), it(generator_iter<CHILDREN>(Monoid())) {}
 
   NodeGen(const Monoid & s) : group(s), it(generator_iter<CHILDREN>(s)){
     this->numChildren = it.count(group);

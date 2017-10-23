@@ -2,7 +2,6 @@
 #include <hpx/hpx_init.hpp>
 
 #include "enumerate/skeletons.hpp"
-#include "enumerate/dist-nodegen-stack.hpp"
 
 #include "util/func.hpp"
 
@@ -51,7 +50,7 @@ template <TreeType TreeType>
 struct NodeGen;
 
 template <>
-struct NodeGen<BINOMIAL> : skeletons::Enum::NodeGenerator<UTSState, UTSNode> {
+struct NodeGen<BINOMIAL> : YewPar::NodeGenerator<UTSNode> {
   UTSNode parent;
   UTSState params;
   int i = 0;

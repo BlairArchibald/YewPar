@@ -6,14 +6,12 @@
 #include <chrono>
 
 #include "enumerate/skeletons.hpp"
-#include "enumerate/dist-nodegen-stack.hpp"
 #include "util/func.hpp"
 
 // Fib doesn't have a space
 struct Empty {};
 
-
-struct NodeGen : skeletons::Enum::NodeGenerator<Empty, std::uint64_t> {
+struct NodeGen : YewPar::NodeGenerator<std::uint64_t> {
   std::uint64_t n;
   unsigned i = 1;
 

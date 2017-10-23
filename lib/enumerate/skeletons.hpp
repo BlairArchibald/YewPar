@@ -6,7 +6,8 @@
 #include "enumerate/dist.hpp"
 #include "enumerate/dist-dfs.hpp"
 #include "enumerate/dist-indexed.hpp"
+#include "enumerate/dist-nodegen-stack.hpp"
 
-#include "enumerate/nodegenerator.hpp"
+#include "util/NodeGenerator.hpp"
 
 #endif

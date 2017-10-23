@@ -73,7 +73,7 @@ SemiGroup::SemiGroup(const SemiGroup& S,uchar x){
 // Numerical Semigroups don't have a space
 struct Empty {};
 
-struct NodeGen : skeletons::Enum::NodeGenerator<Empty, SemiGroup> {
+struct NodeGen : YewPar::NodeGenerator<SemiGroup> {
   const SemiGroup & group;
   unsigned it;
 
