@@ -81,7 +81,7 @@ struct NodeGen<BINOMIAL> : skeletons::Enum::NodeGenerator<UTSState, UTSNode> {
   }
 
   UTSNode next() override {
-    UTSNode child;
+    UTSNode child { false };
     rng_spawn(parent.rngstate.state, child.rngstate.state, i);
     ++i;
 
