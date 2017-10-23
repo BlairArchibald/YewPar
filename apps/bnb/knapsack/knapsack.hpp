@@ -10,6 +10,8 @@
 
 #include <hpx/util/tuple.hpp>
 
+#include "util/NodeGenerator.hpp"
+
 /* A representation of a knapsack current solution */
 struct KPSolution {
   friend class boost::serialization::access;
@@ -37,7 +39,7 @@ template <unsigned numItems>
 using KPSpace = std::pair< std::array<int, numItems>, std::array<int, numItems> >;
 
 template <unsigned numItems>
-struct GenNode : skeletons::BnB::NodeGenerator<KPSpace<numItems>, KPSolution, int, std::vector<int> > {
+struct GenNode : YewPar::BnBNodeGenerator<KPSolution, int, std::vector<int> > {
   std::vector<int> items;
   int pos;
 

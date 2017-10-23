@@ -7,7 +7,6 @@
 
 #include "registry.hpp"
 #include "incumbent.hpp"
-#include "nodegenerator.hpp"
 #include "util/doubleWritePromise.hpp"
 
 namespace skeletons { namespace BnB { namespace Par {

@@ -27,6 +27,7 @@
 #include "bnb/ordered.hpp"
 
 #include "util/func.hpp"
+#include "util/NodeGenerator.hpp"
 
 // Number of Words to use in our bitset representation
 // Possible to specify at compile to to handler bigger graphs if required
@@ -116,7 +117,7 @@ struct MCSol {
 
 using MCNode = hpx::util::tuple<MCSol, int, BitSet<NWORDS> >;
 
-struct GenNode : skeletons::BnB::NodeGenerator<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS> > {
+struct GenNode : YewPar::BnBNodeGenerator<MCSol, int, BitSet<NWORDS> > {
   std::array<unsigned, NWORDS * bits_per_word> p_order;
   std::array<unsigned, NWORDS * bits_per_word> colourClass;
 
