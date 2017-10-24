@@ -7,7 +7,9 @@
 #include <vector>                                                // for vector
 #include <utility>                                               // for vector
 #include <queue>
+#include <atomic>
 #include <unordered_map>
+#include "hpx/performance_counters/manage_counter_type.hpp"    // for instal...
 #include "hpx/lcos/async.hpp"                                    // for async
 #include "hpx/lcos/detail/future_data.hpp"                       // for task...
 #include "hpx/lcos/detail/promise_lco.hpp"                       // for prom...
@@ -41,6 +43,51 @@
 
 namespace workstealing {
 
+namespace SearchManagerPerf {
+// Performance Counters
+std::atomic<std::uint64_t> perf_localSteals(0);
+std::atomic<std::uint64_t> perf_distributedSteals(0);
+std::atomic<std::uint64_t> perf_failedLocalSteals(0);
+std::atomic<std::uint64_t> perf_failedDistributedSteals(0);
+
+std::uint64_t get_and_reset(std::atomic<std::uint64_t> & cntr, bool reset) {
+  auto res = cntr.load();
+  if (reset) { cntr = 0; }
+  return res;
+}
+
+std::uint64_t getLocalSteals(bool reset) {get_and_reset(perf_localSteals, reset);}
+std::uint64_t getDistributedSteals (bool reset) {get_and_reset(perf_distributedSteals, reset);}
+std::uint64_t getFailedLocalSteals(bool reset) {get_and_reset(perf_failedLocalSteals, reset);}
+std::uint64_t getFailedDistributedSteals(bool reset) {get_and_reset(perf_failedDistributedSteals, reset);}
+
+void registerPerformanceCounters() {
+  hpx::performance_counters::install_counter_type(
+      "/workstealing/SearchManager/localSteals",
+      &getLocalSteals,
+      "Returns the number of tasks stolen from another thread on the same locality"
+                                                  );
+
+  hpx::performance_counters::install_counter_type(
+      "/workstealing/SearchManager/distributedSteals",
+      &getDistributedSteals,
+      "Returns the number of tasks stolen from another thread on another locality"
+                                                  );
+
+  hpx::performance_counters::install_counter_type(
+      "/workstealing/SearchManager/localFailedSteals",
+      &getFailedLocalSteals,
+      "Returns the number of failed steals from this locality "
+                                                  );
+
+  hpx::performance_counters::install_counter_type(
+      "/workstealing/SearchManager/distributedFailedSteals",
+      &getFailedDistributedSteals,
+      "Returns the number of failed steals from another locality "
+                                                  );
+}
+}
+
 // The SearchManager component allows steals to happen directly within a
 // searching thread. The SearchManager maintains a list of active threads and
 // uses this to perform steals when work is requested from the scheduler. Thread
@@ -48,7 +95,6 @@ namespace workstealing {
 // even paths for recompute based skeletons
 template <typename SearchInfo, typename FuncToCall>
 class SearchManager: public hpx::components::component_base<SearchManager<SearchInfo, FuncToCall> > {
-
  private:
   // Lock to protect the component
   // We don't use locking_hook here since we also need to protect the local only "registerThread" function
@@ -199,7 +245,7 @@ class SearchManager: public hpx::components::component_base<SearchManager<Search
   }
 
   // Called by the scheduler to ask the searchManager to add more work
-  // TODO: This should return a task type (or nullptr) like other schedulers
+  // TODO: Tidy up the logic here
   bool getWork() {
     std::unique_lock<MutexT> l(mtx);
     Response_t maybeStolen;
@@ -207,17 +253,27 @@ class SearchManager: public hpx::components::component_base<SearchManager<Search
       // No local threads running, steal distributed
       if (!distributedSearchManagers.empty()) {
         maybeStolen = tryDistributedSteal(l);
+        if (maybeStolen) {
+          SearchManagerPerf::perf_distributedSteals++;
+        } else {
+          SearchManagerPerf::perf_failedDistributedSteals++;
+          return false;
+        }
       } else {
+        SearchManagerPerf::perf_failedLocalSteals++;
         return false;
       }
     } else {
       maybeStolen = getLocalWork(l);
+      if (maybeStolen) {
+        SearchManagerPerf::perf_localSteals++;
+      } else {
+        SearchManagerPerf::perf_failedLocalSteals++;
+        return false;
+      }
     }
 
-    if (!maybeStolen) {
-      // Couldn't schedule anything locally
-      return false;
-    } else {
+    if (maybeStolen) {
       SearchInfo searchInfo      = hpx::util::get<0>(*maybeStolen);
       int depth                  = hpx::util::get<1>(*maybeStolen);
       hpx::naming::id_type prom  = hpx::util::get<2>(*maybeStolen);
@@ -275,37 +331,39 @@ class SearchManager: public hpx::components::component_base<SearchManager<Search
     active[nextId] = shared_state;
     return std::make_pair(shared_state, nextId);
   }
+
 };
 
 }
 
-#define REGISTER_SEARCHMANAGER(searchInfo,Func)                                                        \
-  typedef workstealing::SearchManager<searchInfo, Func > BOOST_PP_CAT(__searchmgr_type_, searchInfo);  \
-                                                                                                       \
-  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, searchInfo)::registerDistributedManagers_action, \
-                      BOOST_PP_CAT(__searchmgr_registerDistributedManagers_action,                     \
-                                   BOOST_PP_CAT(searchInfo, Func)));                                   \
-                                                                                                       \
-  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, searchInfo)::getWork_action,                     \
-                      BOOST_PP_CAT(__searchmgr_getWork_action,                                         \
-                                   BOOST_PP_CAT(searchInfo, Func)));                                   \
-                                                                                                       \
-  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, searchInfo)::addWork_action,                     \
-                      BOOST_PP_CAT(__searchmgr_addWork_action,                                         \
-                                   BOOST_PP_CAT(searchInfo, Func)));                                   \
-                                                                                                       \
-  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, searchInfo)::done_action,                        \
-                      BOOST_PP_CAT(__searchmgr_done_action,                                            \
-                                   BOOST_PP_CAT(searchInfo, Func)));                                   \
-                                                                                                       \
-  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, searchInfo)::getDistributedWork_action,          \
-                      BOOST_PP_CAT(__searchmgr_getDistributedWork_action,                              \
-                                   BOOST_PP_CAT(searchInfo, Func)));                                   \
-                                                                                                       \
-  typedef ::hpx::components::component<BOOST_PP_CAT(__searchmgr_type_, searchInfo) >                   \
-  BOOST_PP_CAT(__searchmgr_, BOOST_PP_CAT(searchInfo, Func));                                          \
-                                                                                                       \
-  HPX_REGISTER_COMPONENT(BOOST_PP_CAT(__searchmgr_,                                                    \
-                                      BOOST_PP_CAT(searchInfo, Func)));                                \
+
+#define REGISTER_SEARCHMANAGER(searchInfo,Func)                                                                            \
+  typedef workstealing::SearchManager<searchInfo, Func > BOOST_PP_CAT(__searchmgr_type_, BOOST_PP_CAT(searchInfo, Func));  \
+                                                                                                                           \
+  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, BOOST_PP_CAT(searchInfo, Func))::registerDistributedManagers_action, \
+                      BOOST_PP_CAT(__searchmgr_registerDistributedManagers_action,                                         \
+                                   BOOST_PP_CAT(searchInfo, Func)));                                                       \
+                                                                                                                           \
+  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, BOOST_PP_CAT(searchInfo, Func))::getWork_action,                     \
+                      BOOST_PP_CAT(__searchmgr_getWork_action,                                                             \
+                                   BOOST_PP_CAT(searchInfo, Func)));                                                       \
+                                                                                                                           \
+  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, BOOST_PP_CAT(searchInfo, Func))::addWork_action,                     \
+                      BOOST_PP_CAT(__searchmgr_addWork_action,                                                             \
+                                   BOOST_PP_CAT(searchInfo, Func)));                                                       \
+                                                                                                                           \
+  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, BOOST_PP_CAT(searchInfo, Func))::done_action,                        \
+                      BOOST_PP_CAT(__searchmgr_done_action,                                                                \
+                                   BOOST_PP_CAT(searchInfo, Func)));                                                       \
+                                                                                                                           \
+  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, BOOST_PP_CAT(searchInfo, Func))::getDistributedWork_action,          \
+                      BOOST_PP_CAT(__searchmgr_getDistributedWork_action,                                                  \
+                                   BOOST_PP_CAT(searchInfo, Func)));                                                       \
+                                                                                                                           \
+  typedef ::hpx::components::component<BOOST_PP_CAT(__searchmgr_type_, BOOST_PP_CAT(searchInfo, Func)) >                   \
+  BOOST_PP_CAT(__searchmgr_, BOOST_PP_CAT(searchInfo, Func));                                                              \
+                                                                                                                           \
+  HPX_REGISTER_COMPONENT(BOOST_PP_CAT(__searchmgr_,                                                                        \
+                                      BOOST_PP_CAT(searchInfo, Func)));                                                    \
 
 #endif

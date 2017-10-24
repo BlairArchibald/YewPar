@@ -7,11 +7,11 @@ add_hpx_library(YewPar
   SOURCES
   workstealing/scheduler.cpp
   workstealing/priorityscheduler.cpp
-  workstealing/SearchManagerScheduler.cpp
 
   COMPONENT_DEPENDENCIES
   workqueue
   priorityworkqueue
   incumbent
   SearchManager
+  iostreams
 )

@@ -25,7 +25,10 @@ namespace workstealing { namespace SearchManagerSched {
 std::atomic<bool> running(true);
 hpx::lcos::local::counting_semaphore tasks_required_sem;
 
-void stopScheduler();
+void stopScheduler() {
+  running.store(false);
+  tasks_required_sem.signal(1);
+}
 
 std::atomic<std::uint64_t> perf_steals(0);
 std::atomic<std::uint64_t> perf_failedSteals(0);

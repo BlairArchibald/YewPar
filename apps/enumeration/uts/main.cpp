@@ -99,7 +99,7 @@ auto generateChildren(const UTSState & space, const UTSNode & n) {
 typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
 
 #ifndef UTS_MAX_TREE_DEPTH
-#define UTS_MAX_TREE_DEPTH 2000
+#define UTS_MAX_TREE_DEPTH 20000
 #endif
 
 using cFunc = skeletons::Enum::DistCount<UTSState, UTSNode, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, UTS_MAX_TREE_DEPTH> >::ChildTask;
@@ -133,6 +133,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   for (auto i = 0; i <= maxDepth; ++i) {
     std::cout << i << ": " << counts[i] << std::endl;
   }
+  std::cout << "Total Nodes: " << std::accumulate(counts.begin(), counts.end(), 0) << std::endl;
   std::cout << "=====" << std::endl;
   std::cout << "cpu = " << overall_time.count() << std::endl;
 
@@ -164,7 +165,7 @@ int main(int argc, char* argv[]) {
       ( "uts-r", boost::program_options::value<int>()->default_value(0), "root seed" )
       ;
 
-  hpx::register_startup_function(&workstealing::SearchManagerSched::registerPerformanceCounters);
+  hpx::register_startup_function(&workstealing::SearchManagerPerf::registerPerformanceCounters);
 
   return hpx::init(desc_commandline, argc, argv);
 }
