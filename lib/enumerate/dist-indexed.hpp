@@ -9,6 +9,7 @@
 #include "enumRegistry.hpp"
 #include "util.hpp"
 
+#include "util/util.hpp"
 #include "util/func.hpp"
 #include "util/positionIndex.hpp"
 
@@ -101,15 +102,12 @@ struct DistCount<Space, Sol, Gen, Indexed> {
                                           const Space & space,
                                           const Sol   & root) {
     hpx::wait_all(hpx::lcos::broadcast<EnumInitRegistryAct<Space, Sol> >(hpx::find_all_localities(), space, maxDepth, root));
-    hpx::naming::id_type localSearchManager;
+
     std::vector<hpx::naming::id_type> searchManagers;
     for (auto const& loc : hpx::find_all_localities()) {
-      auto mgr = hpx::new_<workstealing::SearchManager<std::vector<unsigned>, ChildTask> >(loc).get();
-      searchManagers.push_back(mgr);
-      if (loc == hpx::find_here()) {
-        localSearchManager = mgr;
-      }
+      searchManagers.push_back(hpx::new_<workstealing::SearchManager<std::vector<unsigned>, ChildTask> >(loc).get());
     }
+    auto localSearchManager = *(std::find_if(searchManagers.begin(), searchManagers.end(), util::isColocated));
 
     typedef typename workstealing::SearchManagerSched::startSchedulerAct<std::vector<unsigned>, ChildTask> startSchedulerAct;
     hpx::wait_all(hpx::lcos::broadcast<startSchedulerAct>(hpx::find_all_localities(), searchManagers));

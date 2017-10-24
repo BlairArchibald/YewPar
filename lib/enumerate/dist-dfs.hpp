@@ -21,11 +21,7 @@ struct DistCount<Space, Sol, Gen> {
                               unsigned depth,
                               Sol c,
                               hpx::naming::id_type p) {
-    std::vector<std::uint64_t> cntMap;
-    cntMap.resize(maxDepth + 1);
-    for (auto i = 0; i <= maxDepth; ++i) {
-      cntMap[i] = 0;
-    }
+    std::vector<std::uint64_t> cntMap(maxDepth + 1);
 
     expand(spawnDepth, maxDepth, depth, c, cntMap);
 
