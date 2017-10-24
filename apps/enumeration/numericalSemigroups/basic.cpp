@@ -107,7 +107,6 @@ NodeGen generateChildren(const Empty & space, const SemiGroup & s) {
 }
 
 typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
-REGISTER_ENUM_REGISTRY(Empty, SemiGroup)
 
 namespace hpx { namespace traits {
   template <>

@@ -97,7 +97,6 @@ auto generateChildren(const UTSState & space, const UTSNode & n) {
 }
 
 typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
-REGISTER_ENUM_REGISTRY(UTSState, UTSNode)
 
 #ifndef UTS_MAX_TREE_DEPTH
 #define UTS_MAX_TREE_DEPTH 2000

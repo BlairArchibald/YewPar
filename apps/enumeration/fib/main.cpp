@@ -37,7 +37,6 @@ NodeGen generateChildren(const Empty & space, const std::uint64_t & n) {
 #define MAX_DEPTH 50
 
 typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
-REGISTER_ENUM_REGISTRY(Empty, std::uint64_t)
 
 using cFunc = skeletons::Enum::DistCount<Empty, std::uint64_t, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_DEPTH> >::ChildTask;
 using solType = std::uint64_t;

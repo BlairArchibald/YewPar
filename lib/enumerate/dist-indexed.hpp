@@ -7,6 +7,7 @@
 #include <cstdint>
 
 #include "enumRegistry.hpp"
+#include "util.hpp"
 
 #include "util/func.hpp"
 #include "util/positionIndex.hpp"
@@ -27,7 +28,7 @@ struct DistCount<Space, Sol, Gen, Indexed> {
                               const hpx::naming::id_type doneProm,
                               const int idx,
                               const hpx::naming::id_type searchMgr) {
-    auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
+    auto reg = Registry<Space, Sol>::gReg;
 
     auto posIdx = positionIndex(path);
     auto c = getStartingNode(path);
@@ -59,7 +60,7 @@ struct DistCount<Space, Sol, Gen, Indexed> {
                      const Sol & n,
                      std::shared_ptr<SharedState_t> stealRequest,
                      std::vector<std::uint64_t> & cntMap) {
-    auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
+    auto reg = Registry<Space, Sol>::gReg;
 
     // Handle Steal requests before processing a node
     if (std::get<0>(*stealRequest)) {
@@ -99,7 +100,7 @@ struct DistCount<Space, Sol, Gen, Indexed> {
   static std::vector<std::uint64_t> count(const unsigned maxDepth,
                                           const Space & space,
                                           const Sol   & root) {
-    hpx::wait_all(hpx::lcos::broadcast<enum_initRegistry_act>(hpx::find_all_localities(), space, maxDepth, root));
+    hpx::wait_all(hpx::lcos::broadcast<EnumInitRegistryAct<Space, Sol> >(hpx::find_all_localities(), space, maxDepth, root));
     hpx::naming::id_type localSearchManager;
     std::vector<hpx::naming::id_type> searchManagers;
     for (auto const& loc : hpx::find_all_localities()) {
@@ -131,25 +132,12 @@ struct DistCount<Space, Sol, Gen, Indexed> {
     hpx::wait_all(hpx::lcos::broadcast<stopScheduler_SearchManager_action>(hpx::find_all_localities()));
 
     // Gather the counts
-    std::vector<std::vector<uint64_t> > cntList;
-    cntList = hpx::lcos::broadcast(enum_getCounts_act(), hpx::find_all_localities(), Space(), root).get();
-    std::vector<uint64_t> res;
-    res.resize(maxDepth + 1);
-    for (auto i = 0; i <= maxDepth; ++i) {
-      std::uint64_t totalCnt = 0;
-      for (const auto & cnt : cntList) {
-        totalCnt += cnt[i];
-      }
-      res[i] = totalCnt;
-    }
-    res[0] = 1; //Account for root node
-
-    return res;
+    return totalNodeCounts<Space, Sol>(maxDepth);
   }
 
   static Sol getStartingNode(std::vector<unsigned> & path) {
-    auto reg  = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
-    auto node =  reg->root_;
+    auto reg  = Registry<Space, Sol>::gReg;
+    auto node = reg->root_;
 
     // Paths have a leading 0 (representing root, we don't need this).
     path.erase(path.begin());

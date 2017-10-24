@@ -3,82 +3,68 @@
 
 #include <vector>
 
-namespace skeletons { namespace Enum { namespace Components {
+namespace skeletons { namespace Enum {
 
-      template <typename Space, typename Sol>
-      struct Registry {
-        static Registry<Space, Sol>* gReg;
+template <typename Space, typename Sol>
+struct Registry {
+  static Registry<Space, Sol>* gReg;
 
-        Space space_;
+  Space space_;
 
-        unsigned maxDepth;
-        std::vector<std::atomic<std::uint64_t> >* counts;
+  unsigned maxDepth;
+  std::vector<std::atomic<std::uint64_t> >* counts; //TODO: Why is this a pointer?
 
-        // For recompute we need to store the root
-        Sol root_;
+  // For recompute we need to store the root
+  Sol root_;
 
-        void updateCounts(std::vector<std::uint64_t> & cntMap) {
-          for (auto i = 0; i <= maxDepth; ++i) {
-            // Addition happens atomically
-            (*counts)[i] += cntMap[i];
-          }
-        }
-      };
+  void updateCounts(std::vector<std::uint64_t> & cntMap) {
+    for (auto i = 0; i <= maxDepth; ++i) {
+      // Addition happens atomically
+      (*counts)[i] += cntMap[i];
+    }
+  }
+};
 
-      template<typename Space, typename Sol>
-      Registry<Space, Sol>* Registry<Space, Sol>::gReg = new Registry<Space, Sol>;
+template<typename Space, typename Sol>
+Registry<Space, Sol>* Registry<Space, Sol>::gReg = new Registry<Space, Sol>;
 
-      template <typename Space, typename Sol>
-      void initialiseRegistry(Space space, unsigned maxDepth , Sol root) {
-        auto reg = Registry<Space, Sol>::gReg;
-        reg->space_ = space;
-        reg->maxDepth = maxDepth;
-        reg->root_ = root;
+template <typename Space, typename Sol>
+void initialiseRegistry(Space space, unsigned maxDepth , Sol root) {
+  auto reg = Registry<Space, Sol>::gReg;
+  reg->space_ = space;
+  reg->maxDepth = maxDepth;
+  reg->root_ = root;
 
-        // FIXME: Technically a memory leak
-        // FIXME: Should we just move to fixed size arrays for this?
-        reg->counts = new std::vector<std::atomic<std::uint64_t>>(maxDepth + 1);
-        for (auto i = 0; i <= reg->maxDepth; ++i) {
-          (*reg->counts)[i] = 0;
-        }
-      }
+  // FIXME: Technically a memory leak
+  // FIXME: Should we just move to fixed size arrays for this?
+  reg->counts = new std::vector<std::atomic<std::uint64_t>>(maxDepth + 1);
+  for (auto i = 0; i <= reg->maxDepth; ++i) {
+    (*reg->counts)[i] = 0;
+  }
+}
 
-      // Faketypes needed so we can typecheck before full action initialisation
-      template <typename Space, typename Sol>
-      std::vector<std::uint64_t> getCounts(Space, Sol) {
-        auto reg = Registry<Space, Sol>::gReg;
-        std::vector<std::uint64_t> res;
+template <typename Space, typename Sol>
+std::vector<std::uint64_t> getCounts() {
+  auto reg = Registry<Space, Sol>::gReg;
+  std::vector<std::uint64_t> res;
 
-        // Convert std::atomic<std::uint64_t> -> uint64_t by loading it
-        res.resize(reg->maxDepth + 1);
-        for (auto i = 0; i <= reg->maxDepth; ++i) {
-          res[i] = (*reg->counts)[i].load();
-        }
+  // Convert std::atomic<std::uint64_t> -> uint64_t by loading it
+  res.resize(reg->maxDepth + 1);
+  for (auto i = 0; i <= reg->maxDepth; ++i) {
+    res[i] = (*reg->counts)[i].load();
+  }
 
-        return res;
-      }
-}}}
+  return res;
+}
 
-HPX_DECLARE_PLAIN_ACTION(skeletons::Enum::Components::initialiseRegistry, enum_initRegistry_act);
-HPX_DECLARE_PLAIN_ACTION(skeletons::Enum::Components::getCounts, enum_getCounts_act);
+template<typename Space, typename Sol>
+struct EnumGetCountsAct : hpx::actions::make_action<
+  decltype(&getCounts<Space, Sol>), &getCounts<Space, Sol>, EnumGetCountsAct<Space, Sol> >::type {};
 
-#define COMMA ,
+template<typename Space, typename Sol>
+struct EnumInitRegistryAct : hpx::actions::make_action<
+  decltype(&initialiseRegistry<Space, Sol>), &initialiseRegistry<Space, Sol>, EnumInitRegistryAct<Space, Sol> >::type {};
 
-#define REGISTER_ENUM_REGISTRY(space,sol)                                        \
-  struct enum_initRegistry_act : hpx::actions::make_action<                      \
-    decltype(&skeletons::Enum::Components::initialiseRegistry<space COMMA sol>), \
-    &skeletons::Enum::Components::initialiseRegistry<space COMMA sol>,           \
-    enum_initRegistry_act>::type {};                                             \
-                                                                                 \
-  HPX_REGISTER_ACTION_DECLARATION(enum_initRegistry_act, enum_initRegistry_act); \
-  HPX_REGISTER_ACTION(enum_initRegistry_act, enum_initRegistry_act);             \
-                                                                                 \
-  struct enum_getCounts_act : hpx::actions::make_action<                         \
-    decltype(&skeletons::Enum::Components::getCounts<space COMMA sol>),          \
-    &skeletons::Enum::Components::getCounts<space COMMA sol>,                    \
-    enum_getCounts_act>::type {};                                                \
-                                                                                 \
-  HPX_REGISTER_ACTION_DECLARATION(enum_getCounts_act, enum_getCounts_act);       \
-  HPX_REGISTER_ACTION(enum_getCounts_act, enum_getCounts_act);                   \
+}}
 
 #endif

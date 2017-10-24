@@ -12,7 +12,10 @@
 #include <hpx/runtime/get_ptr.hpp>
 
 #include "enumRegistry.hpp"
+#include "util.hpp"
+
 #include "util/func.hpp"
+#include "util/util.hpp"
 
 #include "workstealing/SearchManager.hpp"
 #include "workstealing/SearchManagerScheduler.hpp"
@@ -175,7 +178,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
                       const Space & space,
                       const Sol & root,
                       std::vector<hpx::naming::id_type> & searchMgrs) {
-    auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
+    auto reg = Registry<Space, Sol>::gReg;
 
     std::vector<hpx::future<void> > futures;
     std::vector<std::uint64_t> cntMap(maxDepth + 1);
@@ -248,7 +251,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
   static std::vector<std::uint64_t> count(const unsigned maxDepth,
                                           const Space & space,
                                           const Sol   & root) {
-    hpx::wait_all(hpx::lcos::broadcast<enum_initRegistry_act>(hpx::find_all_localities(), space, maxDepth, root));
+    hpx::wait_all(hpx::lcos::broadcast<EnumInitRegistryAct<Space, Sol> >(hpx::find_all_localities(), space, maxDepth, root));
 
     std::vector<hpx::naming::id_type> searchManagers;
     for (auto const& loc : hpx::find_all_localities()) {
@@ -263,19 +266,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
 
     hpx::wait_all(hpx::lcos::broadcast<stopScheduler_SearchManager_action>(hpx::find_all_localities()));
 
-    std::vector<std::vector<uint64_t> > cntList;
-    cntList = hpx::lcos::broadcast(enum_getCounts_act(), hpx::find_all_localities(), Space(), root).get();
-    std::vector<uint64_t> res(maxDepth + 1);
-    for (auto i = 0; i <= maxDepth; ++i) {
-      std::uint64_t totalCnt = 0;
-      for (const auto & cnt : cntList) {
-        totalCnt += cnt[i];
-      }
-      res[i] = totalCnt;
-    }
-    res[0] = 1; //Account for root node
-
-    return res;
+    return totalNodeCounts<Space, Sol>(maxDepth);
   }
 
   static void runFromSol(const Sol initNode,
@@ -284,7 +275,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
                          const hpx::naming::id_type p,
                          const unsigned idx,
                          const hpx::naming::id_type searchManager) {
-    auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
+    auto reg = Registry<Space, Sol>::gReg;
 
     std::array<StackElem, maxStackDepth_> generatorStack;
     std::vector<std::uint64_t> cntMap(reg->maxDepth + 1);
@@ -309,7 +300,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
                                 const hpx::naming::id_type searchManager,
                                 const int stackDepth = 0,
                                 const int depth = -1) {
-    auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
+    auto reg = Registry<Space, Sol>::gReg;
     std::vector<hpx::future<void> > futures;
 
     runWithStack(startingDepth, maxDepth, space, generatorStack, stealRequest, cntMap, futures, stackDepth, depth);

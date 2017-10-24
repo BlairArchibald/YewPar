@@ -6,6 +6,7 @@
 #include <cstdint>
 
 #include "enumRegistry.hpp"
+#include "util.hpp"
 
 #include "workstealing/scheduler.hpp"
 #include "workstealing/workqueue.hpp"
@@ -29,7 +30,7 @@ struct DistCount<Space, Sol, Gen> {
     expand(spawnDepth, maxDepth, depth, c, cntMap);
 
     // Atomically updates the (process) local counter
-    auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
+    auto reg = Registry<Space, Sol>::gReg;
     reg->updateCounts(cntMap);
 
     workstealing::tasks_required_sem.signal();
@@ -46,7 +47,7 @@ struct DistCount<Space, Sol, Gen> {
                      unsigned depth,
                      const Sol & n,
                      std::vector<std::uint64_t> & cntMap) {
-    auto reg = Components::Registry<Space, Sol>::gReg;
+    auto reg = Registry<Space, Sol>::gReg;
 
     auto newCands = Gen::invoke(reg->space_, n);
 
@@ -91,7 +92,8 @@ struct DistCount<Space, Sol, Gen> {
                                           const unsigned maxDepth,
                                           const Space & space,
                                           const Sol   & root) {
-    hpx::wait_all(hpx::lcos::broadcast<enum_initRegistry_act>(hpx::find_all_localities(), space, maxDepth, root));
+
+    hpx::wait_all(hpx::lcos::broadcast<EnumInitRegistryAct<Space, Sol> >(hpx::find_all_localities(), space, maxDepth, root));
 
     std::vector<hpx::naming::id_type> workqueues;
     for (auto const& loc : hpx::find_all_localities()) {
@@ -99,35 +101,18 @@ struct DistCount<Space, Sol, Gen> {
     }
     hpx::wait_all(hpx::lcos::broadcast<startScheduler_action>(hpx::find_all_localities(), workqueues));
 
-    std::vector<std::uint64_t> cntMap;
-    cntMap.resize(maxDepth + 1);
-    for (auto i = 1; i <= maxDepth; ++i) {
-      cntMap[i] = 0;
-    }
-    cntMap[0] = 1; // Count root node
+    std::vector<std::uint64_t> cntMap(maxDepth + 1);
 
     expand(spawnDepth, maxDepth, 1, root, cntMap);
 
     hpx::wait_all(hpx::lcos::broadcast<stopScheduler_action>(hpx::find_all_localities()));
 
     // Add the count of the "main" thread (since this doesn't return the same way the other tasks do)
-    auto reg = skeletons::Enum::Components::Registry<Space, Sol>::gReg;
+    auto reg = Registry<Space, Sol>::gReg;
     reg->updateCounts(cntMap);
 
     // Gather the counts
-    std::vector<std::vector<uint64_t> > cntList;
-    cntList = hpx::lcos::broadcast(enum_getCounts_act(), hpx::find_all_localities(), Space(), root).get();
-    std::vector<uint64_t> res;
-    res.resize(maxDepth + 1);
-    for (auto i = 0; i <= maxDepth; ++i) {
-      std::uint64_t totalCnt = 0;
-      for (const auto & cnt : cntList) {
-        totalCnt += cnt[i];
-      }
-      res[i] = totalCnt;
-    }
-
-    return res;
+    return totalNodeCounts<Space, Sol>(maxDepth);
   }
 
 };
