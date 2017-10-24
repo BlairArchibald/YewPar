@@ -185,9 +185,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     auto totalThreads = hpx::find_all_localities().size() * hpx::get_os_thread_count();
 
     // Assumes we always have a local manager in the list
-    auto localSearchMgr = *(std::find_if(searchMgrs.begin(), searchMgrs.end(), [](const auto & id){
-          return hpx::get_colocation_id(hpx::launch::sync, id) == hpx::find_here();
-        }));
+    auto localSearchMgr = *(std::find_if(searchMgrs.begin(), searchMgrs.end(), util::isColocated));
 
     if (totalThreads == 1) {
       hpx::promise<void> prom;
@@ -252,15 +250,11 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
                                           const Sol   & root) {
     hpx::wait_all(hpx::lcos::broadcast<enum_initRegistry_act>(hpx::find_all_localities(), space, maxDepth, root));
 
-    hpx::naming::id_type localSearchManager;
     std::vector<hpx::naming::id_type> searchManagers;
     for (auto const& loc : hpx::find_all_localities()) {
-      auto mgr = hpx::new_<workstealing::SearchManager<Sol, ChildTask> >(loc).get();
-      searchManagers.push_back(mgr);
-      if (loc == hpx::find_here()) {
-        localSearchManager = mgr;
-      }
+      searchManagers.push_back(hpx::new_<workstealing::SearchManager<Sol, ChildTask> >(loc).get());
     }
+    auto localSearchMgr = *(std::find_if(searchManagers.begin(), searchManagers.end(), util::isColocated));
 
     typedef typename workstealing::SearchManagerSched::startSchedulerAct<Sol, ChildTask> startSchedulerAct;
     hpx::wait_all(hpx::lcos::broadcast<startSchedulerAct>(hpx::find_all_localities(), searchManagers));
