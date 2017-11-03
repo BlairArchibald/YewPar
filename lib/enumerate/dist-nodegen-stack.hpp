@@ -299,6 +299,9 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
       for (auto const& loc : hpx::find_all_localities()) {
         hpx::async<Debug::printTaskTimes_act>(loc).get();
       }
+      for (auto const& loc : hpx::find_all_localities()) {
+        hpx::async<workstealing::SearchManagerPerf::printDistributedStealsList_act>(loc).get();
+      }
     }
 
     return totalNodeCounts<Space, Sol>(maxDepth);

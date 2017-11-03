@@ -16,6 +16,7 @@
 #include "hpx/lcos/future.hpp"                                   // for future
 #include "hpx/lcos/local/channel.hpp"                            // for future
 #include "hpx/lcos/local/mutex.hpp"
+#include "hpx/runtime/actions/plain_action.hpp"
 #include "hpx/runtime/actions/basic_action.hpp"                  // for make...
 #include "hpx/runtime/actions/component_action.hpp"              // for HPX_...
 #include "hpx/runtime/actions/transfer_action.hpp"               // for tran...
@@ -86,7 +87,26 @@ void registerPerformanceCounters() {
       "Returns the number of failed steals from another locality "
                                                   );
 }
+
+std::vector<std::pair<hpx::naming::id_type, bool> > distributedStealsList;
+
+void printDistributedStealsList() {
+  for (const auto &p : distributedStealsList) {
+    std::cout
+        << (boost::format("Steal %1% - %2% , success: %3%")
+            % static_cast<std::int64_t>(hpx::get_locality_id())
+            % static_cast<std::int64_t>(hpx::naming::get_locality_id_from_id(p.first))
+            % p.second)
+        << std::endl;
+  }
 }
+HPX_DEFINE_PLAIN_ACTION(printDistributedStealsList, printDistributedStealsList_act);
+
+}}
+
+HPX_REGISTER_ACTION(workstealing::SearchManagerPerf::printDistributedStealsList_act, SearchManagerPerPrintDistributedStealsList_act);
+
+namespace workstealing {
 
 // The SearchManager component allows steals to happen directly within a
 // searching thread. The SearchManager maintains a list of active threads and
@@ -180,7 +200,14 @@ class SearchManager: public hpx::components::component_base<SearchManager<Search
 
     isStealingDistributed = false;
 
-    return res.getResponse();
+    auto response = res.getResponse();
+    if (response) {
+      SearchManagerPerf::distributedStealsList.push_back(std::make_pair(*victim, true));
+    } else {
+      SearchManagerPerf::distributedStealsList.push_back(std::make_pair(*victim, false));
+    }
+
+    return response;
   }
 
  public:
