@@ -41,7 +41,9 @@ NodeGen generateChildren(const Empty & space, const Monoid & s) {
 typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
 
 using cFunc = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS> >::ChildTask;
+using cFuncDeb = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS>, std::integral_constant<bool, true> >::ChildTask;
 REGISTER_SEARCHMANAGER(Monoid, cFunc)
+REGISTER_SEARCHMANAGER(Monoid, cFuncDeb)
 
 using indexedFunc = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::Indexed>::ChildTask;
 using pathType = std::vector<unsigned>;
@@ -76,7 +78,12 @@ int hpx_main(boost::program_options::variables_map & opts) {
   } else if (skeleton == "indexed"){
     counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::Indexed>::count(maxDepth, Empty(), root);
   } else if (skeleton == "genstack"){
-    counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS> >::count(maxDepth, Empty(), root);
+    auto verbose = opts["verbose"].as<bool>();
+    if (verbose) {
+      counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS>, std::integral_constant<bool, true> >::count(maxDepth, Empty(), root);
+    } else {
+      counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS> >::count(maxDepth, Empty(), root);
+    }
   } else {
     std::cout << "Invalid skeleton type: " << skeleton << std::endl;
     return hpx::finalize();
@@ -111,10 +118,13 @@ int main(int argc, char* argv[]) {
     ( "until-depth,d",
       boost::program_options::value<unsigned>()->default_value(0),
       "Depth in the tree to count until"
+    )
+    ( "verbose,v",
+      boost::program_options::value<bool>()->default_value(false),
+      "Enable verbose output"
     );
 
-  // hpx::register_startup_function(&workstealing::registerPerformanceCounters);
-  hpx::register_startup_function(&workstealing::SearchManagerSched::registerPerformanceCounters);
+  hpx::register_startup_function(&workstealing::SearchManagerPerf::registerPerformanceCounters);
 
   return hpx::init(desc_commandline, argc, argv);
 }

@@ -5,11 +5,14 @@
 #include <array>
 #include <stack>
 #include <cstdint>
+#include <chrono>
+#include <unordered_map>
 
 #include <boost/optional.hpp>
 
 #include <hpx/lcos/broadcast.hpp>
 #include <hpx/runtime/get_ptr.hpp>
+#include <hpx/include/iostreams.hpp>
 
 #include "enumRegistry.hpp"
 #include "util.hpp"
@@ -22,13 +25,39 @@
 
 #include "seq.hpp"
 
+namespace skeletons { namespace Enum { namespace Debug {
+std::unordered_map<std::size_t, std::vector<std::uint64_t> > taskTimes;
+
+void printTaskTimes () {
+  auto numThreads = hpx::get_os_thread_count();
+  for (std::size_t t = 0; t < numThreads; ++t) {
+    const auto taskList = taskTimes[t];
+    for (const auto & cnt : taskList) {
+      // TODO: We can even put the thread in here
+      std::cout
+          << (boost::format("Task ran on locality: %1% for: %2% us") % static_cast<std::int64_t>(hpx::get_locality_id()) % cnt)
+          << std::endl;
+    }
+  }
+}
+HPX_DEFINE_PLAIN_ACTION(printTaskTimes, printTaskTimes_act);
+
+}}}
+
+HPX_REGISTER_ACTION(skeletons::Enum::Debug::printTaskTimes_act, skeletonEnumDebugPrintTaskTimes_act);
+
 // Represent the search tree as a stealable stack of nodegens
 namespace skeletons { namespace Enum {
 
 struct StackOfNodes {};
 
+// Default to no debug information
 template <typename Space, typename Sol, typename Gen, std::size_t maxStackDepth_>
-struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size_t, maxStackDepth_> > {
+struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size_t, maxStackDepth_> > :
+      DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size_t, maxStackDepth_>, std::integral_constant<bool, false> > {};
+
+template <typename Space, typename Sol, typename Gen, std::size_t maxStackDepth_, bool Debug>
+struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size_t, maxStackDepth_>, std::integral_constant<bool, Debug> > {
 
   struct StackElem {
     unsigned seen;
@@ -185,7 +214,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
 
     // Push work
     // FIXME: Assumes homogeneous machines
-    auto totalThreads = hpx::find_all_localities().size() * hpx::get_os_thread_count();
+    auto totalThreads = hpx::find_all_localities().size() * (hpx::get_os_thread_count() - 1);
 
     // Assumes we always have a local manager in the list
     auto localSearchMgr = *(std::find_if(searchMgrs.begin(), searchMgrs.end(), util::isColocated));
@@ -266,6 +295,15 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
 
     hpx::wait_all(hpx::lcos::broadcast<stopScheduler_SearchManager_action>(hpx::find_all_localities()));
 
+    if (Debug) {
+      for (auto const& loc : hpx::find_all_localities()) {
+        hpx::async<Debug::printTaskTimes_act>(loc).get();
+      }
+      for (auto const& loc : hpx::find_all_localities()) {
+        hpx::async<workstealing::SearchManagerPerf::printDistributedStealsList_act>(loc).get();
+      }
+    }
+
     return totalNodeCounts<Space, Sol>(maxDepth);
   }
 
@@ -300,6 +338,12 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
                                 const hpx::naming::id_type searchManager,
                                 const int stackDepth = 0,
                                 const int depth = -1) {
+
+    std::chrono::time_point<std::chrono::steady_clock> start_time;
+    if (Debug) {
+      start_time = std::chrono::steady_clock::now();
+    }
+
     auto reg = Registry<Space, Sol>::gReg;
     std::vector<hpx::future<void> > futures;
 
@@ -310,16 +354,24 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
 
     typedef typename workstealing::SearchManager<Sol, ChildTask>::done_action doneAct;
     hpx::async<doneAct>(searchManager, searchManagerId).get();
-
     workstealing::SearchManagerSched::tasks_required_sem.signal();
+
+    if (Debug) {
+      auto overall_time = std::chrono::duration_cast<std::chrono::microseconds>
+                          (std::chrono::steady_clock::now() - start_time);
+      auto thread = hpx::get_worker_thread_num();
+      Debug::taskTimes[thread].emplace_back(overall_time.count());
+    }
+
     hpx::wait_all(futures);
+
 
     hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromise, true).get();
   }
 
   using ChildTask = func<
-    decltype(&DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size_t, maxStackDepth_> >::runFromSol),
-    &DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size_t, maxStackDepth_> >::runFromSol >;
+    decltype(&DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size_t, maxStackDepth_>, std::integral_constant<bool, Debug> >::runFromSol),
+    &DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size_t, maxStackDepth_>, std::integral_constant<bool, Debug> >::runFromSol >;
 };
 
 }}

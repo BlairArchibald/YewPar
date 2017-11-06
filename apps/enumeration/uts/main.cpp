@@ -165,7 +165,7 @@ int main(int argc, char* argv[]) {
       ( "uts-r", boost::program_options::value<int>()->default_value(0), "root seed" )
       ;
 
-  hpx::register_startup_function(&workstealing::SearchManagerSched::registerPerformanceCounters);
+  hpx::register_startup_function(&workstealing::SearchManagerPerf::registerPerformanceCounters);
 
   return hpx::init(desc_commandline, argc, argv);
 }

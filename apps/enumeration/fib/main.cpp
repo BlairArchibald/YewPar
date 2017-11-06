@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
         "Depth in the tree to count until"
         );
 
-  hpx::register_startup_function(&workstealing::SearchManagerSched::registerPerformanceCounters);
+  hpx::register_startup_function(&workstealing::SearchManagerPerf::registerPerformanceCounters);
 
   return hpx::init(desc_commandline, argc, argv);
 }

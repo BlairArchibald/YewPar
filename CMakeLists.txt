@@ -8,6 +8,7 @@ project(YewPar CXX)
 find_package(HPX)
 
 # We need intrinsics for some apps so make sure they are enabled
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 
 # Variables to allow toggling of example apps
