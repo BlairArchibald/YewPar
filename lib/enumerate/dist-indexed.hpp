@@ -69,7 +69,7 @@ struct DistCount<Space, Sol, Gen, Indexed> {
       std::get<0>(*stealRequest).store(false);
     }
 
-    auto newCands = Gen::invoke(reg->space_, n);
+    auto newCands = Gen::invoke(reg->space, n);
     pos.setNumChildren(newCands.numChildren);
 
     cntMap[depth] += newCands.numChildren;
@@ -135,7 +135,7 @@ struct DistCount<Space, Sol, Gen, Indexed> {
 
   static Sol getStartingNode(std::vector<unsigned> & path) {
     auto reg  = Registry<Space, Sol>::gReg;
-    auto node = reg->root_;
+    auto node = reg->root;
 
     // Paths have a leading 0 (representing root, we don't need this).
     path.erase(path.begin());
@@ -145,7 +145,7 @@ struct DistCount<Space, Sol, Gen, Indexed> {
     }
 
     for (auto const & p : path) {
-      auto newCands = Gen::invoke(reg->space_, node);
+      auto newCands = Gen::invoke(reg->space, node);
       node = newCands.nth(p);
     }
 

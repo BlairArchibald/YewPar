@@ -1,6 +1,11 @@
 #ifndef ENUM_REGISTRY_HPP
 #define ENUM_REGISTRY_HPP
 
+#include <algorithm>
+#include <atomic>
+#include <cstdint>
+#include <iterator>
+#include <memory>
 #include <vector>
 
 namespace skeletons { namespace Enum {
@@ -9,19 +14,32 @@ template <typename Space, typename Sol>
 struct Registry {
   static Registry<Space, Sol>* gReg;
 
-  Space space_;
-
+  Space space;
+  Sol root;
   unsigned maxDepth;
-  std::vector<std::atomic<std::uint64_t> >* counts; //TODO: Why is this a pointer?
 
-  // For recompute we need to store the root
-  Sol root_;
+  using countMapT = std::vector<std::atomic<std::uint64_t> >;
+  std::unique_ptr<countMapT> counts;
 
   void updateCounts(std::vector<std::uint64_t> & cntMap) {
     for (auto i = 0; i <= maxDepth; ++i) {
       // Addition happens atomically
       (*counts)[i] += cntMap[i];
     }
+  }
+
+  void initialise(Space space, unsigned maxDepth, Sol root) {
+    this->space = space;
+    this->maxDepth = maxDepth;
+    this->root = root;
+    this->counts = std::make_unique<countMapT>(maxDepth + 1);
+  }
+
+  std::vector<std::uint64_t> getCounts() {
+    // Convert std::atomic<std::uint64_t> -> uint64_t by loading it
+    std::vector<std::uint64_t> res;
+    std::transform(counts->begin(), counts->end(), std::back_inserter(res), [](const auto & c) { return c.load(); });
+    return res;
   }
 };
 
@@ -30,31 +48,12 @@ Registry<Space, Sol>* Registry<Space, Sol>::gReg = new Registry<Space, Sol>;
 
 template <typename Space, typename Sol>
 void initialiseRegistry(Space space, unsigned maxDepth , Sol root) {
-  auto reg = Registry<Space, Sol>::gReg;
-  reg->space_ = space;
-  reg->maxDepth = maxDepth;
-  reg->root_ = root;
-
-  // FIXME: Technically a memory leak
-  // FIXME: Should we just move to fixed size arrays for this?
-  reg->counts = new std::vector<std::atomic<std::uint64_t>>(maxDepth + 1);
-  for (auto i = 0; i <= reg->maxDepth; ++i) {
-    (*reg->counts)[i] = 0;
-  }
+  Registry<Space, Sol>::gReg->initialise(space, maxDepth, root);
 }
 
 template <typename Space, typename Sol>
 std::vector<std::uint64_t> getCounts() {
-  auto reg = Registry<Space, Sol>::gReg;
-  std::vector<std::uint64_t> res;
-
-  // Convert std::atomic<std::uint64_t> -> uint64_t by loading it
-  res.resize(reg->maxDepth + 1);
-  for (auto i = 0; i <= reg->maxDepth; ++i) {
-    res[i] = (*reg->counts)[i].load();
-  }
-
-  return res;
+  return Registry<Space, Sol>::gReg->getCounts();
 }
 
 template<typename Space, typename Sol>

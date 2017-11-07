@@ -45,7 +45,7 @@ struct DistCount<Space, Sol, Gen> {
                      std::vector<std::uint64_t> & cntMap) {
     auto reg = Registry<Space, Sol>::gReg;
 
-    auto newCands = Gen::invoke(reg->space_, n);
+    auto newCands = Gen::invoke(reg->space, n);
 
     std::vector<hpx::future<void> > childFuts;
     if (spawnDepth > 0) {

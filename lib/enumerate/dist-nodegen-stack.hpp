@@ -319,12 +319,12 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     std::vector<std::uint64_t> cntMap(reg->maxDepth + 1);
 
     // Setup the stack with root node
-    auto rootGen = Gen::invoke(reg->space_, initNode);
+    auto rootGen = Gen::invoke(reg->space, initNode);
     cntMap[depth] += rootGen.numChildren;
     generatorStack[0].seen = 0;
     generatorStack[0].generator = std::move(rootGen);
 
-    runTaskFromStack(depth, reg->maxDepth, reg->space_, generatorStack, stealRequest, cntMap, p, idx, searchManager);
+    runTaskFromStack(depth, reg->maxDepth, reg->space, generatorStack, stealRequest, cntMap, p, idx, searchManager);
   }
 
   static void runTaskFromStack (const unsigned startingDepth,
