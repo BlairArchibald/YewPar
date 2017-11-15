@@ -52,7 +52,11 @@ int hpx_main(boost::program_options::variables_map & opts) {
   std::vector<std::uint64_t> counts(maxDepth);
   if (skeleton == "seq") {
     counts = skeletons::Enum::Count<Empty, std::uint64_t, genChildren_func>::search(maxDepth, Empty(), maxDepth - 1);
-  } else if (skeleton == "genstack"){
+  }
+  else if (skeleton == "dist"){
+    counts = skeletons::Enum::DistCount<Empty, std::uint64_t, genChildren_func>::count(spawnDepth, maxDepth, Empty(), maxDepth - 1);
+  }
+  else if (skeleton == "genstack"){
     counts = skeletons::Enum::DistCount<Empty, std::uint64_t, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_DEPTH> >::count(maxDepth, Empty(), maxDepth - 1);
   }
 
@@ -87,7 +91,7 @@ int main(int argc, char* argv[]) {
         "Depth in the tree to count until"
         );
 
-  hpx::register_startup_function(&workstealing::SearchManagerPerf::registerPerformanceCounters);
+  hpx::register_startup_function(&Workstealing::Policies::SearchManagerPerf::registerPerformanceCounters);
 
   return hpx::init(desc_commandline, argc, argv);
 }

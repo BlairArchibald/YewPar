@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
       "Enable verbose output"
     );
 
-  hpx::register_startup_function(&workstealing::SearchManagerPerf::registerPerformanceCounters);
+  hpx::register_startup_function(&Workstealing::Policies::SearchManagerPerf::registerPerformanceCounters);
 
   return hpx::init(desc_commandline, argc, argv);
 }

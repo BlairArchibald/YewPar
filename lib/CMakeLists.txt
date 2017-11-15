@@ -5,8 +5,7 @@ add_subdirectory(util)
 
 add_hpx_library(YewPar
   SOURCES
-  workstealing/scheduler.cpp
-  workstealing/priorityscheduler.cpp
+  workstealing/Scheduler.cpp
 
   COMPONENT_DEPENDENCIES
   workqueue

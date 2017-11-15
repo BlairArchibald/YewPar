@@ -8,10 +8,10 @@
 #include "registry.hpp"
 #include "incumbent.hpp"
 
-#include "workstealing/scheduler.hpp"
-#include "workstealing/workqueue.hpp"
-
 #include "util/doubleWritePromise.hpp"
+
+#include "workstealing/Scheduler.hpp"
+#include "workstealing/policies/Workpool.hpp"
 
 namespace skeletons { namespace BnB { namespace Dist {
 
@@ -23,9 +23,25 @@ template <typename Space,
           typename Bound,
           bool PruneLevel = false>
 struct BranchAndBoundSat {
+
+  static hpx::future<void> createTask(const unsigned spawnDepth,
+                                      const hpx::util::tuple<Sol, Bnd, Cand> & c,
+                                      const hpx::naming::id_type foundProm) {
+    hpx::lcos::promise<void> prom;
+    auto pfut = prom.get_future();
+    auto pid  = prom.get_id();
+
+    ChildTask t;
+    hpx::util::function<void(hpx::naming::id_type)> task;
+    task = hpx::util::bind(t, hpx::util::placeholders::_1, spawnDepth, c, pid, foundProm);
+    std::static_pointer_cast<Workstealing::Policies::Workpool>(Workstealing::Scheduler::local_policy)->addwork(task);
+    return pfut;
+  }
+
   static void expand(unsigned spawnDepth,
                      const hpx::util::tuple<Sol, Bnd, Cand> & n,
-                     const hpx::naming::id_type foundProm) {
+                     const hpx::naming::id_type foundProm,
+                     std::vector<hpx::future<void> > & childFutures) {
     constexpr bool const prunelevel = PruneLevel;
 
     auto reg = skeletons::BnB::Components::Registry<Space, Sol, Bnd, Cand>::gReg;
@@ -34,11 +50,6 @@ struct BranchAndBoundSat {
     }
 
     auto newCands = Gen::invoke(reg->space_, n);
-
-    std::vector<hpx::future<void> > childFuts;
-    if (spawnDepth > 0) {
-      childFuts.reserve(newCands.numChildren);
-    }
 
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
@@ -68,24 +79,11 @@ struct BranchAndBoundSat {
 
       /* Search the child nodes */
       if (spawnDepth > 0) {
-        hpx::lcos::promise<void> prom;
-        auto pfut = prom.get_future();
-        auto pid  = prom.get_id();
-
-        ChildTask t;
-        hpx::util::function<void(hpx::naming::id_type)> task;
-        task = hpx::util::bind(t, hpx::util::placeholders::_1, spawnDepth - 1, c, pid, foundProm);
-        hpx::apply<workstealing::workqueue::addWork_action>(workstealing::local_workqueue, task);
-
-        childFuts.push_back(std::move(pfut));
+        auto pfut = createTask(spawnDepth - 1, c, foundProm);
+        childFutures.push_back(std::move(pfut));
       } else {
-        expand(0, c, foundProm);
+        expand(0, c, foundProm, childFutures);
       }
-    }
-
-    if (spawnDepth > 0) {
-      workstealing::tasks_required_sem.signal(); // Going to sleep, get more tasks
-      hpx::wait_all(childFuts);
     }
   }
 
@@ -93,11 +91,16 @@ struct BranchAndBoundSat {
            hpx::util::tuple<Sol, Bnd, Cand> c,
            const hpx::naming::id_type foundProm,
            std::shared_ptr<hpx::promise<void> > done) {
-    expand(spawnDepth, c, foundProm);
+    std::vector<hpx::future<void> > childFutures;
+    expand(spawnDepth, c, foundProm, childFutures);
 
-    // Search finished without finding a solution, wake up the main thread to finalise everything
-    hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(foundProm, true).get();
-    done->set_value();
+
+    hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
+          hpx::wait_all(futs);
+          // Search finished without finding a solution, wake up the main thread to finalise everything
+          hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(foundProm, true).get();
+          done->set_value();
+        }, std::move(childFutures)));
   }
 
   static hpx::util::tuple<Sol, Bnd, Cand> search(unsigned spawnDepth,
@@ -114,12 +117,17 @@ struct BranchAndBoundSat {
     hpx::async<updateInc>(inc, root).get();
 
     // Start work stealing schedulers on all localities
-    std::vector<hpx::naming::id_type> workqueues;
-    for (auto const& loc : hpx::find_all_localities()) {
-      workqueues.push_back(hpx::new_<workstealing::workqueue>(loc).get());
-    }
-    hpx::wait_all(hpx::lcos::broadcast<startScheduler_action>(hpx::find_all_localities(), workqueues));
+    Workstealing::Policies::Workpool::initPolicy();
 
+    // We launch n - 2 threads locally since this locality also calls doSearch as a scheduler thread
+    auto allLocs = hpx::find_all_localities();
+    allLocs.erase(std::remove(allLocs.begin(), allLocs.end(), hpx::find_here()), allLocs.end());
+
+    auto threadCount = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 1;
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(allLocs, threadCount));
+
+    auto threadCountLocal = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 2;
+    Workstealing::Scheduler::startSchedulers(threadCountLocal);
 
     // Setup early termination promise
     hpx::promise<int> foundProm;
@@ -129,8 +137,10 @@ struct BranchAndBoundSat {
 
     std::shared_ptr<hpx::promise<void> > donePromise = std::make_shared<hpx::promise<void> >();
 
-    hpx::threads::executors::default_executor exe(hpx::threads::thread_stacksize_large);
-    hpx::apply(exe, hpx::util::bind(&doSearch, spawnDepth, root, foundId, donePromise));
+    // Run the main funciton as a scheduler thread
+    hpx::threads::executors::default_executor exe(hpx::threads::thread_priority_critical,
+                                                  hpx::threads::thread_stacksize_huge);
+    hpx::apply(exe, &Workstealing::Scheduler::scheduler, hpx::util::bind(&doSearch, spawnDepth, root, foundId, donePromise));
 
     foundFut.get();
 
@@ -141,7 +151,7 @@ struct BranchAndBoundSat {
 
     // Wait for all workqueues to flush before stopping them
     donePromise->get_future().get();
-    hpx::wait_all(hpx::lcos::broadcast<stopScheduler_action>(hpx::find_all_localities()));
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(hpx::find_all_localities()));
 
     // Read the result form the global incumbent
     typedef typename bounds::Incumbent<Sol, Bnd, Cand>::getIncumbent_action getInc;
@@ -152,9 +162,12 @@ struct BranchAndBoundSat {
                               hpx::util::tuple<Sol, Bnd, Cand> c,
                               hpx::naming::id_type p,
                               const hpx::naming::id_type foundProm) {
-    expand(spawnDepth, c, foundProm);
-    workstealing::tasks_required_sem.signal();
-    hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
+    std::vector<hpx::future<void> > childFutures;
+    expand(spawnDepth, c, foundProm, childFutures);
+    hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
+          hpx::wait_all(futs);
+          hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true);
+        }, std::move(childFutures)));
   }
 
   struct ChildTask : hpx::actions::make_action<
