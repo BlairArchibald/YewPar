@@ -5,7 +5,7 @@
 #include <cstdint>
 
 // Max scheduler sleep time (microseconds)
-#define MAX_BACKOFF 5000000
+#define MAX_BACKOFF 500000 // 500ms max
 #define INITIAL_BACKOFF 100
 #define BACKOFF_MUL 2
 
