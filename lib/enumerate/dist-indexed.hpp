@@ -20,7 +20,7 @@ namespace skeletons { namespace Enum {
 
 template <typename Space, typename Sol, typename Gen>
 struct DistCount<Space, Sol, Gen, Indexed> {
-  using Response_t    = boost::optional<hpx::util::tuple<std::vector<unsigned>, int, hpx::naming::id_type> >;
+  using Response_t    = std::vector<hpx::util::tuple<std::vector<unsigned>, int, hpx::naming::id_type> >;
   using SharedState_t = std::pair<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response_t> >;
 
   static void searchChildTask(std::vector<unsigned> path,

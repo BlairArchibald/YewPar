@@ -91,7 +91,7 @@ class positionIndex {
     nextIndex.pop_back();
   }
 
-  boost::optional<hpx::util::tuple<std::vector<unsigned>, int, hpx::naming::id_type> > steal() {
+  std::vector<hpx::util::tuple<std::vector<unsigned>, int, hpx::naming::id_type> > steal() {
     // Find the highest depth that still has work
     int highest = -1;
     for (auto i = 0; i <= depth; ++i) {
@@ -126,7 +126,7 @@ class positionIndex {
 
     // FIXME: Should path size be returned here?
     int stealDepth = res.size();
-    auto stealRes = hpx::util::make_tuple(std::move(res), stealDepth, pid);
+    std::vector<hpx::util::tuple<std::vector<unsigned>, int, hpx::naming::id_type> > stealRes {hpx::util::make_tuple(std::move(res), stealDepth, pid)};
     return stealRes;
   }
 

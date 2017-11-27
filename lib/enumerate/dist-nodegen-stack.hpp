@@ -9,8 +9,6 @@
 #include <unordered_map>
 #include <memory>
 
-#include <boost/optional.hpp>
-
 #include <hpx/lcos/broadcast.hpp>
 #include <hpx/runtime/get_ptr.hpp>
 #include <hpx/include/iostreams.hpp>
@@ -65,7 +63,8 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     typename Gen::return_type generator;
   };
 
-  using Response_t    = boost::optional<hpx::util::tuple<Sol, int, hpx::naming::id_type> >;
+  //TODO: Can I get these types from the Policy?
+  using Response_t    = std::vector<hpx::util::tuple<Sol, int, hpx::naming::id_type> >;
   using SharedState_t = std::pair<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response_t> >;
 
   // Run with a pre-initialised stack. Used for the master thread once it pushes work
@@ -101,14 +100,16 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
             futures.push_back(prom.get_future());
 
             const auto stolenSol = generatorStack[i].generator.next();
-            std::get<1>(*stealRequest).set(hpx::util::make_tuple(stolenSol, startingDepth + i + 1, prom.get_id()));
+            Response_t res {hpx::util::make_tuple(stolenSol, startingDepth + i + 1, prom.get_id())};
+            std::get<1>(*stealRequest).set(res);
 
             responded = true;
             break;
           }
         }
         if (!responded) {
-          std::get<1>(*stealRequest).set({});
+          Response_t res;
+          std::get<1>(*stealRequest).set(res);
         }
         std::get<0>(*stealRequest).store(false);
       }
