@@ -122,7 +122,11 @@ int hpx_main(boost::program_options::variables_map & opts) {
   std::vector<std::uint64_t> counts(maxDepth);
   if (skeleton == "seq") {
     counts = skeletons::Enum::Count<UTSState, UTSNode, genChildren_func>::search(maxDepth, params, root);
-  } else if (skeleton == "genstack") {
+  }
+  if (skeleton == "dist") {
+    counts = skeletons::Enum::DistCount<UTSState, UTSNode, genChildren_func>::count(spawnDepth, maxDepth, params, root);
+  }
+  else if (skeleton == "genstack") {
     counts = skeletons::Enum::DistCount<UTSState, UTSNode, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, UTS_MAX_TREE_DEPTH> >::count(maxDepth, params, root);
   }
 
@@ -165,7 +169,7 @@ int main(int argc, char* argv[]) {
       ( "uts-r", boost::program_options::value<int>()->default_value(0), "root seed" )
       ;
 
-  hpx::register_startup_function(&workstealing::SearchManagerPerf::registerPerformanceCounters);
+  hpx::register_startup_function(&Workstealing::Policies::SearchManagerPerf::registerPerformanceCounters);
 
   return hpx::init(desc_commandline, argc, argv);
 }

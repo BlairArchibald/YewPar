@@ -1,3 +1,5 @@
+add_subdirectory(policies)
+
 add_hpx_component(workqueue
     SOURCES workqueue.cpp
     HEADERS workqueue.hpp)
@@ -5,7 +7,3 @@ add_hpx_component(workqueue
 add_hpx_component(priorityworkqueue
     SOURCES priorityworkqueue.cpp
     HEADERS priorityworkqueue.hpp)
-
-add_hpx_component(SearchManager
-    SOURCES SearchManager.cpp
-    HEADERS SearchManager.hpp)

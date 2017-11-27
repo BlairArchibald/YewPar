@@ -318,7 +318,7 @@ int main (int argc, char* argv[]) {
     ("no-edge-labels", "Get rid of edge labels, but keep vertex labels")
     ("undirected", "Make the graph undirected");
 
-  hpx::register_startup_function(&workstealing::registerPerformanceCounters);
+  //hpx::register_startup_function(&workstealing::registerPerformanceCounters);
 
   return hpx::init(desc_commandline, argc, argv);
 }

@@ -8,8 +8,8 @@
 #include "enumRegistry.hpp"
 #include "util.hpp"
 
-#include "workstealing/scheduler.hpp"
-#include "workstealing/workqueue.hpp"
+#include "workstealing/Scheduler.hpp"
+#include "workstealing/policies/Workpool.hpp"
 
 namespace skeletons { namespace Enum {
 
@@ -22,15 +22,18 @@ struct DistCount<Space, Sol, Gen> {
                               Sol c,
                               hpx::naming::id_type p) {
     std::vector<std::uint64_t> cntMap(maxDepth + 1);
+    std::vector<hpx::future<void> > childFutures;
 
-    expand(spawnDepth, maxDepth, depth, c, cntMap);
+    expand(spawnDepth, maxDepth, depth, c, cntMap, childFutures);
 
     // Atomically updates the (process) local counter
     auto reg = Registry<Space, Sol>::gReg;
     reg->updateCounts(cntMap);
 
-    workstealing::tasks_required_sem.signal();
-    hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
+    hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
+          hpx::wait_all(futs);
+          hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true);
+        }, std::move(childFutures)));
   }
 
   struct ChildTask : hpx::actions::make_action<
@@ -38,20 +41,31 @@ struct DistCount<Space, Sol, Gen> {
     &DistCount<Space, Sol, Gen>::searchChildTask,
     ChildTask>::type {};
 
-  static void expand(unsigned spawnDepth,
+  static hpx::future<void> createTask(const unsigned spawnDepth,
+                                      const unsigned maxDepth,
+                                      const unsigned depth,
+                                      const Sol & c) {
+    hpx::lcos::promise<void> prom;
+    auto pfut = prom.get_future();
+    auto pid  = prom.get_id();
+
+    ChildTask t;
+    hpx::util::function<void(hpx::naming::id_type)> task;
+    task = hpx::util::bind(t, hpx::util::placeholders::_1, spawnDepth, maxDepth, depth, c, pid);
+    std::static_pointer_cast<Workstealing::Policies::Workpool>(Workstealing::Scheduler::local_policy)->addwork(task);
+
+    return pfut;
+  }
+
+  static void expand(const unsigned spawnDepth,
                      const unsigned maxDepth,
-                     unsigned depth,
+                     const unsigned depth,
                      const Sol & n,
-                     std::vector<std::uint64_t> & cntMap) {
+                     std::vector<std::uint64_t> & cntMap,
+                     std::vector<hpx::future<void> > & childFutures) {
     auto reg = Registry<Space, Sol>::gReg;
 
     auto newCands = Gen::invoke(reg->space, n);
-
-    std::vector<hpx::future<void> > childFuts;
-    if (spawnDepth > 0) {
-      childFuts.reserve(newCands.numChildren);
-    }
-
     cntMap[depth] += newCands.numChildren;
 
     if (maxDepth == depth) {
@@ -63,24 +77,31 @@ struct DistCount<Space, Sol, Gen> {
 
       /* Search the child nodes */
       if (spawnDepth > 0) {
-        hpx::lcos::promise<void> prom;
-        auto pfut = prom.get_future();
-        auto pid  = prom.get_id();
-
-        ChildTask t;
-        hpx::util::function<void(hpx::naming::id_type)> task;
-        task = hpx::util::bind(t, hpx::util::placeholders::_1, spawnDepth - 1, maxDepth, depth + 1, c, pid);
-        hpx::apply<workstealing::workqueue::addWork_action>(workstealing::local_workqueue, task);
-
-        childFuts.push_back(std::move(pfut));
+        auto pfut = createTask(spawnDepth - 1, maxDepth, depth + 1, c);
+        childFutures.push_back(std::move(pfut));
       } else {
-        expand(0, maxDepth, depth + 1, c, cntMap);
+        expandNoSpawns(maxDepth, depth + 1, reg->space, c, cntMap);
       }
     }
+  }
 
-    if (spawnDepth > 0) {
-      workstealing::tasks_required_sem.signal(); // Going to sleep, get more tasks
-      hpx::wait_all(childFuts);
+  // Optimised version of expand, for performance
+  static void expandNoSpawns(const unsigned maxDepth,
+                             const unsigned depth,
+                             const Space & space,
+                             const Sol & n,
+                             std::vector<std::uint64_t> & cntMap
+                             ) {
+    auto newCands = Gen::invoke(space, n);
+    cntMap[depth] += newCands.numChildren;
+
+    if (maxDepth == depth) {
+      return;
+    }
+
+    for (auto i = 0; i < newCands.numChildren; ++i) {
+      auto c = newCands.next();
+      expandNoSpawns(maxDepth, depth + 1, space, c, cntMap);
     }
   }
 
@@ -91,21 +112,15 @@ struct DistCount<Space, Sol, Gen> {
 
     hpx::wait_all(hpx::lcos::broadcast<EnumInitRegistryAct<Space, Sol> >(hpx::find_all_localities(), space, maxDepth, root));
 
-    std::vector<hpx::naming::id_type> workqueues;
-    for (auto const& loc : hpx::find_all_localities()) {
-      workqueues.push_back(hpx::new_<workstealing::workqueue>(loc).get());
-    }
-    hpx::wait_all(hpx::lcos::broadcast<startScheduler_action>(hpx::find_all_localities(), workqueues));
+    Workstealing::Policies::Workpool::initPolicy();
 
-    std::vector<std::uint64_t> cntMap(maxDepth + 1);
+    auto threadCount = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 1;
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(hpx::find_all_localities(), threadCount));
 
-    expand(spawnDepth, maxDepth, 1, root, cntMap);
+    // Create the main task and wait for it to finish
+    createTask(spawnDepth, maxDepth, 1, root).get();
 
-    hpx::wait_all(hpx::lcos::broadcast<stopScheduler_action>(hpx::find_all_localities()));
-
-    // Add the count of the "main" thread (since this doesn't return the same way the other tasks do)
-    auto reg = Registry<Space, Sol>::gReg;
-    reg->updateCounts(cntMap);
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(hpx::find_all_localities()));
 
     // Gather the counts
     return totalNodeCounts<Space, Sol>(maxDepth);

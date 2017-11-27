@@ -13,8 +13,8 @@
 #include "util/func.hpp"
 #include "util/positionIndex.hpp"
 
-#include "workstealing/SearchManager.hpp"
-#include "workstealing/SearchManagerScheduler.hpp"
+#include "workstealing/policies/SearchManager.hpp"
+#include "workstealing/Scheduler.hpp"
 
 namespace skeletons { namespace Enum {
 
@@ -42,13 +42,12 @@ struct DistCount<Space, Sol, Gen, Indexed> {
     // Atomically updates the (process) local counter
     reg->updateCounts(cntMap);
 
-    typedef typename workstealing::SearchManager<std::vector<unsigned>, ChildTask>::done_action doneAct;
-    hpx::async<doneAct>(searchMgr, idx).get();
+    std::static_pointer_cast<Workstealing::Policies::SearchManager<std::vector<unsigned>, ChildTask> >(Workstealing::Scheduler::local_policy)->done(idx);
 
-    workstealing::SearchManagerSched::tasks_required_sem.signal();
-
-    posIdx.waitFutures();
-    hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(doneProm, true).get();
+    hpx::apply([=](auto pIdx) {
+          pIdx.waitFutures();
+          hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(doneProm, true).get();
+      }, std::move(posIdx));
   }
 
   using ChildTask = func<
@@ -103,14 +102,10 @@ struct DistCount<Space, Sol, Gen, Indexed> {
                                           const Sol   & root) {
     hpx::wait_all(hpx::lcos::broadcast<EnumInitRegistryAct<Space, Sol> >(hpx::find_all_localities(), space, maxDepth, root));
 
-    std::vector<hpx::naming::id_type> searchManagers;
-    for (auto const& loc : hpx::find_all_localities()) {
-      searchManagers.push_back(hpx::new_<workstealing::SearchManager<std::vector<unsigned>, ChildTask> >(loc).get());
-    }
-    auto localSearchManager = *(std::find_if(searchManagers.begin(), searchManagers.end(), util::isColocated));
+    Workstealing::Policies::SearchManager<std::vector<unsigned>, ChildTask>::initPolicy();
 
-    typedef typename workstealing::SearchManagerSched::startSchedulerAct<std::vector<unsigned>, ChildTask> startSchedulerAct;
-    hpx::wait_all(hpx::lcos::broadcast<startSchedulerAct>(hpx::find_all_localities(), searchManagers));
+    auto threadCount = hpx::get_os_thread_count() - 1;
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(hpx::find_all_localities(), threadCount));
 
     // Push the root node as a task to the searchManager
     std::vector<unsigned> path;
@@ -120,14 +115,13 @@ struct DistCount<Space, Sol, Gen, Indexed> {
     auto f = prom.get_future();
     auto pid = prom.get_id();
 
-    typedef typename workstealing::SearchManager<std::vector<unsigned>, ChildTask>::addWork_action addWorkAct;
-    hpx::async<addWorkAct>(localSearchManager, path, 1, pid);
+    std::static_pointer_cast<Workstealing::Policies::SearchManager<std::vector<unsigned>, ChildTask> >(Workstealing::Scheduler::local_policy)->addWork(path, 1, pid);
 
     // Wait completion of the main task
     f.get();
 
     // Stop the schedulers everywhere
-    hpx::wait_all(hpx::lcos::broadcast<stopScheduler_SearchManager_action>(hpx::find_all_localities()));
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(hpx::find_all_localities()));
 
     // Gather the counts
     return totalNodeCounts<Space, Sol>(maxDepth);

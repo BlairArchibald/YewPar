@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <chrono>
 #include <unordered_map>
+#include <memory>
 
 #include <boost/optional.hpp>
 
@@ -20,8 +21,8 @@
 #include "util/func.hpp"
 #include "util/util.hpp"
 
-#include "workstealing/SearchManager.hpp"
-#include "workstealing/SearchManagerScheduler.hpp"
+#include "workstealing/policies/SearchManager.hpp"
+#include "workstealing/Scheduler.hpp"
 
 #include "seq.hpp"
 
@@ -177,7 +178,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
           futures.push_back(std::move(f));
 
           auto mgr = tasksSpawned % searchMgrs.size();
-          typedef typename workstealing::SearchManager<Sol, ChildTask>::addWork_action addWorkAct;
+          typedef typename Workstealing::Policies::SearchManager<Sol, ChildTask>::addWork_action addWorkAct;
           hpx::async<addWorkAct>(searchMgrs[mgr], child, depth, pid);
 
           stackDepth--;
@@ -219,12 +220,12 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     // Assumes we always have a local manager in the list
     auto localSearchMgr = *(std::find_if(searchMgrs.begin(), searchMgrs.end(), util::isColocated));
 
-    if (totalThreads == 1) {
+    if (totalThreads == 0) {
       hpx::promise<void> prom;
       auto f = prom.get_future();
       auto pid = prom.get_id();
 
-      typedef typename workstealing::SearchManager<Sol, ChildTask>::addWork_action addWorkAct;
+      typedef typename Workstealing::Policies::SearchManager<Sol, ChildTask>::addWork_action addWorkAct;
       hpx::async<addWorkAct>(localSearchMgr, root, 1, pid);
 
       f.get();
@@ -260,8 +261,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     spawnInitialWork(depthRequired, totalThreads, stackDepth, depth, space, generatorStack, cntMap, futures, searchMgrs);
 
     // Register the rest of the work from the main thread with the generator
-    auto localSearchManagerPtr = hpx::get_ptr<workstealing::SearchManager<Sol, ChildTask> >(hpx::launch::sync, localSearchMgr);
-    auto searchMgrInfo = localSearchManagerPtr->registerThread();
+    auto searchMgrInfo = std::static_pointer_cast<Workstealing::Policies::SearchManager<Sol, ChildTask> >(Workstealing::Scheduler::local_policy)->registerThread();
     auto stealRequest  = std::get<0>(searchMgrInfo);
 
     // Continue the actual work
@@ -269,9 +269,10 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     auto f = prom.get_future();
     auto pid = prom.get_id();
 
-    hpx::threads::executors::default_executor exe(hpx::threads::thread_stacksize_large);
-    hpx::apply(exe, hpx::util::bind(&runTaskFromStack, 1, maxDepth, space, generatorStack, stealRequest,
-                                    cntMap, pid, std::get<1>(searchMgrInfo), localSearchMgr, stackDepth, depth));
+    // Launch initialising thread as a new Scheduler
+    hpx::threads::executors::default_executor exe(hpx::threads::thread_priority_critical,
+                                                  hpx::threads::thread_stacksize_huge);
+    hpx::apply(exe, &Workstealing::Scheduler::scheduler, hpx::util::bind(&runTaskFromStack, 1, maxDepth, space, generatorStack, stealRequest, cntMap, pid, std::get<1>(searchMgrInfo), localSearchMgr, stackDepth, depth));
 
     futures.push_back(std::move(f));
     hpx::wait_all(futures);
@@ -282,25 +283,20 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
                                           const Sol   & root) {
     hpx::wait_all(hpx::lcos::broadcast<EnumInitRegistryAct<Space, Sol> >(hpx::find_all_localities(), space, maxDepth, root));
 
-    std::vector<hpx::naming::id_type> searchManagers;
-    for (auto const& loc : hpx::find_all_localities()) {
-      searchManagers.push_back(hpx::new_<workstealing::SearchManager<Sol, ChildTask> >(loc).get());
-    }
-    auto localSearchMgr = *(std::find_if(searchManagers.begin(), searchManagers.end(), util::isColocated));
+    Workstealing::Policies::SearchManager<Sol, ChildTask>::initPolicy();
 
-    typedef typename workstealing::SearchManagerSched::startSchedulerAct<Sol, ChildTask> startSchedulerAct;
-    hpx::wait_all(hpx::lcos::broadcast<startSchedulerAct>(hpx::find_all_localities(), searchManagers));
+    auto searchManagers = std::static_pointer_cast<Workstealing::Policies::SearchManager<Sol, ChildTask> >(Workstealing::Scheduler::local_policy)->getAllSearchManagers();
 
     doCount(maxDepth, space, root, searchManagers);
 
-    hpx::wait_all(hpx::lcos::broadcast<stopScheduler_SearchManager_action>(hpx::find_all_localities()));
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(hpx::find_all_localities()));
 
     if (Debug) {
       for (auto const& loc : hpx::find_all_localities()) {
         hpx::async<Debug::printTaskTimes_act>(loc).get();
       }
       for (auto const& loc : hpx::find_all_localities()) {
-        hpx::async<workstealing::SearchManagerPerf::printDistributedStealsList_act>(loc).get();
+        hpx::async<Workstealing::Policies::SearchManagerPerf::printDistributedStealsList_act>(loc).get();
       }
     }
 
@@ -352,9 +348,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
     // Atomically updates the (process) local counter
     reg->updateCounts(cntMap);
 
-    typedef typename workstealing::SearchManager<Sol, ChildTask>::done_action doneAct;
-    hpx::async<doneAct>(searchManager, searchManagerId).get();
-    workstealing::SearchManagerSched::tasks_required_sem.signal();
+    std::static_pointer_cast<Workstealing::Policies::SearchManager<Sol, ChildTask> >(Workstealing::Scheduler::local_policy)->done(searchManagerId);
 
     if (Debug) {
       auto overall_time = std::chrono::duration_cast<std::chrono::microseconds>
@@ -363,10 +357,10 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
       Debug::taskTimes[thread].emplace_back(overall_time.count());
     }
 
-    hpx::wait_all(futures);
-
-
-    hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromise, true).get();
+    hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
+          hpx::wait_all(futs);
+          hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromise, true);
+        }, std::move(futures)));
   }
 
   using ChildTask = func<

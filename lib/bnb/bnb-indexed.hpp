@@ -13,8 +13,8 @@
 #include "util/func.hpp"
 #include "util/positionIndex.hpp"
 
-#include "workstealing/SearchManager.hpp"
-#include "workstealing/SearchManagerScheduler.hpp"
+#include "workstealing/policies/SearchManager.hpp"
+#include "workstealing/Scheduler.hpp"
 
 namespace skeletons { namespace BnB { namespace Indexed {
 
@@ -100,20 +100,10 @@ struct BranchAndBoundOpt {
     typedef typename bounds::Incumbent<Sol, Bnd, Cand>::updateIncumbent_action updateInc;
     hpx::async<updateInc>(inc, root).get();
 
-    // Initialise searchManagers on each locality to handle steals
-    hpx::naming::id_type localSearchManager;
-    std::vector<hpx::naming::id_type> searchManagers;
-    for (auto const& loc : hpx::find_all_localities()) {
-      auto mgr = hpx::new_<workstealing::SearchManager<std::vector<unsigned>, ChildTask> >(loc).get();
-      searchManagers.push_back(mgr);
-      if (loc == hpx::find_here()) {
-        localSearchManager = mgr;
-      }
-    }
+    Workstealing::Policies::SearchManager<std::vector<unsigned>, ChildTask>::initPolicy();
 
-    // Start work stealing schedulers on all localities
-    typedef typename workstealing::SearchManagerSched::startSchedulerAct<std::vector<unsigned>, ChildTask> startSchedulerAct;
-    hpx::wait_all(hpx::lcos::broadcast<startSchedulerAct>(hpx::find_all_localities(), searchManagers));
+    auto threadCount = hpx::get_os_thread_count() - 1;
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(hpx::find_all_localities(), threadCount));
 
     std::vector<unsigned> path;
     path.reserve(30);
@@ -122,14 +112,13 @@ struct BranchAndBoundOpt {
     auto f = prom.get_future();
     auto pid = prom.get_id();
 
-    typedef typename workstealing::SearchManager<std::vector<unsigned>, ChildTask>::addWork_action addWorkAct;
-    hpx::async<addWorkAct>(localSearchManager, path, 1, pid);
+    std::static_pointer_cast<Workstealing::Policies::SearchManager<std::vector<unsigned>, ChildTask> >(Workstealing::Scheduler::local_policy)->addWork(path, 1, pid);
 
     // Wait completion of the main task
     f.get();
 
     // Stop all work stealing schedulers
-    hpx::wait_all(hpx::lcos::broadcast<stopScheduler_SearchManager_action>(hpx::find_all_localities()));
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(hpx::find_all_localities()));
 
     // Read the result form the global incumbent
     typedef typename bounds::Incumbent<Sol, Bnd, Cand>::getIncumbent_action getInc;
@@ -167,14 +156,12 @@ struct BranchAndBoundOpt {
 
     expand(posIdx, c, stealRequest);
 
-    typedef typename workstealing::SearchManager<std::vector<unsigned>, ChildTask>::done_action doneAct;
-    hpx::async<doneAct>(searchMgr, idx).get();
+    std::static_pointer_cast<Workstealing::Policies::SearchManager<std::vector<unsigned>, ChildTask> >(Workstealing::Scheduler::local_policy)->done(idx);
 
-    // Don't fully finish until we determine all children are also finished - Termination detection
-    workstealing::SearchManagerSched::tasks_required_sem.signal();
-
-    posIdx.waitFutures();
-    hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(doneProm, true).get();
+    hpx::apply([=](auto pIdx) {
+        pIdx.waitFutures();
+        hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(doneProm, true).get();
+      }, std::move(posIdx));
   }
 
   using ChildTask = func<

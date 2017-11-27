@@ -8,8 +8,8 @@
 #include "registry.hpp"
 #include "incumbent.hpp"
 
-#include "workstealing/scheduler.hpp"
-#include "workstealing/workqueue.hpp"
+#include "workstealing/Scheduler.hpp"
+#include "workstealing/policies/Workpool.hpp"
 
 // Same as the depth-bounded skeleton but uses computation instead of sending
 // full node structures. This lets us assess the trade-off between computation
@@ -25,19 +25,29 @@ template <typename Space,
           bool PruneLevel = false>
 struct BranchAndBoundOpt {
 
+  static hpx::future<void> createTask(const unsigned spawnDepth,
+                                      const std::vector<unsigned> & path) {
+    hpx::lcos::promise<void> prom;
+    auto pfut = prom.get_future();
+    auto pid  = prom.get_id();
+
+    ChildTask t;
+    hpx::util::function<void(hpx::naming::id_type)> task;
+    task = hpx::util::bind(t, hpx::util::placeholders::_1, spawnDepth, path, pid);
+    std::static_pointer_cast<Workstealing::Policies::Workpool>(Workstealing::Scheduler::local_policy)->addwork(task);
+    return pfut;
+  }
+
   static void expand(unsigned spawnDepth,
                      const hpx::util::tuple<Sol, Bnd, Cand> & n,
-                     std::vector<unsigned> & path) {
+                     std::vector<unsigned> & path,
+                     std::vector<hpx::future<void> > & childFutures) {
     constexpr bool const prunelevel = PruneLevel;
 
     auto reg = skeletons::BnB::Components::Registry<Space, Sol, Bnd, Cand>::gReg;
 
     auto newCands = Gen::invoke(reg->space_, n);
 
-    std::vector<hpx::future<void> > childFuts;
-    if (spawnDepth > 0) {
-      childFuts.reserve(newCands.numChildren);
-    }
 
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
@@ -66,26 +76,13 @@ struct BranchAndBoundOpt {
 
       /* Search the child nodes */
       if (spawnDepth > 0) {
-        hpx::lcos::promise<void> prom;
-        auto pfut = prom.get_future();
-        auto pid  = prom.get_id();
-
-        ChildTask t;
-        hpx::util::function<void(hpx::naming::id_type)> task;
-        task = hpx::util::bind(t, hpx::util::placeholders::_1, spawnDepth - 1, path, pid);
-        hpx::apply<workstealing::workqueue::addWork_action>(workstealing::local_workqueue, task);
-
-        childFuts.push_back(std::move(pfut));
+        auto pfut = createTask(spawnDepth - 1, path);
+        childFutures.push_back(std::move(pfut));
       } else {
-        expand(0, c, path);
+        expand(0, c, path, childFutures);
       }
 
       path.pop_back();
-    }
-
-    if (spawnDepth > 0) {
-      workstealing::tasks_required_sem.signal(); // Going to sleep, get more tasks
-      hpx::wait_all(childFuts);
     }
   }
 
@@ -103,17 +100,15 @@ struct BranchAndBoundOpt {
     hpx::async<updateInc>(inc, root).get();
 
     // Start work stealing schedulers on all localities
-    std::vector<hpx::naming::id_type> workqueues;
-    for (auto const& loc : hpx::find_all_localities()) {
-      workqueues.push_back(hpx::new_<workstealing::workqueue>(loc).get());
-    }
-    hpx::wait_all(hpx::lcos::broadcast<startScheduler_action>(hpx::find_all_localities(), workqueues));
+    Workstealing::Policies::Workpool::initPolicy();
+
+    auto threadCount = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 1;
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(hpx::find_all_localities(), threadCount));
 
     std::vector<unsigned> path;
-    expand(spawnDepth, root, path);
+    createTask(spawnDepth, path).get();
 
-    // Stop all work stealing schedulers
-    hpx::wait_all(hpx::lcos::broadcast<stopScheduler_action>(hpx::find_all_localities()));
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(hpx::find_all_localities()));
 
     // Read the result form the global incumbent
     typedef typename bounds::Incumbent<Sol, Bnd, Cand>::getIncumbent_action getInc;
@@ -136,9 +131,13 @@ struct BranchAndBoundOpt {
                               std::vector<unsigned> path,
                               hpx::naming::id_type p) {
     auto c = getStartingNode(path);
-    expand(spawnDepth, c, path);
-    workstealing::tasks_required_sem.signal();
-    hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true).get();
+
+    std::vector<hpx::future<void> > childFutures;
+    expand(spawnDepth, c, path, childFutures);
+    hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
+          hpx::wait_all(futs);
+          hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(p, true);
+        }, std::move(childFutures)));
   }
 
   struct ChildTask : hpx::actions::make_action<
