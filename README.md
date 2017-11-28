@@ -9,8 +9,25 @@ the [HPX](https://github.com/STEllAR-GROUP/hpx) parallel library/runtime
 
 ## Installation Instructions
 
-YewPar and it's test applications can be installed
-using [CMake](https://cmake.org/). For example:
+### Via Nix
+
+The quickest way to get up and running is to use [Nix](https://nixos.org/nix/)
+and the included [default.nix] file to build YewPar (including the required
+dependencies). Once you have Nix installed run:
+
+```bash
+nix-build
+```
+
+To build YewPar and it's test applications into `./result/`. 
+Note: The first time you run this command Nix needs to build HPX which may take some time.
+
+When executing the test applications first start a `nix-shell` to ensure the correct runtime libraries are loaded.
+
+### Via CMake
+
+YewPar and it's test applications can also be built using
+[CMake](https://cmake.org/). For example:
 
 ```bash
 git clone git@github.com:BlairArchibald/YewPar.git
