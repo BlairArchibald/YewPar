@@ -12,7 +12,7 @@ the [HPX](https://github.com/STEllAR-GROUP/hpx) parallel library/runtime
 ### Via Nix
 
 The quickest way to get up and running is to use [Nix](https://nixos.org/nix/)
-and the included [default.nix] file to build YewPar (including the required
+and the included [default.nix](default.nix) file to build YewPar (including the required
 dependencies). Once you have Nix installed run:
 
 ```bash
