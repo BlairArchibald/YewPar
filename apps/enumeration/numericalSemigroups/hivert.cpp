@@ -61,6 +61,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto maxDepth   = opts["until-depth"].as<unsigned>();
   auto skeleton   = opts["skeleton-type"].as<std::string>();
+  auto stealAll   = opts["stealall"].as<bool>();
 
   Monoid root;
   init_full_N(root);
@@ -80,9 +81,9 @@ int hpx_main(boost::program_options::variables_map & opts) {
   } else if (skeleton == "genstack"){
     auto verbose = opts["verbose"].as<bool>();
     if (verbose) {
-      counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS>, std::integral_constant<bool, true> >::count(maxDepth, Empty(), root, true);
+      counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS>, std::integral_constant<bool, true> >::count(maxDepth, Empty(), root, stealAll);
     } else {
-      counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS> >::count(maxDepth, Empty(), root);
+      counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS> >::count(maxDepth, Empty(), root, stealAll);
     }
   } else {
     std::cout << "Invalid skeleton type: " << skeleton << std::endl;
@@ -122,6 +123,10 @@ int main(int argc, char* argv[]) {
     ( "verbose,v",
       boost::program_options::value<bool>()->default_value(false),
       "Enable verbose output"
+    )
+    ( "stealall",
+      boost::program_options::value<bool>()->default_value(false),
+      "Steal all when chunking"
     );
 
   hpx::register_startup_function(&Workstealing::Policies::SearchManagerPerf::registerPerformanceCounters);
