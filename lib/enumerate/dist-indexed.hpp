@@ -21,7 +21,7 @@ namespace skeletons { namespace Enum {
 template <typename Space, typename Sol, typename Gen>
 struct DistCount<Space, Sol, Gen, Indexed> {
   using Response_t    = std::vector<hpx::util::tuple<std::vector<unsigned>, int, hpx::naming::id_type> >;
-  using SharedState_t = std::pair<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response_t> >;
+  using SharedState_t = std::tuple<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response_t>, bool >;
 
   static void searchChildTask(std::vector<unsigned> path,
                               const int depth,
@@ -64,6 +64,7 @@ struct DistCount<Space, Sol, Gen, Indexed> {
 
     // Handle Steal requests before processing a node
     if (std::get<0>(*stealRequest)) {
+      auto stealAll = std::get<2>(*stealRequest);
       std::get<1>(*stealRequest).set(pos.steal());
       std::get<0>(*stealRequest).store(false);
     }
@@ -99,10 +100,11 @@ struct DistCount<Space, Sol, Gen, Indexed> {
 
   static std::vector<std::uint64_t> count(const unsigned maxDepth,
                                           const Space & space,
-                                          const Sol   & root) {
+                                          const Sol   & root,
+                                          const bool stealAll = false) {
     hpx::wait_all(hpx::lcos::broadcast<EnumInitRegistryAct<Space, Sol> >(hpx::find_all_localities(), space, maxDepth, root));
 
-    Workstealing::Policies::SearchManager<std::vector<unsigned>, ChildTask>::initPolicy();
+    Workstealing::Policies::SearchManager<std::vector<unsigned>, ChildTask>::initPolicy(stealAll);
 
     auto threadCount = hpx::get_os_thread_count() - 1;
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(hpx::find_all_localities(), threadCount));
