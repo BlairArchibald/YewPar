@@ -45,9 +45,9 @@ using cFuncDeb = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, ske
 REGISTER_SEARCHMANAGER(Monoid, cFunc)
 REGISTER_SEARCHMANAGER(Monoid, cFuncDeb)
 
-using indexedFunc = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::Indexed>::ChildTask;
-using pathType = std::vector<unsigned>;
-REGISTER_SEARCHMANAGER(pathType, indexedFunc)
+//using indexedFunc = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::Indexed>::ChildTask;
+//using pathType = std::vector<unsigned>;
+//REGISTER_SEARCHMANAGER(pathType, indexedFunc)
 
 // Annoying way to get large stack sizes by default (hide this if possible)
 namespace hpx { namespace traits {
@@ -76,11 +76,11 @@ int hpx_main(boost::program_options::variables_map & opts) {
   } else if (skeleton == "dist") {
     counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func>::count(spawnDepth, maxDepth, Empty(), root);
   } else if (skeleton == "indexed"){
-    counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::Indexed>::count(maxDepth, Empty(), root);
+    // counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::Indexed>::count(maxDepth, Empty(), root);
   } else if (skeleton == "genstack"){
     auto verbose = opts["verbose"].as<bool>();
     if (verbose) {
-      counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS>, std::integral_constant<bool, true> >::count(maxDepth, Empty(), root);
+      counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS>, std::integral_constant<bool, true> >::count(maxDepth, Empty(), root, true);
     } else {
       counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS> >::count(maxDepth, Empty(), root);
     }

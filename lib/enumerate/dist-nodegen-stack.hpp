@@ -65,7 +65,7 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
 
   //TODO: Can I get these types from the Policy?
   using Response_t    = std::vector<hpx::util::tuple<Sol, int, hpx::naming::id_type> >;
-  using SharedState_t = std::pair<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response_t> >;
+  using SharedState_t = std::tuple<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response_t>, bool>;
 
   // Run with a pre-initialised stack. Used for the master thread once it pushes work
   static void runWithStack(const int startingDepth,
@@ -91,20 +91,43 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
         // We steal from the highest possible generator with work
         bool responded = false;
         for (auto i = 0; i < stackDepth; ++i) {
-          if (generatorStack[i].seen < generatorStack[i].generator.numChildren) {
-            generatorStack[i].seen++;
+          // StealAll
+          if (std::get<2>(*stealRequest)) {
+            Response_t res;
+            while (generatorStack[i].seen < generatorStack[i].generator.numChildren) {
+              generatorStack[i].seen++;
 
-            promises.emplace_back();
-            auto & prom = promises.back();
+              promises.emplace_back();
+              auto & prom = promises.back();
 
-            futures.push_back(prom.get_future());
+              futures.push_back(prom.get_future());
 
-            const auto stolenSol = generatorStack[i].generator.next();
-            Response_t res {hpx::util::make_tuple(stolenSol, startingDepth + i + 1, prom.get_id())};
+              const auto stolenSol = generatorStack[i].generator.next();
+              res.emplace_back(hpx::util::make_tuple(stolenSol, startingDepth + i + 1, prom.get_id()));
+
+              responded = true;
+              break;
+            }
             std::get<1>(*stealRequest).set(res);
-
             responded = true;
             break;
+          // Steal 1
+          } else {
+            if (generatorStack[i].seen < generatorStack[i].generator.numChildren) {
+              generatorStack[i].seen++;
+
+              promises.emplace_back();
+              auto & prom = promises.back();
+
+              futures.push_back(prom.get_future());
+
+              const auto stolenSol = generatorStack[i].generator.next();
+              Response_t res {hpx::util::make_tuple(stolenSol, startingDepth + i + 1, prom.get_id())};
+              std::get<1>(*stealRequest).set(res);
+
+              responded = true;
+              break;
+            }
           }
         }
         if (!responded) {
@@ -281,10 +304,11 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
 
   static std::vector<std::uint64_t> count(const unsigned maxDepth,
                                           const Space & space,
-                                          const Sol   & root) {
+                                          const Sol   & root,
+                                          bool stealAll = false) {
     hpx::wait_all(hpx::lcos::broadcast<EnumInitRegistryAct<Space, Sol> >(hpx::find_all_localities(), space, maxDepth, root));
 
-    Workstealing::Policies::SearchManager<Sol, ChildTask>::initPolicy();
+    Workstealing::Policies::SearchManager<Sol, ChildTask>::initPolicy(stealAll);
 
     auto searchManagers = std::static_pointer_cast<Workstealing::Policies::SearchManager<Sol, ChildTask> >(Workstealing::Scheduler::local_policy)->getAllSearchManagers();
 
