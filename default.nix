@@ -26,8 +26,10 @@ stdenv.mkDerivation rec {
   buildInputs = [
     gcc7
     boost
-    newHPX
     openmpi
+    newHPX
+    gperftools
+    hwloc
   ];
 
   src = ./.;
