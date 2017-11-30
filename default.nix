@@ -26,11 +26,19 @@ stdenv.mkDerivation rec {
   buildInputs = [
     gcc7
     boost
-    newHPX
     openmpi
+    newHPX
+    gperftools
+    hwloc
   ];
 
-  src = ./.;
+  src =
+    let
+      inDir = path : dir : stdenv.lib.hasPrefix (toString dir) (toString path);
+      filter = path : type : baseNameOf path == "CMakeLists.txt"
+        || inDir path ./apps
+        || inDir path ./lib;
+    in builtins.filterSource filter ./.;
 
   nativeBuildInputs = [ cmake ];
 
