@@ -65,7 +65,7 @@ struct DistCount<Space, Sol, Gen, Indexed> {
     // Handle Steal requests before processing a node
     if (std::get<0>(*stealRequest)) {
       auto stealAll = std::get<2>(*stealRequest);
-      std::get<1>(*stealRequest).set(pos.steal());
+      std::get<1>(*stealRequest).set(pos.steal(stealAll));
       std::get<0>(*stealRequest).store(false);
     }
 

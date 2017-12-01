@@ -91,29 +91,27 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
         // We steal from the highest possible generator with work
         bool responded = false;
         for (auto i = 0; i < stackDepth; ++i) {
-          // StealAll
-          if (std::get<2>(*stealRequest)) {
-            Response_t res;
-            while (generatorStack[i].seen < generatorStack[i].generator.numChildren) {
-              generatorStack[i].seen++;
+          // Work left at this level:
+          if (generatorStack[i].seen < generatorStack[i].generator.numChildren) {
+            // Steal it all
+            if (std::get<2>(*stealRequest)) {
+              Response_t res;
+              while (generatorStack[i].seen < generatorStack[i].generator.numChildren) {
+                generatorStack[i].seen++;
 
-              promises.emplace_back();
-              auto & prom = promises.back();
+                promises.emplace_back();
+                auto & prom = promises.back();
 
-              futures.push_back(prom.get_future());
+                futures.push_back(prom.get_future());
 
-              const auto stolenSol = generatorStack[i].generator.next();
-              res.emplace_back(hpx::util::make_tuple(stolenSol, startingDepth + i + 1, prom.get_id()));
-
+                const auto stolenSol = generatorStack[i].generator.next();
+                res.emplace_back(hpx::util::make_tuple(stolenSol, startingDepth + i + 1, prom.get_id()));
+              }
+              std::get<1>(*stealRequest).set(res);
               responded = true;
               break;
-            }
-            std::get<1>(*stealRequest).set(res);
-            responded = true;
-            break;
-          // Steal 1
-          } else {
-            if (generatorStack[i].seen < generatorStack[i].generator.numChildren) {
+              // Steal the first task
+            } else {
               generatorStack[i].seen++;
 
               promises.emplace_back();
