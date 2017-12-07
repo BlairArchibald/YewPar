@@ -322,6 +322,7 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
   }
 
   std::vector<hpx::naming::id_type> getAllSearchManagers() {
+    std::lock_guard<MutexT> l(mtx);
     std::vector<hpx::naming::id_type> res(distributedSearchManagers);
     res.push_back(this->get_id());
     return res;
@@ -346,8 +347,10 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
       searchManagers.push_back(searchManager);
     }
 
-    typedef typename SearchManager<SearchInfo, FuncToCall>::registerDistributedManagers_action registerManagersAct;
-    hpx::wait_all(hpx::lcos::broadcast<registerManagersAct>(hpx::find_all_localities(), searchManagers));
+    for (auto const & loc : searchManagers) {
+      typedef typename SearchManager<SearchInfo, FuncToCall>::registerDistributedManagers_action registerManagersAct;
+      hpx::async<registerManagersAct>(loc, searchManagers).get();
+    }
   }
 
 };
