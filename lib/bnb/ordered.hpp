@@ -8,8 +8,7 @@
 #include "registry.hpp"
 #include "incumbent.hpp"
 
-#include "workstealing/priorityscheduler.hpp"
-#include "workstealing/priorityworkqueue.hpp"
+#include "workstealing/policies/PriorityOrdered.hpp"
 
 namespace skeletons { namespace BnB { namespace Ordered {
 
