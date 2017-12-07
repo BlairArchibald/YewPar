@@ -110,36 +110,46 @@ struct BranchAndBoundOpt {
 
     if (spawnDepth == 0) {
       expand(root);
-    } else {
-      auto globalWorkqueue = hpx::new_<workstealing::priorityworkqueue>(hpx::find_here()).get();
-      auto tasks = prioritiseTasks(space, spawnDepth, root);
-      for (auto const & t : tasks) {
-        // Spawn the tasks
-        ChildTask child;
-        hpx::util::function<void(hpx::naming::id_type)> task;
-        task = hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedPromise);
-
-        hpx::apply<workstealing::priorityworkqueue::addWork_action>(globalWorkqueue, t.priority, std::move(task));
-      }
-
-      hpx::wait_all(hpx::lcos::broadcast<priority_startScheduler_action>(hpx::find_all_localities(), globalWorkqueue));
-
-      // Sequential thread of execution
-      for (auto & t : tasks) {
-        auto weStarted = hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(t.startedPromise, true).get();
-        if (weStarted) {
-          expand(t.node);
-        }
-      }
-
-      // Stop all work stealing schedulers
-      hpx::wait_all(hpx::lcos::broadcast<priority_stopScheduler_action>(hpx::find_all_localities()));
+      typedef typename bounds::Incumbent<Sol, Bnd, Cand>::getIncumbent_action getInc;
+      return hpx::async<getInc>(inc).get();
     }
+
+    Workstealing::Policies::PriorityOrderedPolicy::initPolicy();
+
+    auto tasks = prioritiseTasks(space, spawnDepth, root);
+    for (auto const & t : tasks) {
+      // Spawn the tasks
+      ChildTask child;
+      hpx::util::function<void(hpx::naming::id_type)> task;
+      task = hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedPromise);
+      std::static_pointer_cast<Workstealing::Policies::PriorityOrderedPolicy>
+          (Workstealing::Scheduler::local_policy)->addwork(t.priority, std::move(task));
+    }
+    // We need at least 2 threads for this to work correctly
+    auto allLocs = hpx::find_all_localities();
+    allLocs.erase(std::remove(allLocs.begin(), allLocs.end(), hpx::find_here()), allLocs.end());
+
+    auto threadCount = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 1;
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(allLocs, threadCount));
+
+    auto threadCountLocal = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 2;
+    Workstealing::Scheduler::startSchedulers(threadCountLocal);
+
+    // Sequential thread of execution
+    for (auto & t : tasks) {
+      auto weStarted = hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(t.startedPromise, true).get();
+      if (weStarted) {
+        expand(t.node);
+      }
+    }
+
+    // Stop all work stealing schedulers
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(hpx::find_all_localities()));
 
     // Read the result form the global incumbent
     typedef typename bounds::Incumbent<Sol, Bnd, Cand>::getIncumbent_action getInc;
     return hpx::async<getInc>(inc).get();
-  }
+}
 
   static void searchChildTask(hpx::util::tuple<Sol, Bnd, Cand> c,
                               const hpx::naming::id_type started) {
@@ -148,7 +158,6 @@ struct BranchAndBoundOpt {
     if (weStarted) {
       expand(c);
     }
-    workstealing::priority::tasks_required_sem.signal();
   }
 
   struct ChildTask : hpx::actions::make_action<
