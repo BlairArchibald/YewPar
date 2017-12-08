@@ -24,7 +24,7 @@
 #include "bnb/bnb-decision-dist.hpp"
 #include "bnb/bnb-recompute.hpp"
 #include "bnb/bnb-indexed.hpp"
-// #include "bnb/ordered.hpp"
+#include "bnb/ordered.hpp"
 
 #include "util/func.hpp"
 #include "util/NodeGenerator.hpp"
@@ -198,16 +198,10 @@ typedef func<decltype(&generateChoices), &generateChoices> generateChoices_func;
 typedef func<decltype(&upperBound), &upperBound> upperBound_func;
 
 // We want large stacks for everything
-using par_act = skeletons::BnB::Par::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
-HPX_ACTION_USES_LARGE_STACK(par_act);
-using decision_par_act = skeletons::BnB::Par::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
-HPX_ACTION_USES_LARGE_STACK(decision_par_act);
 using dist_act = skeletons::BnB::Dist::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
 HPX_ACTION_USES_LARGE_STACK(dist_act);
 using decision_dist_act = skeletons::BnB::Dist::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
 HPX_ACTION_USES_LARGE_STACK(decision_dist_act);
-// using ordered_act = skeletons::BnB::Ordered::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
-// HPX_ACTION_USES_LARGE_STACK(ordered_act);
 using recompute_act = skeletons::BnB::DistRecompute::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
 HPX_ACTION_USES_LARGE_STACK(recompute_act);
 
@@ -226,7 +220,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
-  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision", "dist-decision", "dist-recompute", "indexed"};
+  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision", "dist-decision", "dist-recompute", "ordered", "indexed"};
 
   auto skeletonType = opts["skeleton-type"].as<std::string>();
   auto found = std::find(std::begin(skeletonTypes), std::end(skeletonTypes), skeletonType);
@@ -293,11 +287,11 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                                   generateChoices_func, upperBound_func, true>
           ::search(spawnDepth, graph, root, decisionBound);
   }
-  // if (skeletonType == "ordered") {
-  //   sol = skeletons::BnB::Ordered::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-  //                                                    generateChoices_func, upperBound_func, true>
-  //         ::search(spawnDepth, graph, root);
-  // }
+  if (skeletonType == "ordered") {
+    sol = skeletons::BnB::Ordered::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+                                                     generateChoices_func, upperBound_func, true>
+          ::search(spawnDepth, graph, root);
+  }
   if (skeletonType == "dist-recompute") {
     sol = skeletons::BnB::DistRecompute::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
                                                            generateChoices_func, upperBound_func, true>
