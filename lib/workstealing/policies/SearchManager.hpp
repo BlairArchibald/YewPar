@@ -30,7 +30,6 @@
 #include "hpx/runtime/serialization/binary_filter.hpp"           // for bina...
 #include "hpx/runtime/serialization/serialize.hpp"               // for oper...
 #include "hpx/runtime/serialization/shared_ptr.hpp"
-#include "hpx/runtime/serialization/variant.hpp"
 #include "hpx/runtime/threads/executors/default_executor.hpp"
 #include "hpx/runtime/threads/thread_data_fwd.hpp"               // for get_...
 #include "hpx/traits/is_action.hpp"                              // for is_a...
@@ -41,8 +40,7 @@
 #include "hpx/util/tuple.hpp"
 #include "hpx/lcos/broadcast.hpp"
 #include "hpx/runtime/get_ptr.hpp"
-#include <boost/optional.hpp>
-#include <boost/variant.hpp>
+#include "hpx/util/lockfree/deque.hpp"
 
 #include "Policy.hpp"
 #include "workstealing/Scheduler.hpp"
@@ -78,59 +76,27 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
                       public Policy
 {
  private:
-  // Lock to protect the component
-  // We don't use locking_hook here since we also need to protect the local only "registerThread" function
-  using MutexT = hpx::lcos::local::mutex;
-  MutexT mtx;
-
   // Information returned on a steal from a thread
-  using Response_t = boost::optional<hpx::util::tuple<SearchInfo, int, hpx::naming::id_type> >;
+  using Task = hpx::util::tuple<SearchInfo, int, hpx::naming::id_type>;
 
-  // For serialization we wrap the Response_t in a struct
-  struct DistResponse_t {
-    // Serialising an optional isn't (currently) supported by HPX
-    // Instead we pass around boost variants which are supported
-    // FIXME: Move back to optional if/once support is added in HPX
-    using T_type = hpx::util::tuple<SearchInfo, int, hpx::naming::id_type>;
-    boost::variant<T_type, bool> var;
-
-    DistResponse_t () = default;
-    DistResponse_t (Response_t res) {
-      if (res) {
-        var = *res;
-      } else {
-        var = false;
-      }
-    };
-
-    Response_t getResponse() {
-      switch(var.which()) {
-        // Success
-        case 0: return boost::get<T_type>(var);
-        // Failed steal
-        case 1: return {};
-      }
-    }
-
-    friend class hpx::serialization::access;
-    template <typename Archive>
-    void serialize(Archive & ar, const unsigned int version) {
-      ar & var;
-    }
-  };
-
+  // We return an empty vector here to signal no tasks
+  using Response = std::vector<Task>;
 
   // Information shared between a thread and the manager. We set the atomic on a steal and then use the channel to await a response
-  using SharedState_t = std::pair<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response_t> >;
+  using SharedState = std::tuple<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response>, bool>;
+
+  // Lock to protect the component
+  using MutexT = hpx::lcos::local::mutex;
+  MutexT mtx;
 
   // (internal) Id's of currently running threads, for managing the active map
   std::queue<unsigned> activeIds;
 
   // Active thread shared states
-  std::unordered_map<unsigned, std::shared_ptr<SharedState_t> > active;
+  std::unordered_map<unsigned, std::shared_ptr<SharedState> > active;
 
   // Shared states of threads currently being stolen from
-  std::unordered_map<unsigned, std::shared_ptr<SharedState_t> > inactive;
+  std::unordered_map<unsigned, std::shared_ptr<SharedState> > inactive;
 
   // Pointers to SearchManagers on other localities
   std::vector<hpx::naming::id_type> distributedSearchManagers;
@@ -141,8 +107,14 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
   // Are we currently doing a distributed steal?
   bool isStealingDistributed = false;
 
+  // Task Buffer for chunking
+  boost::lockfree::deque<Task> taskBuffer;
+
+  // Should we steal all tasks at a level when we perform a steal?
+  bool stealAll = false;
+
   // Try to steal from a thread on another (random) locality
-  Response_t tryDistributedSteal(std::unique_lock<MutexT> & l) {
+  Response tryDistributedSteal(std::unique_lock<MutexT> & l) {
     // We only allow one distributed steal to happen at a time (to make sure we
     // don't overload the communication)
     if (isStealingDistributed) {
@@ -162,19 +134,20 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
 
     isStealingDistributed = false;
 
-    auto response = res.getResponse();
-    if (response) {
+    if (!res.empty()) {
       SearchManagerPerf::distributedStealsList.push_back(std::make_pair(*victim, true));
     } else {
       SearchManagerPerf::distributedStealsList.push_back(std::make_pair(*victim, false));
     }
 
-    return response;
+    return res;
   }
 
  public:
 
-  SearchManager() {
+  SearchManager() : SearchManager(false) {}
+
+  SearchManager(bool stealAll) : stealAll(stealAll){
     for (auto i = 0; i < hpx::get_os_thread_count(); ++i) {
       activeIds.push(i);
     }
@@ -194,14 +167,14 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
 
   // Try to get work from a (random) thread running on this locality and wrap it
   // back up for serializing over the network
-  DistResponse_t getDistributedWork() {
+  Response getDistributedWork() {
     std::unique_lock<MutexT> l(mtx);
-    return DistResponse_t(getLocalWork(l));
+    return getLocalWork(l);
   }
   HPX_DEFINE_COMPONENT_ACTION(SearchManager, getDistributedWork);
 
   // Try to get work from a (random) thread running on this locality
-  Response_t getLocalWork(std::unique_lock<MutexT> & l) {
+  Response getLocalWork(std::unique_lock<MutexT> & l) {
     if (active.empty()) {
       return {};
     }
@@ -226,7 +199,7 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
     l.lock();
 
     // -1 depth signals that the thread we tried to steal from has finished it's search
-    if (res && hpx::util::get<1>(*res) == -1) {
+    if (!res.empty() && hpx::util::get<1>(res[0]) == -1) {
       return {};
     }
 
@@ -237,15 +210,23 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
   }
 
   // Called by the scheduler to ask the searchManager to add more work
-  // TODO: Tidy up the logic here
   hpx::util::function<void(), false> getWork() override {
     std::unique_lock<MutexT> l(mtx);
-    Response_t maybeStolen;
+
+    // Return from task buffer first if anything exists
+    Task task;
+    if (taskBuffer.pop_right(task)) {
+      SearchInfo searchInfo; int depth; hpx::naming::id_type prom;
+      hpx::util::tie(searchInfo, depth, prom) = task;
+      return hpx::util::bind(FuncToCall::fn_ptr(), searchInfo, depth, prom);
+    }
+
+    Response maybeStolen;
     if (active.empty()) {
       // No local threads running, steal distributed
       if (!distributedSearchManagers.empty()) {
         maybeStolen = tryDistributedSteal(l);
-        if (maybeStolen) {
+        if (!maybeStolen.empty()) {
           SearchManagerPerf::perf_distributedSteals++;
         } else {
           SearchManagerPerf::perf_failedDistributedSteals++;
@@ -257,7 +238,7 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
       }
     } else {
       maybeStolen = getLocalWork(l);
-      if (maybeStolen) {
+      if (!maybeStolen.empty()) {
         SearchManagerPerf::perf_localSteals++;
       } else {
         SearchManagerPerf::perf_failedLocalSteals++;
@@ -265,38 +246,24 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
       }
     }
 
-    if (maybeStolen) {
-      SearchInfo searchInfo      = hpx::util::get<0>(*maybeStolen);
-      int depth                  = hpx::util::get<1>(*maybeStolen);
-      hpx::naming::id_type prom  = hpx::util::get<2>(*maybeStolen);
+    if (!maybeStolen.empty()) {
+      // Take off the first task and queue up anything else that was returned
+      auto first = maybeStolen[0];
+      SearchInfo searchInfo; int depth; hpx::naming::id_type prom;
+      hpx::util::tie(searchInfo, depth, prom) = first;
 
-      // Build the action
-      auto shared_state = std::make_shared<SharedState_t>();
-      auto nextId = activeIds.front();
-      activeIds.pop();
-      active[nextId] = shared_state;
+      auto itr = maybeStolen.begin();
+      ++itr;
+      for (itr; itr != maybeStolen.end(); ++itr) {
+        taskBuffer.push_left(std::move(*itr));
+      }
 
-      return hpx::util::bind(FuncToCall::fn_ptr(), searchInfo, depth, shared_state, prom, nextId, this->get_id());
+      return hpx::util::bind(FuncToCall::fn_ptr(), searchInfo, depth, prom);
     }
   }
 
-  // Action to allow work to be pushed eagerly to this searchManager
-  void addWork(SearchInfo info, int depth, hpx::naming::id_type prom) {
-    std::lock_guard<MutexT> l(mtx);
-    auto shared_state = std::make_shared<SharedState_t>();
-    auto nextId = activeIds.front();
-    activeIds.pop();
-    active[nextId] = shared_state;
-
-    // Launch in a new Scheduler
-    hpx::threads::executors::default_executor exe(hpx::threads::thread_priority_critical,
-                                                  hpx::threads::thread_stacksize_huge);
-    hpx::apply(exe, &Workstealing::Scheduler::scheduler, hpx::util::bind(FuncToCall::fn_ptr(), info, depth, shared_state, prom, nextId, this->get_id()));
-  }
-  HPX_DEFINE_COMPONENT_ACTION(SearchManager, addWork);
-
   // Signal the searchManager that a local thread is now finished working and should be removed from active
-  void done(unsigned activeId) {
+  void unregisterThread(unsigned activeId) {
     std::lock_guard<MutexT> l(mtx);
     if (active.find(activeId) != active.end()) {
       active.erase(activeId);
@@ -304,7 +271,8 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
       // A steal must be in progress on this id so cancel it before finishing
       // Canceled steals (-1 flag) are already removed from active
       auto & state = inactive[activeId];
-      std::get<1>(*state).set(hpx::util::make_tuple(SearchInfo(), -1, hpx::find_here()));
+      std::vector<Task> noSteal {hpx::util::make_tuple(SearchInfo(), -1, hpx::find_here())};
+      std::get<1>(*state).set(noSteal);
       inactive.erase(activeId);
     }
     activeIds.push(activeId);
@@ -312,9 +280,9 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
 
   // Generate a new stealRequest pair that can be used with an existing thread to add steals to it
   // Used for master-threads initialising work while maintaining a stack
-  std::pair<std::shared_ptr<SharedState_t>, unsigned> registerThread() {
+  std::pair<std::shared_ptr<SharedState>, unsigned> registerThread() {
     std::lock_guard<MutexT> l(mtx);
-    auto shared_state = std::make_shared<SharedState_t>();
+    auto shared_state = std::make_shared<SharedState>();
     auto nextId = activeIds.front();
     activeIds.pop();
     active[nextId] = shared_state;
@@ -339,10 +307,10 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
     setLocalPolicy_act>::type {};
 
   // Helper function to setup the components/policies on each node and register required information
-  static void initPolicy() {
+  static void initPolicy(bool stealAll) {
     std::vector<hpx::naming::id_type> searchManagers;
     for (auto const& loc : hpx::find_all_localities()) {
-      auto searchManager = hpx::new_<SearchManager<SearchInfo, FuncToCall> >(loc).get();
+      auto searchManager = hpx::new_<SearchManager<SearchInfo, FuncToCall> >(loc, stealAll).get();
       hpx::async<setLocalPolicy_act>(loc, searchManager).get();
       searchManagers.push_back(searchManager);
     }
@@ -352,6 +320,9 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
       hpx::async<registerManagersAct>(loc, searchManagers).get();
     }
   }
+
+  typedef Response Response_t;
+  typedef SharedState SharedState_t;
 
 };
 
@@ -363,10 +334,6 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
                                                                                                                            \
   HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, BOOST_PP_CAT(searchInfo, Func))::registerDistributedManagers_action, \
                       BOOST_PP_CAT(__searchmgr_registerDistributedManagers_action,                                         \
-                                   BOOST_PP_CAT(searchInfo, Func)));                                                       \
-                                                                                                                           \
-  HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, BOOST_PP_CAT(searchInfo, Func))::addWork_action,                     \
-                      BOOST_PP_CAT(__searchmgr_addWork_action,                                                             \
                                    BOOST_PP_CAT(searchInfo, Func)));                                                       \
                                                                                                                            \
   HPX_REGISTER_ACTION(BOOST_PP_CAT(__searchmgr_type_, BOOST_PP_CAT(searchInfo, Func))::getDistributedWork_action,          \

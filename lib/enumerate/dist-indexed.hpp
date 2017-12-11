@@ -20,15 +20,10 @@ namespace skeletons { namespace Enum {
 
 template <typename Space, typename Sol, typename Gen>
 struct DistCount<Space, Sol, Gen, Indexed> {
-  using Response_t    = boost::optional<hpx::util::tuple<std::vector<unsigned>, int, hpx::naming::id_type> >;
-  using SharedState_t = std::pair<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response_t> >;
 
   static void searchChildTask(std::vector<unsigned> path,
                               const int depth,
-                              std::shared_ptr<SharedState_t> stealRequest,
-                              const hpx::naming::id_type doneProm,
-                              const int idx,
-                              const hpx::naming::id_type searchMgr) {
+                              const hpx::naming::id_type doneProm) {
     auto reg = Registry<Space, Sol>::gReg;
 
     auto posIdx = positionIndex(path);
@@ -37,12 +32,15 @@ struct DistCount<Space, Sol, Gen, Indexed> {
     std::vector<std::uint64_t> cntMap;
     cntMap.resize(reg->maxDepth + 1);
 
+    std::shared_ptr<SharedState_t> stealRequest; unsigned idx;
+    std::tie(stealRequest, idx) = std::static_pointer_cast<Policy_t>(Workstealing::Scheduler::local_policy)->registerThread();
+
     expand(posIdx, reg->maxDepth, depth, c, stealRequest, cntMap);
+
+    std::static_pointer_cast<Policy_t>(Workstealing::Scheduler::local_policy)->unregisterThread(idx);
 
     // Atomically updates the (process) local counter
     reg->updateCounts(cntMap);
-
-    std::static_pointer_cast<Workstealing::Policies::SearchManager<std::vector<unsigned>, ChildTask> >(Workstealing::Scheduler::local_policy)->done(idx);
 
     hpx::apply([=](auto pIdx) {
           pIdx.waitFutures();
@@ -54,6 +52,10 @@ struct DistCount<Space, Sol, Gen, Indexed> {
     decltype(&DistCount<Space, Sol, Gen, Indexed>::searchChildTask),
     &DistCount<Space, Sol, Gen, Indexed>::searchChildTask>;
 
+  using Policy_t      = Workstealing::Policies::SearchManager<std::vector<unsigned>, ChildTask>;
+  using Response_t    = typename Policy_t::Response_t;
+  using SharedState_t = typename Policy_t::SharedState_t;
+
   static void expand(positionIndex & pos,
                      const unsigned maxDepth,
                      unsigned depth,
@@ -64,7 +66,8 @@ struct DistCount<Space, Sol, Gen, Indexed> {
 
     // Handle Steal requests before processing a node
     if (std::get<0>(*stealRequest)) {
-      std::get<1>(*stealRequest).set(pos.steal());
+      auto stealAll = std::get<2>(*stealRequest);
+      std::get<1>(*stealRequest).set(pos.steal(stealAll));
       std::get<0>(*stealRequest).store(false);
     }
 
@@ -99,13 +102,18 @@ struct DistCount<Space, Sol, Gen, Indexed> {
 
   static std::vector<std::uint64_t> count(const unsigned maxDepth,
                                           const Space & space,
-                                          const Sol   & root) {
+                                          const Sol   & root,
+                                          const bool stealAll = false) {
     hpx::wait_all(hpx::lcos::broadcast<EnumInitRegistryAct<Space, Sol> >(hpx::find_all_localities(), space, maxDepth, root));
 
-    Workstealing::Policies::SearchManager<std::vector<unsigned>, ChildTask>::initPolicy();
+    Workstealing::Policies::SearchManager<std::vector<unsigned>, ChildTask>::initPolicy(stealAll);
 
-    auto threadCount = hpx::get_os_thread_count() - 1;
-    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(hpx::find_all_localities(), threadCount));
+    auto distributedThreads = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 1;
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(util::findOtherLocalities(), distributedThreads));
+
+    // Start N-2 local schedulers since we start another below
+    auto localThreads = hpx::get_os_thread_count() < 3 ? 0 : hpx::get_os_thread_count() - 2;
+    hpx::async<Workstealing::Scheduler::startSchedulers_act>(hpx::find_here(), localThreads).get();
 
     // Push the root node as a task to the searchManager
     std::vector<unsigned> path;
@@ -115,7 +123,10 @@ struct DistCount<Space, Sol, Gen, Indexed> {
     auto f = prom.get_future();
     auto pid = prom.get_id();
 
-    std::static_pointer_cast<Workstealing::Policies::SearchManager<std::vector<unsigned>, ChildTask> >(Workstealing::Scheduler::local_policy)->addWork(path, 1, pid);
+    // Start off the main scheduler
+    hpx::threads::executors::default_executor exe(hpx::threads::thread_priority_critical,
+                                                  hpx::threads::thread_stacksize_huge);
+    hpx::apply(exe, &Workstealing::Scheduler::scheduler, hpx::util::bind(&searchChildTask, path, 1, pid));
 
     // Wait completion of the main task
     f.get();

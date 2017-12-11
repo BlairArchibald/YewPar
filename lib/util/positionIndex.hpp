@@ -91,7 +91,7 @@ class positionIndex {
     nextIndex.pop_back();
   }
 
-  boost::optional<hpx::util::tuple<std::vector<unsigned>, int, hpx::naming::id_type> > steal() {
+  std::vector<hpx::util::tuple<std::vector<unsigned>, int, hpx::naming::id_type> > steal(bool stealAll = false) {
     // Find the highest depth that still has work
     int highest = -1;
     for (auto i = 0; i <= depth; ++i) {
@@ -105,28 +105,45 @@ class positionIndex {
       return {};
     }
 
-    // Take this child
-    children[highest]--;
-
-    // Calc the path
+    // Current path
     std::vector<unsigned> res;
     for (auto i = 0; i <= highest; ++i) {
       res.push_back(path[i]);
     }
 
-    auto idx = nextIndex[highest];
-    nextIndex[highest]++;
-    res.push_back(idx);
+    std::vector<hpx::util::tuple<std::vector<unsigned>, int, hpx::naming::id_type> > stealRes;
 
-    hpx::promise<void> prom;
-    auto f = prom.get_future();
-    auto pid = prom.get_id();
+    if (stealAll) {
+      while (children[highest] > 0) {
+        children[highest]--;
+        std::vector<unsigned> pth(res);
 
-    futures.push_back(std::move(f));
+        auto idx = nextIndex[highest];
+        nextIndex[highest]++;
+        pth.push_back(idx);
 
-    // FIXME: Should path size be returned here?
-    int stealDepth = res.size();
-    auto stealRes = hpx::util::make_tuple(std::move(res), stealDepth, pid);
+        hpx::promise<void> prom;
+        auto f = prom.get_future();
+        auto pid = prom.get_id();
+        futures.push_back(std::move(f));
+
+        stealRes.emplace_back(hpx::util::make_tuple(std::move(res), res.size(), pid));
+      }
+    } else {
+      children[highest]--;
+
+      auto idx = nextIndex[highest];
+      nextIndex[highest]++;
+      res.push_back(idx);
+
+      hpx::promise<void> prom;
+      auto f = prom.get_future();
+      auto pid = prom.get_id();
+      futures.push_back(std::move(f));
+
+      stealRes.emplace_back(hpx::util::make_tuple(std::move(res), res.size(), pid));
+    }
+
     return stealRes;
   }
 
