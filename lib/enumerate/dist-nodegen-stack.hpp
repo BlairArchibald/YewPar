@@ -204,13 +204,12 @@ struct DistCount<Space, Sol, Gen, StackOfNodes, std::integral_constant<std::size
                                std::array<StackElem, maxStackDepth_> & generatorStack,
                                std::vector<std::uint64_t> & cntMap,
                                std::vector<hpx::future<void> > & futures){
-    auto tasksSpawned = 0;
-    auto localities = hpx::find_all_localities();
-
-    // Ensure local is at the back of all localities (since it has one less task)
-    localities.erase(std::remove(localities.begin(), localities.end(), hpx::find_here()), localities.end());
+    // Make sure the master locality is at the back of all other localities
+    // since it takes the rest of the spawned work
+    auto localities = util::findOtherLocalities();
     localities.push_back(hpx::find_here());
 
+    auto tasksSpawned = 0;
     while (stackDepth >= 0) {
       // If there's still children at this stackDepth we move into them
       if (generatorStack[stackDepth].seen < generatorStack[stackDepth].generator.numChildren) {
