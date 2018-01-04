@@ -6,7 +6,9 @@
 #include <chrono>
 
 #include "enumerate/skeletons.hpp"
+#include "skeletons/Seq.hpp"
 #include "util/func.hpp"
+#include "util/NodeGenerator.hpp"
 
 // Fib doesn't have a space
 struct Empty {};
@@ -15,9 +17,7 @@ struct NodeGen : YewPar::NodeGenerator<std::uint64_t> {
   std::uint64_t n;
   unsigned i = 1;
 
-  NodeGen() : n(0) {
-    this->numChildren = 0;
-  }
+  NodeGen() = default;
 
   NodeGen(const std::uint64_t & n) : n(n) {
     this->numChildren = 2;
@@ -49,16 +49,20 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto start_time = std::chrono::steady_clock::now();
 
-  std::vector<std::uint64_t> counts(maxDepth);
+  std::vector<std::uint64_t> counts;
   if (skeleton == "seq") {
-    counts = skeletons::Enum::Count<Empty, std::uint64_t, genChildren_func>::search(maxDepth, Empty(), maxDepth - 1);
+    counts = YewPar::Skeletons::Seq<NodeGen, YewPar::Skeletons::API::CountNodes>::search(maxDepth, YewPar::Empty(), maxDepth - 1);
   }
-  else if (skeleton == "dist"){
-    counts = skeletons::Enum::DistCount<Empty, std::uint64_t, genChildren_func>::count(spawnDepth, maxDepth, Empty(), maxDepth - 1);
-  }
-  else if (skeleton == "genstack"){
-    counts = skeletons::Enum::DistCount<Empty, std::uint64_t, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_DEPTH> >::count(maxDepth, Empty(), maxDepth - 1);
-  }
+
+  // if (skeleton == "seq") {
+  //   counts = skeletons::Enum::Count<Empty, std::uint64_t, genChildren_func>::search(maxDepth, Empty(), maxDepth - 1);
+  // }
+  // else if (skeleton == "dist"){
+  //   counts = skeletons::Enum::DistCount<Empty, std::uint64_t, genChildren_func>::count(spawnDepth, maxDepth, Empty(), maxDepth - 1);
+  // }
+  // else if (skeleton == "genstack"){
+  //   counts = skeletons::Enum::DistCount<Empty, std::uint64_t, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_DEPTH> >::count(maxDepth, Empty(), maxDepth - 1);
+  // }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
                       (std::chrono::steady_clock::now() - start_time);

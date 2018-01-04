@@ -5,12 +5,14 @@ namespace YewPar {
 
 #include <hpx/util/tuple.hpp>
 
-template <typename NodeType>
-struct NodeGenerator {
-  unsigned numChildren;
+struct Empty {};
 
-  NodeGenerator() : numChildren(0) {};
-  NodeGenerator(unsigned children) : numChildren(children) {};
+template <typename NodeType, typename Space = Empty>
+struct NodeGenerator {
+  using Nodetype  = NodeType;
+  using Spacetype = Space;
+
+  unsigned numChildren;
 
   // When called, return the next child element
   // Pre condition: numChildren < number of next Calls
@@ -18,7 +20,7 @@ struct NodeGenerator {
 
   // Quickly skip to the nth child if possible Useful for recompute based
   // skeletons where we send a path in the tree rather than a particular node
-  virtual NodeType nth(unsigned n) {
+  NodeType nth(unsigned n) {
     NodeType c;
     for (auto i = 0; i <= n; ++i) {
       c = next();
@@ -26,10 +28,6 @@ struct NodeGenerator {
     return c;
   };
 };
-
-// BnB Nodes are represented as a (CurrentSol, LowerBound, RemainingSpace) tuple
-template<typename Sol, typename Bnd, typename Cand>
-struct BnBNodeGenerator : NodeGenerator<hpx::util::tuple<Sol, Bnd, Cand> > {};
 
 }
 
