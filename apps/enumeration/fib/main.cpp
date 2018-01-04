@@ -51,7 +51,10 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   std::vector<std::uint64_t> counts;
   if (skeleton == "seq") {
-    counts = YewPar::Skeletons::Seq<NodeGen, YewPar::Skeletons::API::CountNodes>::search(maxDepth, YewPar::Empty(), maxDepth - 1);
+    counts = YewPar::Skeletons::Seq<NodeGen,
+                                    YewPar::Skeletons::API::CountNodes,
+                                    YewPar::Skeletons::API::DepthBounded>
+             ::search(maxDepth, YewPar::Empty(), maxDepth - 1);
   }
 
   // if (skeleton == "seq") {

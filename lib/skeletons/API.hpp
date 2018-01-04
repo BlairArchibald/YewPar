@@ -17,7 +17,14 @@ namespace API {
 
 // Tree Search Types
 DEF_PRESENT_PARAMETER(CountNodes, CountNodes_)
+DEF_PRESENT_PARAMETER(BnB, BnB_)
 
+// Search Shape changers
+DEF_PRESENT_PARAMETER(DepthBounded, DepthBounded_)
+
+// Bounding/Pruning
+BOOST_PARAMETER_TEMPLATE_KEYWORD(BoundFunction)
+DEF_PRESENT_PARAMETER(PruneLevel, PruneLevel_)
 
 // Signature, everything is optional since the generators are explicitly passed as arg 1 on each skeleton
 BOOST_PARAMETER_TEMPLATE_KEYWORD(null)

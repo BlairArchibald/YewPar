@@ -16,16 +16,14 @@
 struct KPSolution {
   friend class boost::serialization::access;
 
-  int numItems;
-  int capacity;
+  int numItems; // FIXME: should really be in the space not the sol?
+  int capacity; // FIXME: should really be in the space not the sol?
   std::vector<int> items;
   int profit;
   int weight;
 
   template <class Archive>
   void serialize(Archive & ar, const unsigned int version) {
-    ar & numItems;
-    ar & numItems;
     ar & capacity;
     ar & items;
     ar & profit;
@@ -33,60 +31,69 @@ struct KPSolution {
   }
 };
 
-using KPNode = hpx::util::tuple<KPSolution, int, std::vector<int> >;
-
 template <unsigned numItems>
 using KPSpace = std::pair< std::array<int, numItems>, std::array<int, numItems> >;
 
+struct KPNode {
+  friend class boost::serialization::access;
+
+  KPSolution sol;
+  std::vector<int> rem;
+
+  int getObj() {
+    return sol.profit;
+  }
+
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & sol;
+    ar & rem;
+  }
+};
+
 template <unsigned numItems>
-struct GenNode : YewPar::BnBNodeGenerator<KPSolution, int, std::vector<int> > {
+struct GenNode : YewPar::NodeGenerator<KPNode, KPSpace<numItems> > {
   std::vector<int> items;
   int pos;
 
   const KPSpace<numItems> & space;
   const KPNode & n;
 
-  GenNode (const KPSpace<numItems> & space, const KPNode & n, std::vector<int> items) :
-      items(items), pos(0), space(space), n(n) {
+  GenNode (const KPSpace<numItems> & space, const KPNode & n) :
+      pos(0), space(space), n(n) {
+
+    auto cands = n.rem;
+    std::copy_if(cands.begin(), cands.end(), std::inserter(items, items.end()), [&](const int i) {
+        return n.sol.weight + std::get<1>(space)[i] <= n.sol.capacity;
+      });
+
     this->numChildren = items.size();
   }
 
   KPNode next() override {
     auto i = items[pos];
 
-    auto newSol = hpx::util::get<0>(n);
+    auto newSol = n.sol;
     newSol.items.push_back(i);
     newSol.profit += std::get<0>(space)[i];
     newSol.weight += std::get<1>(space)[i];
 
-    auto newCands = hpx::util::get<2>(n);
+    auto newCands = n.rem;
     newCands.erase(std::remove(newCands.begin(), newCands.end(), i), newCands.end());
 
     pos++;
-    return hpx::util::make_tuple(std::move(newSol), newSol.profit, std::move(newCands));
+    return {newSol, newCands};
   }
 };
 
 template <unsigned numItems>
-GenNode<numItems> generateChoices(const KPSpace<numItems> & space, const KPNode & n) {
-  auto cands = hpx::util::get<2>(n);
-
-  // Get potential choices - those that don't exceed the capacity
-  std::vector<int> items;
-  std::copy_if(cands.begin(), cands.end(), std::inserter(items, items.end()), [&](const int i) {
-      return hpx::util::get<0>(n).weight + std::get<1>(space)[i] <= hpx::util::get<0>(n).capacity;
-    });
-
-  return GenNode<numItems>(space, n, std::move(items));
-}
-
-template <unsigned numItems>
 int upperBound(const KPSpace<numItems> & space, const KPNode & n) {
-  auto sol = hpx::util::get<0>(n);
+  auto sol = n.sol;
 
   float profit = sol.profit;
   auto weight  = sol.weight;
 
+  // TODO: Space should have the numItems
   for (auto i = sol.items.back() + 1; i < sol.numItems; i++) {
     // If there is enough space for a full item we take it all
     if (hpx::util::get<1>(space)[i] + weight > sol.capacity) {

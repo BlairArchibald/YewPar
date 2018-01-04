@@ -6,25 +6,26 @@
 #include <hpx/hpx.hpp>
 #include <hpx/hpx_init.hpp>
 
-#include "bnb/bnb-seq.hpp"
-#include "bnb/bnb-par.hpp"
+// #include "bnb/bnb-seq.hpp"
+// #include "bnb/bnb-par.hpp"
 #include "bnb/bnb-dist.hpp"
 
 #include "knapsack.hpp"
 
 #include "util/func.hpp"
+#include "skeletons/Seq.hpp"
 
 #ifndef NUMITEMS
 #define NUMITEMS 50
 #endif
 
 // Actions for HPX (PAR)
-typedef func<decltype(&generateChoices<NUMITEMS>), &generateChoices<NUMITEMS> > gen_func;
+//typedef func<decltype(&generateChoices<NUMITEMS>), &generateChoices<NUMITEMS> > gen_func;
 typedef func<decltype(&upperBound<NUMITEMS>), &upperBound<NUMITEMS> > bnd_func;
 
-typedef std::vector<int> vecint;
-REGISTER_INCUMBENT(KPSolution, int, vecint);
-REGISTER_REGISTRY(KPSpace<NUMITEMS>, KPSolution, int, vecint);
+// typedef std::vector<int> vecint;
+// REGISTER_INCUMBENT(KPSolution, int, vecint);
+// REGISTER_REGISTRY(KPSpace<NUMITEMS>, KPSolution, int, vecint);
 
 struct knapsackData {
   int capacity = 0;
@@ -122,32 +123,33 @@ int hpx_main(boost::program_options::variables_map & opts) {
   for (int i = 0; i < numItems; i++) {
     initRem.push_back(i);
   }
-  auto root  = hpx::util::make_tuple(initSol, 0, initRem);
+  KPNode root  {initSol, initRem};
 
   auto sol = root;
-  if (skeletonType == "seq") {
-    sol = skeletons::BnB::Seq::BranchAndBoundOpt<KPSpace<NUMITEMS>,
-                                                 KPSolution,
-                                                 int,
-                                                 std::vector<int>,
-                                                 gen_func,
-                                                 bnd_func>
-          ::search(space, root);
-  }
+  sol = YewPar::Skeletons::Seq<GenNode<NUMITEMS>, YewPar::Skeletons::API::BnB, YewPar::Skeletons::API::BoundFunction<bnd_func> >::search(10000, space, root);
+  // if (skeletonType == "seq") {
+  //   sol = skeletons::BnB::Seq::BranchAndBoundOpt<KPSpace<NUMITEMS>,
+  //                                                KPSolution,
+  //                                                int,
+  //                                                std::vector<int>,
+  //                                                gen_func,
+  //                                                bnd_func>
+  //         ::search(space, root);
+  // }
 
-  if (skeletonType == "par") {
-    auto spawnDepth = opts["spawn-depth"].as<int>();
-    sol = skeletons::BnB::Par::BranchAndBoundOpt<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_func, bnd_func>
-          ::search(spawnDepth, space, root);
-  }
+  // if (skeletonType == "par") {
+  //   auto spawnDepth = opts["spawn-depth"].as<int>();
+  //   sol = skeletons::BnB::Par::BranchAndBoundOpt<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_func, bnd_func>
+  //         ::search(spawnDepth, space, root);
+  // }
 
-  if (skeletonType == "dist") {
-    auto spawnDepth = opts["spawn-depth"].as<int>();
-    sol = skeletons::BnB::Dist::BranchAndBoundOpt<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_func, bnd_func>
-          ::search(spawnDepth, space, root);
-  }
+  // if (skeletonType == "dist") {
+  //   auto spawnDepth = opts["spawn-depth"].as<int>();
+  //   sol = skeletons::BnB::Dist::BranchAndBoundOpt<KPSpace<NUMITEMS>, KPSolution, int, std::vector<int>, gen_func, bnd_func>
+  //         ::search(spawnDepth, space, root);
+  // }
 
-  auto finalSol = hpx::util::get<0>(sol);
+  auto finalSol = sol.sol;
   std::cout << "Final Profit: " << finalSol.profit << std::endl;
   std::cout << "Final Weight: " << finalSol.weight << std::endl;
   std::cout << "Expected Result: " << std::boolalpha << (finalSol.profit == problem.expectedResult) << std::endl;
