@@ -28,7 +28,7 @@ struct Seq {
   static bool expandBnBDecision (const Space & space,
                                  const Node  & n,
                                  Node & incumbent,
-                                 Bound & expectedBound) {
+                                 const Bound & expectedBound) {
     Generator newCands = Generator(space, n);
 
     for (auto i = 0; i < newCands.numChildren; ++i) {
@@ -65,7 +65,7 @@ struct Seq {
                              const Node  & root,
                              const Bound & expectedBound) {
     auto incumbent = root;
-    expandBnB(space, root, incumbent, expectedBound);
+    expandBnBDecision(space, root, incumbent, expectedBound);
     return incumbent;
   }
 
@@ -155,7 +155,7 @@ struct Seq {
     } else if constexpr(isBnB) {
       return doBnB(space, root);
     } else if constexpr(isBnBDecision) {
-      return doBnBDecision(space, root, params.expectedBound);
+      return doBnBDecision(space, root, params.expectedObjective);
     } else {
       static_assert(isCountNodes || isBnB, "Please provide a supported search type: CountNodes, BnB, Decision");
     }
