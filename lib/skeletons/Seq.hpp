@@ -19,9 +19,55 @@ struct Seq {
 
   static constexpr bool isCountNodes = parameter::value_type<args, API::tag::CountNodes_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isBnB = parameter::value_type<args, API::tag::BnB_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool isBnBDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthBounded_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
+  typedef typename boundFn::return_type Bound;
+
+  static bool expandBnBDecision (const Space & space,
+                                 const Node  & n,
+                                 Node & incumbent,
+                                 Bound & expectedBound) {
+    Generator newCands = Generator(space, n);
+
+    for (auto i = 0; i < newCands.numChildren; ++i) {
+      auto c = newCands.next();
+
+      // Found the solution we are looking for!
+      if (c.getObj() == expectedBound) {
+        incumbent = c;
+        return true;
+      }
+
+      // Do we support bounding?
+      if constexpr(!std::is_same<boundFn, nullFn__>::value) {
+          auto bnd  = boundFn::invoke(space, c);
+          // TODO: Pass bound cmp function
+          if (bnd < expectedBound) {
+            if constexpr(pruneLevel) {
+              break;
+            } else {
+              continue;
+            }
+          }
+      }
+
+      auto found = expandBnBDecision(space, c, incumbent, expectedBound);
+      if (found) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static Node doBnBDecision (const Space & space,
+                             const Node  & root,
+                             const Bound & expectedBound) {
+    auto incumbent = root;
+    expandBnB(space, root, incumbent, expectedBound);
+    return incumbent;
+  }
 
   static void expandBnB (const Space & space,
                          const Node  & n,
@@ -108,7 +154,10 @@ struct Seq {
       return countNodes(params.maxDepth, space, root);
     } else if constexpr(isBnB) {
       return doBnB(space, root);
+    } else if constexpr(isBnBDecision) {
+      return doBnBDecision(space, root, params.expectedBound);
     } else {
+      static_assert(isCountNodes || isBnB, "Please provide a supported search type: CountNodes, BnB, Decision");
     }
   }
 };

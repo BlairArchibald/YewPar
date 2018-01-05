@@ -19,6 +19,7 @@ namespace API {
 // Tree Search Types
 DEF_PRESENT_PARAMETER(CountNodes, CountNodes_)
 DEF_PRESENT_PARAMETER(BnB, BnB_)
+DEF_PRESENT_PARAMETER(Decision, Decision_)
 
 // Search Shape changers
 DEF_PRESENT_PARAMETER(DepthBounded, DepthBounded_)
