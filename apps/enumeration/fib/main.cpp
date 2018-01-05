@@ -13,13 +13,13 @@
 // Fib doesn't have a space
 struct Empty {};
 
-struct NodeGen : YewPar::NodeGenerator<std::uint64_t> {
+struct NodeGen : YewPar::NodeGenerator<std::uint64_t, Empty> {
   std::uint64_t n;
   unsigned i = 1;
 
   NodeGen() = default;
 
-  NodeGen(const std::uint64_t & n) : n(n) {
+  NodeGen(const Empty & space, const std::uint64_t & n) : n(n) {
     this->numChildren = 2;
   }
 
@@ -31,7 +31,7 @@ struct NodeGen : YewPar::NodeGenerator<std::uint64_t> {
 };
 
 NodeGen generateChildren(const Empty & space, const std::uint64_t & n) {
-  return NodeGen(n);
+  return NodeGen(space, n);
 }
 
 #define MAX_DEPTH 50
@@ -56,7 +56,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     counts = YewPar::Skeletons::Seq<NodeGen,
                                     YewPar::Skeletons::API::CountNodes,
                                     YewPar::Skeletons::API::DepthBounded>
-             ::search(YewPar::Empty(), maxDepth - 1, searchParameters);
+             ::search(Empty(), maxDepth - 1, searchParameters);
   }
 
   // if (skeleton == "seq") {

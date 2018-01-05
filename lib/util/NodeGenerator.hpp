@@ -5,9 +5,7 @@ namespace YewPar {
 
 #include <hpx/util/tuple.hpp>
 
-struct Empty {};
-
-template <typename NodeType, typename Space = Empty>
+template <typename NodeType, typename Space>
 struct NodeGenerator {
   using Nodetype  = NodeType;
   using Spacetype = Space;
