@@ -126,7 +126,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   KPNode root  {initSol, initRem};
 
   auto sol = root;
-  sol = YewPar::Skeletons::Seq<GenNode<NUMITEMS>, YewPar::Skeletons::API::BnB, YewPar::Skeletons::API::BoundFunction<bnd_func> >::search(10000, space, root);
+  sol = YewPar::Skeletons::Seq<GenNode<NUMITEMS>, YewPar::Skeletons::API::BnB, YewPar::Skeletons::API::BoundFunction<bnd_func> >::search(space, root);
   // if (skeletonType == "seq") {
   //   sol = skeletons::BnB::Seq::BranchAndBoundOpt<KPSpace<NUMITEMS>,
   //                                                KPSolution,

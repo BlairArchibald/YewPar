@@ -101,15 +101,14 @@ struct Seq {
     return counts;
   }
 
-  static auto search(const unsigned maxDepth,
-                     const Space & space,
-                     const Node & root) {
+  static auto search (const Space & space,
+                      const Node & root,
+                      const API::Params<Bound> params = API::Params<Bound>()) {
     if constexpr(isCountNodes) {
-      return countNodes(maxDepth, space, root);
+      return countNodes(params.maxDepth, space, root);
     } else if constexpr(isBnB) {
       return doBnB(space, root);
     } else {
-      static_assert(isCountNodes || isBnB, "Please provide a supported search type: CountNodes, BnB");
     }
   }
 };
