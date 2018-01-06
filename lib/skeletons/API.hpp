@@ -2,6 +2,7 @@
 #define SKELETONS_API_HPP
 
 #include <boost/parameter.hpp>
+#include <boost/serialization/access.hpp>
 
 namespace YewPar { namespace Skeletons {
 
@@ -34,11 +35,24 @@ typedef parameter::parameters<parameter::optional<tag::null> > skeleton_signatur
 
 template <typename Obj = bool>
 struct Params {
+  friend class boost::serialization::access;
+
   // For depth limited searches
   unsigned maxDepth;
 
   // For decision based problems
   Obj expectedObjective;
+
+  // Depth Spawns
+  unsigned spawnDepth = 1;
+
+  // Needed to push to registries on all nodes
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & maxDepth;
+    ar & expectedObjective;
+    ar & spawnDepth;
+  }
 };
 
 }}}
