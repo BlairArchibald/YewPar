@@ -40,6 +40,7 @@ struct Registry {
     this->space = space;
     this->root = root;
     this->params = params;
+    counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
   }
 
   // Counting
@@ -104,6 +105,22 @@ void setStopSearchFlag() {
 template <typename Space, typename Node, typename Bound>
 struct SetStopFlagAct : hpx::actions::make_action<
   decltype(&setStopSearchFlag<Space, Node, Bound>), &setStopSearchFlag<Space, Node, Bound>, SetStopFlagAct<Space, Node, Bound> >::type {};
+
+template <typename Space, typename Node, typename Bound>
+void updateRegistryBound(Bound bnd) {
+  Registry<Space, Node, Bound>::gReg->updateRegistryBound(bnd);
+}
+template <typename Space, typename Node, typename Bound>
+struct UpdateRegistryBoundAct : hpx::actions::make_action<
+  decltype(&updateRegistryBound<Space, Node, Bound>), &updateRegistryBound<Space, Node, Bound>, UpdateRegistryBoundAct<Space, Node, Bound> >::type {};
+
+template <typename Space, typename Node, typename Bound>
+void updateGlobalIncumbent(hpx::naming::id_type inc) {
+  Registry<Space, Node, Bound>::gReg->globalIncumbent = inc;
+}
+template <typename Space, typename Node, typename Bound>
+struct UpdateGlobalIncumbentAct : hpx::actions::make_action<
+  decltype(&updateGlobalIncumbent<Space, Node, Bound>), &updateGlobalIncumbent<Space, Node, Bound>, UpdateGlobalIncumbentAct<Space, Node, Bound> >::type {};
 
 }
 

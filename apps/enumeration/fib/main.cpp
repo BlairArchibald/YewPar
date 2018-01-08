@@ -60,7 +60,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
              ::search(Empty(), maxDepth - 1, searchParameters);
   } else if (skeleton == "dist"){
     YewPar::Skeletons::API::Params<> searchParameters;
-    searchParameters.maxDepth = maxDepth;
+    searchParameters.maxDepth   = maxDepth;
+    searchParameters.spawnDepth = spawnDepth;
     counts = YewPar::Skeletons::DepthSpawns<NodeGen,
                                     YewPar::Skeletons::API::CountNodes,
                                     YewPar::Skeletons::API::DepthBounded>

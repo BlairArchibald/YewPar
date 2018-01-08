@@ -6,8 +6,11 @@
 
 #include "API.hpp"
 
+#include <hpx/lcos/broadcast.hpp>
+
 #include "util/NodeGenerator.hpp"
 #include "util/Registry.hpp"
+#include "util/Incumbent.hpp"
 #include "util/func.hpp"
 
 #include "workstealing/Scheduler.hpp"
@@ -32,12 +35,24 @@ struct DepthSpawns {
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
 
-  static bool seqExpand(const Space & space,
-                        const Node & n,
-                        const API::Params<Bound> & params,
-                        Node & incumbent,
-                        const unsigned childDepth,
-                        std::vector<uint64_t> & counts) {
+  static void updateIncumbent(const Node & node, const Bound & bnd) {
+    auto reg = Registry<Space, Node, Bound>::gReg;
+    // Should we force this local update for performance?
+    //reg->updateRegistryBound(bnd)
+    hpx::lcos::broadcast<UpdateRegistryBoundAct<Space, Node, Bound> >(
+        hpx::find_all_localities(), bnd);
+
+    typedef typename Incumbent<Node>::UpdateIncumbentAct act;
+    hpx::async<act>(reg->globalIncumbent, node).get();
+  }
+
+  static void expandWithSpawns(const Space & space,
+                               const Node & n,
+                               const API::Params<Bound> & params,
+                               std::vector<uint64_t> & counts,
+                               std::vector<hpx::future<void> > & childFutures,
+                               const unsigned childDepth) {
+    auto reg = Registry<Space, Node, Bound>::gReg;
     Generator newCands = Generator(space, n);
 
     if constexpr(isCountNodes) {
@@ -46,17 +61,17 @@ struct DepthSpawns {
 
     if constexpr(isDepthBounded) {
         if (childDepth == params.maxDepth) {
-          return false;
+          return;
         }
-      }
+    }
 
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
       if constexpr(isDecision) {
         if (c.getObj() == params.expectedObjective) {
-          incumbent = c;
-          return true;
+          updateIncumbent(c, c.getObj());
+          return;
         }
       }
 
@@ -73,7 +88,7 @@ struct DepthSpawns {
             }
           // B&B Case
           } else {
-            auto best = incumbent.getObj();
+            auto best = reg->localBound.load();
             if (bnd <= best) {
               if constexpr(pruneLevel) {
                   break;
@@ -85,39 +100,160 @@ struct DepthSpawns {
       }
 
       if constexpr(isBnB) {
-        if (c.getObj() > incumbent.getObj()) {
-          incumbent = c;
+        // FIXME: unsure about loading this twice in terms of performance
+        auto best = reg->localBound.load();
+
+        if (c.getObj() > best) {
+          updateIncumbent(c, c.getObj());
         }
       }
 
-      auto found = seqExpand(space, c, params, incumbent, childDepth + 1, counts);
-      if constexpr(isDecision) {
-        // Propagate early exit
-        if (found) {
-          return true;
+      // Spawn new tasks for all children (that are still alive after pruning)
+      childFutures.push_back(createTask(childDepth + 1, c));
+
+      // TODO: How do I handle the distributed decision problems?
+      // if constexpr(isDecision) {
+      //   // Propagate early exit
+      //   if (found) {
+      //     return true;
+      //   }
+      }
+  }
+
+  static void expandNoSpawns(const Space & space,
+                             const Node & n,
+                             const API::Params<Bound> & params,
+                             std::vector<uint64_t> & counts,
+                             const unsigned childDepth) {
+    auto reg = Registry<Space, Node, Bound>::gReg;
+    Generator newCands = Generator(space, n);
+
+    if constexpr(isCountNodes) {
+        counts[childDepth] += newCands.numChildren;
+    }
+
+    if constexpr(isDepthBounded) {
+        if (childDepth == params.maxDepth) {
+          return;
         }
+    }
+
+    for (auto i = 0; i < newCands.numChildren; ++i) {
+      auto c = newCands.next();
+
+      if constexpr(isDecision) {
+        if (c.getObj() == params.expectedObjective) {
+          updateIncumbent(c, c.getObj());
+          return;
+        }
+      }
+
+      // Do we support bounding?
+      if constexpr(!std::is_same<boundFn, nullFn__>::value) {
+          auto bnd  = boundFn::invoke(space, c);
+          if constexpr(isDecision) {
+            if (bnd < params.expectedObjective) {
+              if constexpr(pruneLevel) {
+                  break;
+                } else {
+                continue;
+              }
+            }
+          // B&B Case
+          } else {
+            auto best = reg->localBound.load();
+            if (bnd <= best) {
+              if constexpr(pruneLevel) {
+                  break;
+                } else {
+                continue;
+              }
+            }
+        }
+      }
+
+      if constexpr(isBnB) {
+        // FIXME: unsure about loading this twice in terms of performance
+        auto best = reg->localBound.load();
+        if (c.getObj() > best) {
+          updateIncumbent(c, c.getObj());
+        }
+      }
+
+      expandNoSpawns(space, c, params, counts, childDepth + 1);
+
+      // TODO: How do I handle the distributed decision problems?
+      // if constexpr(isDecision) {
+      //   // Propagate early exit
+      //   if (found) {
+      //     return true;
+      //   }
+      }
+  }
+
+  static void subtreeTask(const Node taskRoot,
+                          const unsigned childDepth,
+                          const hpx::naming::id_type donePromiseId) {
+    auto reg = Registry<Space, Node, Bound>::gReg;
+
+    std::vector<std::uint64_t> countMap;
+    if constexpr(isCountNodes) {
+        countMap.resize(reg->params.maxDepth + 1);
+    }
+
+    std::vector<hpx::future<void> > childFutures;
+
+    if (childDepth <= reg->params.spawnDepth) {
+      expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth);
+    } else {
+      expandNoSpawns(reg->space, taskRoot, reg->params, countMap, childDepth);
+    }
+
+    // Atomically updates the (process) local counter
+    if constexpr (isCountNodes) {
+      reg->updateCounts(countMap);
+    }
+
+    hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
+          hpx::wait_all(futs);
+          hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
+        }, std::move(childFutures)));
+  }
+
+  struct SubtreeTask : hpx::actions::make_action<
+    decltype(&DepthSpawns<Generator, Args...>::subtreeTask),
+    &DepthSpawns<Generator, Args...>::subtreeTask,
+    SubtreeTask>::type {};
+
+  static hpx::future<void> createTask(const unsigned childDepth,
+                                      const Node & taskRoot) {
+    hpx::lcos::promise<void> prom;
+    auto pfut = prom.get_future();
+    auto pid  = prom.get_id();
+
+    SubtreeTask t;
+    hpx::util::function<void(hpx::naming::id_type)> task;
+    task = hpx::util::bind(t, hpx::util::placeholders::_1, taskRoot, childDepth, pid);
+
+    // TODO: Type alias this stuff
+    auto workPool = std::static_pointer_cast<Workstealing::Policies::Workpool>(Workstealing::Scheduler::local_policy);
+     workPool->addwork(task);
+
+     return pfut;
+  }
+
+  static std::vector<std::uint64_t> totalNodeCounts(const unsigned maxDepth) {
+    auto cntList = hpx::lcos::broadcast<GetCountsAct<Space, Node, Bound> >(
+        hpx::find_all_localities()).get();
+
+    std::vector<std::uint64_t> res(maxDepth + 1);
+    for (auto i = 0; i <= maxDepth; ++i) {
+      for (const auto & cnt : cntList) {
+        res[i] += cnt[i];
       }
     }
-    return false;
-  }
-
-  static Node doBnB (const Space & space,
-                     const Node  & root,
-                     const API::Params<Bound> & params) {
-    auto incumbent = root;
-    std::vector<std::uint64_t> counts(0);
-    seqExpand(space, root, params, incumbent, 1, counts);
-    return incumbent;
-  }
-
-  static std::vector<std::uint64_t> countNodes(const Space & space,
-                                               const Node & root,
-                                               const API::Params<Bound> & params) {
-    auto incumbent = root;
-    std::vector<std::uint64_t> counts(params.maxDepth + 1);
-    counts[0] = 1;
-    seqExpand(space, root, params, incumbent, 1, counts);
-    return counts;
+    res[0] = 1; //Account for root node
+    return res;
   }
 
   static auto search (const Space & space,
@@ -132,17 +268,30 @@ struct DepthSpawns {
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(
         hpx::find_all_localities(), threadCount));
 
+    if constexpr(isBnB || isDecision) {
+      auto inc = hpx::new_<Incumbent<Node> >(hpx::find_here()).get();
+      hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
+          hpx::find_all_localities(), inc));
+      updateIncumbent(root, root.getObj());
+    }
+
     // Create a main task and wait for it to finish
+    // Seems to SIGSEGV here
+    // Issue is updateCounts by the looks of things. Something probably isn't initialised correctly.
+    createTask(1, root).get();
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
     // Return the right thing
     if constexpr(isCountNodes) {
-        return countNodes(space, root, params);
-      } else if constexpr(isBnB || isDecision) {
-        return doBnB(space, root, params);
-      } else {
+      return totalNodeCounts(params.maxDepth);
+    } else if constexpr(isBnB || isDecision) {
+      auto reg = Registry<Space, Node, Bound>::gReg;
+
+      typedef typename Incumbent<Node>::GetIncumbentAct getInc;
+      return hpx::async<getInc>(reg->globalIncumbent).get();
+    } else {
       static_assert(isCountNodes || isBnB || isDecision, "Please provide a supported search type: CountNodes, BnB, Decision");
     }
   }

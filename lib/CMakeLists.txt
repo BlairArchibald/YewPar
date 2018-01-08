@@ -12,6 +12,7 @@ add_hpx_library(YewPar
   workqueue
   priorityworkqueue
   incumbent
+  Incumbent
   SearchManager
   iostreams
 )
