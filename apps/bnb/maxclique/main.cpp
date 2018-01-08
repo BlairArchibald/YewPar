@@ -214,6 +214,17 @@ REGISTER_INCUMBENT(MCNode);
 // using indexedFunc = skeletons::BnB::Indexed::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
 // using pathType = std::vector<unsigned>;
 // REGISTER_SEARCHMANAGER(pathType, indexedFunc)
+using dist_skel = YewPar::Skeletons::DepthSpawns<GenNode,
+                                     YewPar::Skeletons::API::BnB,
+                                     YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                     YewPar::Skeletons::API::PruneLevel>;
+HPX_ACTION_USES_LARGE_STACK(dist_skel::SubtreeTask);
+
+using dist_dec_skel = YewPar::Skeletons::DepthSpawns<GenNode,
+                                                 YewPar::Skeletons::API::Decision,
+                                                 YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                                 YewPar::Skeletons::API::PruneLevel>;
+HPX_ACTION_USES_LARGE_STACK(dist_dec_skel::SubtreeTask);
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto inputFile = opts["input-file"].as<std::string>();
@@ -254,14 +265,6 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto sol = root;
   if (skeletonType == "seq") {
-    // sol = skeletons::BnB::Seq::BranchAndBoundOpt<BitGraph<NWORDS>,
-    //                                              MCSol,
-    //                                              int,
-    //                                              BitSet<NWORDS>,
-    //                                              generateChoices_func,
-    //                                              upperBound_func,
-    //                                              true>
-    //       ::search (graph, root);
     sol = YewPar::Skeletons::Seq<GenNode,
                                  YewPar::Skeletons::API::BnB,
                                  YewPar::Skeletons::API::BoundFunction<upperBound_func>,
@@ -277,8 +280,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                  YewPar::Skeletons::API::PruneLevel
                                  >
           ::search(graph, root, searchParameters);
-  }
-  if (skeletonType == "seq-decision") {
+  } else if (skeletonType == "seq-decision") {
     auto decisionBound = opts["decisionBound"].as<int>();
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.expectedObjective = decisionBound;
@@ -289,19 +291,19 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                  YewPar::Skeletons::API::PruneLevel
                                  >
           ::search(graph, root, searchParameters);
+  } else if (skeletonType == "dist-decision") {
+    auto decisionBound = opts["decisionBound"].as<int>();
+    YewPar::Skeletons::API::Params<int> searchParameters;
+    searchParameters.expectedObjective = decisionBound;
+    searchParameters.spawnDepth = spawnDepth;
+
+    sol = YewPar::Skeletons::DepthSpawns<GenNode,
+                                 YewPar::Skeletons::API::Decision,
+                                 YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                 YewPar::Skeletons::API::PruneLevel
+                                 >
+          ::search(graph, root, searchParameters);
   }
-  // if (skeletonType == "par-decision") {
-  //   auto decisionBound = opts["decisionBound"].as<int>();
-  //   sol = skeletons::BnB::Par::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-  //                                                generateChoices_func, upperBound_func, true>
-  //         ::search(spawnDepth, graph, root, decisionBound);
-  // }
-  // if (skeletonType == "dist-decision") {
-  //   auto decisionBound = opts["decisionBound"].as<int>();
-  //   sol = skeletons::BnB::Dist::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-  //                                                 generateChoices_func, upperBound_func, true>
-  //         ::search(spawnDepth, graph, root, decisionBound);
-  // }
   // if (skeletonType == "ordered") {
   //   sol = skeletons::BnB::Ordered::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
   //                                                    generateChoices_func, upperBound_func, true>

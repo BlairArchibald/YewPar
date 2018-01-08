@@ -12,6 +12,7 @@
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
 #include "util/func.hpp"
+#include "util/doubleWritePromise.hpp"
 
 #include "workstealing/Scheduler.hpp"
 #include "workstealing/policies/Workpool.hpp"
@@ -110,14 +111,7 @@ struct DepthSpawns {
 
       // Spawn new tasks for all children (that are still alive after pruning)
       childFutures.push_back(createTask(childDepth + 1, c));
-
-      // TODO: How do I handle the distributed decision problems?
-      // if constexpr(isDecision) {
-      //   // Propagate early exit
-      //   if (found) {
-      //     return true;
-      //   }
-      }
+    }
   }
 
   static void expandNoSpawns(const Space & space,
@@ -127,6 +121,12 @@ struct DepthSpawns {
                              const unsigned childDepth) {
     auto reg = Registry<Space, Node, Bound>::gReg;
     Generator newCands = Generator(space, n);
+
+    if constexpr(isDecision) {
+        if (reg->stopSearch) {
+          return;
+        }
+      }
 
     if constexpr(isCountNodes) {
         counts[childDepth] += newCands.numChildren;
@@ -144,6 +144,8 @@ struct DepthSpawns {
       if constexpr(isDecision) {
         if (c.getObj() == params.expectedObjective) {
           updateIncumbent(c, c.getObj());
+          // Found a solution, tell the main thread to kill everything
+          hpx::async<util::DoubleWritePromise<bool>::set_value_action>(reg->foundPromiseId, true).get();
           return;
         }
       }
@@ -181,19 +183,13 @@ struct DepthSpawns {
       }
 
       expandNoSpawns(space, c, params, counts, childDepth + 1);
-
-      // TODO: How do I handle the distributed decision problems?
-      // if constexpr(isDecision) {
-      //   // Propagate early exit
-      //   if (found) {
-      //     return true;
-      //   }
-      }
+    }
   }
 
   static void subtreeTask(const Node taskRoot,
                           const unsigned childDepth,
-                          const hpx::naming::id_type donePromiseId) {
+                          const hpx::naming::id_type donePromiseId,
+                          const bool isMainTask = false) {
     auto reg = Registry<Space, Node, Bound>::gReg;
 
     std::vector<std::uint64_t> countMap;
@@ -217,6 +213,9 @@ struct DepthSpawns {
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
           hpx::wait_all(futs);
           hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
+          if (isMainTask) {
+            hpx::async<util::DoubleWritePromise<bool>::set_value_action>(reg->foundPromiseId, true).get();
+          }
         }, std::move(childFutures)));
   }
 
@@ -226,18 +225,19 @@ struct DepthSpawns {
     SubtreeTask>::type {};
 
   static hpx::future<void> createTask(const unsigned childDepth,
-                                      const Node & taskRoot) {
+                                      const Node & taskRoot,
+                                      const bool isMainTask = false) {
     hpx::lcos::promise<void> prom;
     auto pfut = prom.get_future();
     auto pid  = prom.get_id();
 
     SubtreeTask t;
     hpx::util::function<void(hpx::naming::id_type)> task;
-    task = hpx::util::bind(t, hpx::util::placeholders::_1, taskRoot, childDepth, pid);
+    task = hpx::util::bind(t, hpx::util::placeholders::_1, taskRoot, childDepth, pid, isMainTask);
 
     // TODO: Type alias this stuff
     auto workPool = std::static_pointer_cast<Workstealing::Policies::Workpool>(Workstealing::Scheduler::local_policy);
-     workPool->addwork(task);
+    workPool->addwork(task);
 
      return pfut;
   }
@@ -275,10 +275,18 @@ struct DepthSpawns {
       updateIncumbent(root, root.getObj());
     }
 
-    // Create a main task and wait for it to finish
-    // Seems to SIGSEGV here
     // Issue is updateCounts by the looks of things. Something probably isn't initialised correctly.
-    createTask(1, root).get();
+    if constexpr(isDecision) {
+      hpx::promise<int> foundProm;
+      auto foundFut = foundProm.get_future();
+      auto foundId = hpx::new_<util::DoubleWritePromise<bool> >(hpx::find_here(), foundProm.get_id()).get();
+      hpx::wait_all(hpx::lcos::broadcast<SetFoundPromiseIdAct<Space, Node, Bound> >(
+          hpx::find_all_localities(), foundId));
+      createTask(1, root, true);
+      foundFut.get(); // Allows early termination
+    } else {
+      createTask(1, root).get();
+    }
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));

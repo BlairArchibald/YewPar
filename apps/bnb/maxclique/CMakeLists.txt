@@ -46,6 +46,16 @@ if (YEWPAR_BUILD_TEST_APPS)
   set_tests_properties(MAXCLIQUE_DIST_4T PROPERTIES PASS_REGULAR_EXPRESSION "MaxClique Size = 21")
 
   add_test(
+    NAME MAXCLIQUE_DIST_DECISION_1T
+    COMMAND maxclique-${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS} -d 1 --skeleton-type dist-decision --decisionBound 21 --input-file ${YEWPAR_TEST_DATA_DIR}/brock200_1.clq --hpx:threads 1)
+  set_tests_properties(MAXCLIQUE_DIST_DECISION_1T PROPERTIES PASS_REGULAR_EXPRESSION "MaxClique Size = 21")
+
+  add_test(
+    NAME MAXCLIQUE_DIST_DECISION_4T
+    COMMAND maxclique-${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS} -d 1 --skeleton-type dist-decision --decisionBound 21 --input-file ${YEWPAR_TEST_DATA_DIR}/brock200_1.clq --hpx:threads 4)
+  set_tests_properties(MAXCLIQUE_DIST_DECISION_4T PROPERTIES PASS_REGULAR_EXPRESSION "MaxClique Size = 21")
+
+  add_test(
     NAME MAXCLIQUE_DISTRECOMPUTE_1T
     COMMAND maxclique-${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS} -d 1 --skeleton-type dist-recompute --input-file ${YEWPAR_TEST_DATA_DIR}/brock200_1.clq --hpx:threads 1)
   set_tests_properties(MAXCLIQUE_DISTRECOMPUTE_1T PROPERTIES PASS_REGULAR_EXPRESSION "MaxClique Size = 21")

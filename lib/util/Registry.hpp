@@ -28,8 +28,9 @@ struct Registry {
 
   // Decision problems
   std::atomic<bool> stopSearch {false};
+  hpx::naming::id_type foundPromiseId;
 
-  // Coounting Nodes
+  // Counting Nodes
   using countMapT = std::vector<std::atomic<std::uint64_t> >;
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
 
@@ -122,6 +123,14 @@ template <typename Space, typename Node, typename Bound>
 struct UpdateGlobalIncumbentAct : hpx::actions::make_action<
   decltype(&updateGlobalIncumbent<Space, Node, Bound>), &updateGlobalIncumbent<Space, Node, Bound>, UpdateGlobalIncumbentAct<Space, Node, Bound> >::type {};
 
+
+template <typename Space, typename Node, typename Bound>
+void setFoundPromiseId(hpx::naming::id_type id) {
+  Registry<Space, Node, Bound>::gReg->foundPromiseId = id;
+}
+template <typename Space, typename Node, typename Bound>
+struct SetFoundPromiseIdAct : hpx::actions::make_action<
+  decltype(&setFoundPromiseId<Space, Node, Bound>), &setFoundPromiseId<Space, Node, Bound>, SetFoundPromiseIdAct<Space, Node, Bound> >::type {};
 }
 
 #endif
