@@ -38,7 +38,7 @@ struct DepthSpawns {
 
   static void updateIncumbent(const Node & node, const Bound & bnd) {
     auto reg = Registry<Space, Node, Bound>::gReg;
-    // Should we force this local update for performance?
+    // TODO: Should we force this local update for performance?
     //reg->updateRegistryBound(bnd)
     hpx::lcos::broadcast<UpdateRegistryBoundAct<Space, Node, Bound> >(
         hpx::find_all_localities(), bnd);
@@ -284,6 +284,7 @@ struct DepthSpawns {
           hpx::find_all_localities(), foundId));
       createTask(1, root, true);
       foundFut.get(); // Allows early termination
+      // TODO: need to make sure we tidy up the schedulers before exiting (create a root tasks function as in the original code!)
     } else {
       createTask(1, root).get();
     }

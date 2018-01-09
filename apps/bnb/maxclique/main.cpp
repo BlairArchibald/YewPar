@@ -274,12 +274,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   } else if (skeletonType == "dist") {
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.spawnDepth = spawnDepth;
-    sol = YewPar::Skeletons::DepthSpawns<GenNode,
-                                 YewPar::Skeletons::API::BnB,
-                                 YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                 YewPar::Skeletons::API::PruneLevel
-                                 >
-          ::search(graph, root, searchParameters);
+    sol = dist_skel::search(graph, root, searchParameters);
   } else if (skeletonType == "seq-decision") {
     auto decisionBound = opts["decisionBound"].as<int>();
     YewPar::Skeletons::API::Params<int> searchParameters;
@@ -296,13 +291,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.expectedObjective = decisionBound;
     searchParameters.spawnDepth = spawnDepth;
-
-    sol = YewPar::Skeletons::DepthSpawns<GenNode,
-                                 YewPar::Skeletons::API::Decision,
-                                 YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                 YewPar::Skeletons::API::PruneLevel
-                                 >
-          ::search(graph, root, searchParameters);
+    sol = dist_dec_skel::search(graph, root, searchParameters);
   }
   // if (skeletonType == "ordered") {
   //   sol = skeletons::BnB::Ordered::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
