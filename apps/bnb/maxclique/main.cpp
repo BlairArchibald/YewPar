@@ -218,13 +218,13 @@ using dist_skel = YewPar::Skeletons::DepthSpawns<GenNode,
                                      YewPar::Skeletons::API::BnB,
                                      YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                      YewPar::Skeletons::API::PruneLevel>;
-HPX_ACTION_USES_LARGE_STACK(dist_skel::SubtreeTask);
+HPX_ACTION_USES_HUGE_STACK(dist_skel::SubtreeTask);
 
 using dist_dec_skel = YewPar::Skeletons::DepthSpawns<GenNode,
                                                  YewPar::Skeletons::API::Decision,
                                                  YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                                  YewPar::Skeletons::API::PruneLevel>;
-HPX_ACTION_USES_LARGE_STACK(dist_dec_skel::SubtreeTask);
+HPX_ACTION_USES_HUGE_STACK(dist_dec_skel::SubtreeTask);
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto inputFile = opts["input-file"].as<std::string>();
