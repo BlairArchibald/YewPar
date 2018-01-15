@@ -78,7 +78,7 @@ class Workpool : public Policy {
     std::unique_lock<mutex_t> l(mtx);
     distributed_workqueues = workqueues;
     distributed_workqueues.erase(
-        std::remove_if(distributed_workqueues.begin(), distributed_workqueues.end(), util::isColocated),
+        std::remove_if(distributed_workqueues.begin(), distributed_workqueues.end(), YewPar::util::isColocated),
         distributed_workqueues.end());
   }
 

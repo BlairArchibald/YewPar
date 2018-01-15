@@ -5,9 +5,10 @@
 #include <memory>
 #include <chrono>
 
-#include "enumerate/skeletons.hpp"
+//#include "enumerate/skeletons.hpp"
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
+#include "skeletons/StackStealing.hpp"
 #include "util/func.hpp"
 #include "util/NodeGenerator.hpp"
 
@@ -39,9 +40,12 @@ NodeGen generateChildren(const Empty & space, const std::uint64_t & n) {
 
 typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
 
-using cFunc = skeletons::Enum::DistCount<Empty, std::uint64_t, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_DEPTH> >::ChildTask;
-using solType = std::uint64_t;
-REGISTER_SEARCHMANAGER(solType, cFunc)
+using ss_skel = YewPar::Skeletons::StackStealing<NodeGen,
+                                                 YewPar::Skeletons::API::CountNodes,
+                                                 YewPar::Skeletons::API::DepthBounded>;
+using ntype = std::uint64_t;
+using cfunc  = ss_skel::SubTreeTask;
+REGISTER_SEARCHMANAGER(ntype, cfunc);
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
@@ -66,11 +70,14 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                     YewPar::Skeletons::API::CountNodes,
                                     YewPar::Skeletons::API::DepthBounded>
              ::search(Empty(), maxDepth - 1, searchParameters);
+  } else if (skeleton == "genstack"){
+    YewPar::Skeletons::API::Params<> searchParameters;
+    searchParameters.maxDepth   = maxDepth;
+    counts = ss_skel::search(Empty(), maxDepth - 1, searchParameters);
   }
   // if (skeleton == "seq") {
   //   counts = skeletons::Enum::Count<Empty, std::uint64_t, genChildren_func>::search(maxDepth, Empty(), maxDepth - 1);
   // }
-  // else if (skeleton == "genstack"){
   //   counts = skeletons::Enum::DistCount<Empty, std::uint64_t, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_DEPTH> >::count(maxDepth, Empty(), maxDepth - 1);
   // }
 

@@ -160,7 +160,7 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
     std::lock_guard<MutexT> l(mtx);
     distributedSearchManagers = distributedSearchMgrs;
     distributedSearchManagers.erase(
-        std::remove_if(distributedSearchManagers.begin(), distributedSearchManagers.end(), util::isColocated),
+        std::remove_if(distributedSearchManagers.begin(), distributedSearchManagers.end(), YewPar::util::isColocated),
         distributedSearchManagers.end());
   }
   HPX_DEFINE_COMPONENT_ACTION(SearchManager, registerDistributedManagers);

@@ -28,6 +28,7 @@
 
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
+#include "skeletons/StackStealing.hpp"
 
 #include "util/func.hpp"
 #include "util/NodeGenerator.hpp"
@@ -142,7 +143,7 @@ struct GenNode : YewPar::NodeGenerator<MCNode, BitGraph<NWORDS> > {
   std::array<unsigned, NWORDS * bits_per_word> p_order;
   std::array<unsigned, NWORDS * bits_per_word> colourClass;
 
-  const BitGraph<NWORDS> & graph;
+  std::reference_wrapper<const BitGraph<NWORDS> > graph;
 
   MCSol childSol;
   int childBnd;
@@ -150,7 +151,7 @@ struct GenNode : YewPar::NodeGenerator<MCNode, BitGraph<NWORDS> > {
 
   int v;
 
-  GenNode(const BitGraph<NWORDS> & graph, const MCNode & n) : graph(graph) {
+  GenNode(const BitGraph<NWORDS> & graph, const MCNode & n) : graph(std::cref(graph)) {
     colour_class_order(graph, n.remaining, p_order, colourClass);
     childSol = n.sol;
     childBnd = n.size + 1;
@@ -166,7 +167,7 @@ struct GenNode : YewPar::NodeGenerator<MCNode, BitGraph<NWORDS> > {
     sol.colours = colourClass[v] - 1;
 
     auto cands = p;
-    graph.intersect_with_row(p_order[v], cands);
+    graph.get().intersect_with_row(p_order[v], cands);
 
     // Side effectful function update
     p.unset(p_order[v]);
@@ -188,7 +189,7 @@ struct GenNode : YewPar::NodeGenerator<MCNode, BitGraph<NWORDS> > {
       cands.unset(p_order[i]);
     }
 
-    graph.intersect_with_row(p_order[pos], cands);
+    graph.get().intersect_with_row(p_order[pos], cands);
 
     return {sol, childBnd, cands};
   }
@@ -226,6 +227,13 @@ using dist_dec_skel = YewPar::Skeletons::DepthSpawns<GenNode,
                                                  YewPar::Skeletons::API::PruneLevel>;
 HPX_ACTION_USES_HUGE_STACK(dist_dec_skel::SubtreeTask);
 
+using ss_skel = YewPar::Skeletons::StackStealing<GenNode,
+                                                 YewPar::Skeletons::API::BnB,
+                                                 YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                                 YewPar::Skeletons::API::PruneLevel>;
+using cfunc  = ss_skel::SubTreeTask;
+REGISTER_SEARCHMANAGER(MCNode, cfunc);
+
 int hpx_main(boost::program_options::variables_map & opts) {
   auto inputFile = opts["input-file"].as<std::string>();
   if (inputFile.empty()) {
@@ -233,7 +241,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
-  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision", "dist-decision", "dist-recompute", "ordered", "indexed"};
+  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision", "dist-decision", "dist-recompute", "ordered", "indexed", "stacksteal"};
 
   auto skeletonType = opts["skeleton-type"].as<std::string>();
   auto found = std::find(std::begin(skeletonTypes), std::end(skeletonTypes), skeletonType);
@@ -292,6 +300,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.expectedObjective = decisionBound;
     searchParameters.spawnDepth = spawnDepth;
     sol = dist_dec_skel::search(graph, root, searchParameters);
+  } else if (skeletonType == "stacksteal") {
+    sol = ss_skel::search(graph, root);
   }
   // if (skeletonType == "ordered") {
   //   sol = skeletons::BnB::Ordered::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,

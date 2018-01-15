@@ -27,6 +27,8 @@ DEF_PRESENT_PARAMETER(DepthBounded, DepthBounded_)
 
 // Bounding/Pruning
 BOOST_PARAMETER_TEMPLATE_KEYWORD(BoundFunction)
+BOOST_PARAMETER_TEMPLATE_KEYWORD(MaxStackDepth)
+
 DEF_PRESENT_PARAMETER(PruneLevel, PruneLevel_)
 
 // Signature, everything is optional since the generators are explicitly passed as arg 1 on each skeleton
@@ -45,6 +47,10 @@ struct Params {
 
   // Depth Spawns
   unsigned spawnDepth = 1;
+
+  // Stack Steals
+  // Should we steal all remaining nodes at the highest depth or just one?
+  bool stealAll = false;
 
   // Needed to push to registries on all nodes
   template <class Archive>
