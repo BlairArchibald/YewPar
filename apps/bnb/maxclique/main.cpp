@@ -215,17 +215,6 @@ REGISTER_INCUMBENT(MCNode);
 // using indexedFunc = skeletons::BnB::Indexed::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
 // using pathType = std::vector<unsigned>;
 // REGISTER_SEARCHMANAGER(pathType, indexedFunc)
-using dist_skel = YewPar::Skeletons::DepthSpawns<GenNode,
-                                     YewPar::Skeletons::API::BnB,
-                                     YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                     YewPar::Skeletons::API::PruneLevel>;
-HPX_ACTION_USES_HUGE_STACK(dist_skel::SubtreeTask);
-
-using dist_dec_skel = YewPar::Skeletons::DepthSpawns<GenNode,
-                                                 YewPar::Skeletons::API::Decision,
-                                                 YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                                 YewPar::Skeletons::API::PruneLevel>;
-HPX_ACTION_USES_HUGE_STACK(dist_dec_skel::SubtreeTask);
 
 using ss_skel = YewPar::Skeletons::StackStealing<GenNode,
                                                  YewPar::Skeletons::API::BnB,
@@ -282,7 +271,11 @@ int hpx_main(boost::program_options::variables_map & opts) {
   } else if (skeletonType == "dist") {
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.spawnDepth = spawnDepth;
-    sol = dist_skel::search(graph, root, searchParameters);
+    sol = YewPar::Skeletons::DepthSpawns<GenNode,
+                                         YewPar::Skeletons::API::BnB,
+                                         YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                         YewPar::Skeletons::API::PruneLevel>
+          ::search(graph, root, searchParameters);
   } else if (skeletonType == "seq-decision") {
     auto decisionBound = opts["decisionBound"].as<int>();
     YewPar::Skeletons::API::Params<int> searchParameters;
@@ -299,7 +292,11 @@ int hpx_main(boost::program_options::variables_map & opts) {
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.expectedObjective = decisionBound;
     searchParameters.spawnDepth = spawnDepth;
-    sol = dist_dec_skel::search(graph, root, searchParameters);
+    sol = YewPar::Skeletons::DepthSpawns<GenNode,
+                                         YewPar::Skeletons::API::Decision,
+                                         YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                         YewPar::Skeletons::API::PruneLevel>
+          ::search(graph, root, searchParameters);
   } else if (skeletonType == "stacksteal") {
     sol = ss_skel::search(graph, root);
   }

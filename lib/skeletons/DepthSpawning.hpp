@@ -292,4 +292,18 @@ struct DepthSpawns {
 
 }}
 
+namespace hpx { namespace traits {
+
+namespace detail {
+template <typename ...Args>
+struct subTaskDepthSpawning : YewPar::Skeletons::DepthSpawns<Args...>::SubTreeTask {};
+}
+
+template <typename ...Args>
+struct action_stacksize<detail::subTaskDepthSpawning<Args...> > {
+  enum { value = threads::thread_stacksize_huge };
+};
+
+}}
+
 #endif
