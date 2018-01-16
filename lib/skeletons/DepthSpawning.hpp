@@ -19,6 +19,13 @@
 
 namespace YewPar { namespace Skeletons {
 
+namespace DepthSpawns_ {
+
+template <typename Generator, typename ...Args>
+struct SubtreeTask;
+
+}
+
 // This skeleton allows spawning all tasks into a workqueue based policy based on some depth limit
 // TODO: Not sure on the name for this
 template <typename Generator, typename ...Args>
@@ -215,18 +222,13 @@ struct DepthSpawns {
         }, std::move(childFutures)));
   }
 
-  struct SubtreeTask : hpx::actions::make_action<
-    decltype(&DepthSpawns<Generator, Args...>::subtreeTask),
-    &DepthSpawns<Generator, Args...>::subtreeTask,
-    SubtreeTask>::type {};
-
   static hpx::future<void> createTask(const unsigned childDepth,
                                       const Node & taskRoot) {
     hpx::lcos::promise<void> prom;
     auto pfut = prom.get_future();
     auto pid  = prom.get_id();
 
-    SubtreeTask t;
+    DepthSpawns_::SubtreeTask<Generator, Args...> t;
     hpx::util::function<void(hpx::naming::id_type)> task;
     task = hpx::util::bind(t, hpx::util::placeholders::_1, taskRoot, childDepth, pid);
 
@@ -290,17 +292,22 @@ struct DepthSpawns {
   }
 };
 
+namespace DepthSpawns_ {
+
+template <typename Generator, typename ...Args>
+struct SubtreeTask : hpx::actions::make_action<
+  decltype(&DepthSpawns<Generator, Args...>::subtreeTask),
+  &DepthSpawns<Generator, Args...>::subtreeTask,
+  SubtreeTask<Generator, Args...>>::type {};
+
+}
+
 }}
 
 namespace hpx { namespace traits {
 
-namespace detail {
-template <typename ...Args>
-struct subTaskDepthSpawning : YewPar::Skeletons::DepthSpawns<Args...>::SubTreeTask {};
-}
-
-template <typename ...Args>
-struct action_stacksize<detail::subTaskDepthSpawning<Args...> > {
+template <typename Generator, typename ...Args>
+struct action_stacksize<YewPar::Skeletons::DepthSpawns_::SubtreeTask<Generator, Args...> > {
   enum { value = threads::thread_stacksize_huge };
 };
 
