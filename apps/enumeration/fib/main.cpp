@@ -1,15 +1,12 @@
-#include <hpx/hpx.hpp>
 #include <hpx/hpx_init.hpp>
 
 #include <vector>
 #include <memory>
 #include <chrono>
 
-//#include "enumerate/skeletons.hpp"
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
 #include "skeletons/StackStealing.hpp"
-#include "util/func.hpp"
 #include "util/NodeGenerator.hpp"
 
 // Fib doesn't have a space
@@ -37,8 +34,6 @@ NodeGen generateChildren(const Empty & space, const std::uint64_t & n) {
 }
 
 #define MAX_DEPTH 50
-
-typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
 
 using ss_skel = YewPar::Skeletons::StackStealing<NodeGen,
                                                  YewPar::Skeletons::API::CountNodes,
@@ -75,11 +70,6 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.maxDepth   = maxDepth;
     counts = ss_skel::search(Empty(), maxDepth - 1, searchParameters);
   }
-  // if (skeleton == "seq") {
-  //   counts = skeletons::Enum::Count<Empty, std::uint64_t, genChildren_func>::search(maxDepth, Empty(), maxDepth - 1);
-  // }
-  //   counts = skeletons::Enum::DistCount<Empty, std::uint64_t, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_DEPTH> >::count(maxDepth, Empty(), maxDepth - 1);
-  // }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
                       (std::chrono::steady_clock::now() - start_time);

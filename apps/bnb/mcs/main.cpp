@@ -7,9 +7,7 @@
 #include <memory>
 #include <typeinfo>
 
-#include <hpx/hpx.hpp>
 #include <hpx/hpx_init.hpp>
-#include <hpx/util/tuple.hpp>
 
 #include <boost/serialization/access.hpp>
 
@@ -17,10 +15,9 @@
 #include "BitGraph.hpp"
 #include "BitSet.hpp"
 
-#include "bnb/bnb-dist.hpp"
-
-#include "util/func.hpp"
-#include "util/NodeGenerator.hpp"
+//#include "skeletons/Seq.hpp"
+#include "skeletons/DepthSpawning.hpp"
+//#include "skeletons/StackStealing.hpp"
 
 // Number of Words to use in our bitset representation
 // Possible to specify at compile to to handler bigger graphs if required
@@ -148,13 +145,31 @@ struct MCSol {
   }
 };
 
-using MCNode = hpx::util::tuple<MCSol, int, BitSet<NWORDS> >;
+struct MCNode {
+  friend class boost::serialization::access;
 
-struct GenNode : YewPar::BnBNodeGenerator<MCSol, int, BitSet<NWORDS> > {
+  MCSol sol;
+  int size;
+  BitSet<NWORDS> remaining;
+
+  int getObj() const {
+    return size;
+  }
+
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & sol;
+    ar & size;
+    ar & remaining;
+  }
+
+};
+
+struct GenNode : YewPar::NodeGenerator<MCNode, BitGraph<NWORDS> > {
   std::array<unsigned, NWORDS * bits_per_word> p_order;
   std::array<unsigned, NWORDS * bits_per_word> colourClass;
 
-  const BitGraph<NWORDS> & graph;
+  std::reference_wrapper<const BitGraph<NWORDS> > graph;
 
   MCSol childSol;
   int childBnd;
@@ -162,15 +177,11 @@ struct GenNode : YewPar::BnBNodeGenerator<MCSol, int, BitSet<NWORDS> > {
 
   int v;
 
-  GenNode(const BitGraph<NWORDS> & graph,
-          const MCNode & n,
-          const std::array<unsigned, NWORDS * bits_per_word> p_order,
-          const std::array<unsigned, NWORDS * bits_per_word> colourClass)
-      : graph(graph), p_order(p_order), colourClass(colourClass) {
-
-    childSol = hpx::util::get<0>(n);
-    childBnd = hpx::util::get<1>(n) + 1;
-    p = hpx::util::get<2>(n);
+  GenNode(const BitGraph<NWORDS> & graph, const MCNode & n) : graph(std::cref(graph)) {
+    colour_class_order(graph, n.remaining, p_order, colourClass);
+    childSol = n.sol;
+    childBnd = n.size + 1;
+    p = n.remaining;
     numChildren = p.popcount();
     v = numChildren - 1;
   }
@@ -182,41 +193,32 @@ struct GenNode : YewPar::BnBNodeGenerator<MCSol, int, BitSet<NWORDS> > {
     sol.colours = colourClass[v] - 1;
 
     auto cands = p;
-    graph.intersect_with_row(p_order[v], cands);
+    graph.get().intersect_with_row(p_order[v], cands);
 
     // Side effectful function update
     p.unset(p_order[v]);
     v--;
 
-    return hpx::util::make_tuple(std::move(sol), childBnd, std::move(cands));
+    return {sol, childBnd, cands};
   }
 };
 
-GenNode
-generateChoices(const BitGraph<NWORDS> & graph, const MCNode & n) {
-  std::array<unsigned, NWORDS * bits_per_word> p_order;
-  std::array<unsigned, NWORDS * bits_per_word> colourClass;
-  auto p = hpx::util::get<2>(n);
-
-  colour_class_order(graph, p, p_order, colourClass);
-
-  GenNode g(graph, n, std::move(p_order), std::move(colourClass));
-  return g;
-}
 
 int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
-  return hpx::util::get<1>(n) + hpx::util::get<0>(n).colours;
+  return n.size + n.sol.colours;
 }
 
-typedef func<decltype(&generateChoices), &generateChoices> generateChoices_func;
 typedef func<decltype(&upperBound), &upperBound> upperBound_func;
 
-using dist_act = skeletons::BnB::Dist::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
-HPX_ACTION_USES_LARGE_STACK(dist_act);
 
-typedef BitSet<NWORDS> bitsetType;
-REGISTER_INCUMBENT(MCSol, int, bitsetType);
-REGISTER_REGISTRY(BitGraph<NWORDS>, MCSol, int, bitsetType);
+REGISTER_INCUMBENT(MCNode);
+
+// using ss_skel = YewPar::Skeletons::StackStealing<GenNode,
+//                                                  YewPar::Skeletons::API::BnB,
+//                                                  YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+//                                                  YewPar::Skeletons::API::PruneLevel>;
+// using cfunc  = ss_skel::SubTreeTask;
+// REGISTER_SEARCHMANAGER(MCNode, cfunc);
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto patternF = opts["pattern-file"].as<std::string>();
@@ -247,17 +249,21 @@ int hpx_main(boost::program_options::variables_map & opts) {
   BitSet<NWORDS> cands;
   cands.resize(graph.size());
   cands.set_all();
-  auto root = hpx::util::make_tuple(mcsol, 0, cands);
+  MCNode root = {mcsol, 0, cands};
 
-  auto result = skeletons::BnB::Dist::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                                        generateChoices_func, upperBound_func, true>
-                ::search(spawnDepth, graph, root);
+  YewPar::Skeletons::API::Params<int> searchParameters;
+  searchParameters.spawnDepth = spawnDepth;
+  auto result = YewPar::Skeletons::DepthSpawns<GenNode,
+                                               YewPar::Skeletons::API::BnB,
+                                               YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                               YewPar::Skeletons::API::PruneLevel>
+        ::search(graph, root, searchParameters);
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
     (std::chrono::steady_clock::now() - start_time);
 
   std::map<int, int> isomorphism;
-  auto sol = hpx::util::get<0>(result);
+  auto sol = result.sol;
   for (auto const & v : sol.members) {
     isomorphism.insert(unproduct(prod.first, order[v]));
   }
@@ -317,8 +323,6 @@ int main (int argc, char* argv[]) {
     ("unlabelled", "Make the graph unlabelled")
     ("no-edge-labels", "Get rid of edge labels, but keep vertex labels")
     ("undirected", "Make the graph undirected");
-
-  //hpx::register_startup_function(&workstealing::registerPerformanceCounters);
 
   return hpx::init(desc_commandline, argc, argv);
 }

@@ -1,10 +1,8 @@
 /* Code by Florent Hivert: https://www.lri.fr/~hivert/ */
 
-#include <hpx/hpx.hpp>
 #include <hpx/hpx_init.hpp>
 
-#include "enumerate/skeletons.hpp"
-#include "util/func.hpp"
+#include "skeletons/DepthSpawning.hpp"
 
 typedef unsigned char uchar;
 typedef unsigned short int usint;
@@ -73,11 +71,11 @@ SemiGroup::SemiGroup(const SemiGroup& S,uchar x){
 // Numerical Semigroups don't have a space
 struct Empty {};
 
-struct NodeGen : YewPar::NodeGenerator<SemiGroup> {
+struct NodeGen : YewPar::NodeGenerator<SemiGroup, Empty> {
   const SemiGroup & group;
   unsigned it;
 
-  NodeGen(const SemiGroup & s) : group(s) {
+  NodeGen(const Empty & space, const SemiGroup & s) : group(s) {
     it = group.c;
 
     // TODO: Factor into SemiGroup functionality
@@ -102,25 +100,18 @@ struct NodeGen : YewPar::NodeGenerator<SemiGroup> {
   }
 };
 
-NodeGen generateChildren(const Empty & space, const SemiGroup & s) {
-  return NodeGen(s);
-}
-
-typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
-
-namespace hpx { namespace traits {
-  template <>
-  struct action_stacksize<skeletons::Enum::DistCount<Empty, SemiGroup, genChildren_func>::ChildTask> {
-    enum { value = threads::thread_stacksize_large };
-  };
-}}
-
-
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto maxDepth   = opts["until-depth"].as<unsigned>();
 
-  auto counts = skeletons::Enum::DistCount<Empty, SemiGroup, genChildren_func>::count(spawnDepth, maxDepth, Empty(), SemiGroup());
+  YewPar::Skeletons::API::Params<> searchParameters;
+  searchParameters.maxDepth   = maxDepth;
+  searchParameters.spawnDepth = spawnDepth;
+
+  auto counts = YewPar::Skeletons::DepthSpawns<NodeGen,
+                                               YewPar::Skeletons::API::CountNodes,
+                                               YewPar::Skeletons::API::DepthBounded>
+                ::search(Empty(), SemiGroup(), searchParameters);
 
   std::cout << "Results Table: " << std::endl;
   for (auto i = 0; i <= maxDepth; ++i) {

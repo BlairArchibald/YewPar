@@ -7,7 +7,6 @@
 #include <memory>
 #include <typeinfo>
 
-#include <hpx/hpx.hpp>
 #include <hpx/hpx_init.hpp>
 
 #include <boost/serialization/access.hpp>
@@ -15,16 +14,6 @@
 #include "DimacsParser.hpp"
 #include "BitGraph.hpp"
 #include "BitSet.hpp"
-
-// #include "bnb/bnb-seq.hpp"
-// #include "bnb/bnb-par.hpp"
-//#include "bnb/bnb-dist.hpp"
-// #include "bnb/bnb-decision-seq.hpp"
-// #include "bnb/bnb-decision-par.hpp"
-// #include "bnb/bnb-decision-dist.hpp"
-// #include "bnb/bnb-recompute.hpp"
-// #include "bnb/bnb-indexed.hpp"
-// #include "bnb/ordered.hpp"
 
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
@@ -201,20 +190,7 @@ int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
 
 typedef func<decltype(&upperBound), &upperBound> upperBound_func;
 
-// // We want large stacks for everything
-// using dist_act = skeletons::BnB::Dist::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
-// using decision_dist_act = skeletons::BnB::Dist::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
-// HPX_ACTION_USES_LARGE_STACK(decision_dist_act);
-// using recompute_act = skeletons::BnB::DistRecompute::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
-// HPX_ACTION_USES_LARGE_STACK(recompute_act);
-
-//typedef BitSet<NWORDS> bitsetType;
 REGISTER_INCUMBENT(MCNode);
-//REGISTER_REGISTRY(BitGraph<NWORDS>, MCSol, int, bitsetType);
-
-// using indexedFunc = skeletons::BnB::Indexed::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
-// using pathType = std::vector<unsigned>;
-// REGISTER_SEARCHMANAGER(pathType, indexedFunc)
 
 using ss_skel = YewPar::Skeletons::StackStealing<GenNode,
                                                  YewPar::Skeletons::API::BnB,
@@ -305,16 +281,6 @@ int hpx_main(boost::program_options::variables_map & opts) {
   //                                                    generateChoices_func, upperBound_func, true>
   //         ::search(spawnDepth, graph, root);
   // }
-  // if (skeletonType == "dist-recompute") {
-  //   sol = skeletons::BnB::DistRecompute::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-  //                                                          generateChoices_func, upperBound_func, true>
-  //         ::search(spawnDepth, graph, root);
-  // }
-  // if (skeletonType == "indexed") {
-  //   sol = skeletons::BnB::Indexed::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-  //                                                    generateChoices_func, upperBound_func, true>
-  //         ::search(graph, root);
-  // }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
     (std::chrono::steady_clock::now() - start_time);
@@ -346,9 +312,6 @@ int main (int argc, char* argv[]) {
     boost::program_options::value<int>()->default_value(0),
     "For Decision Skeletons. Size of the clique to search for"
     );
-
-  // hpx::register_startup_function(&workstealing::registerPerformanceCounters);
-  // hpx::register_startup_function(&workstealing::priority::registerPerformanceCounters);
 
   return hpx::init(desc_commandline, argc, argv);
 }
