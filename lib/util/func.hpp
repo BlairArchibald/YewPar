@@ -1,6 +1,8 @@
 #ifndef YEWPAR_FUNCVIEW_HPP
 #define YEWPAR_FUNCVIEW_HPP
 
+// TODO: Put into YewPar namespace
+
 // Simple wrapping of function pointers to pass as (local only) template parameters
 // HPX "actions" should be used if distributed execution is required
 template <typename Func, Func F>
@@ -19,5 +21,8 @@ struct func<Ret(*)(Args...), F> {
     return F;
   }
 };
+
+static bool null__() {};
+typedef func<decltype(&null__), &null__> nullFn__;
 
 #endif

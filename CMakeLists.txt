@@ -1,5 +1,5 @@
 # Require a recent version of cmake
-cmake_minimum_required(VERSION 3.4.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.8.0 FATAL_ERROR)
 
 # This project is C++ based.
 project(YewPar CXX)
@@ -7,8 +7,7 @@ project(YewPar CXX)
 # Instruct cmake to find the HPX settings
 find_package(HPX)
 
-# We need intrinsics for some apps so make sure they are enabled
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
@@ -18,8 +17,8 @@ set(YEWPAR_BUILD_DNC_APPS "OFF" CACHE BOOL "Build Divide and Conquer apps for Ye
 set(YEWPAR_BUILD_BNB_APPS "ON" CACHE BOOL "Build Branch and Bound apps for YewPar")
 set(YEWPAR_BUILD_ENUMERATION_APPS "ON" CACHE BOOL "Build Enumeration apps for YewPar")
 set(YEWPAR_BUILD_TEST_APPS "ON" CACHE BOOL "Create tests for YewPar apps")
-set(YEWPAR_TEST_DATA_DIR "${PROJECT_SOURCE_DIR}/test/" CACHE FILEPATH "Test data directory for YewPar apps")
 
+set(YEWPAR_TEST_DATA_DIR "${PROJECT_SOURCE_DIR}/test/" CACHE FILEPATH "Test data directory for YewPar apps")
 
 include_directories(lib)
 

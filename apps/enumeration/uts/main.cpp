@@ -1,13 +1,12 @@
-#include <hpx/hpx.hpp>
 #include <hpx/hpx_init.hpp>
-
-#include "enumerate/skeletons.hpp"
-
-#include "util/func.hpp"
 
 // We just use the default RNG for simplicity
 #define BRG_RNG
 #include "uts-rng/rng.h"
+
+#include "skeletons/Seq.hpp"
+#include "skeletons/DepthSpawning.hpp"
+#include "skeletons/StackStealing.hpp"
 
 enum GeometricType {
   LINEAR, CYCLIC, FIXED, EXPDEC
@@ -53,13 +52,11 @@ struct UTSNode {
   }
 };
 
-
-
 template <TreeType t>
 struct NodeGen;
 
 template <>
-struct NodeGen<TreeType::BINOMIAL> : YewPar::NodeGenerator<UTSNode> {
+struct NodeGen<TreeType::BINOMIAL> : YewPar::NodeGenerator<UTSNode, UTSState> {
   UTSNode parent;
   UTSState params;
   int i = 0;
@@ -98,7 +95,7 @@ struct NodeGen<TreeType::BINOMIAL> : YewPar::NodeGenerator<UTSNode> {
 };
 
 template <>
-struct NodeGen<TreeType::GEOMETRIC> : YewPar::NodeGenerator<UTSNode> {
+struct NodeGen<TreeType::GEOMETRIC> : YewPar::NodeGenerator<UTSNode, UTSState> {
   UTSNode parent;
   UTSState params;
   int i = 0;
@@ -156,25 +153,28 @@ struct NodeGen<TreeType::GEOMETRIC> : YewPar::NodeGenerator<UTSNode> {
   }
 };
 
-template <TreeType T>
-auto generateChildren(const UTSState & space, const UTSNode & n) {
-  return NodeGen<T>(space, n);
-}
-
-typedef func<decltype(&generateChildren<TreeType::BINOMIAL>), &generateChildren<TreeType::BINOMIAL> > genChildrenBinomial_func;
-typedef func<decltype(&generateChildren<TreeType::GEOMETRIC>), &generateChildren<TreeType::GEOMETRIC> > genChildrenGeometric_func;
-
 #ifndef UTS_MAX_TREE_DEPTH
 #define UTS_MAX_TREE_DEPTH 20000
 #endif
 
-using bFunc = skeletons::Enum::DistCount<UTSState, UTSNode, genChildrenBinomial_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, UTS_MAX_TREE_DEPTH> >::ChildTask;
-REGISTER_SEARCHMANAGER(UTSNode, bFunc)
+using ss_skel_b = YewPar::Skeletons::StackStealing<NodeGen<TreeType::BINOMIAL>,
+                                                   YewPar::Skeletons::API::CountNodes,
+                                                   YewPar::Skeletons::API::DepthBounded,
+                                                   YewPar::Skeletons::API::MaxStackDepth<
+                                                     std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >;
 
-using gFunc = skeletons::Enum::DistCount<UTSState, UTSNode, genChildrenGeometric_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, UTS_MAX_TREE_DEPTH> >::ChildTask;
+using ss_skel_g = YewPar::Skeletons::StackStealing<NodeGen<TreeType::GEOMETRIC>,
+                                                   YewPar::Skeletons::API::CountNodes,
+                                                   YewPar::Skeletons::API::DepthBounded,
+                                                           YewPar::Skeletons::API::MaxStackDepth<
+                                                     std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >;
+
+using bFunc = ss_skel_b::SubTreeTask;
+using gFunc = ss_skel_g::SubTreeTask;
+REGISTER_SEARCHMANAGER(UTSNode, bFunc)
 REGISTER_SEARCHMANAGER(UTSNode, gFunc)
 
-std::vector<std::string> treeTypes = {"binomial"};
+std::vector<std::string> treeTypes = {"binomial", "geometric"};
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
@@ -193,23 +193,49 @@ int hpx_main(boost::program_options::variables_map & opts) {
   std::vector<std::uint64_t> counts(maxDepth);
   if (treeType == "binomial") {
     if (skeleton == "seq") {
-      counts = skeletons::Enum::Count<UTSState, UTSNode, genChildrenBinomial_func>::search(maxDepth, params, root);
+      YewPar::Skeletons::API::Params<> searchParameters;
+      searchParameters.maxDepth = maxDepth;
+      counts = YewPar::Skeletons::Seq<NodeGen<TreeType::BINOMIAL>,
+                                      YewPar::Skeletons::API::CountNodes,
+                                      YewPar::Skeletons::API::DepthBounded>
+               ::search(params, root, searchParameters);
     }
     if (skeleton == "dist") {
-      counts = skeletons::Enum::DistCount<UTSState, UTSNode, genChildrenBinomial_func>::count(spawnDepth, maxDepth, params, root);
+      YewPar::Skeletons::API::Params<> searchParameters;
+      searchParameters.maxDepth   = maxDepth;
+      searchParameters.spawnDepth = spawnDepth;
+      counts = YewPar::Skeletons::DepthSpawns<NodeGen<TreeType::BINOMIAL>,
+                                              YewPar::Skeletons::API::CountNodes,
+                                              YewPar::Skeletons::API::DepthBounded>
+               ::search(params, root, searchParameters);
     }
     else if (skeleton == "genstack") {
-      counts = skeletons::Enum::DistCount<UTSState, UTSNode, genChildrenBinomial_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, UTS_MAX_TREE_DEPTH> >::count(maxDepth, params, root);
+      YewPar::Skeletons::API::Params<> searchParameters;
+      searchParameters.maxDepth   = maxDepth;
+      counts = ss_skel_b::search(params, root, searchParameters);
     }
   } else if (treeType == "geometric"){
     if (skeleton == "seq") {
-      counts = skeletons::Enum::Count<UTSState, UTSNode, genChildrenGeometric_func>::search(maxDepth, params, root);
+      YewPar::Skeletons::API::Params<> searchParameters;
+      searchParameters.maxDepth = maxDepth;
+      counts = YewPar::Skeletons::Seq<NodeGen<TreeType::GEOMETRIC>,
+                                      YewPar::Skeletons::API::CountNodes,
+                                      YewPar::Skeletons::API::DepthBounded>
+               ::search(params, root, searchParameters);
     }
     if (skeleton == "dist") {
-      counts = skeletons::Enum::DistCount<UTSState, UTSNode, genChildrenGeometric_func>::count(spawnDepth, maxDepth, params, root);
+      YewPar::Skeletons::API::Params<> searchParameters;
+      searchParameters.maxDepth   = maxDepth;
+      searchParameters.spawnDepth = spawnDepth;
+      counts = YewPar::Skeletons::DepthSpawns<NodeGen<TreeType::GEOMETRIC>,
+                                              YewPar::Skeletons::API::CountNodes,
+                                              YewPar::Skeletons::API::DepthBounded>
+               ::search(params, root, searchParameters);
     }
     else if (skeleton == "genstack") {
-      counts = skeletons::Enum::DistCount<UTSState, UTSNode, genChildrenGeometric_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, UTS_MAX_TREE_DEPTH> >::count(maxDepth, params, root);
+      YewPar::Skeletons::API::Params<> searchParameters;
+      searchParameters.maxDepth   = maxDepth;
+      counts = ss_skel_g::search(params, root, searchParameters);
     }
   } else {
     std::cout << "Invalid tree type\n";

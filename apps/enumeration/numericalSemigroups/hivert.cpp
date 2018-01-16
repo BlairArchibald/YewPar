@@ -2,27 +2,25 @@
    Link: https://github.com/hivert/NumericMonoid/blob/master/src/Cilk++/monoid.hpp
  */
 
-#include <hpx/hpx.hpp>
 #include <hpx/hpx_init.hpp>
 
 #include <vector>
 #include <chrono>
 
-#include "enumerate/skeletons.hpp"
+#include "skeletons/Seq.hpp"
+#include "skeletons/DepthSpawning.hpp"
+#include "skeletons/StackStealing.hpp"
 
 #include "monoid.hpp"
-#include "util/func.hpp"
 
 // Numerical Semigroups don't have a space
 struct Empty {};
 
-struct NodeGen : YewPar::NodeGenerator<Monoid> {
+struct NodeGen : YewPar::NodeGenerator<Monoid, Empty> {
   Monoid group;
   generator_iter<CHILDREN> it;
 
-  NodeGen() : group(Monoid()), it(generator_iter<CHILDREN>(Monoid())) {}
-
-  NodeGen(const Monoid & s) : group(s), it(generator_iter<CHILDREN>(s)){
+  NodeGen(const Empty &, const Monoid & s) : group(s), it(generator_iter<CHILDREN>(s)){
     this->numChildren = it.count(group);
     it.move_next(group); // Original code skips begin
   }
@@ -34,28 +32,11 @@ struct NodeGen : YewPar::NodeGenerator<Monoid> {
   }
 };
 
-NodeGen generateChildren(const Empty & space, const Monoid & s) {
-  return NodeGen(s);
-}
-
-typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
-
-using cFunc = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS> >::ChildTask;
-using cFuncDeb = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS>, std::integral_constant<bool, true> >::ChildTask;
-REGISTER_SEARCHMANAGER(Monoid, cFunc)
-REGISTER_SEARCHMANAGER(Monoid, cFuncDeb)
-
-using indexedFunc = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::Indexed>::ChildTask;
-using pathType = std::vector<unsigned>;
-REGISTER_SEARCHMANAGER(pathType, indexedFunc)
-
-// Annoying way to get large stack sizes by default (hide this if possible)
-namespace hpx { namespace traits {
-  template <>
-  struct action_stacksize<skeletons::Enum::DistCount<Empty, Monoid, genChildren_func>::ChildTask> {
-    enum { value = threads::thread_stacksize_large };
-  };
-}};
+using ss_skel = YewPar::Skeletons::StackStealing<NodeGen,
+                                                 YewPar::Skeletons::API::CountNodes,
+                                                 YewPar::Skeletons::API::DepthBounded>;
+using cFunc = ss_skel::SubTreeTask;
+REGISTER_SEARCHMANAGER(Monoid, cFunc);
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
@@ -68,23 +49,26 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto start_time = std::chrono::steady_clock::now();
 
-  std::vector<std::uint64_t> counts(maxDepth);
+  std::vector<std::uint64_t> counts;
   if (skeleton == "seq") {
-    counts = skeletons::Enum::Count<Empty, Monoid, genChildren_func>::search(maxDepth, Empty(), root);
-  } else
-  if (skeleton == "seq-stack") {
-    counts = skeletons::Enum::Count<Empty, Monoid, genChildren_func, skeletons::Enum::Stack, std::integral_constant<std::size_t, MAX_GENUS> >::search(maxDepth, Empty(), root);
+    YewPar::Skeletons::API::Params<> searchParameters;
+    searchParameters.maxDepth = maxDepth;
+    counts = YewPar::Skeletons::Seq<NodeGen,
+                                    YewPar::Skeletons::API::CountNodes,
+                                    YewPar::Skeletons::API::DepthBounded>
+             ::search(Empty(), root, searchParameters);
   } else if (skeleton == "dist") {
-    counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func>::count(spawnDepth, maxDepth, Empty(), root);
-  } else if (skeleton == "indexed"){
-    counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::Indexed>::count(maxDepth, Empty(), root);
+    YewPar::Skeletons::API::Params<> searchParameters;
+    searchParameters.maxDepth   = maxDepth;
+    searchParameters.spawnDepth = spawnDepth;
+    counts = YewPar::Skeletons::DepthSpawns<NodeGen,
+                                            YewPar::Skeletons::API::CountNodes,
+                                            YewPar::Skeletons::API::DepthBounded>
+             ::search(Empty(), root, searchParameters);
   } else if (skeleton == "genstack"){
-    auto verbose = opts["verbose"].as<bool>();
-    if (verbose) {
-      counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS>, std::integral_constant<bool, true> >::count(maxDepth, Empty(), root, stealAll);
-    } else {
-      counts = skeletons::Enum::DistCount<Empty, Monoid, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_GENUS> >::count(maxDepth, Empty(), root, stealAll);
-    }
+    YewPar::Skeletons::API::Params<> searchParameters;
+    searchParameters.maxDepth   = maxDepth;
+    counts = ss_skel::search(Empty(), root, searchParameters);
   } else {
     std::cout << "Invalid skeleton type: " << skeleton << std::endl;
     return hpx::finalize();

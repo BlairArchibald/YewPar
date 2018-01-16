@@ -1,6 +1,7 @@
 add_subdirectory(bnb)
 add_subdirectory(enumerate)
 add_subdirectory(workstealing)
+add_subdirectory(skeletons)
 add_subdirectory(util)
 
 add_hpx_library(YewPar
@@ -11,6 +12,7 @@ add_hpx_library(YewPar
   workqueue
   priorityworkqueue
   incumbent
+  Incumbent
   SearchManager
   iostreams
 )

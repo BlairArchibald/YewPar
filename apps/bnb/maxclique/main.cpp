@@ -7,7 +7,6 @@
 #include <memory>
 #include <typeinfo>
 
-#include <hpx/hpx.hpp>
 #include <hpx/hpx_init.hpp>
 
 #include <boost/serialization/access.hpp>
@@ -16,15 +15,9 @@
 #include "BitGraph.hpp"
 #include "BitSet.hpp"
 
-#include "bnb/bnb-seq.hpp"
-#include "bnb/bnb-par.hpp"
-#include "bnb/bnb-dist.hpp"
-#include "bnb/bnb-decision-seq.hpp"
-#include "bnb/bnb-decision-par.hpp"
-#include "bnb/bnb-decision-dist.hpp"
-#include "bnb/bnb-recompute.hpp"
-#include "bnb/bnb-indexed.hpp"
-#include "bnb/ordered.hpp"
+#include "skeletons/Seq.hpp"
+#include "skeletons/DepthSpawning.hpp"
+#include "skeletons/StackStealing.hpp"
 
 #include "util/func.hpp"
 #include "util/NodeGenerator.hpp"
@@ -115,13 +108,31 @@ struct MCSol {
   }
 };
 
-using MCNode = hpx::util::tuple<MCSol, int, BitSet<NWORDS> >;
+struct MCNode {
+  friend class boost::serialization::access;
 
-struct GenNode : YewPar::BnBNodeGenerator<MCSol, int, BitSet<NWORDS> > {
+  MCSol sol;
+  int size;
+  BitSet<NWORDS> remaining;
+
+  int getObj() const {
+    return size;
+  }
+
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & sol;
+    ar & size;
+    ar & remaining;
+  }
+
+};
+
+struct GenNode : YewPar::NodeGenerator<MCNode, BitGraph<NWORDS> > {
   std::array<unsigned, NWORDS * bits_per_word> p_order;
   std::array<unsigned, NWORDS * bits_per_word> colourClass;
 
-  const BitGraph<NWORDS> & graph;
+  std::reference_wrapper<const BitGraph<NWORDS> > graph;
 
   MCSol childSol;
   int childBnd;
@@ -129,15 +140,11 @@ struct GenNode : YewPar::BnBNodeGenerator<MCSol, int, BitSet<NWORDS> > {
 
   int v;
 
-  GenNode(const BitGraph<NWORDS> & graph,
-          const MCNode & n,
-          const std::array<unsigned, NWORDS * bits_per_word> p_order,
-          const std::array<unsigned, NWORDS * bits_per_word> colourClass)
-    : graph(graph), p_order(p_order), colourClass(colourClass) {
-
-    childSol = hpx::util::get<0>(n);
-    childBnd = hpx::util::get<1>(n) + 1;
-    p = hpx::util::get<2>(n);
+  GenNode(const BitGraph<NWORDS> & graph, const MCNode & n) : graph(std::cref(graph)) {
+    colour_class_order(graph, n.remaining, p_order, colourClass);
+    childSol = n.sol;
+    childBnd = n.size + 1;
+    p = n.remaining;
     numChildren = p.popcount();
     v = numChildren - 1;
   }
@@ -149,18 +156,17 @@ struct GenNode : YewPar::BnBNodeGenerator<MCSol, int, BitSet<NWORDS> > {
     sol.colours = colourClass[v] - 1;
 
     auto cands = p;
-    graph.intersect_with_row(p_order[v], cands);
+    graph.get().intersect_with_row(p_order[v], cands);
 
     // Side effectful function update
     p.unset(p_order[v]);
     v--;
 
-    return hpx::util::make_tuple(std::move(sol), childBnd, std::move(cands));
+    return {sol, childBnd, cands};
   }
 
-  MCNode nth(unsigned n) override {
+  MCNode nth(unsigned n) {
     auto pos = v - n;
-
 
     auto sol = childSol;
     sol.members.push_back(p_order[pos]);
@@ -172,46 +178,26 @@ struct GenNode : YewPar::BnBNodeGenerator<MCSol, int, BitSet<NWORDS> > {
       cands.unset(p_order[i]);
     }
 
-    graph.intersect_with_row(p_order[pos], cands);
+    graph.get().intersect_with_row(p_order[pos], cands);
 
-    return hpx::util::make_tuple(std::move(sol), childBnd, std::move(cands));
+    return {sol, childBnd, cands};
   }
 };
 
-GenNode
-generateChoices(const BitGraph<NWORDS> & graph, const MCNode & n) {
-  std::array<unsigned, NWORDS * bits_per_word> p_order;
-  std::array<unsigned, NWORDS * bits_per_word> colourClass;
-  auto p = hpx::util::get<2>(n);
-
-  colour_class_order(graph, p, p_order, colourClass);
-
-  GenNode g(graph, n, std::move(p_order), std::move(colourClass));
-  return g;
-}
-
 int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
-  return hpx::util::get<1>(n) + hpx::util::get<0>(n).colours;
+  return n.size + n.sol.colours;
 }
 
-typedef func<decltype(&generateChoices), &generateChoices> generateChoices_func;
 typedef func<decltype(&upperBound), &upperBound> upperBound_func;
 
-// We want large stacks for everything
-using dist_act = skeletons::BnB::Dist::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
-HPX_ACTION_USES_LARGE_STACK(dist_act);
-using decision_dist_act = skeletons::BnB::Dist::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
-HPX_ACTION_USES_LARGE_STACK(decision_dist_act);
-using recompute_act = skeletons::BnB::DistRecompute::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
-HPX_ACTION_USES_LARGE_STACK(recompute_act);
+REGISTER_INCUMBENT(MCNode);
 
-typedef BitSet<NWORDS> bitsetType;
-REGISTER_INCUMBENT(MCSol, int, bitsetType);
-REGISTER_REGISTRY(BitGraph<NWORDS>, MCSol, int, bitsetType);
-
-using indexedFunc = skeletons::BnB::Indexed::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>::ChildTask;
-using pathType = std::vector<unsigned>;
-REGISTER_SEARCHMANAGER(pathType, indexedFunc)
+using ss_skel = YewPar::Skeletons::StackStealing<GenNode,
+                                                 YewPar::Skeletons::API::BnB,
+                                                 YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                                 YewPar::Skeletons::API::PruneLevel>;
+using cfunc  = ss_skel::SubTreeTask;
+REGISTER_SEARCHMANAGER(MCNode, cfunc);
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto inputFile = opts["input-file"].as<std::string>();
@@ -220,7 +206,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
-  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision", "dist-decision", "dist-recompute", "ordered", "indexed"};
+  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision", "dist-decision", "dist-recompute", "ordered", "indexed", "stacksteal"};
 
   auto skeletonType = opts["skeleton-type"].as<std::string>();
   auto found = std::find(std::begin(skeletonTypes), std::end(skeletonTypes), skeletonType);
@@ -248,67 +234,58 @@ int hpx_main(boost::program_options::variables_map & opts) {
   BitSet<NWORDS> cands;
   cands.resize(graph.size());
   cands.set_all();
-  auto root = hpx::util::make_tuple(mcsol, 0, cands);
+  MCNode root = { mcsol, 0, cands };
 
   auto sol = root;
   if (skeletonType == "seq") {
-    sol = skeletons::BnB::Seq::BranchAndBoundOpt<BitGraph<NWORDS>,
-                                                 MCSol,
-                                                 int,
-                                                 BitSet<NWORDS>,
-                                                 generateChoices_func,
-                                                 upperBound_func,
-                                                 true>
-          ::search (graph, root);
-  }
-  if (skeletonType == "par") {
-    sol = skeletons::BnB::Par::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>
-          ::search(spawnDepth, graph, root);
-  }
-  if (skeletonType == "dist") {
-    sol = skeletons::BnB::Dist::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                       generateChoices_func, upperBound_func, true>
-          ::search(spawnDepth, graph, root);
-  }
-  if (skeletonType == "seq-decision") {
-    auto decisionBound = opts["decisionBound"].as<int>();
-    sol = skeletons::BnB::Seq::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>, generateChoices_func, upperBound_func, true>
-          ::search(graph, root, decisionBound);
-  }
-  if (skeletonType == "par-decision") {
-    auto decisionBound = opts["decisionBound"].as<int>();
-    sol = skeletons::BnB::Par::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                                 generateChoices_func, upperBound_func, true>
-          ::search(spawnDepth, graph, root, decisionBound);
-  }
-  if (skeletonType == "dist-decision") {
-    auto decisionBound = opts["decisionBound"].as<int>();
-    sol = skeletons::BnB::Dist::BranchAndBoundSat<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                                  generateChoices_func, upperBound_func, true>
-          ::search(spawnDepth, graph, root, decisionBound);
-  }
-  if (skeletonType == "ordered") {
-    sol = skeletons::BnB::Ordered::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                                     generateChoices_func, upperBound_func, true>
-          ::search(spawnDepth, graph, root);
-  }
-  if (skeletonType == "dist-recompute") {
-    sol = skeletons::BnB::DistRecompute::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                                           generateChoices_func, upperBound_func, true>
-          ::search(spawnDepth, graph, root);
-  }
-  if (skeletonType == "indexed") {
-    sol = skeletons::BnB::Indexed::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-                                                     generateChoices_func, upperBound_func, true>
+    sol = YewPar::Skeletons::Seq<GenNode,
+                                 YewPar::Skeletons::API::BnB,
+                                 YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                 YewPar::Skeletons::API::PruneLevel
+                                 >
           ::search(graph, root);
+  } else if (skeletonType == "dist") {
+    YewPar::Skeletons::API::Params<int> searchParameters;
+    searchParameters.spawnDepth = spawnDepth;
+    sol = YewPar::Skeletons::DepthSpawns<GenNode,
+                                         YewPar::Skeletons::API::BnB,
+                                         YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                         YewPar::Skeletons::API::PruneLevel>
+          ::search(graph, root, searchParameters);
+  } else if (skeletonType == "seq-decision") {
+    auto decisionBound = opts["decisionBound"].as<int>();
+    YewPar::Skeletons::API::Params<int> searchParameters;
+    searchParameters.expectedObjective = decisionBound;
+
+    sol = YewPar::Skeletons::Seq<GenNode,
+                                 YewPar::Skeletons::API::Decision,
+                                 YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                 YewPar::Skeletons::API::PruneLevel
+                                 >
+          ::search(graph, root, searchParameters);
+  } else if (skeletonType == "dist-decision") {
+    auto decisionBound = opts["decisionBound"].as<int>();
+    YewPar::Skeletons::API::Params<int> searchParameters;
+    searchParameters.expectedObjective = decisionBound;
+    searchParameters.spawnDepth = spawnDepth;
+    sol = YewPar::Skeletons::DepthSpawns<GenNode,
+                                         YewPar::Skeletons::API::Decision,
+                                         YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                         YewPar::Skeletons::API::PruneLevel>
+          ::search(graph, root, searchParameters);
+  } else if (skeletonType == "stacksteal") {
+    sol = ss_skel::search(graph, root);
   }
+  // if (skeletonType == "ordered") {
+  //   sol = skeletons::BnB::Ordered::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
+  //                                                    generateChoices_func, upperBound_func, true>
+  //         ::search(spawnDepth, graph, root);
+  // }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
     (std::chrono::steady_clock::now() - start_time);
 
-  auto maxCliqueSize = hpx::util::get<1>(sol);
-
-  std::cout << "MaxClique Size = " << maxCliqueSize << std::endl;
+  std::cout << "MaxClique Size = " << sol.size << std::endl;
   std::cout << "cpu = " << overall_time.count() << std::endl;
 
   return hpx::finalize(0); // End instantly. Required as the decision skeleton currently can't kill all threads.
@@ -335,9 +312,6 @@ int main (int argc, char* argv[]) {
     boost::program_options::value<int>()->default_value(0),
     "For Decision Skeletons. Size of the clique to search for"
     );
-
-  // hpx::register_startup_function(&workstealing::registerPerformanceCounters);
-  // hpx::register_startup_function(&workstealing::priority::registerPerformanceCounters);
 
   return hpx::init(desc_commandline, argc, argv);
 }

@@ -1,25 +1,24 @@
-#include <hpx/hpx.hpp>
 #include <hpx/hpx_init.hpp>
 
 #include <vector>
 #include <memory>
 #include <chrono>
 
-#include "enumerate/skeletons.hpp"
-#include "util/func.hpp"
+#include "skeletons/Seq.hpp"
+#include "skeletons/DepthSpawning.hpp"
+#include "skeletons/StackStealing.hpp"
+#include "util/NodeGenerator.hpp"
 
 // Fib doesn't have a space
 struct Empty {};
 
-struct NodeGen : YewPar::NodeGenerator<std::uint64_t> {
+struct NodeGen : YewPar::NodeGenerator<std::uint64_t, Empty> {
   std::uint64_t n;
   unsigned i = 1;
 
-  NodeGen() : n(0) {
-    this->numChildren = 0;
-  }
+  NodeGen() = default;
 
-  NodeGen(const std::uint64_t & n) : n(n) {
+  NodeGen(const Empty & space, const std::uint64_t & n) : n(n) {
     this->numChildren = 2;
   }
 
@@ -31,16 +30,17 @@ struct NodeGen : YewPar::NodeGenerator<std::uint64_t> {
 };
 
 NodeGen generateChildren(const Empty & space, const std::uint64_t & n) {
-  return NodeGen(n);
+  return NodeGen(space, n);
 }
 
 #define MAX_DEPTH 50
 
-typedef func<decltype(&generateChildren), &generateChildren> genChildren_func;
-
-using cFunc = skeletons::Enum::DistCount<Empty, std::uint64_t, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_DEPTH> >::ChildTask;
-using solType = std::uint64_t;
-REGISTER_SEARCHMANAGER(solType, cFunc)
+using ss_skel = YewPar::Skeletons::StackStealing<NodeGen,
+                                                 YewPar::Skeletons::API::CountNodes,
+                                                 YewPar::Skeletons::API::DepthBounded>;
+using ntype = std::uint64_t;
+using cfunc  = ss_skel::SubTreeTask;
+REGISTER_SEARCHMANAGER(ntype, cfunc);
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
@@ -49,15 +49,26 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto start_time = std::chrono::steady_clock::now();
 
-  std::vector<std::uint64_t> counts(maxDepth);
+  std::vector<std::uint64_t> counts;
   if (skeleton == "seq") {
-    counts = skeletons::Enum::Count<Empty, std::uint64_t, genChildren_func>::search(maxDepth, Empty(), maxDepth - 1);
-  }
-  else if (skeleton == "dist"){
-    counts = skeletons::Enum::DistCount<Empty, std::uint64_t, genChildren_func>::count(spawnDepth, maxDepth, Empty(), maxDepth - 1);
-  }
-  else if (skeleton == "genstack"){
-    counts = skeletons::Enum::DistCount<Empty, std::uint64_t, genChildren_func, skeletons::Enum::StackOfNodes, std::integral_constant<std::size_t, MAX_DEPTH> >::count(maxDepth, Empty(), maxDepth - 1);
+    YewPar::Skeletons::API::Params<> searchParameters;
+    searchParameters.maxDepth = maxDepth;
+    counts = YewPar::Skeletons::Seq<NodeGen,
+                                    YewPar::Skeletons::API::CountNodes,
+                                    YewPar::Skeletons::API::DepthBounded>
+             ::search(Empty(), maxDepth - 1, searchParameters);
+  } else if (skeleton == "dist"){
+    YewPar::Skeletons::API::Params<> searchParameters;
+    searchParameters.maxDepth   = maxDepth;
+    searchParameters.spawnDepth = spawnDepth;
+    counts = YewPar::Skeletons::DepthSpawns<NodeGen,
+                                    YewPar::Skeletons::API::CountNodes,
+                                    YewPar::Skeletons::API::DepthBounded>
+             ::search(Empty(), maxDepth - 1, searchParameters);
+  } else if (skeleton == "genstack"){
+    YewPar::Skeletons::API::Params<> searchParameters;
+    searchParameters.maxDepth   = maxDepth;
+    counts = ss_skel::search(Empty(), maxDepth - 1, searchParameters);
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
