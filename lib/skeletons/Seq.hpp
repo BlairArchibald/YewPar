@@ -24,6 +24,7 @@ struct Seq {
   static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
+  typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
 
   static bool expand(const Space & space,
                      const Node & n,
@@ -67,7 +68,8 @@ struct Seq {
           // B&B Case
           } else {
             auto best = incumbent.getObj();
-            if (bnd <= best) {
+            Objcmp cmp;
+            if (!cmp(bnd,best)) {
               if constexpr(pruneLevel) {
                   break;
                 } else {
@@ -78,7 +80,8 @@ struct Seq {
       }
 
       if constexpr(isBnB) {
-        if (c.getObj() > incumbent.getObj()) {
+        Objcmp cmp;
+        if (cmp(c.getObj(), incumbent.getObj())) {
           incumbent = c;
         }
       }

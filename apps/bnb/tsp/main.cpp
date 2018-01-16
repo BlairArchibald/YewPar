@@ -1,120 +1,138 @@
 #include <iostream>
-#include <fstream>
-#include <regex>
-#include <cmath>
-
-#include <unordered_map>
+#include <unordered_set>
 
 #include <hpx/hpx_init.hpp>
 
+#include "parser.hpp"
+
+#include "skeletons/Seq.hpp"
+#include "skeletons/DepthSpawning.hpp"
+
 #define MAX_CITIES  128
 
-enum TSP_TYPE {
-  EUC_2D, GEO
-};
+struct TSPSol {
+  std::vector<unsigned> cities;
+  unsigned tourLength;
 
-class SomethingWentWrong : public std::exception
-{
- private:
-  std::string _what;
-
- public:
-  SomethingWentWrong(const std::string & message) throw () :
-      _what(message) {}
-
-  auto what() const throw () -> const char * {
-    return _what.c_str();
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & cities;
+    ar & tourLength;
   }
 };
 
-struct TSPFromFile {
-  TSP_TYPE type;
-  std::unordered_map<unsigned, std::pair<double, double>> nodeInfo;
-  unsigned numNodes;
-};
+struct TSPNode {
+  TSPSol sol;
+  std::unordered_set<unsigned> unvisited;
 
-// Very simple, un-robust parser
-TSPFromFile parseFile (const std::string & filename) {
-  TSPFromFile result;
-
-  std::ifstream infile{ filename };
-  if (!infile) {
-    throw SomethingWentWrong { "Can't read from file" };
-  }
-
-  std::string line;
-  while (std::getline(infile, line)) {
-    if (line.empty()) continue;
-
-    // TODO: need to parse the type field
-
-    static const std::regex node { R"((\d+) (\d+) (\d+))" };
-    static const std::regex type { R"(EDGE_WEIGHT_TYPE: (\w+)" };
-    std::smatch match;
-    if (regex_match(line, match, node)) {
-      result.nodeInfo[std::stoi(match.str(0))] = std::make_pair(std::stod(match.str(1)), std::stod(match.str(2)));
-      // Assumes the nodes are in increasing order
-      result.numNodes = std::stoi(match.str(0));
-    } else if (regex_match(line, match, type)) {
-      if (match.str(0) == "EUC_2D") result.type = TSP_TYPE::EUC_2D;
-      if (match.str(0) == "GEO")    result.type = TSP_TYPE::GEO;
+  unsigned getObj() {
+    if (unvisited.empty()) {
+      return sol.tourLength;
+    } else {
+      return INT_MAX;
     }
   }
 
-  if (! infile.eof()) {
-    throw SomethingWentWrong { "Error reading file" };
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & sol;
+    ar & unvisited;
   }
 
-  return result;
-}
+};
 
-template<unsigned N>
-using DistanceMatrix = std::array<std::array<unsigned, N>, N>;
+struct NodeGen : YewPar::NodeGenerator<TSPNode, DistanceMatrix<MAX_CITIES> > {
+  unsigned lastCity;
 
-template<unsigned N>
-DistanceMatrix<N> buildDistanceMatrixEUC2D (const TSPFromFile & data) {
-  DistanceMatrix<N> costs;
-  for (const auto & n1 : data.nodeInfo) {
-    for (const auto & n2 : data.nodeInfo) {
-      if (n1.first == n2.first) {
-        costs[n1.first][n2.first] = 0;
-      } else {
-        auto x = std::pow((n1.second.first  - n2.second.first), 2);
-        auto y = std::pow((n1.second.second - n2.second.second), 2);
-        costs[n1.first][n2.first] = std::round(std::sqrt(x + y));
+  std::reference_wrapper<const DistanceMatrix<MAX_CITIES> > distances;
+  std::reference_wrapper<const TSPNode> parent;
+
+  std::unordered_set<unsigned>::const_iterator unvisitedIter;
+
+  NodeGen(const DistanceMatrix<MAX_CITIES> & distances, const TSPNode & n) :
+      distances(std::cref(distances)), parent(std::cref(n)) {
+    lastCity = n.sol.cities.back();
+    numChildren = n.unvisited.size();
+    unvisitedIter = parent.get().unvisited.cbegin();
+  }
+
+  TSPNode next() override {
+    auto nextCity = *unvisitedIter;
+    unvisitedIter++;
+
+    // Not quite right since partial tours don't have a length
+    auto newSol = parent.get().sol;
+    newSol.cities.push_back(nextCity);
+    newSol.tourLength += distances.get()[lastCity][nextCity];
+
+    auto newUnvisited = parent.get().unvisited;
+    newUnvisited.erase(nextCity);
+
+    // Link back to the start if we have a complete tour
+    if (newUnvisited.empty()) {
+      auto start = newSol.cities.front();
+      newSol.cities.push_back(start);
+      newSol.tourLength += distances.get()[nextCity][start];
+    }
+
+    return TSPNode { newSol, newUnvisited };
+  }
+};
+
+// Very simple MST function, nothing fancy so not the fastest
+unsigned mst(const DistanceMatrix<MAX_CITIES> & distances,
+             unsigned lastCity,
+             std::unordered_set<unsigned> & remCities) {
+  std::unordered_map<unsigned, unsigned> weights;
+  auto w = 0;
+  auto minCity = 0;
+  auto minWeight = INT_MAX;
+
+  // Set up initial weights
+  for (const auto  & c : remCities) {
+    weights[c] = distances[lastCity][c];
+  }
+
+  while (!weights.empty()) {
+    auto minWeight = INT_MAX;
+    for (const auto & c : weights) {
+      if (c.second < minWeight) {
+        minWeight = c.second;
+        minCity = c.first;
+      }
+    }
+
+    w += minWeight;
+    weights.erase(minCity);
+
+    // Update weights
+    for (const auto & c : weights) {
+      auto dist = distances[minCity][c.first];
+      if (dist < c.second) {
+        weights[c.first] = dist;
       }
     }
   }
+
+  return w;
 }
 
-template<unsigned N>
-DistanceMatrix<N> buildDistanceMatrixGEO (const TSPFromFile & data) {
-  DistanceMatrix<N> costs;
+unsigned boundFn(const DistanceMatrix<MAX_CITIES> & distances, const TSPNode & n) {
+  std::unordered_set<unsigned> nodes = n.unvisited;
+  nodes.insert(n.sol.cities.front());
+  return n.sol.tourLength + mst(distances, n.sol.cities.back(), nodes);
+}
 
-  auto getLatLon = [](double x) {
-    auto deg = static_cast<double>(std::round(x));
-    auto min = x - deg;
-    return M_PI * (deg + 5.0 * min / 3.0) / 180.0;
-  };
+typedef func<decltype(&boundFn), &boundFn> upperBound_func;
 
-  // TODO: Check logic here
-  auto getDistance = [&](auto n1, auto n2) {
-    auto q1 = std::cos(getLatLon(n1.second - n2.second));
-    auto q2 = std::cos(getLatLon(n1.first - n2.first));
-    auto q3 = std::cos(getLatLon(n1.first + n2.first));
-    auto res = 6378.388 * std::acos(0.5 * (( 1.0 + q1) * q2 - (1.0 - q1) * q3)) + 1.0;
-    return std::floor(res);
-  };
-
-  for (const auto & n1 : data.nodeInfo) {
-    for (const auto & n2 : data.nodeInfo) {
-      if (n1.first == n2.first) {
-        costs[n1.first][n2.first] = 0;
-      } else {
-        costs[n1.first][n2.first] = getDistance(n1.second, n2.second);
-      }
-    }
+// TSP helper functions
+unsigned calculateTourLength(const DistanceMatrix<MAX_CITIES> & distances,
+                             const std::vector<unsigned> & cities) {
+  auto l = 0;
+  for (auto i = 0; i < cities.size() - 1; ++i) {
+    l += distances[cities[i]][cities[i+1]];
   }
+  return l;
 }
 
 int hpx_main(boost::program_options::variables_map & opts) {
@@ -127,6 +145,36 @@ int hpx_main(boost::program_options::variables_map & opts) {
     std::cerr << e.what() << std::endl;
     hpx::finalize();
   }
+
+  DistanceMatrix<MAX_CITIES> distances;
+  if (inputData.type == TSP_TYPE::EUC_2D) {
+    distances = buildDistanceMatrixEUC2D<MAX_CITIES>(inputData);
+  } else {
+    distances = buildDistanceMatrixGEO<MAX_CITIES>(inputData);
+  }
+
+  std::vector<unsigned> initialTour {1};
+  std::unordered_set<unsigned> unvisited;
+
+  for (auto i = 2; i <= inputData.numNodes; ++i) {
+    unvisited.insert(i);
+  }
+
+  TSPSol initSol { initialTour, 0};
+  TSPNode root { initSol, unvisited };
+
+  auto sol = YewPar::Skeletons::Seq<NodeGen,
+                                    YewPar::Skeletons::API::BnB,
+                                    YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                    YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
+             ::search(distances, root);
+
+  std::cout << "Tour: ";
+  for (const auto c : sol.sol.cities) {
+    std::cout << c << ",";
+  }
+  std::cout << std::endl;
+  std::cout << "Optimal tour length: " << sol.sol.tourLength << "\n";
 
   return hpx::finalize();
 }
