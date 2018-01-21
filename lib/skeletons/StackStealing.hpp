@@ -38,6 +38,21 @@ struct StackStealing {
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
 
+  static void printSkeletonDetails() {
+    std::cout << "Skeleton Type: StackStealing\n";
+    std::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
+    std::cout << "BNB: " << std::boolalpha << isBnB << "\n";
+    std::cout << "Decision: " << std::boolalpha << isDecision << "\n";
+    std::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
+    std::cout << "MaxStackDepth: " << maxStackDepth << "\n";
+    if constexpr(!std::is_same<boundFn, nullFn__>::value) {
+        std::cout << "Using Bounding: true\n";
+        std::cout << "PruneLevel Optimisation: " << std::boolalpha << pruneLevel << "\n";
+      } else {
+      std::cout << "Using Bounding: false\n";
+    }
+  }
+
   struct StackElem {
     unsigned seen;
     Generator gen;
