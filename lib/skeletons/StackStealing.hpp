@@ -15,6 +15,8 @@
 #include "util/doubleWritePromise.hpp"
 #include "util/util.hpp"
 
+#include "Common.hpp"
+
 #include "workstealing/Scheduler.hpp"
 #include "workstealing/policies/SearchManager.hpp"
 
@@ -97,18 +99,6 @@ struct StackStealing {
   using Policy      = Workstealing::Policies::SearchManager<Node, SubTreeTask>;
   using Response    = typename Policy::Response_t;
   using SharedState = typename Policy::SharedState_t;
-
-  // TODO: Duplicated in DepthSpawning
-  static void updateIncumbent(const Node & node, const Bound & bnd) {
-    auto reg = Registry<Space, Node, Bound>::gReg;
-    // TODO: Should we force this local update for performance?
-    //reg->updateRegistryBound(bnd)
-    hpx::lcos::broadcast<UpdateRegistryBoundAct<Space, Node, Bound> >(
-        hpx::find_all_localities(), bnd);
-
-    typedef typename Incumbent<Node>::UpdateIncumbentAct act;
-    hpx::async<act>(reg->globalIncumbent, node).get();
-  }
 
   // Find the required depth to create "totalThreads" tasks
   static unsigned getRequiredSpawnDepth(const Space & space,
@@ -215,7 +205,7 @@ struct StackStealing {
 
         if constexpr(isDecision) {
           if (child.getObj() == reg->params.expectedObjective) {
-            updateIncumbent(child, child.getObj());
+            updateIncumbent<Space, Node, Bound>(child, child.getObj());
             hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
             return;
           }
@@ -253,7 +243,7 @@ struct StackStealing {
           // FIXME: unsure about loading this twice in terms of performance
           auto best = reg->localBound.load();
           if (child.getObj() > best) {
-            updateIncumbent(child, child.getObj());
+            updateIncumbent<Space,Node,Bound>(child, child.getObj());
           }
         }
 
@@ -444,21 +434,6 @@ struct StackStealing {
     hpx::wait_all(futures);
   }
 
-  // TODO: This is repeated elsewhere
-  static std::vector<std::uint64_t> totalNodeCounts(const unsigned maxDepth) {
-    auto cntList = hpx::lcos::broadcast<GetCountsAct<Space, Node, Bound> >(
-        hpx::find_all_localities()).get();
-
-    std::vector<std::uint64_t> res(maxDepth + 1);
-    for (auto i = 0; i <= maxDepth; ++i) {
-      for (const auto & cnt : cntList) {
-        res[i] += cnt[i];
-      }
-    }
-    res[0] = 1; //Account for root node
-    return res;
-  }
-
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
@@ -471,7 +446,7 @@ struct StackStealing {
       auto inc = hpx::new_<Incumbent<Node> >(hpx::find_here()).get();
       hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
           hpx::find_all_localities(), inc));
-      updateIncumbent(root, root.getObj());
+      updateIncumbent<Space,Node,Bound>(root, root.getObj());
     }
 
     doSearch(space, root, params);
@@ -481,7 +456,7 @@ struct StackStealing {
 
     // Return the right thing
     if constexpr(isCountNodes) {
-      return totalNodeCounts(params.maxDepth);
+      return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
     } else if constexpr(isBnB || isDecision) {
       auto reg = Registry<Space, Node, Bound>::gReg;
 

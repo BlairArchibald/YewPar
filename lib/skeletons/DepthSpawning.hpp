@@ -14,6 +14,8 @@
 #include "util/func.hpp"
 #include "util/doubleWritePromise.hpp"
 
+#include "Common.hpp"
+
 #include "workstealing/Scheduler.hpp"
 #include "workstealing/policies/Workpool.hpp"
 
@@ -57,17 +59,6 @@ struct DepthSpawns {
     }
   }
 
-  static void updateIncumbent(const Node & node, const Bound & bnd) {
-    auto reg = Registry<Space, Node, Bound>::gReg;
-    // TODO: Should we force this local update for performance?
-    //reg->updateRegistryBound(bnd)
-    hpx::lcos::broadcast<UpdateRegistryBoundAct<Space, Node, Bound> >(
-        hpx::find_all_localities(), bnd);
-
-    typedef typename Incumbent<Node>::UpdateIncumbentAct act;
-    hpx::async<act>(reg->globalIncumbent, node).get();
-  }
-
   static void expandWithSpawns(const Space & space,
                                const Node & n,
                                const API::Params<Bound> & params,
@@ -92,7 +83,7 @@ struct DepthSpawns {
 
       if constexpr(isDecision) {
         if (c.getObj() == params.expectedObjective) {
-          updateIncumbent(c, c.getObj());
+          updateIncumbent<Space, Node, Bound>(c, c.getObj());
           hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
           return;
         }
@@ -127,7 +118,7 @@ struct DepthSpawns {
         auto best = reg->localBound.load();
 
         if (c.getObj() > best) {
-          updateIncumbent(c, c.getObj());
+          updateIncumbent<Space, Node, Bound>(c, c.getObj());
         }
       }
 
@@ -165,7 +156,7 @@ struct DepthSpawns {
 
       if constexpr(isDecision) {
         if (c.getObj() == params.expectedObjective) {
-          updateIncumbent(c, c.getObj());
+          updateIncumbent<Space, Node, Bound>(c, c.getObj());
           hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
           return;
         }
@@ -199,7 +190,7 @@ struct DepthSpawns {
         // FIXME: unsure about loading this twice in terms of performance
         auto best = reg->localBound.load();
         if (c.getObj() > best) {
-          updateIncumbent(c, c.getObj());
+          updateIncumbent<Space, Node, Bound>(c, c.getObj());
         }
       }
 
@@ -253,20 +244,6 @@ struct DepthSpawns {
      return pfut;
   }
 
-  static std::vector<std::uint64_t> totalNodeCounts(const unsigned maxDepth) {
-    auto cntList = hpx::lcos::broadcast<GetCountsAct<Space, Node, Bound> >(
-        hpx::find_all_localities()).get();
-
-    std::vector<std::uint64_t> res(maxDepth + 1);
-    for (auto i = 0; i <= maxDepth; ++i) {
-      for (const auto & cnt : cntList) {
-        res[i] += cnt[i];
-      }
-    }
-    res[0] = 1; //Account for root node
-    return res;
-  }
-
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
@@ -283,7 +260,7 @@ struct DepthSpawns {
       auto inc = hpx::new_<Incumbent<Node> >(hpx::find_here()).get();
       hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
           hpx::find_all_localities(), inc));
-      updateIncumbent(root, root.getObj());
+      updateIncumbent<Space, Node, Bound>(root, root.getObj());
     }
 
     // Issue is updateCounts by the looks of things. Something probably isn't initialised correctly.
@@ -294,7 +271,7 @@ struct DepthSpawns {
 
     // Return the right thing
     if constexpr(isCountNodes) {
-      return totalNodeCounts(params.maxDepth);
+      return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
     } else if constexpr(isBnB || isDecision) {
       auto reg = Registry<Space, Node, Bound>::gReg;
 
