@@ -28,7 +28,6 @@ funcType priorityworkqueue::steal() {
 }
 
 void priorityworkqueue::addWork(int priority, funcType task) {
-  std::cout << "Queue size: " << tasks.size() << std::endl;
   tasks.push(hpx::util::make_tuple(priority, std::move(task)));
 }
 

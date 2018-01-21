@@ -13,15 +13,15 @@ if (YEWPAR_BUILD_TEST_APPS)
     COMMAND maxclique-${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS} --skeleton-type seq --input-file ${YEWPAR_TEST_DATA_DIR}/brock200_1.clq --hpx:threads 1)
   set_tests_properties(MAXCLIQUE_SEQ_1T PROPERTIES PASS_REGULAR_EXPRESSION "MaxClique Size = 21")
 
-  # add_test(
-  #   NAME MAXCLIQUE_ORDERED_1T
-  #   COMMAND maxclique-${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS} --skeleton-type ordered --input-file ${YEWPAR_TEST_DATA_DIR}/brock200_1.clq --hpx:threads 1)
-  # set_tests_properties(MAXCLIQUE_ORDERED_1T PROPERTIES PASS_REGULAR_EXPRESSION "MaxClique Size = 21")
+  add_test(
+    NAME MAXCLIQUE_ORDERED_1T
+    COMMAND maxclique-${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS} --skeleton-type ordered --input-file ${YEWPAR_TEST_DATA_DIR}/brock200_1.clq --hpx:threads 1)
+  set_tests_properties(MAXCLIQUE_ORDERED_1T PROPERTIES PASS_REGULAR_EXPRESSION "MaxClique Size = 21")
 
-  # add_test(
-  #   NAME MAXCLIQUE_ORDERED_4T
-  #   COMMAND maxclique-${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS} --skeleton-type ordered --input-file ${YEWPAR_TEST_DATA_DIR}/brock200_1.clq --hpx:threads 4)
-  # set_tests_properties(MAXCLIQUE_ORDERED_4T PROPERTIES PASS_REGULAR_EXPRESSION "MaxClique Size = 21")
+  add_test(
+    NAME MAXCLIQUE_ORDERED_4T
+    COMMAND maxclique-${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS} --skeleton-type ordered --input-file ${YEWPAR_TEST_DATA_DIR}/brock200_1.clq --hpx:threads 4)
+  set_tests_properties(MAXCLIQUE_ORDERED_4T PROPERTIES PASS_REGULAR_EXPRESSION "MaxClique Size = 21")
 
   add_test(
     NAME MAXCLIQUE_DIST_1T
