@@ -1,6 +1,7 @@
 #ifndef SKELETONS_STACKSTEAL_HPP
 #define SKELETONS_STACKSTEAL_HPP
 
+#include <iostream>
 #include <vector>
 #include <cstdint>
 

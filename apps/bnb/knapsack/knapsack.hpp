@@ -40,7 +40,7 @@ struct KPNode {
   KPSolution sol;
   std::vector<int> rem;
 
-  int getObj() {
+  int getObj() const {
     return sol.profit;
   }
 

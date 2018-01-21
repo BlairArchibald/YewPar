@@ -1,6 +1,7 @@
 #ifndef SKELETONS_DEPTHSPAWN_HPP
 #define SKELETONS_DEPTHSPAWN_HPP
 
+#include <iostream>
 #include <vector>
 #include <cstdint>
 

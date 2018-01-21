@@ -7,6 +7,7 @@
 
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
+#include "skeletons/Ordered.hpp"
 
 #define MAX_CITIES  128
 

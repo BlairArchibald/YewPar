@@ -1,6 +1,7 @@
 #ifndef SKELETONS_SEQ_HPP
 #define SKELETONS_SEQ_HPP
 
+#include <iostream>
 #include <vector>
 #include <cstdint>
 
