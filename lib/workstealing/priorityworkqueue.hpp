@@ -48,10 +48,13 @@ namespace workstealing
       HPX_DEFINE_COMPONENT_ACTION(priorityworkqueue, steal);
       void addWork(int priority, funcType task);
       HPX_DEFINE_COMPONENT_ACTION(priorityworkqueue, addWork);
+      bool workRemaining();
+      HPX_DEFINE_COMPONENT_ACTION(priorityworkqueue, workRemaining);
     };
 }
 
 HPX_REGISTER_ACTION_DECLARATION(workstealing::priorityworkqueue::steal_action, workqueue_prio_steal_action);
 HPX_REGISTER_ACTION_DECLARATION(workstealing::priorityworkqueue::addWork_action, workqueue_prio_addWork_action);
+HPX_REGISTER_ACTION_DECLARATION(workstealing::priorityworkqueue::workRemaining_action, workqueue_prio_workRemaining_action);
 
 #endif

@@ -36,10 +36,26 @@ void scheduler(hpx::util::function<void(), false> initialTask) {
       hpx::this_thread::suspend(backoff.getSleepTime());
     }
   }
+
+  {
+    // Signal exit
+    std::unique_lock<hpx::lcos::local::mutex> l(mtx);
+    numRunningSchedulers--;
+    exit_cv.notify_all();
+  }
 }
 
 void stopSchedulers() {
   running.store(false);
+
+  {
+    // Block until all schedulers have finished
+    std::unique_lock<hpx::lcos::local::mutex> l(mtx);
+    while (numRunningSchedulers > 0) {
+      exit_cv.wait(l);
+    }
+  }
+  return;
 }
 
 void startSchedulers(unsigned n) {
@@ -47,6 +63,11 @@ void startSchedulers(unsigned n) {
                                                 hpx::threads::thread_stacksize_huge);
   for (auto i = 0; i < n; ++i) {
     hpx::apply(exe, &scheduler, nullptr);
+  }
+
+  {
+    std::unique_lock<hpx::lcos::local::mutex> l(mtx);
+    numRunningSchedulers += n;
   }
 }
 

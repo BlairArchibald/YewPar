@@ -18,6 +18,7 @@
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
 #include "skeletons/StackStealing.hpp"
+#include "skeletons/Ordered.hpp"
 
 #include "util/func.hpp"
 #include "util/NodeGenerator.hpp"
@@ -275,12 +276,15 @@ int hpx_main(boost::program_options::variables_map & opts) {
           ::search(graph, root, searchParameters);
   } else if (skeletonType == "stacksteal") {
     sol = ss_skel::search(graph, root);
+  } else if (skeletonType == "ordered") {
+    YewPar::Skeletons::API::Params<int> searchParameters;
+    searchParameters.spawnDepth = spawnDepth;
+    sol = YewPar::Skeletons::Ordered<GenNode,
+                                         YewPar::Skeletons::API::BnB,
+                                         YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                         YewPar::Skeletons::API::PruneLevel>
+          ::search(graph, root, searchParameters);
   }
-  // if (skeletonType == "ordered") {
-  //   sol = skeletons::BnB::Ordered::BranchAndBoundOpt<BitGraph<NWORDS>, MCSol, int, BitSet<NWORDS>,
-  //                                                    generateChoices_func, upperBound_func, true>
-  //         ::search(spawnDepth, graph, root);
-  // }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
     (std::chrono::steady_clock::now() - start_time);
@@ -288,7 +292,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   std::cout << "MaxClique Size = " << sol.size << std::endl;
   std::cout << "cpu = " << overall_time.count() << std::endl;
 
-  return hpx::finalize(0); // End instantly. Required as the decision skeleton currently can't kill all threads.
+  return hpx::finalize();
 }
 
 int main (int argc, char* argv[]) {

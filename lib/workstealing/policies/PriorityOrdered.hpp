@@ -1,5 +1,5 @@
 #ifndef YEWPAR_POLICY_PRIORITYORDERED_HPP
-#define YEWPAR_POLICY_WORKPOOL_HPP
+#define YEWPAR_POLICY_PRIORITYORDERED_HPP
 
 #include "Policy.hpp"
 #include "workstealing/priorityworkqueue.hpp"
@@ -22,12 +22,21 @@ class PriorityOrderedPolicy : public Policy {
 
     hpx::util::function<void(hpx::naming::id_type)> task;
     task = hpx::async<workstealing::priorityworkqueue::steal_action>(globalWorkqueue).get();
-    return hpx::util::bind(task, hpx::find_here());
+    if (task) {
+      return hpx::util::bind(task, hpx::find_here());
+    }
+    return nullptr;
   }
 
   void addwork(int priority, hpx::util::function<void(hpx::naming::id_type)> task) {
     std::unique_lock<mutex_t> l(mtx);
-    hpx::apply<workstealing::priorityworkqueue::addWork_action>(globalWorkqueue, priority, task);
+    //hpx::apply<workstealing::priorityworkqueue::addWork_action>(globalWorkqueue, priority, task);
+    hpx::async<workstealing::priorityworkqueue::addWork_action>(globalWorkqueue, priority, task).get();
+  }
+
+  hpx::future<bool> workRemaining() {
+    std::unique_lock<mutex_t> l(mtx);
+    return hpx::async<workstealing::priorityworkqueue::workRemaining_action>(globalWorkqueue);
   }
 
   // Policy initialiser
@@ -41,6 +50,8 @@ class PriorityOrderedPolicy : public Policy {
 
   static void initPolicy () {
     auto globalWorkqueue = hpx::new_<workstealing::priorityworkqueue>(hpx::find_here()).get();
+    hpx::wait_all(hpx::lcos::broadcast<setPriorityWorkqueuePolicy_act>(
+        hpx::find_all_localities(), globalWorkqueue));
   }
 };
 

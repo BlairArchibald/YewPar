@@ -4,11 +4,17 @@
 #include <atomic>
 #include "hpx/runtime/actions/plain_action.hpp"
 #include "policies/Policy.hpp"
+#include "hpx/lcos/local/mutex.hpp"
+#include "hpx/lcos/local/condition_variable.hpp"
 
 namespace Workstealing { namespace Scheduler {
 
 // Used to stop all schedulers
 std::atomic<bool> running(true);
+
+hpx::lcos::local::mutex mtx;
+hpx::lcos::local::condition_variable exit_cv;
+unsigned numRunningSchedulers;
 
 // Implementation policy
 std::shared_ptr<Policy> local_policy;
