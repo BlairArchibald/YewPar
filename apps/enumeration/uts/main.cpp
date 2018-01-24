@@ -179,7 +179,7 @@ std::vector<std::string> treeTypes = {"binomial", "geometric"};
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto maxDepth   = opts["until-depth"].as<unsigned>();
-  auto skeleton   = opts["skeleton-type"].as<std::string>();
+  auto skeleton   = opts["skeleton"].as<std::string>();
   auto treeType   = opts["uts-t"].as<std::string>();
 
   auto start_time = std::chrono::steady_clock::now();
@@ -190,51 +190,40 @@ int hpx_main(boost::program_options::variables_map & opts) {
   UTSNode root { true, 0 };
   rng_init(root.rngstate.state, opts["uts-r"].as<int>());
 
-  std::vector<std::uint64_t> counts(maxDepth);
+  std::vector<std::uint64_t> counts;
   if (treeType == "binomial") {
     if (skeleton == "seq") {
-      YewPar::Skeletons::API::Params<> searchParameters;
-      searchParameters.maxDepth = maxDepth;
       counts = YewPar::Skeletons::Seq<NodeGen<TreeType::BINOMIAL>,
-                                      YewPar::Skeletons::API::CountNodes,
-                                      YewPar::Skeletons::API::DepthBounded>
-               ::search(params, root, searchParameters);
+                                      YewPar::Skeletons::API::CountNodes>
+               ::search(params, root);
     }
-    if (skeleton == "dist") {
+    if (skeleton == "depthbounded") {
       YewPar::Skeletons::API::Params<> searchParameters;
-      searchParameters.maxDepth   = maxDepth;
       searchParameters.spawnDepth = spawnDepth;
       counts = YewPar::Skeletons::DepthSpawns<NodeGen<TreeType::BINOMIAL>,
-                                              YewPar::Skeletons::API::CountNodes,
-                                              YewPar::Skeletons::API::DepthBounded>
+                                              YewPar::Skeletons::API::CountNodes>
                ::search(params, root, searchParameters);
     }
-    else if (skeleton == "genstack") {
+    else if (skeleton == "stacksteal") {
       YewPar::Skeletons::API::Params<> searchParameters;
-      searchParameters.maxDepth   = maxDepth;
       counts = ss_skel_b::search(params, root, searchParameters);
     }
   } else if (treeType == "geometric"){
     if (skeleton == "seq") {
       YewPar::Skeletons::API::Params<> searchParameters;
-      searchParameters.maxDepth = maxDepth;
       counts = YewPar::Skeletons::Seq<NodeGen<TreeType::GEOMETRIC>,
-                                      YewPar::Skeletons::API::CountNodes,
-                                      YewPar::Skeletons::API::DepthBounded>
+                                      YewPar::Skeletons::API::CountNodes>
                ::search(params, root, searchParameters);
     }
-    if (skeleton == "dist") {
+    if (skeleton == "depthbounded") {
       YewPar::Skeletons::API::Params<> searchParameters;
-      searchParameters.maxDepth   = maxDepth;
       searchParameters.spawnDepth = spawnDepth;
       counts = YewPar::Skeletons::DepthSpawns<NodeGen<TreeType::GEOMETRIC>,
-                                              YewPar::Skeletons::API::CountNodes,
-                                              YewPar::Skeletons::API::DepthBounded>
+                                              YewPar::Skeletons::API::CountNodes>
                ::search(params, root, searchParameters);
     }
-    else if (skeleton == "genstack") {
+    else if (skeleton == "stacksteal") {
       YewPar::Skeletons::API::Params<> searchParameters;
-      searchParameters.maxDepth   = maxDepth;
       counts = ss_skel_g::search(params, root, searchParameters);
     }
   } else {
@@ -244,10 +233,6 @@ int hpx_main(boost::program_options::variables_map & opts) {
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
                       (std::chrono::steady_clock::now() - start_time);
 
-  std::cout << "Results Table: " << std::endl;
-  for (auto i = 0; i <= maxDepth; ++i) {
-    std::cout << i << ": " << counts[i] << std::endl;
-  }
   std::cout << "Total Nodes: " << std::accumulate(counts.begin(), counts.end(), 0) << std::endl;
   std::cout << "=====" << std::endl;
   std::cout << "cpu = " << overall_time.count() << std::endl;
@@ -260,7 +245,7 @@ int main(int argc, char* argv[]) {
       desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
-      ( "skeleton-type",
+      ( "skeleton",
         boost::program_options::value<std::string>()->default_value("seq"),
         "Which skeleton to use"
         )

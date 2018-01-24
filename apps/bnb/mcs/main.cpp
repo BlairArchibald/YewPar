@@ -211,7 +211,7 @@ int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
 typedef func<decltype(&upperBound), &upperBound> upperBound_func;
 
 
-REGISTER_INCUMBENT(MCNode);
+REGISTER_INCUMBENT_BND(MCNode, int);
 
 // using ss_skel = YewPar::Skeletons::StackStealing<GenNode,
 //                                                  YewPar::Skeletons::API::BnB,

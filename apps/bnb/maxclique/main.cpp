@@ -191,7 +191,7 @@ int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
 
 typedef func<decltype(&upperBound), &upperBound> upperBound_func;
 
-REGISTER_INCUMBENT(MCNode);
+REGISTER_INCUMBENT_BND(MCNode, int);
 
 using ss_skel = YewPar::Skeletons::StackStealing<GenNode,
                                                  YewPar::Skeletons::API::BnB,
@@ -207,16 +207,6 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
-  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist", "seq-decision", "par-decision", "dist-decision", "dist-recompute", "ordered", "indexed", "stacksteal"};
-
-  auto skeletonType = opts["skeleton-type"].as<std::string>();
-  auto found = std::find(std::begin(skeletonTypes), std::end(skeletonTypes), skeletonType);
-  if (found == std::end(skeletonTypes)) {
-    std::cout << "Invalid skeleton type option. Should be: seq, par or dist" << std::endl;
-    hpx::finalize();
-    return EXIT_FAILURE;
-  }
-
   auto gFile = dimacs::read_dimacs(inputFile);
 
   // Order the graph (keep a hold of the map)
@@ -224,6 +214,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   auto graph = orderGraphFromFile<NWORDS>(gFile, invMap);
 
   auto spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
+  auto decisionBound = opts["decisionBound"].as<int>();
 
   auto start_time = std::chrono::steady_clock::now();
 
@@ -238,42 +229,45 @@ int hpx_main(boost::program_options::variables_map & opts) {
   MCNode root = { mcsol, 0, cands };
 
   auto sol = root;
+  auto skeletonType = opts["skeleton"].as<std::string>();
   if (skeletonType == "seq") {
+    if (decisionBound != 0) {
+      YewPar::Skeletons::API::Params<int> searchParameters;
+      searchParameters.expectedObjective = decisionBound;
+
+      sol = YewPar::Skeletons::Seq<GenNode,
+                                   YewPar::Skeletons::API::Decision,
+                                   YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                   YewPar::Skeletons::API::PruneLevel
+                                   >
+            ::search(graph, root, searchParameters);
+    } else {
     sol = YewPar::Skeletons::Seq<GenNode,
                                  YewPar::Skeletons::API::BnB,
                                  YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                  YewPar::Skeletons::API::PruneLevel
                                  >
           ::search(graph, root);
-  } else if (skeletonType == "dist") {
-    YewPar::Skeletons::API::Params<int> searchParameters;
-    searchParameters.spawnDepth = spawnDepth;
-    sol = YewPar::Skeletons::DepthSpawns<GenNode,
-                                         YewPar::Skeletons::API::BnB,
-                                         YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                         YewPar::Skeletons::API::PruneLevel>
-          ::search(graph, root, searchParameters);
-  } else if (skeletonType == "seq-decision") {
-    auto decisionBound = opts["decisionBound"].as<int>();
-    YewPar::Skeletons::API::Params<int> searchParameters;
-    searchParameters.expectedObjective = decisionBound;
-
-    sol = YewPar::Skeletons::Seq<GenNode,
-                                 YewPar::Skeletons::API::Decision,
-                                 YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                 YewPar::Skeletons::API::PruneLevel
-                                 >
-          ::search(graph, root, searchParameters);
-  } else if (skeletonType == "dist-decision") {
-    auto decisionBound = opts["decisionBound"].as<int>();
-    YewPar::Skeletons::API::Params<int> searchParameters;
-    searchParameters.expectedObjective = decisionBound;
-    searchParameters.spawnDepth = spawnDepth;
-    sol = YewPar::Skeletons::DepthSpawns<GenNode,
-                                         YewPar::Skeletons::API::Decision,
-                                         YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                         YewPar::Skeletons::API::PruneLevel>
-          ::search(graph, root, searchParameters);
+    }
+  } else if (skeletonType == "depthbounded") {
+    if (decisionBound != 0) {
+      YewPar::Skeletons::API::Params<int> searchParameters;
+      searchParameters.expectedObjective = decisionBound;
+      searchParameters.spawnDepth = spawnDepth;
+      sol = YewPar::Skeletons::DepthSpawns<GenNode,
+                                           YewPar::Skeletons::API::Decision,
+                                           YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                           YewPar::Skeletons::API::PruneLevel>
+            ::search(graph, root, searchParameters);
+    } else {
+      YewPar::Skeletons::API::Params<int> searchParameters;
+      searchParameters.spawnDepth = spawnDepth;
+      sol = YewPar::Skeletons::DepthSpawns<GenNode,
+                                          YewPar::Skeletons::API::BnB,
+                                          YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                          YewPar::Skeletons::API::PruneLevel>
+            ::search(graph, root, searchParameters);
+    }
   } else if (skeletonType == "stacksteal") {
     sol = ss_skel::search(graph, root);
   } else if (skeletonType == "ordered") {
@@ -284,6 +278,10 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                          YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                          YewPar::Skeletons::API::PruneLevel>
           ::search(graph, root, searchParameters);
+  } else {
+    std::cout << "Invalid skeleton type option. Should be: seq, depthbound, stacksteal or ordered" << std::endl;
+    hpx::finalize();
+    return EXIT_FAILURE;
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
@@ -300,6 +298,10 @@ int main (int argc, char* argv[]) {
     desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
+    ( "skeleton",
+      boost::program_options::value<std::string>()->default_value("seq"),
+      "Which skeleton to use: seq, depthbound, stacksteal or ordered"
+      )
     ( "spawn-depth,d",
       boost::program_options::value<std::uint64_t>()->default_value(0),
       "Depth in the tree to spawn at"
@@ -307,10 +309,6 @@ int main (int argc, char* argv[]) {
     ( "input-file,f",
       boost::program_options::value<std::string>(),
       "DIMACS formatted input graph"
-      )
-    ( "skeleton-type",
-      boost::program_options::value<std::string>()->default_value("seq"),
-      "Which skeleton to use"
       )
     ( "decisionBound",
     boost::program_options::value<int>()->default_value(0),

@@ -19,7 +19,7 @@
 #endif
 
 typedef func<decltype(&upperBound<NUMITEMS>), &upperBound<NUMITEMS> > bnd_func;
-REGISTER_INCUMBENT(KPNode);
+REGISTER_INCUMBENT_BND(KPNode, int);
 
 struct knapsackData {
   int capacity = 0;
@@ -63,16 +63,7 @@ knapsackData read_knapsack(const std::string & filename) {
 }
 
 int hpx_main(boost::program_options::variables_map & opts) {
-  // TODO: Proper lower case conversion
-  const std::vector<std::string> skeletonTypes = {"seq", "par", "dist" };
 
-  auto skeletonType = opts["skeleton"].as<std::string>();
-  auto found = std::find(std::begin(skeletonTypes), std::end(skeletonTypes), skeletonType);
-  if (found == std::end(skeletonTypes)) {
-    std::cout << "Invalid skeleton type option. Should be: seq, par or dist" << std::endl;
-    hpx::finalize();
-    return EXIT_FAILURE;
-  }
 
   knapsackData problem;
   auto inputFile = opts["input-file"].as<std::string>();
@@ -120,19 +111,32 @@ int hpx_main(boost::program_options::variables_map & opts) {
   KPNode root {initSol, initRem};
 
   auto sol = root;
+  auto skeletonType = opts["skeleton"].as<std::string>();
   if (skeletonType == "seq") {
     sol = YewPar::Skeletons::Seq<GenNode<NUMITEMS>,
                                  YewPar::Skeletons::API::BnB,
                                  YewPar::Skeletons::API::BoundFunction<bnd_func> >
           ::search(space, root);
-  } else if (skeletonType == "dist") {
-    auto spawnDepth = opts["spawn-depth"].as<int>();
+  } else if (skeletonType == "depthbounded") {
+    auto spawnDepth = opts["spawn-depth"].as<unsigned>();
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.spawnDepth = spawnDepth;
     sol = YewPar::Skeletons::DepthSpawns<GenNode<NUMITEMS>,
                                          YewPar::Skeletons::API::BnB,
                                          YewPar::Skeletons::API::BoundFunction<bnd_func> >
           ::search(space, root, searchParameters);
+  } else if (skeletonType == "ordered") {
+    auto spawnDepth = opts["spawn-depth"].as<unsigned>();
+    YewPar::Skeletons::API::Params<int> searchParameters;
+    searchParameters.spawnDepth = spawnDepth;
+    sol = YewPar::Skeletons::Ordered<GenNode<NUMITEMS>,
+                                     YewPar::Skeletons::API::BnB,
+                                     YewPar::Skeletons::API::BoundFunction<bnd_func> >
+          ::search(space, root, searchParameters);
+  } else {
+    std::cout << "Invalid skeleton type\n";
+    hpx::finalize();
+    return EXIT_FAILURE;
   }
 
   auto finalSol = sol.sol;
@@ -153,18 +157,18 @@ int main(int argc, char* argv[]) {
     desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
-    ( "spawn-depth,d",
-      boost::program_options::value<std::uint64_t>()->default_value(0),
-      "Depth in the tree to spawn until (for parallel skeletons only)"
-      )
+    ( "skeleton",
+      boost::program_options::value<std::string>()->default_value("seq"),
+      "Type of skeleton to use: seq, depthbounded, ordered"
+    )
     ( "input-file,f",
       boost::program_options::value<std::string>(),
       "Input problem"
-      )
-    ( "skeleton",
-      boost::program_options::value<std::string>()->default_value("seq"),
-      "Type of skeleton to use: seq, par, dist"
-      );
+    )
+    ( "spawn-depth,d",
+      boost::program_options::value<unsigned>()->default_value(0),
+      "Depth in the tree to spawn until (for parallel skeletons only)"
+    );
 
   return hpx::init(desc_commandline, argc, argv);
 }

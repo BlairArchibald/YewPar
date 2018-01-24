@@ -41,8 +41,8 @@ REGISTER_SEARCHMANAGER(Monoid, cFunc);
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto maxDepth   = opts["until-depth"].as<unsigned>();
-  auto skeleton   = opts["skeleton-type"].as<std::string>();
-  auto stealAll   = opts["stealall"].as<bool>();
+  auto skeleton   = opts["skeleton"].as<std::string>();
+  //auto stealAll   = opts["stealall"].as<bool>();
 
   Monoid root;
   init_full_N(root);
@@ -57,7 +57,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                     YewPar::Skeletons::API::CountNodes,
                                     YewPar::Skeletons::API::DepthBounded>
              ::search(Empty(), root, searchParameters);
-  } else if (skeleton == "dist") {
+  } else if (skeleton == "depthbounded") {
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.maxDepth   = maxDepth;
     searchParameters.spawnDepth = spawnDepth;
@@ -65,7 +65,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                             YewPar::Skeletons::API::CountNodes,
                                             YewPar::Skeletons::API::DepthBounded>
              ::search(Empty(), root, searchParameters);
-  } else if (skeleton == "genstack"){
+  } else if (skeleton == "stacksteal"){
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.maxDepth   = maxDepth;
     counts = ss_skel::search(Empty(), root, searchParameters);
@@ -92,8 +92,8 @@ int main(int argc, char* argv[]) {
     desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
-    ( "skeleton-type",
-      boost::program_options::value<std::string>()->default_value("dist"),
+    ( "skeleton",
+      boost::program_options::value<std::string>()->default_value("seq"),
       "Which skeleton to use"
     )
     ( "spawn-depth,s",
@@ -108,10 +108,7 @@ int main(int argc, char* argv[]) {
       boost::program_options::value<bool>()->default_value(false),
       "Enable verbose output"
     )
-    ( "stealall",
-      boost::program_options::value<bool>()->default_value(false),
-      "Steal all when chunking"
-    );
+    ( "stealall", "Steal all when chunking" );
 
   hpx::register_startup_function(&Workstealing::Policies::SearchManagerPerf::registerPerformanceCounters);
 
