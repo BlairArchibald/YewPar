@@ -41,10 +41,13 @@ struct Params {
   friend class boost::serialization::access;
 
   // For depth limited searches
-  unsigned maxDepth;
+  unsigned maxDepth = 5000;
 
   // For decision based problems
   Obj expectedObjective;
+
+  // For B&B
+  Obj initialBound = false;
 
   // Depth Spawns
   unsigned spawnDepth = 1;

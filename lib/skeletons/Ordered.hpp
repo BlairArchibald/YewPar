@@ -40,6 +40,7 @@ struct Ordered {
   static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
+  typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
 
   static void printSkeletonDetails() {
     std::cout << "Skeleton Type: Ordered\n";
@@ -124,7 +125,7 @@ struct Ordered {
 
       if constexpr(isDecision) {
         if (c.getObj() == params.expectedObjective) {
-          updateIncumbent<Space,Node,Bound>(c, c.getObj());
+          updateIncumbent<Space,Node,Bound,Objcmp>(c, c.getObj());
           hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
           return;
         }
@@ -144,7 +145,8 @@ struct Ordered {
           // B&B Case
           } else {
             auto best = reg->localBound.load();
-            if (bnd <= best) {
+            Objcmp cmp;
+            if (!cmp(bnd,best)) {
               if constexpr(pruneLevel) {
                   break;
                 } else {
@@ -157,8 +159,10 @@ struct Ordered {
       if constexpr(isBnB) {
         // FIXME: unsure about loading this twice in terms of performance
         auto best = reg->localBound.load();
-        if (c.getObj() > best) {
-          updateIncumbent<Space,Node,Bound>(c, c.getObj());
+
+        Objcmp cmp;
+        if (cmp(c.getObj(), best)) {
+          updateIncumbent<Space,Node,Bound,Objcmp>(c, c.getObj());
         }
       }
 
@@ -173,10 +177,10 @@ struct Ordered {
         hpx::find_all_localities(), space, root, params));
 
     if constexpr(isBnB || isDecision) {
-      auto inc = hpx::new_<Incumbent<Node> >(hpx::find_here()).get();
+      auto inc = hpx::new_<Incumbent<Node, Bound> >(hpx::find_here()).get();
       hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
           hpx::find_all_localities(), inc));
-      updateIncumbent<Space,Node,Bound>(root, root.getObj());
+      initIncumbent<Space,Node,Bound>(root, params.initialBound);
     }
 
     Workstealing::Policies::PriorityOrderedPolicy::initPolicy();
@@ -239,7 +243,7 @@ struct Ordered {
       return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
     } else if constexpr(isBnB || isDecision) {
       auto reg = Registry<Space, Node, Bound>::gReg;
-      typedef typename Incumbent<Node>::GetIncumbentAct getInc;
+      typedef typename Incumbent<Node, Bound>::GetIncumbentAct getInc;
       return hpx::async<getInc>(reg->globalIncumbent).get();
     } else {
       static_assert(isCountNodes || isBnB || isDecision, "Please provide a supported search type: CountNodes, BnB, Decision");

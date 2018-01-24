@@ -11,40 +11,57 @@ namespace hpx { namespace components { template <typename Component> class compo
 
 namespace YewPar {
 // FIXME: We probably don't need to store the candidate search space
-template<typename Node>
+template<typename Node, typename Bound>
 class Incumbent : public hpx::components::locking_hook<
-  hpx::components::component_base<Incumbent<Node> >
+  hpx::components::component_base<Incumbent<Node, Bound> >
   > {
  private:
   Node incumbentNode;
+  Bound bnd;
  public:
+
+  void initialiseIncumbent(Node n, Bound b) {
+    incumbentNode = n;
+    bnd = b;
+  }
+  struct InitialiseIncumbentAct : hpx::actions::make_action<
+    decltype(&Incumbent<Node, Bound>::initialiseIncumbent),
+    &Incumbent<Node, Bound>::initialiseIncumbent,
+    InitialiseIncumbentAct>::type {};
+
+  template <typename Cmp = std::greater<> >
   void updateIncumbent(Node incumbent) {
-    // TODO: Pass the right comparator object
-    if (incumbent.getObj() > incumbentNode.getObj()) {
+    Cmp cmp;
+    if (cmp(incumbent.getObj(), incumbentNode.getObj())) {
       incumbentNode = incumbent;
+      bnd = incumbent.getObj();
     }
   }
+
+  template <typename Cmp = std::greater<> >
   struct UpdateIncumbentAct : hpx::actions::make_action<
-    decltype(&Incumbent<Node>::updateIncumbent),
-    &Incumbent<Node>::updateIncumbent,
-    UpdateIncumbentAct>::type {};
+    decltype(&Incumbent<Node, Bound>::updateIncumbent<Cmp>),
+    &Incumbent<Node, Bound>::updateIncumbent<Cmp>,
+    UpdateIncumbentAct<Cmp> >::type {};
 
   Node getIncumbent() const {
     return incumbentNode;
   }
   struct GetIncumbentAct : hpx::actions::make_action<
-    decltype(&Incumbent<Node>::getIncumbent),
-    &Incumbent<Node>::getIncumbent,
+    decltype(&Incumbent<Node, Bound>::getIncumbent),
+    &Incumbent<Node, Bound>::getIncumbent,
     GetIncumbentAct>::type {};
 };
 }
 
-// Do I still need this?
-#define REGISTER_INCUMBENT(node)                            \
-  typedef YewPar::Incumbent<node> __incumbent_type_;        \
-                                                            \
-  typedef ::hpx::components::component<__incumbent_type_ >  \
-  BOOST_PP_CAT(__incumbent_, node);                         \
-  HPX_REGISTER_COMPONENT(BOOST_PP_CAT(__incumbent_, node))  \
+#define REGISTER_INCUMBENT(node)     \
+  REGISTER_INCUMBENT_BND(node, bool) \
+
+#define REGISTER_INCUMBENT_BND(node, bnd)                                     \
+  typedef YewPar::Incumbent<node, bnd > __incumbent_type_bnd;                 \
+                                                                              \
+  typedef ::hpx::components::component<__incumbent_type_bnd >                 \
+  BOOST_PP_CAT(__incumbent_, BOOST_PP_CAT(node, bnd));                        \
+  HPX_REGISTER_COMPONENT(BOOST_PP_CAT(__incumbent_, BOOST_PP_CAT(node, bnd))) \
 
 #endif

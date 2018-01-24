@@ -40,6 +40,7 @@ struct StackStealing {
   static constexpr unsigned maxStackDepth = parameter::value_type<args, API::tag::MaxStackDepth, std::integral_constant<unsigned, 5000> >::type::value;
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
+  typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
 
   static void printSkeletonDetails() {
     std::cout << "Skeleton Type: StackStealing\n";
@@ -206,7 +207,7 @@ struct StackStealing {
 
         if constexpr(isDecision) {
           if (child.getObj() == reg->params.expectedObjective) {
-            updateIncumbent<Space, Node, Bound>(child, child.getObj());
+            updateIncumbent<Space, Node, Bound, Objcmp>(child, child.getObj());
             hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
             return;
           }
@@ -228,7 +229,8 @@ struct StackStealing {
               // B&B Case
               } else {
               auto best = reg->localBound.load();
-              if (bnd <= best) {
+              Objcmp cmp;
+              if (!cmp(bnd, best)) {
                 if constexpr(pruneLevel) {
                     stackDepth--;
                     depth--;
@@ -243,8 +245,9 @@ struct StackStealing {
         if constexpr(isBnB) {
           // FIXME: unsure about loading this twice in terms of performance
           auto best = reg->localBound.load();
-          if (child.getObj() > best) {
-            updateIncumbent<Space,Node,Bound>(child, child.getObj());
+          Objcmp cmp;
+          if (cmp(child.getObj(), best)) {
+            updateIncumbent<Space,Node,Bound,Objcmp>(child, child.getObj());
           }
         }
 
@@ -444,10 +447,10 @@ struct StackStealing {
     Policy::initPolicy(params.stealAll);
 
     if constexpr(isBnB || isDecision) {
-      auto inc = hpx::new_<Incumbent<Node> >(hpx::find_here()).get();
+      auto inc = hpx::new_<Incumbent<Node, Bound> >(hpx::find_here()).get();
       hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
           hpx::find_all_localities(), inc));
-      updateIncumbent<Space,Node,Bound>(root, root.getObj());
+      initIncumbent<Space,Node,Bound>(root, params.initialBound);
     }
 
     doSearch(space, root, params);
@@ -461,7 +464,7 @@ struct StackStealing {
     } else if constexpr(isBnB || isDecision) {
       auto reg = Registry<Space, Node, Bound>::gReg;
 
-      typedef typename Incumbent<Node>::GetIncumbentAct getInc;
+      typedef typename Incumbent<Node, Bound>::GetIncumbentAct getInc;
       return hpx::async<getInc>(reg->globalIncumbent).get();
     } else {
       static_assert(isCountNodes || isBnB || isDecision, "Please provide a supported search type: CountNodes, BnB, Decision");

@@ -1,7 +1,8 @@
 #include <iostream>
-#include <unordered_set>
+#include <set>
 
 #include <hpx/hpx_init.hpp>
+#include <hpx/runtime/serialization/set.hpp>
 
 #include "parser.hpp"
 
@@ -9,7 +10,7 @@
 #include "skeletons/DepthSpawning.hpp"
 #include "skeletons/Ordered.hpp"
 
-#define MAX_CITIES  128
+#define MAX_CITIES  64
 
 struct TSPSol {
   std::vector<unsigned> cities;
@@ -24,9 +25,9 @@ struct TSPSol {
 
 struct TSPNode {
   TSPSol sol;
-  std::unordered_set<unsigned> unvisited;
+  std::set<unsigned> unvisited;
 
-  unsigned getObj() {
+  unsigned getObj() const {
     if (unvisited.empty()) {
       return sol.tourLength;
     } else {
@@ -48,7 +49,7 @@ struct NodeGen : YewPar::NodeGenerator<TSPNode, DistanceMatrix<MAX_CITIES> > {
   std::reference_wrapper<const DistanceMatrix<MAX_CITIES> > distances;
   std::reference_wrapper<const TSPNode> parent;
 
-  std::unordered_set<unsigned>::const_iterator unvisitedIter;
+  std::set<unsigned>::const_iterator unvisitedIter;
 
   NodeGen(const DistanceMatrix<MAX_CITIES> & distances, const TSPNode & n) :
       distances(std::cref(distances)), parent(std::cref(n)) {
@@ -83,7 +84,7 @@ struct NodeGen : YewPar::NodeGenerator<TSPNode, DistanceMatrix<MAX_CITIES> > {
 // Very simple MST function, nothing fancy so not the fastest
 unsigned mst(const DistanceMatrix<MAX_CITIES> & distances,
              unsigned lastCity,
-             std::unordered_set<unsigned> & remCities) {
+             std::set<unsigned> & remCities) {
   std::unordered_map<unsigned, unsigned> weights;
   auto w = 0;
   auto minCity = 0;
@@ -119,12 +120,15 @@ unsigned mst(const DistanceMatrix<MAX_CITIES> & distances,
 }
 
 unsigned boundFn(const DistanceMatrix<MAX_CITIES> & distances, const TSPNode & n) {
-  std::unordered_set<unsigned> nodes = n.unvisited;
+  std::set<unsigned> nodes = n.unvisited;
   nodes.insert(n.sol.cities.front());
   return n.sol.tourLength + mst(distances, n.sol.cities.back(), nodes);
 }
 
 typedef func<decltype(&boundFn), &boundFn> upperBound_func;
+
+//using cmp = std::less<unsigned>;
+REGISTER_INCUMBENT_BND(TSPNode, unsigned)
 
 // TSP helper functions
 unsigned calculateTourLength(const DistanceMatrix<MAX_CITIES> & distances,
@@ -155,7 +159,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   }
 
   std::vector<unsigned> initialTour {1};
-  std::unordered_set<unsigned> unvisited;
+  std::set<unsigned> unvisited;
 
   for (auto i = 2; i <= inputData.numNodes; ++i) {
     unvisited.insert(i);
@@ -164,11 +168,34 @@ int hpx_main(boost::program_options::variables_map & opts) {
   TSPSol initSol { initialTour, 0};
   TSPNode root { initSol, unvisited };
 
-  auto sol = YewPar::Skeletons::Seq<NodeGen,
-                                    YewPar::Skeletons::API::BnB,
-                                    YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                    YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
-             ::search(distances, root);
+  auto skeletonType = opts["skeleton"].as<std::string>();
+  auto spawnDepth = opts["spawn-depth"].as<unsigned>();
+  auto sol = root;
+  if (skeletonType == "seq") {
+    sol = YewPar::Skeletons::Seq<NodeGen,
+                                 YewPar::Skeletons::API::BnB,
+                                 YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                 YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
+              ::search(distances, root);
+  } else if (skeletonType == "depthbounded") {
+    YewPar::Skeletons::API::Params<unsigned> searchParameters;
+    searchParameters.spawnDepth = spawnDepth;
+    searchParameters.initialBound = INT_MAX;
+    sol = YewPar::Skeletons::DepthSpawns<NodeGen,
+                                         YewPar::Skeletons::API::BnB,
+                                         YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                         YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
+               ::search(distances, root, searchParameters);
+  } else if (skeletonType == "ordered") {
+    YewPar::Skeletons::API::Params<unsigned> searchParameters;
+    searchParameters.spawnDepth = spawnDepth;
+    searchParameters.initialBound = INT_MAX;
+    sol = YewPar::Skeletons::Ordered<NodeGen,
+                                     YewPar::Skeletons::API::BnB,
+                                     YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                     YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
+              ::search(distances, root, searchParameters);
+  }
 
   std::cout << "Tour: ";
   for (const auto c : sol.sol.cities) {
@@ -185,17 +212,17 @@ int main(int argc, char* argv[]) {
       desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
-      ( "spawn-depth,d",
-        boost::program_options::value<std::uint64_t>()->default_value(0),
-        "Depth in the tree to spawn until (for parallel skeletons only)"
+      ( "skeleton",
+        boost::program_options::value<std::string>()->default_value("seq"),
+        "Type of skeleton to use: seq, depthbounded, ordered"
         )
       ( "input-file,f",
         boost::program_options::value<std::string>(),
         "Input problem"
         )
-      ( "skeleton",
-        boost::program_options::value<std::string>()->default_value("seq"),
-        "Type of skeleton to use: seq, dist"
+      ( "spawn-depth,d",
+        boost::program_options::value<unsigned>()->default_value(0),
+        "Depth in the tree to spawn until (for parallel skeletons only)"
         );
 
   return hpx::init(desc_commandline, argc, argv);
