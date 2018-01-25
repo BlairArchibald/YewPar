@@ -113,6 +113,9 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
   // Should we steal all tasks at a level when we perform a steal?
   bool stealAll = false;
 
+  // Last steal optimisation
+  hpx::naming::id_type last_remote;
+
   // Try to steal from a thread on another (random) locality
   Response tryDistributedSteal(std::unique_lock<MutexT> & l) {
     // We only allow one distributed steal to happen at a time (to make sure we
@@ -123,21 +126,30 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
 
     isStealingDistributed = true;
 
-    auto victim = distributedSearchManagers.begin();
+    // Last steal optimisation
+    hpx::naming::id_type victim;
+    if (last_remote != hpx::find_here()) {
+      victim = last_remote;
+    } else {
+      auto vic = distributedSearchManagers.begin();
 
-    std::uniform_int_distribution<> rand(0, distributedSearchManagers.size() - 1);
-    std::advance(victim, rand(randGenerator));
+      std::uniform_int_distribution<> rand(0, distributedSearchManagers.size() - 1);
+      std::advance(vic, rand(randGenerator));
+      victim = *vic;
+    }
 
     l.unlock();
-    auto res = hpx::async<getDistributedWork_action>(*victim).get();
+    auto res = hpx::async<getDistributedWork_action>(victim).get();
     l.lock();
 
     isStealingDistributed = false;
 
     if (!res.empty()) {
-      SearchManagerPerf::distributedStealsList.push_back(std::make_pair(*victim, true));
+      SearchManagerPerf::distributedStealsList.push_back(std::make_pair(victim, true));
+      last_remote = victim;
     } else {
-      SearchManagerPerf::distributedStealsList.push_back(std::make_pair(*victim, false));
+      SearchManagerPerf::distributedStealsList.push_back(std::make_pair(victim, false));
+      last_remote = hpx::find_here();
     }
 
     return res;
@@ -151,8 +163,11 @@ class SearchManager : public hpx::components::component_base<SearchManager<Searc
     for (auto i = 0; i < hpx::get_os_thread_count(); ++i) {
       activeIds.push(i);
     }
+
     std::random_device rd;
     randGenerator.seed(rd());
+
+    last_remote = hpx::find_here();
   }
 
   // Notify this search manager of the globalId's of potential steal victims
