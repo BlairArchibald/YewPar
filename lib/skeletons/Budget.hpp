@@ -65,6 +65,20 @@ struct Budget {
         }
       }
 
+      // We spawn when we have exhausted our backtrack budget
+      if (backtracks == params.backtrackBudget) {
+        // Spawn everything at the highest possible depth
+        for (auto i = 0; i < stackDepth; ++i) {
+          if (genStack[i].seen < genStack[i].gen.numChildren) {
+            while (genStack[i].seen < genStack[i].gen.numChildren) {
+              genStack[i].seen++;
+              childFutures.push_back(createTask(childDepth + i, genStack[i].gen.next()));
+            }
+          }
+        }
+        backtracks = 0;
+      }
+
       // If there's still children at this stackDepth we move into them
       if (genStack[stackDepth].seen < genStack[stackDepth].gen.numChildren) {
         const auto child = genStack[stackDepth].gen.next();
@@ -131,6 +145,7 @@ struct Budget {
           if (depth == reg->params.maxDepth) {
             stackDepth--;
             depth--;
+            backtracks++;
             continue;
           }
         }
@@ -139,6 +154,7 @@ struct Budget {
       } else {
         stackDepth--;
         depth--;
+        backtracks++;
       }
     }
   }
