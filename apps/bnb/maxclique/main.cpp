@@ -19,6 +19,7 @@
 #include "skeletons/DepthSpawning.hpp"
 #include "skeletons/StackStealing.hpp"
 #include "skeletons/Ordered.hpp"
+#include "skeletons/Budget.hpp"
 
 #include "util/func.hpp"
 #include "util/NodeGenerator.hpp"
@@ -278,6 +279,14 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                          YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                          YewPar::Skeletons::API::PruneLevel>
           ::search(graph, root, searchParameters);
+  } else if (skeletonType == "budget") {
+    //YewPar::Skeletons::API::Params<int> searchParameters;
+    ///YewPar::Skeletons::API::Params<int> searchParameters;/searchParameters.backtrackBudget = x;
+    sol = YewPar::Skeletons::Budget<GenNode,
+                                    YewPar::Skeletons::API::BnB,
+                                    YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                    YewPar::Skeletons::API::PruneLevel>
+          ::search(graph, root);
   } else {
     std::cout << "Invalid skeleton type option. Should be: seq, depthbound, stacksteal or ordered" << std::endl;
     hpx::finalize();

@@ -57,15 +57,6 @@ struct StackStealing {
     }
   }
 
-  struct StackElem {
-    unsigned seen;
-    Generator gen;
-
-    StackElem(Generator gen) : seen(0), gen(gen) {};
-  };
-
-  using GeneratorStack = std::vector<StackElem>;
-
   static void subTreeTask(const Node initNode,
                           const unsigned depth,
                           const hpx::naming::id_type donePromise) {
@@ -75,7 +66,7 @@ struct StackStealing {
     // Setup the stack with root node
     auto rootGen = Generator(reg->space, initNode);
 
-    GeneratorStack generatorStack(maxStackDepth, StackElem(rootGen));
+    GeneratorStack<Generator> generatorStack(maxStackDepth, StackElem(rootGen));
     if constexpr (isCountNodes) {
         cntMap.resize(reg->params.maxDepth + 1);
       }
@@ -128,7 +119,7 @@ struct StackStealing {
   // TODO: We only need the depth for counting so need to constexpr more
   static void runWithStack(const int startingDepth,
                            const Space & space,
-                           GeneratorStack & generatorStack,
+                           GeneratorStack<Generator> & generatorStack,
                            std::shared_ptr<SharedState> stealRequest,
                            std::vector<std::uint64_t> & cntMap,
                            std::vector<hpx::future<void> > & futures,
@@ -282,7 +273,7 @@ struct StackStealing {
 
   static void runTaskFromStack (const unsigned startingDepth,
                                 const Space & space,
-                                GeneratorStack & generatorStack,
+                                GeneratorStack<Generator> & generatorStack,
                                 const std::shared_ptr<SharedState> stealRequest,
                                 std::vector<std::uint64_t> & cntMap,
                                 const hpx::naming::id_type donePromise,
@@ -327,7 +318,7 @@ struct StackStealing {
                                int & stackDepth,
                                int & depth,
                                const Space & space,
-                               GeneratorStack & generatorStack,
+                               GeneratorStack<Generator> & generatorStack,
                                std::vector<std::uint64_t> & countMap,
                                std::vector<hpx::future<void> > & futures){
     auto localities = util::findOtherLocalities();
@@ -395,7 +386,7 @@ struct StackStealing {
     // Master stack
     auto rootGen = Generator(space, root);
 
-    GeneratorStack genStack(maxStackDepth, StackElem(rootGen));
+    GeneratorStack<Generator> genStack(maxStackDepth, StackElem(rootGen));
 
     std::vector<std::uint64_t> countMap;
     if constexpr (isCountNodes) {

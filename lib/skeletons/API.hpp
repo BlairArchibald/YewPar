@@ -56,6 +56,10 @@ struct Params {
   // Should we steal all remaining nodes at the highest depth or just one?
   bool stealAll = false;
 
+  // Budget
+  // FIXME: How to determine a good value for this?
+  unsigned backtrackBudget = 200;
+
   // Needed to push to registries on all nodes
   template <class Archive>
   void serialize(Archive & ar, const unsigned int version) {
