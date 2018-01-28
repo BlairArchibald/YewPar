@@ -1,67 +1,107 @@
 #ifndef YEWPAR_INCUMBENT_HPP
 #define YEWPAR_INCUMBENT_HPP
 
-#include <boost/preprocessor/cat.hpp>                      // for BOOST_PP_CAT
-#include <hpx/util/tuple.hpp>                              // for tuple, get
-#include "hpx/runtime/actions/basic_action.hpp"            // for HPX_REGIST...
-#include "hpx/runtime/actions/component_action.hpp"        // for HPX_DEFINE...
-#include "hpx/runtime/components/component_factory.hpp"    // for HPX_REGIST...
-#include "hpx/runtime/components/server/locking_hook.hpp"  // for locking_hook
-namespace hpx { namespace components { template <typename Component> class component_base; } }
+#include <functional>
+#include <memory>
+
+#include <hpx/include/components.hpp>
 
 namespace YewPar {
-// FIXME: We probably don't need to store the candidate search space
-template<typename Node, typename Bound>
-class Incumbent : public hpx::components::locking_hook<
-  hpx::components::component_base<Incumbent<Node, Bound> >
-  > {
- private:
-  Node incumbentNode;
-  Bound bnd;
- public:
 
-  void initialiseIncumbent(Node n, Bound b) {
-    incumbentNode = n;
-    bnd = b;
+struct Incumbent : public hpx::components::locking_hook<
+  hpx::components::component_base<Incumbent> > {
+
+  // A type erased ptr to the actual component type IncumbentComp This avoids
+  // needing a REGISTER_X macro per type as would be required for a templated
+  // component. Instead we use templated actions to constrain the type. The API
+  // is a little strange, but that's okay since it should only be called form
+  // the library, never user code.
+  std::unique_ptr<void, std::function<void(void*)> > ptr;
+
+  template <typename Node, typename Bound, typename Cmp>
+  void init() {
+    std::function<void(void*)> del = [](void * t) {
+      auto comp = static_cast<Incumbent::IncumbentComp<Node, Bound, Cmp>*>(t);
+      delete comp;
+    };
+    ptr = std::unique_ptr<void, std::function<void(void*)> >(
+        new IncumbentComp<Node, Bound, Cmp>(), del);
   }
-  struct InitialiseIncumbentAct : hpx::actions::make_action<
-    decltype(&Incumbent<Node, Bound>::initialiseIncumbent),
-    &Incumbent<Node, Bound>::initialiseIncumbent,
-    InitialiseIncumbentAct>::type {};
 
-  template <typename Cmp = std::greater<> >
-  void updateIncumbent(Node incumbent) {
-    Cmp cmp;
-    if (cmp(incumbent.getObj(), incumbentNode.getObj())) {
-      incumbentNode = incumbent;
-      bnd = incumbent.getObj();
+  template <typename Node, typename Bound, typename Cmp>
+  struct InitComponentAct : hpx::actions::make_action<
+    decltype(&Incumbent::init<Node, Bound, Cmp>),
+    &Incumbent::init<Node, Bound, Cmp>,
+    InitComponentAct<Node, Bound, Cmp> >::type {};
+
+  template<typename Node, typename Bound, typename Cmp>
+  class IncumbentComp {
+   private:
+    Node incumbentNode;
+    Bound bnd;
+
+  public:
+    void initialiseIncumbent(Node n, Bound b) {
+      incumbentNode = n;
+      bnd = b;
     }
+
+    void updateIncumbent(Node incumbent) {
+      Cmp cmp;
+      if (cmp(incumbent.getObj(), incumbentNode.getObj())) {
+        incumbentNode = incumbent;
+        bnd = incumbent.getObj();
+      }
+    }
+
+    Node getIncumbent() const {
+      return incumbentNode;
+    }
+  };
+
+  template<typename Node, typename Bound, typename Cmp>
+  void initialiseIncumbent(Node n, Bound b) {
+    auto p = ptr.get();
+    auto cmp = static_cast<Incumbent::IncumbentComp<Node, Bound, Cmp>*>(p);
+    cmp->initialiseIncumbent(n, b);
   }
 
-  template <typename Cmp = std::greater<> >
-  struct UpdateIncumbentAct : hpx::actions::make_action<
-    decltype(&Incumbent<Node, Bound>::updateIncumbent<Cmp>),
-    &Incumbent<Node, Bound>::updateIncumbent<Cmp>,
-    UpdateIncumbentAct<Cmp> >::type {};
+  template<typename Node, typename Bound, typename Cmp>
+  void updateIncumbent(Node incumbent) {
+    auto p = ptr.get();
+    auto cmp = static_cast<Incumbent::IncumbentComp<Node, Bound, Cmp>*>(p);
+    cmp->updateIncumbent(incumbent);
+  }
 
+  template<typename Node, typename Bound, typename Cmp>
   Node getIncumbent() const {
-    return incumbentNode;
+    auto p = ptr.get();
+    auto cmp = static_cast<Incumbent::IncumbentComp<Node, Bound, Cmp>*>(p);
+    return cmp->getIncumbent();
   }
+
+  template<typename Node, typename Bound, typename Cmp>
+  struct UpdateIncumbentAct : hpx::actions::make_action<
+    decltype(&Incumbent::updateIncumbent<Node, Bound, Cmp>),
+    &Incumbent::updateIncumbent<Node, Bound, Cmp>,
+    UpdateIncumbentAct<Node, Bound, Cmp> >::type {};
+
+  template<typename Node, typename Bound, typename Cmp>
+  struct InitialiseIncumbentAct : hpx::actions::make_action<
+    decltype(&Incumbent::initialiseIncumbent<Node, Bound, Cmp>),
+    &Incumbent::initialiseIncumbent<Node, Bound, Cmp>,
+    InitialiseIncumbentAct<Node, Bound, Cmp> >::type {};
+
+  template<typename Node, typename Bound, typename Cmp>
   struct GetIncumbentAct : hpx::actions::make_action<
-    decltype(&Incumbent<Node, Bound>::getIncumbent),
-    &Incumbent<Node, Bound>::getIncumbent,
-    GetIncumbentAct>::type {};
+    decltype(&Incumbent::getIncumbent<Node, Bound, Cmp>),
+    &Incumbent::getIncumbent<Node, Bound, Cmp>,
+    GetIncumbentAct<Node, Bound, Cmp> >::type {};
 };
+
 }
 
-#define REGISTER_INCUMBENT(node)     \
-  REGISTER_INCUMBENT_BND(node, bool) \
-
-#define REGISTER_INCUMBENT_BND(node, bnd)                                     \
-  typedef YewPar::Incumbent<node, bnd > __incumbent_type_bnd;                 \
-                                                                              \
-  typedef ::hpx::components::component<__incumbent_type_bnd >                 \
-  BOOST_PP_CAT(__incumbent_, BOOST_PP_CAT(node, bnd));                        \
-  HPX_REGISTER_COMPONENT(BOOST_PP_CAT(__incumbent_, BOOST_PP_CAT(node, bnd))) \
+typedef hpx::components::component<YewPar::Incumbent> incumbent_comp;
+HPX_REGISTER_COMPONENT(incumbent_comp);
 
 #endif

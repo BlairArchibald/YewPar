@@ -127,9 +127,6 @@ unsigned boundFn(const DistanceMatrix<MAX_CITIES> & distances, const TSPNode & n
 
 typedef func<decltype(&boundFn), &boundFn> upperBound_func;
 
-//using cmp = std::less<unsigned>;
-REGISTER_INCUMBENT_BND(TSPNode, unsigned)
-
 // TSP helper functions
 unsigned calculateTourLength(const DistanceMatrix<MAX_CITIES> & distances,
                              const std::vector<unsigned> & cities) {

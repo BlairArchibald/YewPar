@@ -6,11 +6,15 @@
 
 namespace YewPar { namespace Skeletons {
 
-template<typename Space, typename Node, typename Bound>
+template<typename Space, typename Node, typename Bound, typename Cmp>
 static void initIncumbent(const Node & node, const Bound & bnd) {
   auto reg = Registry<Space, Node, Bound>::gReg;
-  typedef typename Incumbent<Node, Bound>::InitialiseIncumbentAct act;
-  hpx::async<act>(reg->globalIncumbent, node, bnd).get();
+
+  typedef typename Incumbent::InitComponentAct<Node, Bound, Cmp> initComp;
+  hpx::async<initComp>(reg->globalIncumbent).get();
+
+  typedef typename Incumbent::InitialiseIncumbentAct<Node, Bound, Cmp> initVals;
+  hpx::async<initVals>(reg->globalIncumbent, node, bnd).get();
 }
 
 template<typename Space, typename Node, typename Bound, typename Cmp>
@@ -21,7 +25,7 @@ static void updateIncumbent(const Node & node, const Bound & bnd) {
   hpx::lcos::broadcast<UpdateRegistryBoundAct<Space, Node, Bound, Cmp> >(
       hpx::find_all_localities(), bnd);
 
-  typedef typename Incumbent<Node, Bound>::template UpdateIncumbentAct<Cmp> act;
+  typedef typename Incumbent::UpdateIncumbentAct<Node, Bound, Cmp> act;
   hpx::async<act>(reg->globalIncumbent, node).get();
 }
 

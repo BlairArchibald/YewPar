@@ -19,7 +19,6 @@
 #endif
 
 typedef func<decltype(&upperBound<NUMITEMS>), &upperBound<NUMITEMS> > bnd_func;
-REGISTER_INCUMBENT_BND(KPNode, int);
 
 struct knapsackData {
   int capacity = 0;
