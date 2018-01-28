@@ -191,12 +191,6 @@ int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
 
 typedef func<decltype(&upperBound), &upperBound> upperBound_func;
 
-using ss_skel = YewPar::Skeletons::StackStealing<GenNode,
-                                                 YewPar::Skeletons::API::BnB,
-                                                 YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                                 YewPar::Skeletons::API::PruneLevel>;
-using cfunc  = ss_skel::SubTreeTask;
-REGISTER_SEARCHMANAGER(MCNode, cfunc);
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto inputFile = opts["input-file"].as<std::string>();
@@ -267,7 +261,11 @@ int hpx_main(boost::program_options::variables_map & opts) {
             ::search(graph, root, searchParameters);
     }
   } else if (skeletonType == "stacksteal") {
-    sol = ss_skel::search(graph, root);
+    sol = YewPar::Skeletons::StackStealing<GenNode,
+                                           YewPar::Skeletons::API::BnB,
+                                           YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                           YewPar::Skeletons::API::PruneLevel>
+          ::search(graph, root);
   } else if (skeletonType == "ordered") {
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.spawnDepth = spawnDepth;

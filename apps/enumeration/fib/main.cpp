@@ -35,12 +35,6 @@ NodeGen generateChildren(const Empty & space, const std::uint64_t & n) {
 
 #define MAX_DEPTH 50
 
-using ss_skel = YewPar::Skeletons::StackStealing<NodeGen,
-                                                 YewPar::Skeletons::API::CountNodes,
-                                                 YewPar::Skeletons::API::DepthBounded>;
-using ntype = std::uint64_t;
-using cfunc  = ss_skel::SubTreeTask;
-REGISTER_SEARCHMANAGER(ntype, cfunc);
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
@@ -67,8 +61,11 @@ int hpx_main(boost::program_options::variables_map & opts) {
              ::search(Empty(), maxDepth - 1, searchParameters);
   } else if (skeleton == "genstack"){
     YewPar::Skeletons::API::Params<> searchParameters;
-    searchParameters.maxDepth   = maxDepth;
-    counts = ss_skel::search(Empty(), maxDepth - 1, searchParameters);
+    searchParameters.maxDepth = maxDepth;
+    counts = YewPar::Skeletons::StackStealing<NodeGen,
+                                              YewPar::Skeletons::API::CountNodes,
+                                              YewPar::Skeletons::API::DepthBounded>
+             ::search(Empty(), maxDepth - 1, searchParameters);
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>

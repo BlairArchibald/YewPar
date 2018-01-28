@@ -98,7 +98,7 @@ struct StackStealing {
     decltype(&StackStealing<Generator, Args...>::subTreeTask),
     &StackStealing<Generator, Args...>::subTreeTask>;
 
-  using Policy      = Workstealing::Policies::SearchManager<Node, SubTreeTask>;
+  using Policy      = Workstealing::Policies::SearchManager::SearchManagerComp<Node, SubTreeTask>;
   using Response    = typename Policy::Response_t;
   using SharedState = typename Policy::SharedState_t;
 

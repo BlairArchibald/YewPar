@@ -32,12 +32,6 @@ struct NodeGen : YewPar::NodeGenerator<Monoid, Empty> {
   }
 };
 
-using ss_skel = YewPar::Skeletons::StackStealing<NodeGen,
-                                                 YewPar::Skeletons::API::CountNodes,
-                                                 YewPar::Skeletons::API::DepthBounded>;
-using cFunc = ss_skel::SubTreeTask;
-REGISTER_SEARCHMANAGER(Monoid, cFunc);
-
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto maxDepth   = opts["until-depth"].as<unsigned>();
@@ -68,7 +62,10 @@ int hpx_main(boost::program_options::variables_map & opts) {
   } else if (skeleton == "stacksteal"){
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.maxDepth   = maxDepth;
-    counts = ss_skel::search(Empty(), root, searchParameters);
+    counts = YewPar::Skeletons::StackStealing<NodeGen,
+                                              YewPar::Skeletons::API::CountNodes,
+                                              YewPar::Skeletons::API::DepthBounded>
+             ::search(Empty(), root, searchParameters);
   } else {
     std::cout << "Invalid skeleton type: " << skeleton << std::endl;
     return hpx::finalize();

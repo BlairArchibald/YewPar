@@ -157,23 +157,6 @@ struct NodeGen<TreeType::GEOMETRIC> : YewPar::NodeGenerator<UTSNode, UTSState> {
 #define UTS_MAX_TREE_DEPTH 20000
 #endif
 
-using ss_skel_b = YewPar::Skeletons::StackStealing<NodeGen<TreeType::BINOMIAL>,
-                                                   YewPar::Skeletons::API::CountNodes,
-                                                   YewPar::Skeletons::API::DepthBounded,
-                                                   YewPar::Skeletons::API::MaxStackDepth<
-                                                     std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >;
-
-using ss_skel_g = YewPar::Skeletons::StackStealing<NodeGen<TreeType::GEOMETRIC>,
-                                                   YewPar::Skeletons::API::CountNodes,
-                                                   YewPar::Skeletons::API::DepthBounded,
-                                                           YewPar::Skeletons::API::MaxStackDepth<
-                                                     std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >;
-
-using bFunc = ss_skel_b::SubTreeTask;
-using gFunc = ss_skel_g::SubTreeTask;
-REGISTER_SEARCHMANAGER(UTSNode, bFunc)
-REGISTER_SEARCHMANAGER(UTSNode, gFunc)
-
 std::vector<std::string> treeTypes = {"binomial", "geometric"};
 
 int hpx_main(boost::program_options::variables_map & opts) {
@@ -206,7 +189,12 @@ int hpx_main(boost::program_options::variables_map & opts) {
     }
     else if (skeleton == "stacksteal") {
       YewPar::Skeletons::API::Params<> searchParameters;
-      counts = ss_skel_b::search(params, root, searchParameters);
+      counts = YewPar::Skeletons::StackStealing<NodeGen<TreeType::BINOMIAL>,
+                                                YewPar::Skeletons::API::CountNodes,
+                                                YewPar::Skeletons::API::DepthBounded,
+                                                YewPar::Skeletons::API::MaxStackDepth<
+                                                  std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >
+               ::search(params, root, searchParameters);
     }
   } else if (treeType == "geometric"){
     if (skeleton == "seq") {
@@ -224,7 +212,12 @@ int hpx_main(boost::program_options::variables_map & opts) {
     }
     else if (skeleton == "stacksteal") {
       YewPar::Skeletons::API::Params<> searchParameters;
-      counts = ss_skel_g::search(params, root, searchParameters);
+      counts = YewPar::Skeletons::StackStealing<NodeGen<TreeType::GEOMETRIC>,
+                                                YewPar::Skeletons::API::CountNodes,
+                                                YewPar::Skeletons::API::DepthBounded,
+                                                YewPar::Skeletons::API::MaxStackDepth<
+                                                  std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >
+               ::search(params, root, searchParameters);
     }
   } else {
     std::cout << "Invalid tree type\n";
