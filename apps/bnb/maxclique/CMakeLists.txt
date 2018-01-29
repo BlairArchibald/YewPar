@@ -52,6 +52,16 @@ if (YEWPAR_BUILD_TEST_APPS)
     NAME MAXCLIQUE_STACKSTEALS_4T
     COMMAND maxclique-${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS} --skeleton stacksteal --input-file ${YEWPAR_TEST_DATA_DIR}/brock200_1.clq --hpx:threads 4)
   set_tests_properties(MAXCLIQUE_STACKSTEALS_4T PROPERTIES PASS_REGULAR_EXPRESSION "MaxClique Size = 21")
+
+  add_test(
+    NAME MAXCLIQUE_BUDGET_1T
+    COMMAND maxclique-${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS} --skeleton budget --input-file ${YEWPAR_TEST_DATA_DIR}/brock200_1.clq --hpx:threads 1)
+  set_tests_properties(MAXCLIQUE_BUDGET_1T PROPERTIES PASS_REGULAR_EXPRESSION "MaxClique Size = 21")
+
+  add_test(
+    NAME MAXCLIQUE_BUDGET_4T
+    COMMAND maxclique-${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS} --skeleton budget --input-file ${YEWPAR_TEST_DATA_DIR}/brock200_1.clq --hpx:threads 4)
+  set_tests_properties(MAXCLIQUE_BUDGET_4T PROPERTIES PASS_REGULAR_EXPRESSION "MaxClique Size = 21")
 endif (YEWPAR_BUILD_TEST_APPS)
 
 endif(YEWPAR_BUILD_BNB_APPS_MAXCLIQUE)

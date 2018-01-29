@@ -212,10 +212,10 @@ struct Budget {
         hpx::find_all_localities(), threadCount));
 
     if constexpr(isBnB || isDecision) {
-      auto inc = hpx::new_<Incumbent<Node, Bound> >(hpx::find_here()).get();
+      auto inc = hpx::new_<Incumbent>(hpx::find_here()).get();
       hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
           hpx::find_all_localities(), inc));
-      initIncumbent<Space, Node, Bound>(root, params.initialBound);
+      initIncumbent<Space, Node, Bound, Objcmp>(root, params.initialBound);
     }
 
     createTask(1, root).get();
@@ -229,7 +229,7 @@ struct Budget {
     } else if constexpr(isBnB || isDecision) {
       auto reg = Registry<Space, Node, Bound>::gReg;
 
-      typedef typename Incumbent<Node, Bound>::GetIncumbentAct getInc;
+      typedef typename Incumbent::GetIncumbentAct<Node, Bound, Objcmp> getInc;
       return hpx::async<getInc>(reg->globalIncumbent).get();
     } else {
       static_assert(isCountNodes || isBnB || isDecision, "Please provide a supported search type: CountNodes, BnB, Decision");
