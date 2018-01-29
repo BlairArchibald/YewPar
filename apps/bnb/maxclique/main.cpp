@@ -276,8 +276,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                          YewPar::Skeletons::API::PruneLevel>
           ::search(graph, root, searchParameters);
   } else if (skeletonType == "budget") {
-    //YewPar::Skeletons::API::Params<int> searchParameters;
-    ///YewPar::Skeletons::API::Params<int> searchParameters;/searchParameters.backtrackBudget = x;
+    YewPar::Skeletons::API::Params<int> searchParameters;
+    searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
     sol = YewPar::Skeletons::Budget<GenNode,
                                     YewPar::Skeletons::API::BnB,
                                     YewPar::Skeletons::API::BoundFunction<upperBound_func>,
@@ -310,6 +310,10 @@ int main (int argc, char* argv[]) {
     ( "spawn-depth,d",
       boost::program_options::value<std::uint64_t>()->default_value(0),
       "Depth in the tree to spawn at"
+      )
+    ( "backtrack-budget,b",
+      boost::program_options::value<unsigned>()->default_value(50),
+      "Number of backtracks before spawning work"
       )
     ( "input-file,f",
       boost::program_options::value<std::string>(),
