@@ -44,6 +44,17 @@ static std::vector<std::uint64_t> totalNodeCounts(const unsigned maxDepth) {
   return res;
 }
 
+template <typename Generator>
+struct StackElem {
+  unsigned seen;
+  Generator gen;
+
+  StackElem(Generator gen) : seen(0), gen(gen) {};
+};
+
+template <typename Generator>
+using GeneratorStack = std::vector<StackElem<Generator>>;
+
 }}
 
 #endif
