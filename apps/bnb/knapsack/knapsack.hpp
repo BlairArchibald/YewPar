@@ -90,10 +90,9 @@ template <unsigned numItems>
 int upperBound(const KPSpace<numItems> & space, const KPNode & n) {
   auto sol = n.sol;
 
-  float profit = sol.profit;
+  double profit = sol.profit;
   auto weight  = sol.weight;
 
-  // TODO: Space should have the numItems
   for (auto i = sol.items.back() + 1; i < sol.numItems; i++) {
     // If there is enough space for a full item we take it all
     if (hpx::util::get<1>(space)[i] + weight > sol.capacity) {
@@ -101,7 +100,7 @@ int upperBound(const KPSpace<numItems> & space, const KPNode & n) {
       weight += std::get<1>(space)[i];
     } else {
       // Only space for some fraction of the last item
-      profit = profit + (sol.capacity - weight) * (std::get<0>(space)[i] / std::get<1>(space)[i]);
+      profit = profit + (sol.capacity - weight) * ((double) std::get<0>(space)[i] / (double) std::get<1>(space)[i]);
       break;
     }
   }
