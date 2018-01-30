@@ -74,6 +74,16 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
+  // Ensure profit density ordering
+  std::sort(problem.items.begin(), problem.items.end(),
+            [](const std::pair<int, int> & x, const std::pair<int, int> & y) {
+              double p1,w1,p2,w2;
+              std::tie(p1, w1) = x;
+              std::tie(p2, w2) = y;
+              // x comes before y
+              return p1 / w1 >= p2 / w2;
+            });
+
   // Pack the problem into a more efficient format
   std::array<int, NUMITEMS> profits;
   std::array<int, NUMITEMS> weights;
@@ -94,7 +104,9 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   // Check profit density ordering (required for bounding to work correctly)
   for (int i = 0; i < numItems - 1; i++) {
-    if (profits[i] / weights[i] < profits[i+1] / weights[i+1]) {
+    auto x = (double) profits[i + 1] / (double) weights[i + 1];
+    auto y = (double) profits[i] / (double) weights[i];
+    if (x > y) {
       std::cout << "Input not in profit density ordering" << std::endl;
       hpx::finalize();
       return EXIT_FAILURE;
