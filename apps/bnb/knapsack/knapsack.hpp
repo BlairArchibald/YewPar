@@ -95,7 +95,7 @@ int upperBound(const KPSpace<numItems> & space, const KPNode & n) {
 
   for (auto i = sol.items.back() + 1; i < sol.numItems; i++) {
     // If there is enough space for a full item we take it all
-    if (hpx::util::get<1>(space)[i] + weight > sol.capacity) {
+    if (hpx::util::get<1>(space)[i] + weight <= sol.capacity) {
       profit += std::get<0>(space)[i];
       weight += std::get<1>(space)[i];
     } else {

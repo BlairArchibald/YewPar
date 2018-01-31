@@ -80,8 +80,15 @@ int hpx_main(boost::program_options::variables_map & opts) {
               double p1,w1,p2,w2;
               std::tie(p1, w1) = x;
               std::tie(p2, w2) = y;
-              // x comes before y
-              return p1 / w1 >= p2 / w2;
+              if (p1 / w1 == p2 / w2) {
+                if (p1 == p2) {
+                  return w1 < w2;
+                } else {
+                  return p1 > p2;
+                }
+              } else {
+                return p1 / w1 > p2 / w2;
+              }
             });
 
   // Pack the problem into a more efficient format
@@ -126,6 +133,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   if (skeletonType == "seq") {
     sol = YewPar::Skeletons::Seq<GenNode<NUMITEMS>,
                                  YewPar::Skeletons::API::BnB,
+                                 YewPar::Skeletons::API::PruneLevel,
                                  YewPar::Skeletons::API::BoundFunction<bnd_func> >
           ::search(space, root);
   } else if (skeletonType == "depthbounded") {
@@ -134,6 +142,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.spawnDepth = spawnDepth;
     sol = YewPar::Skeletons::DepthSpawns<GenNode<NUMITEMS>,
                                          YewPar::Skeletons::API::BnB,
+                                         YewPar::Skeletons::API::PruneLevel,
                                          YewPar::Skeletons::API::BoundFunction<bnd_func> >
           ::search(space, root, searchParameters);
   } else if (skeletonType == "ordered") {
@@ -142,6 +151,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.spawnDepth = spawnDepth;
     sol = YewPar::Skeletons::Ordered<GenNode<NUMITEMS>,
                                      YewPar::Skeletons::API::BnB,
+                                     YewPar::Skeletons::API::PruneLevel,
                                      YewPar::Skeletons::API::BoundFunction<bnd_func> >
           ::search(space, root, searchParameters);
   } else {
