@@ -1,5 +1,6 @@
 #include <iostream>
 #include <set>
+#include <chrono>
 
 #include <hpx/hpx_init.hpp>
 #include <hpx/runtime/serialization/set.hpp>
@@ -162,6 +163,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
     unvisited.insert(i);
   }
 
+  auto start_time = std::chrono::steady_clock::now();
+
   TSPSol initSol { initialTour, 0};
   TSPNode root { initSol, unvisited };
 
@@ -194,12 +197,17 @@ int hpx_main(boost::program_options::variables_map & opts) {
               ::search(distances, root, searchParameters);
   }
 
+  auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
+                      (std::chrono::steady_clock::now() - start_time);
+
   std::cout << "Tour: ";
   for (const auto c : sol.sol.cities) {
     std::cout << c << ",";
   }
   std::cout << std::endl;
   std::cout << "Optimal tour length: " << sol.sol.tourLength << "\n";
+
+  std::cout << "cpu = " << overall_time.count() << std::endl;
 
   return hpx::finalize();
 }

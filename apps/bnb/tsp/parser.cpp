@@ -14,7 +14,7 @@ TSPFromFile parseFile (const std::string & filename) {
 
     // TODO: need to parse the type field
 
-    static const std::regex node { R"(\s*(\d+)\s+(\d+[.\d]*)\s+(\d+[.\d]*))" };
+    static const std::regex node { R"(\s*(\d+)\s+([-]*\d+[.\d]*)\s+([-]*\d+[.\d]*))" };
     static const std::regex type { R"(EDGE_WEIGHT_TYPE: (\w+))" };
     std::smatch match;
     if (regex_match(line, match, node)) {

@@ -4,6 +4,7 @@
 #include <string>
 #include <regex>
 #include <exception>
+#include <chrono>
 
 #include <hpx/hpx_init.hpp>
 
@@ -120,6 +121,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
     }
   }
 
+  auto start_time = std::chrono::steady_clock::now();
+
   KPSolution initSol = {numItems, problem.capacity, std::vector<int>(), 0, 0};
 
   std::vector<int> initRem;
@@ -160,6 +163,9 @@ int hpx_main(boost::program_options::variables_map & opts) {
     return EXIT_FAILURE;
   }
 
+  auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
+                      (std::chrono::steady_clock::now() - start_time);
+
   auto finalSol = sol.sol;
   std::cout << "Final Profit: " << finalSol.profit << std::endl;
   std::cout << "Final Weight: " << finalSol.weight << std::endl;
@@ -169,6 +175,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
     std::cout << i << " ";
   }
   std::cout << std::endl;
+
+  std::cout << "cpu = " << overall_time.count() << std::endl;
 
   return hpx::finalize();
 }
