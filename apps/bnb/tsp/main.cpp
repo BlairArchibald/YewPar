@@ -128,6 +128,36 @@ unsigned boundFn(const DistanceMatrix<MAX_CITIES> & distances, const TSPNode & n
 
 typedef func<decltype(&boundFn), &boundFn> upperBound_func;
 
+unsigned greedyNN(const DistanceMatrix<MAX_CITIES> & distances,
+                  const std::vector<unsigned> & cities,
+                  const unsigned startingCity) {
+  unsigned dist = 0;
+
+  std::set<unsigned> rem;
+  for (const auto & c : cities) {
+    rem.insert(c);
+  }
+
+  rem.erase(startingCity);
+  auto curCity = startingCity;
+
+  while (!rem.empty()) {
+    auto nextCity = *(std::min_element(rem.begin(), rem.end(),
+                                       [curCity, distances](const unsigned & x, const unsigned & y){
+                                         return distances[curCity][x] < distances[curCity][y];
+                                       }));
+    dist += distances[curCity][nextCity];
+    rem.erase(nextCity);
+    curCity = nextCity;
+  };
+
+  // Add loop back to start
+  dist += distances[curCity][startingCity];
+
+  return dist;
+}
+
+
 // TSP helper functions
 unsigned calculateTourLength(const DistanceMatrix<MAX_CITIES> & distances,
                              const std::vector<unsigned> & cities) {
@@ -171,30 +201,37 @@ int hpx_main(boost::program_options::variables_map & opts) {
   auto skeletonType = opts["skeleton"].as<std::string>();
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto sol = root;
+
+  // Init the bound to a greedy nearest neighbour search
+  std::vector<unsigned> allCities(inputData.numNodes + 1);
+  std::iota(allCities.begin(), allCities.end(), 1);
+  YewPar::Skeletons::API::Params<unsigned> searchParameters;
+  searchParameters.initialBound = greedyNN(distances, allCities, 1);
+
   if (skeletonType == "seq") {
+
     sol = YewPar::Skeletons::Seq<NodeGen,
                                  YewPar::Skeletons::API::BnB,
                                  YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                  YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
-              ::search(distances, root);
+        ::search(distances, root, searchParameters);
   } else if (skeletonType == "depthbounded") {
-    YewPar::Skeletons::API::Params<unsigned> searchParameters;
     searchParameters.spawnDepth = spawnDepth;
-    searchParameters.initialBound = INT_MAX;
     sol = YewPar::Skeletons::DepthSpawns<NodeGen,
                                          YewPar::Skeletons::API::BnB,
                                          YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                          YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
                ::search(distances, root, searchParameters);
   } else if (skeletonType == "ordered") {
-    YewPar::Skeletons::API::Params<unsigned> searchParameters;
     searchParameters.spawnDepth = spawnDepth;
-    searchParameters.initialBound = INT_MAX;
     sol = YewPar::Skeletons::Ordered<NodeGen,
                                      YewPar::Skeletons::API::BnB,
                                      YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                      YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
               ::search(distances, root, searchParameters);
+  } else {
+    std::cout << "Invalid skeleton type\n";
+    return hpx::finalize();
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>

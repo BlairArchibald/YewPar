@@ -44,7 +44,7 @@ struct Seq {
   static bool expand(const Space & space,
                      const Node & n,
                      const API::Params<Bound> & params,
-                     Node & incumbent,
+                     std::pair<Node, Bound> & incumbent,
                      const unsigned childDepth,
                      std::vector<uint64_t> & counts) {
     Generator newCands = Generator(space, n);
@@ -64,7 +64,7 @@ struct Seq {
 
       if constexpr(isDecision) {
         if (c.getObj() == params.expectedObjective) {
-          incumbent = c;
+          std::get<0>(incumbent) = c;
           return true;
         }
       }
@@ -82,7 +82,7 @@ struct Seq {
             }
           // B&B Case
           } else {
-            auto best = incumbent.getObj();
+            auto best = std::get<1>(incumbent);
             Objcmp cmp;
             if (!cmp(bnd,best)) {
               if constexpr(pruneLevel) {
@@ -96,8 +96,9 @@ struct Seq {
 
       if constexpr(isBnB) {
         Objcmp cmp;
-        if (cmp(c.getObj(), incumbent.getObj())) {
-          incumbent = c;
+        if (cmp(c.getObj(), std::get<1>(incumbent))) {
+          std::get<0>(incumbent) = c;
+          std::get<1>(incumbent) = c.getObj();
         }
       }
 
@@ -115,16 +116,16 @@ struct Seq {
   static Node doBnB (const Space & space,
                      const Node  & root,
                      const API::Params<Bound> & params) {
-    auto incumbent = root;
+    std::pair<Node, Bound> incumbent = std::make_pair(root, params.initialBound);
     std::vector<std::uint64_t> counts(0);
     expand(space, root, params, incumbent, 1, counts);
-    return incumbent;
+    return std::get<0>(incumbent);
   }
 
   static std::vector<std::uint64_t> countNodes(const Space & space,
                                                const Node & root,
                                                const API::Params<Bound> & params) {
-    auto incumbent = root;
+    std::pair<Node, Bound> incumbent = std::make_pair(root, params.initialBound);
     std::vector<std::uint64_t> counts(params.maxDepth + 1);
     counts[0] = 1;
     expand(space, root, params, incumbent, 1, counts);
