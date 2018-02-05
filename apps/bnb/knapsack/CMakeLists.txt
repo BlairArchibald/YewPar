@@ -4,7 +4,6 @@ if (YEWPAR_BUILD_BNB_APPS_KNAPSACK)
 add_hpx_executable(knapsack
   SOURCES main.cpp
   DEPENDENCIES YewPar_lib)
-endif (YEWPAR_BUILD_BNB_APPS_KNAPSACK)
 
 if (YEWPAR_BUILD_TEST_APPS)
   add_test(
@@ -32,3 +31,5 @@ if (YEWPAR_BUILD_TEST_APPS)
     COMMAND knapsack -d 1 --skeleton ordered --input-file ${YEWPAR_TEST_DATA_DIR}/knapsackTest1.kp --hpx:threads 4)
   set_tests_properties(KNAPSACK_ORDERED_4T PROPERTIES PASS_REGULAR_EXPRESSION "Final Profit: 6925")
 endif (YEWPAR_BUILD_TEST_APPS)
+
+endif (YEWPAR_BUILD_BNB_APPS_KNAPSACK)

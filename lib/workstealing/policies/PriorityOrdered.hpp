@@ -1,10 +1,26 @@
 #ifndef YEWPAR_POLICY_PRIORITYORDERED_HPP
 #define YEWPAR_POLICY_PRIORITYORDERED_HPP
 
+#include <hpx/include/components.hpp>
+#include <hpx/lcos/async.hpp>
+#include <hpx/lcos/broadcast.hpp>
+#include <hpx/lcos/local/mutex.hpp>
+
 #include "Policy.hpp"
 #include "workstealing/priorityworkqueue.hpp"
 
+namespace Workstealing { namespace Scheduler {extern std::shared_ptr<Policy> local_policy; }}
+
 namespace Workstealing { namespace Policies {
+
+namespace PriorityOrderedPerf {
+extern std::atomic<std::uint64_t> perf_steals;
+extern std::atomic<std::uint64_t> perf_failedSteals;
+
+void registerPerformanceCounters();
+
+}
+
 
 class PriorityOrderedPolicy : public Policy {
  private:
@@ -23,8 +39,11 @@ class PriorityOrderedPolicy : public Policy {
     hpx::util::function<void(hpx::naming::id_type)> task;
     task = hpx::async<workstealing::priorityworkqueue::steal_action>(globalWorkqueue).get();
     if (task) {
+      PriorityOrderedPerf::perf_steals++;
       return hpx::util::bind(task, hpx::find_here());
     }
+
+    PriorityOrderedPerf::perf_failedSteals++;
     return nullptr;
   }
 

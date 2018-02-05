@@ -8,6 +8,7 @@
 #include "API.hpp"
 
 #include <hpx/lcos/broadcast.hpp>
+#include <hpx/include/iostreams.hpp>
 
 #include "util/NodeGenerator.hpp"
 #include "util/Registry.hpp"
@@ -38,22 +39,26 @@ struct StackStealing {
   static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthBounded_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
   static constexpr unsigned maxStackDepth = parameter::value_type<args, API::tag::MaxStackDepth, std::integral_constant<unsigned, 5000> >::type::value;
+
+  typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
+  static constexpr unsigned verbose = Verbose::value;
+
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
 
   static void printSkeletonDetails() {
-    std::cout << "Skeleton Type: StackStealing\n";
-    std::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
-    std::cout << "BNB: " << std::boolalpha << isBnB << "\n";
-    std::cout << "Decision: " << std::boolalpha << isDecision << "\n";
-    std::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
-    std::cout << "MaxStackDepth: " << maxStackDepth << "\n";
+    hpx::cout << "Skeleton Type: StackStealing\n";
+    hpx::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
+    hpx::cout << "BNB: " << std::boolalpha << isBnB << "\n";
+    hpx::cout << "Decision: " << std::boolalpha << isDecision << "\n";
+    hpx::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
+    hpx::cout << "MaxStackDepth: " << maxStackDepth << "\n";
     if constexpr(!std::is_same<boundFn, nullFn__>::value) {
-        std::cout << "Using Bounding: true\n";
-        std::cout << "PruneLevel Optimisation: " << std::boolalpha << pruneLevel << "\n";
+        hpx::cout << "Using Bounding: true\n";
+        hpx::cout << "PruneLevel Optimisation: " << std::boolalpha << pruneLevel << "\n";
       } else {
-      std::cout << "Using Bounding: false\n";
+      hpx::cout << "Using Bounding: false\n";
     }
   }
 
@@ -198,8 +203,13 @@ struct StackStealing {
 
         if constexpr(isDecision) {
           if (child.getObj() == reg->params.expectedObjective) {
-            updateIncumbent<Space, Node, Bound, Objcmp>(child, child.getObj());
+            updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(child, child.getObj());
             hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
+            if constexpr (verbose >= 1) {
+              hpx::cout <<
+                  (boost::format("Found solution on: %1%\n")
+                   % static_cast<std::int64_t>(hpx::get_locality_id()));
+            }
             return;
           }
         }
@@ -238,7 +248,7 @@ struct StackStealing {
           auto best = reg->localBound.load();
           Objcmp cmp;
           if (cmp(child.getObj(), best)) {
-            updateIncumbent<Space,Node,Bound,Objcmp>(child, child.getObj());
+            updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(child, child.getObj());
           }
         }
 
@@ -432,6 +442,10 @@ struct StackStealing {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
+    if constexpr(verbose) {
+      printSkeletonDetails();
+    }
+
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
@@ -441,7 +455,7 @@ struct StackStealing {
       auto inc = hpx::new_<Incumbent>(hpx::find_here()).get();
       hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
           hpx::find_all_localities(), inc));
-      initIncumbent<Space, Node, Bound, Objcmp>(root, params.initialBound);
+      initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
 
     doSearch(space, root, params);
@@ -455,7 +469,7 @@ struct StackStealing {
     } else if constexpr(isBnB || isDecision) {
       auto reg = Registry<Space, Node, Bound>::gReg;
 
-      typedef typename Incumbent::GetIncumbentAct<Node, Bound, Objcmp> getInc;
+      typedef typename Incumbent::GetIncumbentAct<Node, Bound, Objcmp, Verbose> getInc;
       return hpx::async<getInc>(reg->globalIncumbent).get();
     } else {
       static_assert(isCountNodes || isBnB || isDecision, "Please provide a supported search type: CountNodes, BnB, Decision");

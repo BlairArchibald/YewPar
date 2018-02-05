@@ -5,6 +5,7 @@
 #include <memory>
 
 #include <hpx/include/components.hpp>
+#include <hpx/include/iostreams.hpp>
 
 namespace YewPar {
 
@@ -18,25 +19,27 @@ struct Incumbent : public hpx::components::locking_hook<
   // the library, never user code.
   std::unique_ptr<void, std::function<void(void*)> > ptr;
 
-  template <typename Node, typename Bound, typename Cmp>
+  template<typename Node, typename Bound, typename Cmp, typename Verbose>
   void init() {
     std::function<void(void*)> del = [](void * t) {
-      auto comp = static_cast<Incumbent::IncumbentComp<Node, Bound, Cmp>*>(t);
+      auto comp = static_cast<Incumbent::IncumbentComp<Node, Bound, Cmp, Verbose>*>(t);
       delete comp;
     };
     ptr = std::unique_ptr<void, std::function<void(void*)> >(
-        new IncumbentComp<Node, Bound, Cmp>(), del);
+        new IncumbentComp<Node, Bound, Cmp, Verbose>(), del);
   }
 
-  template <typename Node, typename Bound, typename Cmp>
+  template <typename Node, typename Bound, typename Cmp, typename Verbose>
   struct InitComponentAct : hpx::actions::make_action<
-    decltype(&Incumbent::init<Node, Bound, Cmp>),
-    &Incumbent::init<Node, Bound, Cmp>,
-    InitComponentAct<Node, Bound, Cmp> >::type {};
+    decltype(&Incumbent::init<Node, Bound, Cmp, Verbose>),
+    &Incumbent::init<Node, Bound, Cmp, Verbose>,
+    InitComponentAct<Node, Bound, Cmp, Verbose> >::type {};
 
-  template<typename Node, typename Bound, typename Cmp>
+  template<typename Node, typename Bound, typename Cmp, typename Verbose>
   class IncumbentComp {
    private:
+    static constexpr unsigned verbose = Verbose::value;
+
     Node incumbentNode;
     Bound bnd;
 
@@ -51,6 +54,9 @@ struct Incumbent : public hpx::components::locking_hook<
       if (cmp(incumbent.getObj(), incumbentNode.getObj())) {
         incumbentNode = incumbent;
         bnd = incumbent.getObj();
+        if constexpr(verbose >= 1) {
+          hpx::cout << (boost::format("New Incumbent Bound: %1%\n") % incumbentNode.getObj());
+        }
       }
     }
 
@@ -59,44 +65,44 @@ struct Incumbent : public hpx::components::locking_hook<
     }
   };
 
-  template<typename Node, typename Bound, typename Cmp>
+  template<typename Node, typename Bound, typename Cmp, typename Verbose>
   void initialiseIncumbent(Node n, Bound b) {
     auto p = ptr.get();
-    auto cmp = static_cast<Incumbent::IncumbentComp<Node, Bound, Cmp>*>(p);
+    auto cmp = static_cast<Incumbent::IncumbentComp<Node, Bound, Cmp, Verbose>*>(p);
     cmp->initialiseIncumbent(n, b);
   }
 
-  template<typename Node, typename Bound, typename Cmp>
+  template<typename Node, typename Bound, typename Cmp, typename Verbose>
   void updateIncumbent(Node incumbent) {
     auto p = ptr.get();
-    auto cmp = static_cast<Incumbent::IncumbentComp<Node, Bound, Cmp>*>(p);
+    auto cmp = static_cast<Incumbent::IncumbentComp<Node, Bound, Cmp, Verbose>*>(p);
     cmp->updateIncumbent(incumbent);
   }
 
-  template<typename Node, typename Bound, typename Cmp>
+  template<typename Node, typename Bound, typename Cmp, typename Verbose>
   Node getIncumbent() const {
     auto p = ptr.get();
-    auto cmp = static_cast<Incumbent::IncumbentComp<Node, Bound, Cmp>*>(p);
+    auto cmp = static_cast<Incumbent::IncumbentComp<Node, Bound, Cmp, Verbose>*>(p);
     return cmp->getIncumbent();
   }
 
-  template<typename Node, typename Bound, typename Cmp>
+  template<typename Node, typename Bound, typename Cmp, typename Verbose>
   struct UpdateIncumbentAct : hpx::actions::make_action<
-    decltype(&Incumbent::updateIncumbent<Node, Bound, Cmp>),
-    &Incumbent::updateIncumbent<Node, Bound, Cmp>,
-    UpdateIncumbentAct<Node, Bound, Cmp> >::type {};
+    decltype(&Incumbent::updateIncumbent<Node, Bound, Cmp, Verbose>),
+    &Incumbent::updateIncumbent<Node, Bound, Cmp, Verbose>,
+    UpdateIncumbentAct<Node, Bound, Cmp, Verbose> >::type {};
 
-  template<typename Node, typename Bound, typename Cmp>
+  template<typename Node, typename Bound, typename Cmp, typename Verbose>
   struct InitialiseIncumbentAct : hpx::actions::make_action<
-    decltype(&Incumbent::initialiseIncumbent<Node, Bound, Cmp>),
-    &Incumbent::initialiseIncumbent<Node, Bound, Cmp>,
-    InitialiseIncumbentAct<Node, Bound, Cmp> >::type {};
+    decltype(&Incumbent::initialiseIncumbent<Node, Bound, Cmp, Verbose>),
+    &Incumbent::initialiseIncumbent<Node, Bound, Cmp, Verbose>,
+    InitialiseIncumbentAct<Node, Bound, Cmp, Verbose> >::type {};
 
-  template<typename Node, typename Bound, typename Cmp>
+  template<typename Node, typename Bound, typename Cmp, typename Verbose>
   struct GetIncumbentAct : hpx::actions::make_action<
-    decltype(&Incumbent::getIncumbent<Node, Bound, Cmp>),
-    &Incumbent::getIncumbent<Node, Bound, Cmp>,
-    GetIncumbentAct<Node, Bound, Cmp> >::type {};
+    decltype(&Incumbent::getIncumbent<Node, Bound, Cmp, Verbose>),
+    &Incumbent::getIncumbent<Node, Bound, Cmp, Verbose>,
+    GetIncumbentAct<Node, Bound, Cmp, Verbose> >::type {};
 };
 
 }

@@ -6,6 +6,7 @@
 #include <cstdint>
 
 #include <hpx/lcos/broadcast.hpp>
+#include <hpx/include/iostreams.hpp>
 
 #include "API.hpp"
 
@@ -38,21 +39,25 @@ struct Ordered {
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthBounded_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
+
+  typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
+  static constexpr unsigned verbose = Verbose::value;
+
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
 
   static void printSkeletonDetails() {
-    std::cout << "Skeleton Type: Ordered\n";
-    std::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
-    std::cout << "BNB: " << std::boolalpha << isBnB << "\n";
-    std::cout << "Decision: " << std::boolalpha << isDecision << "\n";
-    std::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
+    hpx::cout << "Skeleton Type: Ordered\n";
+    hpx::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
+    hpx::cout << "BNB: " << std::boolalpha << isBnB << "\n";
+    hpx::cout << "Decision: " << std::boolalpha << isDecision << "\n";
+    hpx::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
     if constexpr(!std::is_same<boundFn, nullFn__>::value) {
-        std::cout << "Using Bounding: true\n";
-        std::cout << "PruneLevel Optimisation: " << std::boolalpha << pruneLevel << "\n";
+        hpx::cout << "Using Bounding: true\n";
+        hpx::cout << "PruneLevel Optimisation: " << std::boolalpha << pruneLevel << "\n";
       } else {
-      std::cout << "Using Bounding: false\n";
+      hpx::cout << "Using Bounding: false\n";
     }
   }
 
@@ -125,8 +130,13 @@ struct Ordered {
 
       if constexpr(isDecision) {
         if (c.getObj() == params.expectedObjective) {
-          updateIncumbent<Space,Node,Bound,Objcmp>(c, c.getObj());
+          updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(c, c.getObj());
           hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
+          if constexpr (verbose >= 1) {
+            hpx::cout <<
+                (boost::format("Found solution on: %1%\n")
+                % static_cast<std::int64_t>(hpx::get_locality_id()));
+          }
           return;
         }
       }
@@ -162,7 +172,7 @@ struct Ordered {
 
         Objcmp cmp;
         if (cmp(c.getObj(), best)) {
-          updateIncumbent<Space,Node,Bound,Objcmp>(c, c.getObj());
+          updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(c, c.getObj());
         }
       }
 
@@ -173,6 +183,10 @@ struct Ordered {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
+    if constexpr(verbose) {
+      printSkeletonDetails();
+    }
+
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
@@ -180,7 +194,7 @@ struct Ordered {
       auto inc = hpx::new_<Incumbent>(hpx::find_here()).get();
       hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
           hpx::find_all_localities(), inc));
-      initIncumbent<Space, Node, Bound, Objcmp>(root, params.initialBound);
+      initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
 
     Workstealing::Policies::PriorityOrderedPolicy::initPolicy();
@@ -243,7 +257,7 @@ struct Ordered {
       return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
     } else if constexpr(isBnB || isDecision) {
       auto reg = Registry<Space, Node, Bound>::gReg;
-      typedef typename Incumbent::GetIncumbentAct<Node, Bound, Objcmp> getInc;
+      typedef typename Incumbent::GetIncumbentAct<Node, Bound, Objcmp, Verbose> getInc;
       return hpx::async<getInc>(reg->globalIncumbent).get();
     } else {
       static_assert(isCountNodes || isBnB || isDecision, "Please provide a supported search type: CountNodes, BnB, Decision");

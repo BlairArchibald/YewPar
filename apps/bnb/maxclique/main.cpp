@@ -15,6 +15,8 @@
 #include "BitGraph.hpp"
 #include "BitSet.hpp"
 
+#include "YewPar.hpp"
+
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
 #include "skeletons/StackStealing.hpp"
@@ -231,15 +233,15 @@ int hpx_main(boost::program_options::variables_map & opts) {
       sol = YewPar::Skeletons::Seq<GenNode,
                                    YewPar::Skeletons::API::Decision,
                                    YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                   YewPar::Skeletons::API::PruneLevel
-                                   >
+                                   YewPar::Skeletons::API::PruneLevel,
+                                   YewPar::Skeletons::API::MoreVerbose>
             ::search(graph, root, searchParameters);
     } else {
     sol = YewPar::Skeletons::Seq<GenNode,
                                  YewPar::Skeletons::API::BnB,
                                  YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                 YewPar::Skeletons::API::PruneLevel
-                                 >
+                                 YewPar::Skeletons::API::PruneLevel,
+                                 YewPar::Skeletons::API::MoreVerbose>
           ::search(graph, root);
     }
   } else if (skeletonType == "depthbounded") {
@@ -258,7 +260,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
       sol = YewPar::Skeletons::DepthSpawns<GenNode,
                                           YewPar::Skeletons::API::BnB,
                                           YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                          YewPar::Skeletons::API::PruneLevel>
+                                          YewPar::Skeletons::API::PruneLevel,
+                                          YewPar::Skeletons::API::MoreVerbose>
             ::search(graph, root, searchParameters);
     }
   } else if (skeletonType == "stacksteal") {
@@ -323,6 +326,8 @@ int main (int argc, char* argv[]) {
     boost::program_options::value<int>()->default_value(0),
     "For Decision Skeletons. Size of the clique to search for"
     );
+
+  YewPar::registerPerformanceCounters();
 
   return hpx::init(desc_commandline, argc, argv);
 }

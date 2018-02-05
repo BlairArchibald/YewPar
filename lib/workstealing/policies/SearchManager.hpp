@@ -46,8 +46,9 @@
 #include "hpx/util/lockfree/deque.hpp"
 
 #include "Policy.hpp"
-#include "workstealing/Scheduler.hpp"
 #include "util/util.hpp"
+
+namespace Workstealing { namespace Scheduler {extern std::shared_ptr<Policy> local_policy; }}
 
 namespace Workstealing { namespace Policies {
 

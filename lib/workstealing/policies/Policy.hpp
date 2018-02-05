@@ -1,6 +1,8 @@
 #ifndef YEWPAR_POLICY_HPP
 #define YEWPAR_POLICY_HPP
 
+#include <hpx/util/function.hpp>
+
 class Policy {
  public:
   // Scheduler hook point

@@ -30,7 +30,17 @@ BOOST_PARAMETER_TEMPLATE_KEYWORD(BoundFunction)
 BOOST_PARAMETER_TEMPLATE_KEYWORD(ObjectiveComparison)
 BOOST_PARAMETER_TEMPLATE_KEYWORD(MaxStackDepth)
 
+// Optimisations
 DEF_PRESENT_PARAMETER(PruneLevel, PruneLevel_)
+
+// Verbose output
+BOOST_PARAMETER_TEMPLATE_KEYWORD(Verbose_)
+// Basic Info
+struct Verbose : Verbose_<std::integral_constant<unsigned, 1> > {};
+// Basic Info + Updates
+struct MoreVerbose : Verbose_<std::integral_constant<unsigned, 2> > {};
+// Basic Info + Updates + Parallelism information
+struct EvenMoreVerbose : Verbose_<std::integral_constant<unsigned, 3> > {};
 
 // Signature, everything is optional since the generators are explicitly passed as arg 1 on each skeleton
 BOOST_PARAMETER_TEMPLATE_KEYWORD(null)

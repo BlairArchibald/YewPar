@@ -1,7 +1,7 @@
 #ifndef SKELETONS_SEQ_HPP
 #define SKELETONS_SEQ_HPP
 
-#include <iostream>
+#include <hpx/include/iostreams.hpp>
 #include <vector>
 #include <cstdint>
 
@@ -23,21 +23,22 @@ struct Seq {
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthBounded_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
+  static constexpr unsigned verbose = parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type::value;
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
 
   static void printSkeletonDetails() {
-    std::cout << "Skeleton Type: Seq\n";
-    std::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
-    std::cout << "BNB: " << std::boolalpha << isBnB << "\n";
-    std::cout << "Decision: " << std::boolalpha << isDecision << "\n";
-    std::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
+    hpx::cout << "Skeleton Type: Seq\n";
+    hpx::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
+    hpx::cout << "BNB: " << std::boolalpha << isBnB << "\n";
+    hpx::cout << "Decision: " << std::boolalpha << isDecision << "\n";
+    hpx::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
     if constexpr(!std::is_same<boundFn, nullFn__>::value) {
-      std::cout << "Using Bounding: true\n";
-      std::cout << "PruneLevel Optimisation: " << std::boolalpha << pruneLevel << "\n";
+      hpx::cout << "Using Bounding: true\n";
+      hpx::cout << "PruneLevel Optimisation: " << std::boolalpha << pruneLevel << "\n";
     } else {
-      std::cout << "Using Bounding: false\n";
+      hpx::cout << "Using Bounding: false\n";
     }
   }
 
@@ -65,15 +66,21 @@ struct Seq {
       if constexpr(isDecision) {
         if (c.getObj() == params.expectedObjective) {
           std::get<0>(incumbent) = c;
+          if constexpr(verbose > 1) {
+            hpx::cout <<
+              (boost::format("Found solution on: %1%\n")
+              % static_cast<std::int64_t>(hpx::get_locality_id()));
+          }
           return true;
         }
       }
 
       // Do we support bounding?
       if constexpr(!std::is_same<boundFn, nullFn__>::value) {
+          Objcmp cmp;
           auto bnd  = boundFn::invoke(space, c);
           if constexpr(isDecision) {
-            if (bnd < params.expectedObjective) {
+            if (!cmp(bnd, params.expectedObjective) && bnd != params.expectedObjective) {
               if constexpr(pruneLevel) {
                   break;
                 } else {
@@ -83,7 +90,6 @@ struct Seq {
           // B&B Case
           } else {
             auto best = std::get<1>(incumbent);
-            Objcmp cmp;
             if (!cmp(bnd,best)) {
               if constexpr(pruneLevel) {
                   break;
@@ -99,6 +105,9 @@ struct Seq {
         if (cmp(c.getObj(), std::get<1>(incumbent))) {
           std::get<0>(incumbent) = c;
           std::get<1>(incumbent) = c.getObj();
+          if constexpr(verbose >= 1) {
+            hpx::cout << (boost::format("New Incumbent: %1%\n") % c.getObj());
+          }
         }
       }
 
@@ -135,6 +144,10 @@ struct Seq {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
+    if constexpr (verbose) {
+      printSkeletonDetails();
+    }
+
     if constexpr(isCountNodes) {
       return countNodes(space, root, params);
     } else if constexpr(isBnB || isDecision) {

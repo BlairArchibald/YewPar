@@ -2,17 +2,29 @@
 #define YEWPAR_POLICY_WORKPOOL_HPP
 
 #include "Policy.hpp"
-#include "hpx/lcos/local/mutex.hpp"
-#include "hpx/util/function.hpp"
+
+#include <hpx/include/components.hpp>
+
+#include <hpx/lcos/async.hpp>
+#include <hpx/lcos/broadcast.hpp>
+#include <hpx/lcos/local/mutex.hpp>
+#include <hpx/util/function.hpp>
+#include <hpx/runtime/actions/plain_action.hpp>
+#include <hpx/runtime/actions/basic_action.hpp>
+
 #include "../workqueue.hpp"
-#include "util/util.hpp"
 
 #include <random>
 #include <vector>
 
+namespace Workstealing { namespace Scheduler {extern std::shared_ptr<Policy> local_policy; }}
+
 namespace Workstealing { namespace Policies {
 
-// TODO: Factor into a .cpp file (there's no templates so this is fine)
+namespace WorkpoolPerf {
+void registerPerformanceCounters();
+}
+
 // TODO: Performance counters
 class Workpool : public Policy {
 
@@ -30,57 +42,14 @@ class Workpool : public Policy {
   mutex_t mtx;
 
  public:
-  Workpool(hpx::naming::id_type localQueue) {
-    local_workqueue = localQueue;
-    last_remote = hpx::find_here();
+  Workpool(hpx::naming::id_type localQueue);
+  ~Workpool() = default;
 
-    std::random_device rd;
-    randGenerator.seed(rd());
-  }
+  hpx::util::function<void(), false> getWork() override;
 
-  hpx::util::function<void(), false> getWork() override {
-    std::unique_lock<mutex_t> l(mtx);
+  void addwork(hpx::util::function<void(hpx::naming::id_type)> task);
 
-    hpx::util::function<void(hpx::naming::id_type)> task;
-    task = hpx::async<workstealing::workqueue::getLocal_action>(local_workqueue).get();
-
-    if (task) {
-      return hpx::util::bind(task, hpx::find_here());
-    }
-
-    if (!distributed_workqueues.empty()) {
-      if (last_remote != hpx::find_here()) {
-        task = hpx::async<workstealing::workqueue::steal_action>(last_remote).get();
-        if (task) {
-          return hpx::util::bind(task, hpx::find_here());
-        }
-      } else {
-        std::uniform_int_distribution<int> rand(0, distributed_workqueues.size() - 1);
-        auto victim = distributed_workqueues.begin();
-        std::advance(victim, rand(randGenerator));
-        task = hpx::async<workstealing::workqueue::steal_action>(*victim).get();
-
-        if (task) {
-          last_remote = *victim;
-          return hpx::util::bind(task, hpx::find_here());
-        }
-      }
-    }
-    return nullptr;
-  }
-
-  void addwork(hpx::util::function<void(hpx::naming::id_type)> task) {
-    std::unique_lock<mutex_t> l(mtx);
-    hpx::apply<workstealing::workqueue::addWork_action>(local_workqueue, task);
-  }
-
-  void registerDistributedWorkqueues(std::vector<hpx::naming::id_type> workqueues) {
-    std::unique_lock<mutex_t> l(mtx);
-    distributed_workqueues = workqueues;
-    distributed_workqueues.erase(
-        std::remove_if(distributed_workqueues.begin(), distributed_workqueues.end(), YewPar::util::isColocated),
-        distributed_workqueues.end());
-  }
+  void registerDistributedWorkqueues(std::vector<hpx::naming::id_type> workqueues);
 
   static void setWorkqueue(hpx::naming::id_type localWorkqueue) {
     Workstealing::Scheduler::local_policy = std::make_shared<Workpool>(localWorkqueue);
