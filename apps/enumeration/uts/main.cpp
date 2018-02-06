@@ -27,6 +27,8 @@ struct UTSState {
     ar & rootBF;
     ar & nonLeafBF;
     ar & nonLeafProb;
+    ar & gen_mx;
+    ar & geoType;
   }
 };
 
@@ -38,7 +40,7 @@ enum TreeType {
 namespace hpx { namespace serialization {
 template<class Archive>
 void serialize(Archive & ar, state_t & x, const unsigned int version) {
-  ar & x;
+  ar & x.state;
 }}}
 
 struct UTSNode {
@@ -48,12 +50,14 @@ struct UTSNode {
 
   template <class Archive>
   void serialize(Archive & ar, const unsigned int version) {
+    ar & isRoot;
+    ar & depth;
     ar & rngstate;
   }
 };
 
 template <TreeType t>
-struct NodeGen;
+struct NodeGen {};
 
 template <>
 struct NodeGen<TreeType::BINOMIAL> : YewPar::NodeGenerator<UTSNode, UTSState> {
