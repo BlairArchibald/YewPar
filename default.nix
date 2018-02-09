@@ -1,4 +1,4 @@
-with import <nixpkgs> {};
+with import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/78a17f5765f24ae24ee87224dad16862451295d2.tar.gz") {};
 let
 stdenv = overrideCC pkgs.stdenv pkgs.gcc7;
 boost = boost164;
@@ -19,6 +19,7 @@ newHPX = stdenv.mkDerivation rec {
     "-DHPX_WITH_PARCELPORT_MPI=ON"
     "-DHPX_WITH_EXAMPLES=OFF"
     "-DHPX_WITH_TESTS=OFF"
+    "-DMPI_LIBRARY=${mpich2}/lib/libmpi.so"
   ];
 
   enableParallelBuilding = true;
