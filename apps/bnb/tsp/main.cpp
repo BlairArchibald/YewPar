@@ -211,21 +211,21 @@ int hpx_main(boost::program_options::variables_map & opts) {
   if (skeletonType == "seq") {
 
     sol = YewPar::Skeletons::Seq<NodeGen,
-                                 YewPar::Skeletons::API::BnB,
+                                 YewPar::Skeletons::API::Optimisation,
                                  YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                  YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
         ::search(distances, root, searchParameters);
   } else if (skeletonType == "depthbounded") {
     searchParameters.spawnDepth = spawnDepth;
     sol = YewPar::Skeletons::DepthSpawns<NodeGen,
-                                         YewPar::Skeletons::API::BnB,
+                                         YewPar::Skeletons::API::Optimisation,
                                          YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                          YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
                ::search(distances, root, searchParameters);
   } else if (skeletonType == "ordered") {
     searchParameters.spawnDepth = spawnDepth;
     sol = YewPar::Skeletons::Ordered<NodeGen,
-                                     YewPar::Skeletons::API::BnB,
+                                     YewPar::Skeletons::API::Optimisation,
                                      YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                      YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
               ::search(distances, root, searchParameters);

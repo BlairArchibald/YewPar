@@ -251,7 +251,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   YewPar::Skeletons::API::Params<int> searchParameters;
   searchParameters.spawnDepth = spawnDepth;
   auto result = YewPar::Skeletons::DepthSpawns<GenNode,
-                                               YewPar::Skeletons::API::BnB,
+                                               YewPar::Skeletons::API::Optimisation,
                                                YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                                YewPar::Skeletons::API::PruneLevel>
         ::search(graph, root, searchParameters);

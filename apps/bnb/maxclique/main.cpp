@@ -238,7 +238,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
             ::search(graph, root, searchParameters);
     } else {
     sol = YewPar::Skeletons::Seq<GenNode,
-                                 YewPar::Skeletons::API::BnB,
+                                 YewPar::Skeletons::API::Optimisation,
                                  YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                  YewPar::Skeletons::API::PruneLevel,
                                  YewPar::Skeletons::API::MoreVerbose>
@@ -258,7 +258,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
       YewPar::Skeletons::API::Params<int> searchParameters;
       searchParameters.spawnDepth = spawnDepth;
       sol = YewPar::Skeletons::DepthSpawns<GenNode,
-                                          YewPar::Skeletons::API::BnB,
+                                          YewPar::Skeletons::API::Optimisation,
                                           YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                           YewPar::Skeletons::API::PruneLevel,
                                           YewPar::Skeletons::API::MoreVerbose>
@@ -266,7 +266,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     }
   } else if (skeletonType == "stacksteal") {
     sol = YewPar::Skeletons::StackStealing<GenNode,
-                                           YewPar::Skeletons::API::BnB,
+                                           YewPar::Skeletons::API::Optimisation,
                                            YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                            YewPar::Skeletons::API::PruneLevel>
           ::search(graph, root);
@@ -274,7 +274,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.spawnDepth = spawnDepth;
     sol = YewPar::Skeletons::Ordered<GenNode,
-                                         YewPar::Skeletons::API::BnB,
+                                         YewPar::Skeletons::API::Optimisation,
                                          YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                          YewPar::Skeletons::API::PruneLevel>
           ::search(graph, root, searchParameters);
@@ -282,7 +282,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
     sol = YewPar::Skeletons::Budget<GenNode,
-                                    YewPar::Skeletons::API::BnB,
+                                    YewPar::Skeletons::API::Optimisation,
                                     YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                     YewPar::Skeletons::API::PruneLevel>
           ::search(graph, root);

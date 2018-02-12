@@ -135,7 +135,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   auto skeletonType = opts["skeleton"].as<std::string>();
   if (skeletonType == "seq") {
     sol = YewPar::Skeletons::Seq<GenNode<NUMITEMS>,
-                                 YewPar::Skeletons::API::BnB,
+                                 YewPar::Skeletons::API::Optimisation,
                                  YewPar::Skeletons::API::PruneLevel,
                                  YewPar::Skeletons::API::BoundFunction<bnd_func> >
           ::search(space, root);
@@ -144,7 +144,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.spawnDepth = spawnDepth;
     sol = YewPar::Skeletons::DepthSpawns<GenNode<NUMITEMS>,
-                                         YewPar::Skeletons::API::BnB,
+                                         YewPar::Skeletons::API::Optimisation,
                                          YewPar::Skeletons::API::PruneLevel,
                                          YewPar::Skeletons::API::BoundFunction<bnd_func> >
           ::search(space, root, searchParameters);
@@ -153,7 +153,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.spawnDepth = spawnDepth;
     sol = YewPar::Skeletons::Ordered<GenNode<NUMITEMS>,
-                                     YewPar::Skeletons::API::BnB,
+                                     YewPar::Skeletons::API::Optimisation,
                                      YewPar::Skeletons::API::PruneLevel,
                                      YewPar::Skeletons::API::BoundFunction<bnd_func> >
           ::search(space, root, searchParameters);

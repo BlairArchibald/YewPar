@@ -19,7 +19,7 @@ struct Seq {
   typedef typename API::skeleton_signature::bind<Args...>::type args;
 
   static constexpr bool isCountNodes = parameter::value_type<args, API::tag::CountNodes_, std::integral_constant<bool, false> >::type::value;
-  static constexpr bool isBnB = parameter::value_type<args, API::tag::BnB_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool isBnB = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthBounded_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
@@ -31,7 +31,7 @@ struct Seq {
   static void printSkeletonDetails() {
     hpx::cout << "Skeleton Type: Seq\n";
     hpx::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
-    hpx::cout << "BNB: " << std::boolalpha << isBnB << "\n";
+    hpx::cout << "Optimisation: " << std::boolalpha << isBnB << "\n";
     hpx::cout << "Decision: " << std::boolalpha << isDecision << "\n";
     hpx::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
     if constexpr(!std::is_same<boundFn, nullFn__>::value) {

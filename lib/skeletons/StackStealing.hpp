@@ -34,7 +34,7 @@ struct StackStealing {
   typedef typename API::skeleton_signature::bind<Args...>::type args;
 
   static constexpr bool isCountNodes = parameter::value_type<args, API::tag::CountNodes_, std::integral_constant<bool, false> >::type::value;
-  static constexpr bool isBnB = parameter::value_type<args, API::tag::BnB_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool isOptimisation = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthBounded_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
@@ -50,7 +50,7 @@ struct StackStealing {
   static void printSkeletonDetails() {
     hpx::cout << "Skeleton Type: StackStealing\n";
     hpx::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
-    hpx::cout << "BNB: " << std::boolalpha << isBnB << "\n";
+    hpx::cout << "Optimisation: " << std::boolalpha << isOptimisation << "\n";
     hpx::cout << "Decision: " << std::boolalpha << isDecision << "\n";
     hpx::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
     hpx::cout << "MaxStackDepth: " << maxStackDepth << "\n";
@@ -243,7 +243,7 @@ struct StackStealing {
             }
           }
 
-        if constexpr(isBnB) {
+        if constexpr(isOptimisation) {
           // FIXME: unsure about loading this twice in terms of performance
           auto best = reg->localBound.load();
           Objcmp cmp;
@@ -451,7 +451,7 @@ struct StackStealing {
 
     Policy::initPolicy(params.stealAll);
 
-    if constexpr(isBnB || isDecision) {
+    if constexpr(isOptimisation || isDecision) {
       auto inc = hpx::new_<Incumbent>(hpx::find_here()).get();
       hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
           hpx::find_all_localities(), inc));
@@ -466,13 +466,13 @@ struct StackStealing {
     // Return the right thing
     if constexpr(isCountNodes) {
       return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
-    } else if constexpr(isBnB || isDecision) {
+    } else if constexpr(isOptimisation || isDecision) {
       auto reg = Registry<Space, Node, Bound>::gReg;
 
       typedef typename Incumbent::GetIncumbentAct<Node, Bound, Objcmp, Verbose> getInc;
       return hpx::async<getInc>(reg->globalIncumbent).get();
     } else {
-      static_assert(isCountNodes || isBnB || isDecision, "Please provide a supported search type: CountNodes, BnB, Decision");
+      static_assert(isCountNodes || isOptimisation || isDecision, "Please provide a supported search type: CountNodes, Optimisation, Decision");
     }
   }
 };
