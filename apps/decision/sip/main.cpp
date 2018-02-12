@@ -112,7 +112,7 @@ private:
 vector<uint8_t> _pattern_adjacencies_bits;
 
 public:
-const int max_graphs;
+int max_graphs;
 
 unsigned pattern_size, full_pattern_size, target_size;
 
@@ -122,6 +122,8 @@ vector<FixedBitSet<n_words_> > target_graph_rows;
 vector<int> pattern_permutation, target_permutation, isolated_vertices;
 vector<vector<int> > patterns_degrees, targets_degrees;
 int largest_target_degree;
+
+  Model() = default;
 
   Model(const Graph & target, const Graph & pattern) :
       max_graphs(5),
@@ -533,10 +535,13 @@ struct SIPNode {
 
   bool sat;
 
+  SIPNode() = default;
+
   SIPNode(Domains<n_words_> domains, Assignments assignments) :
       domains(domains), assignments(assignments), propagationSuccess(true), sat(false) {};
   SIPNode(Domains<n_words_> domains, Assignments assignments, bool propagationSuccess) :
       domains(domains), assignments(assignments), propagationSuccess(propagationSuccess), sat(false) {};
+
   // If we are SAT then we don't really care about initialising other stuff since it's not used
   SIPNode(Assignments assignments,  bool sat) : assignments(assignments), sat(sat) {};
 
@@ -645,10 +650,22 @@ int hpx_main(boost::program_options::variables_map & opts) {
   YewPar::Skeletons::API::Params<bool> searchParameters;
   searchParameters.expectedObjective = true;
 
-  sol = YewPar::Skeletons::Seq<GenNode<NWORDS>,
-                               YewPar::Skeletons::API::Decision,
-                               YewPar::Skeletons::API::MoreVerbose>
-      ::search(m, root, searchParameters);
+  auto skeleton = opts["skeleton"].as<std::string>();
+  if (skeleton == "seq") {
+    sol = YewPar::Skeletons::Seq<GenNode<NWORDS>,
+                                YewPar::Skeletons::API::Decision,
+                                YewPar::Skeletons::API::MoreVerbose>
+        ::search(m, root, searchParameters);
+  } else if (skeleton ==  "depthbounded") {
+    searchParameters.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
+    sol = YewPar::Skeletons::DepthSpawns<GenNode<NWORDS>,
+                                        YewPar::Skeletons::API::Decision,
+                                        YewPar::Skeletons::API::MoreVerbose>
+        ::search(m, root, searchParameters);
+  } else {
+    std::cerr << "Invalid skeleton type\n";
+    return hpx::finalize();
+  }
 
   std::map<int, int> res_isomorphism;
   for (auto & a : sol.assignments.values) {
@@ -669,6 +686,14 @@ int main (int argc, char* argv[]) {
       desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
+      ( "skeleton",
+        boost::program_options::value<std::string>()->default_value("seq"),
+        "Which skeleton to use: seq, depthbound, stacksteal or ordered"
+      )
+      ( "spawn-depth,d",
+        boost::program_options::value<std::uint64_t>()->default_value(0),
+        "Depth in the tree to spawn at"
+      )
       ("pattern", boost::program_options::value<std::string>(), "Specify the pattern file (LAD format)")
       ("target",  boost::program_options::value<std::string>(), "Specify the target file (LAD format)");
 
