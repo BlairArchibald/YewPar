@@ -27,6 +27,7 @@
 #include "fixed_bit_set.hh"
 
 #include <hpx/hpx_init.hpp>
+#include <hpx/util/tuple.hpp>
 
 #ifndef NWORDS
 #define NWORDS 8
@@ -50,10 +51,11 @@ using std::sort;
 using std::string;
 using std::swap;
 using std::to_string;
-using std::tuple;
 using std::uniform_int_distribution;
 using std::uniform_real_distribution;
 using std::vector;
+
+using hpx::util::tuple;
 
 using std::chrono::duration_cast;
 using std::chrono::milliseconds;
@@ -72,7 +74,16 @@ sort(p.begin(), p.end(),
        [&] (int a, int b) { return (! reverse) ^ (degrees[a] < degrees[b] || (degrees[a] == degrees[b] && a > b)); });
 }
 
-using Assignment = pair<unsigned, unsigned>;
+struct Assignment {
+  unsigned variable;
+  unsigned value;
+
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & variable;
+    ar & value;
+  }
+};
 
 struct Assignments {
     vector<tuple<Assignment, bool> > values;
@@ -81,9 +92,14 @@ struct Assignments {
     {
         // this should not be a linear scan...
         return values.end() != find_if(values.begin(), values.end(), [&] (const auto & a) {
-                return get<0>(a) == assignment;
+                return get<0>(a).variable == assignment.variable && get<0>(a).value == assignment.value;
                 });
     }
+
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & values;
+  }
 };
 
 template <unsigned n_words_>
@@ -272,14 +288,14 @@ auto propagate_adjacency_constraints(
     Domain<n_words_> & d,
     const Assignment & current_assignment) -> void
 {
-  auto pattern_adjacency_bits = m.pattern_adjacencies_bits(current_assignment.first, d.v);
+  auto pattern_adjacency_bits = m.pattern_adjacencies_bits(current_assignment.variable, d.v);
 
   // for each graph pair...
   for (int g = 0 ; g < max_graphs_ ; ++g) {
     // if we're adjacent...
     if (pattern_adjacency_bits & (1u << g)) {
       // ...then we can only be mapped to adjacent vertices
-      d.values.intersect_with(m.target_graph_rows[current_assignment.second * max_graphs_ + g]);
+      d.values.intersect_with(m.target_graph_rows[current_assignment.value * max_graphs_ + g]);
     }
   }
 }
@@ -296,7 +312,7 @@ auto propagate_simple_constraints(
       continue;
 
     // all different
-    d.values.unset(current_assignment.second);
+    d.values.unset(current_assignment.value);
 
     // adjacency
     switch (m.max_graphs) {
@@ -331,7 +347,8 @@ auto propagate(
 
     // ok, make the assignment
     branch_domain->fixed = true;
-    assignments.values.push_back({ { current_assignment.first, current_assignment.second }, false });
+    assignments.values.push_back(hpx::util::make_tuple(current_assignment, false));
+    //assignments.values.push_back({ current_assignment.variable, current_assignment.value}, false });
 
     // propagate simple all different and adjacency
     if (! propagate_simple_constraints(m, new_domains, current_assignment))
@@ -607,7 +624,8 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
 
     // We need to do the copy in case we are running in parallel
     auto newAssignments = parent.get().assignments;
-    newAssignments.values.push_back({ { branch_domain->v, *f_v }, true });
+    Assignment a {branch_domain->v, *f_v};
+    newAssignments.values.push_back(hpx::util::make_tuple(std::move(a), true));
 
     auto new_domains = copy_domains_and_assign(parent.get().domains, branch_domain->v, *f_v);
 
@@ -669,8 +687,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   std::map<int, int> res_isomorphism;
   for (auto & a : sol.assignments.values) {
-    res_isomorphism.emplace(m.pattern_permutation.at(get<0>(a).first),
-                            m.target_permutation.at(get<0>(a).second));
+    res_isomorphism.emplace(m.pattern_permutation.at(get<0>(a).variable),
+                            m.target_permutation.at(get<0>(a).value));
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
