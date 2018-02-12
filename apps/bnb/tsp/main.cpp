@@ -1,9 +1,10 @@
 #include <iostream>
 #include <set>
 #include <chrono>
+#include <bitset>
 
 #include <hpx/hpx_init.hpp>
-#include <hpx/runtime/serialization/set.hpp>
+#include <hpx/runtime/serialization/bitset.hpp>
 
 #include "parser.hpp"
 
@@ -24,12 +25,23 @@ struct TSPSol {
   }
 };
 
+struct TSPSpace {
+  DistanceMatrix<MAX_CITIES> distances;
+  unsigned numCities;
+
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & distances;
+    ar & numCities;
+  }
+};
+
 struct TSPNode {
   TSPSol sol;
-  std::set<unsigned> unvisited;
+  std::bitset<MAX_CITIES> unvisited;
 
   unsigned getObj() const {
-    if (unvisited.empty()) {
+    if (unvisited.none()) {
       return sol.tourLength;
     } else {
       return INT_MAX;
@@ -44,38 +56,49 @@ struct TSPNode {
 
 };
 
-struct NodeGen : YewPar::NodeGenerator<TSPNode, DistanceMatrix<MAX_CITIES> > {
+
+template <std::size_t words_>
+static unsigned next_set(const std::bitset<words_> & bs, unsigned max, unsigned last_set) {
+  for (auto i = last_set + 1; i <= max; ++i) {
+    if (bs.test(i)) {
+      return i;
+    }
+  }
+}
+
+struct NodeGen : YewPar::NodeGenerator<TSPNode, TSPSpace> {
   unsigned lastCity;
 
-  std::reference_wrapper<const DistanceMatrix<MAX_CITIES> > distances;
+  std::reference_wrapper<const TSPSpace> space;
   std::reference_wrapper<const TSPNode> parent;
 
-  std::set<unsigned>::const_iterator unvisitedIter;
+  unsigned nextToVisit;
 
-  NodeGen(const DistanceMatrix<MAX_CITIES> & distances, const TSPNode & n) :
-      distances(std::cref(distances)), parent(std::cref(n)) {
+  NodeGen(const TSPSpace & space, const TSPNode & n) :
+      space(std::cref(space)), parent(std::cref(n)) {
     lastCity = n.sol.cities.back();
-    numChildren = n.unvisited.size();
-    unvisitedIter = parent.get().unvisited.cbegin();
+    numChildren = n.unvisited.count();
+    const auto & bs = parent.get().unvisited;
+    nextToVisit = next_set<MAX_CITIES>(bs, this->space.get().numCities, 0);
   }
 
   TSPNode next() override {
-    auto nextCity = *unvisitedIter;
-    unvisitedIter++;
+    auto nextCity = nextToVisit;
+    nextToVisit = next_set<MAX_CITIES>(parent.get().unvisited, space.get().numCities, nextToVisit);
 
     // Not quite right since partial tours don't have a length
     auto newSol = parent.get().sol;
     newSol.cities.push_back(nextCity);
-    newSol.tourLength += distances.get()[lastCity][nextCity];
+    newSol.tourLength += space.get().distances[lastCity][nextCity];
 
     auto newUnvisited = parent.get().unvisited;
-    newUnvisited.erase(nextCity);
+    newUnvisited.reset(nextCity);
 
     // Link back to the start if we have a complete tour
-    if (newUnvisited.empty()) {
+    if (newUnvisited.none()) {
       auto start = newSol.cities.front();
       newSol.cities.push_back(start);
-      newSol.tourLength += distances.get()[nextCity][start];
+      newSol.tourLength += space.get().distances[nextCity][start];
     }
 
     return TSPNode { newSol, newUnvisited };
@@ -83,17 +106,19 @@ struct NodeGen : YewPar::NodeGenerator<TSPNode, DistanceMatrix<MAX_CITIES> > {
 };
 
 // Very simple MST function, nothing fancy so not the fastest
-unsigned mst(const DistanceMatrix<MAX_CITIES> & distances,
+unsigned mst(const TSPSpace & space,
              unsigned lastCity,
-             std::set<unsigned> & remCities) {
+             std::bitset<MAX_CITIES> & remCities) {
   std::unordered_map<unsigned, unsigned> weights;
   auto w = 0;
   auto minCity = 0;
   auto minWeight = INT_MAX;
 
   // Set up initial weights
-  for (const auto  & c : remCities) {
-    weights[c] = distances[lastCity][c];
+  for (auto i = 1; i <= space.numCities; ++i) {
+    if (remCities.test(i)) {
+      weights[i] = space.distances[lastCity][i];
+    }
   }
 
   while (!weights.empty()) {
@@ -110,7 +135,7 @@ unsigned mst(const DistanceMatrix<MAX_CITIES> & distances,
 
     // Update weights
     for (const auto & c : weights) {
-      auto dist = distances[minCity][c.first];
+      auto dist = space.distances[minCity][c.first];
       if (dist < c.second) {
         weights[c.first] = dist;
       }
@@ -120,10 +145,10 @@ unsigned mst(const DistanceMatrix<MAX_CITIES> & distances,
   return w;
 }
 
-unsigned boundFn(const DistanceMatrix<MAX_CITIES> & distances, const TSPNode & n) {
-  std::set<unsigned> nodes = n.unvisited;
-  nodes.insert(n.sol.cities.front());
-  return n.sol.tourLength + mst(distances, n.sol.cities.back(), nodes);
+unsigned boundFn(const TSPSpace & space, const TSPNode & n) {
+  std::bitset<MAX_CITIES> nodes = n.unvisited;
+  nodes.set(n.sol.cities.front());
+  return n.sol.tourLength + mst(space, n.sol.cities.back(), nodes);
 }
 
 typedef func<decltype(&boundFn), &boundFn> upperBound_func;
@@ -187,14 +212,15 @@ int hpx_main(boost::program_options::variables_map & opts) {
   }
 
   std::vector<unsigned> initialTour {1};
-  std::set<unsigned> unvisited;
+  std::bitset<MAX_CITIES> unvisited;
 
   for (auto i = 2; i <= inputData.numNodes; ++i) {
-    unvisited.insert(i);
+    unvisited.set(i);
   }
 
   auto start_time = std::chrono::steady_clock::now();
 
+  TSPSpace space { distances , inputData.numNodes };
   TSPSol initSol { initialTour, 0};
   TSPNode root { initSol, unvisited };
 
@@ -214,21 +240,21 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                  YewPar::Skeletons::API::Optimisation,
                                  YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                  YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
-        ::search(distances, root, searchParameters);
+        ::search(space, root, searchParameters);
   } else if (skeletonType == "depthbounded") {
     searchParameters.spawnDepth = spawnDepth;
     sol = YewPar::Skeletons::DepthSpawns<NodeGen,
                                          YewPar::Skeletons::API::Optimisation,
                                          YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                          YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
-               ::search(distances, root, searchParameters);
+               ::search(space, root, searchParameters);
   } else if (skeletonType == "ordered") {
     searchParameters.spawnDepth = spawnDepth;
     sol = YewPar::Skeletons::Ordered<NodeGen,
                                      YewPar::Skeletons::API::Optimisation,
                                      YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                      YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
-              ::search(distances, root, searchParameters);
+              ::search(space, root, searchParameters);
   } else {
     std::cout << "Invalid skeleton type\n";
     return hpx::finalize();
