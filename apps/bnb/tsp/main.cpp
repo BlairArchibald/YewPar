@@ -109,7 +109,8 @@ struct NodeGen : YewPar::NodeGenerator<TSPNode, TSPSpace> {
 unsigned mst(const TSPSpace & space,
              unsigned lastCity,
              std::bitset<MAX_CITIES> & remCities) {
-  std::unordered_map<unsigned, unsigned> weights;
+  std::array<unsigned, MAX_CITIES> weights;
+
   auto w = 0;
   auto minCity = 0;
   auto minWeight = INT_MAX;
@@ -121,25 +122,29 @@ unsigned mst(const TSPSpace & space,
     }
   }
 
-  while (!weights.empty()) {
+  while (!remCities.none()) {
     auto minWeight = INT_MAX;
-    for (const auto & c : weights) {
-      if (c.second < minWeight) {
-        minWeight = c.second;
-        minCity = c.first;
+    for (auto i = 1; i <= space.numCities; ++i) {
+      if (remCities.test(i)) {
+        if (weights[i]< minWeight) {
+          minWeight = weights[i];
+          minCity = i;
+        }
       }
     }
 
     w += minWeight;
-    weights.erase(minCity);
+    remCities.reset(minCity);
 
     // Update weights
-    for (const auto & c : weights) {
-      auto dist = space.distances[minCity][c.first];
-      if (dist < c.second) {
-        weights[c.first] = dist;
+      for (auto i = 1; i <= space.numCities; ++i) {
+        if (remCities.test(i)) {
+          auto dist = space.distances[minCity][i];
+          if (dist < weights[i]) {
+            weights[i] = dist;
+          }
+        }
       }
-    }
   }
 
   return w;
