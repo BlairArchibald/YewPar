@@ -1,8 +1,10 @@
 set(YEWPAR_BUILD_BNB_APPS_KNAPSACK "ON" CACHE BOOL "Build Branch and Bound Knapsack")
+set(YEWPAR_BUILD_BNB_APPS_KNAPSACK_NITEMS 50 CACHE INT "Max number of items in Knapsack item arrays")
 
 if (YEWPAR_BUILD_BNB_APPS_KNAPSACK)
 add_hpx_executable(knapsack
   SOURCES main.cpp
+  COMPILE_FLAGS "-DNUMITEMS=${YEWPAR_BUILD_BNB_APPS_KNAPSACK_NITEMS}"
   DEPENDENCIES YewPar_lib)
 
 if (YEWPAR_BUILD_TEST_APPS)

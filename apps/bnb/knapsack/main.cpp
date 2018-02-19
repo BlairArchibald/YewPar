@@ -114,7 +114,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   for (int i = 0; i < numItems - 1; i++) {
     auto x = (double) profits[i + 1] / (double) weights[i + 1];
     auto y = (double) profits[i] / (double) weights[i];
-    if (x >= y) {
+    if (x > y) {
       std::cout << "Input not in profit density ordering" << std::endl;
       hpx::finalize();
       return EXIT_FAILURE;
