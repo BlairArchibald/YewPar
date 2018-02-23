@@ -56,7 +56,8 @@ void registerPerformanceCounters() {
 
 }
 
-DepthPoolPolicy::DepthPoolPolicy(hpx::naming::id_type workpool) : local_workpool(workpool) {
+DepthPoolPolicy::DepthPoolPolicy(hpx::naming::id_type workpool) {
+  local_workpool = workpool;
   last_remote = hpx::find_here();
 
   std::random_device rd;

@@ -34,6 +34,8 @@ DepthPool::fnType DepthPool::getLocal() {
       break;
     }
   }
+
+  return task;
 }
 
 void DepthPool::addWork(DepthPool::fnType task, unsigned depth) {

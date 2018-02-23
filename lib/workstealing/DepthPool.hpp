@@ -24,10 +24,14 @@ class DepthPool : public hpx::components::locking_hook<
   std::vector< std::queue<fnType> > pools;
 
   // For quicker access
-  unsigned highest = 0;
   unsigned lowest = 0;
 
  public:
+  DepthPool() {
+    // TODO: Size should be settable/dynamic
+    pools.resize(30);
+  }
+
   fnType getLocal();
   HPX_DEFINE_COMPONENT_ACTION(DepthPool, getLocal);
   fnType steal();

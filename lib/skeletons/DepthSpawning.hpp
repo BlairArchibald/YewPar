@@ -267,7 +267,7 @@ struct DepthSpawns {
     if constexpr (std::is_same<Policy, Workstealing::Policies::Workpool>::value) {
       workPool->addwork(task);
     } else {
-      workPool->addWork(task, depth);
+      workPool->addwork(task, depth);
     }
 
      return pfut;
