@@ -20,6 +20,7 @@
 
 #include "workstealing/Scheduler.hpp"
 #include "workstealing/policies/Workpool.hpp"
+#include "workstealing/policies/DepthPoolPolicy.hpp"
 
 namespace YewPar { namespace Skeletons {
 
@@ -51,6 +52,8 @@ struct DepthSpawns {
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
+
+  typedef typename parameter::value_type<args, API::tag::DepthBoundedPoolPolicy, Workstealing::Policies::Workpool >::type Policy;
 
   static void printSkeletonDetails() {
     hpx::cout << "Skeleton Type: DepthSpawns\n";
@@ -133,7 +136,11 @@ struct DepthSpawns {
       }
 
       // Spawn new tasks for all children (that are still alive after pruning)
-      childFutures.push_back(createTask(childDepth + 1, c));
+      if constexpr (std::is_same<Policy, Workstealing::Policies::Workpool>::value) {
+        childFutures.push_back(createTask(childDepth + 1, c));
+      } else {
+        childFutures.push_back(createTask(childDepth + 1, c, childDepth));
+      }
     }
   }
 
@@ -246,7 +253,8 @@ struct DepthSpawns {
   }
 
   static hpx::future<void> createTask(const unsigned childDepth,
-                                      const Node & taskRoot) {
+                                      const Node & taskRoot,
+                                      const unsigned depth = 0) {
     hpx::lcos::promise<void> prom;
     auto pfut = prom.get_future();
     auto pid  = prom.get_id();
@@ -255,9 +263,12 @@ struct DepthSpawns {
     hpx::util::function<void(hpx::naming::id_type)> task;
     task = hpx::util::bind(t, hpx::util::placeholders::_1, taskRoot, childDepth, pid);
 
-    // TODO: Type alias this stuff
-    auto workPool = std::static_pointer_cast<Workstealing::Policies::Workpool>(Workstealing::Scheduler::local_policy);
-    workPool->addwork(task);
+    auto workPool = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy);
+    if constexpr (std::is_same<Policy, Workstealing::Policies::Workpool>::value) {
+      workPool->addwork(task);
+    } else {
+      workPool->addWork(task, depth);
+    }
 
      return pfut;
   }
@@ -272,7 +283,7 @@ struct DepthSpawns {
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
-    Workstealing::Policies::Workpool::initPolicy();
+    Policy::initPolicy();
 
     auto threadCount = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 1;
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(
@@ -286,7 +297,7 @@ struct DepthSpawns {
     }
 
     // Issue is updateCounts by the looks of things. Something probably isn't initialised correctly.
-    createTask(1, root).get();
+    createTask(1, root, 0).get();
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));

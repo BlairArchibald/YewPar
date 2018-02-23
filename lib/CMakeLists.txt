@@ -20,6 +20,7 @@ add_hpx_library(YewPar
   COMPONENT_DEPENDENCIES
   workqueue
   priorityworkqueue
+  DepthPool
   Incumbent
   SearchManager
   iostreams
