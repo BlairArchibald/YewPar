@@ -40,6 +40,7 @@ struct Seq {
     } else {
       hpx::cout << "Using Bounding: false\n";
     }
+    hpx::cout << hpx::flush;
   }
 
   static bool expand(const Space & space,
@@ -69,7 +70,8 @@ struct Seq {
           if constexpr(verbose > 1) {
             hpx::cout <<
               (boost::format("Found solution on: %1%\n")
-              % static_cast<std::int64_t>(hpx::get_locality_id()));
+              % static_cast<std::int64_t>(hpx::get_locality_id()))
+                      << hpx::flush;
           }
           return true;
         }
@@ -106,7 +108,7 @@ struct Seq {
           std::get<0>(incumbent) = c;
           std::get<1>(incumbent) = c.getObj();
           if constexpr(verbose >= 1) {
-            hpx::cout << (boost::format("New Incumbent: %1%\n") % c.getObj());
+            hpx::cout << (boost::format("New Incumbent: %1%\n") % c.getObj()) << hpx::flush;
           }
         }
       }
