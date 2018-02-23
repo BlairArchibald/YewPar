@@ -63,7 +63,6 @@ struct Ordered {
     hpx::cout << hpx::flush;
   }
 
-
   struct OrderedTask {
     OrderedTask(const Node n, unsigned priority) : node(n), priority(priority) {
       started.get_future();
@@ -119,6 +118,12 @@ struct Ordered {
       for (auto i = 0; i < tasks.size(); ++i) {
         tasks[i].priority = i;
       }
+    }
+
+    if (verbose > 1) {
+      hpx::cout <<
+          (boost::format("Ordered Skeleton Spawned %1% Tasks\n") % tasks.size())
+                << hpx::flush;
     }
 
     return tasks;
