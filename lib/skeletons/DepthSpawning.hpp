@@ -53,7 +53,7 @@ struct DepthSpawns {
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
 
-  typedef typename parameter::value_type<args, API::tag::DepthBoundedPoolPolicy, Workstealing::Policies::Workpool >::type Policy;
+  typedef typename parameter::value_type<args, API::tag::DepthBoundedPoolPolicy, Workstealing::Policies::DepthPoolPolicy>::type Policy;
 
   static void printSkeletonDetails() {
     hpx::cout << "Skeleton Type: DepthSpawns\n";
