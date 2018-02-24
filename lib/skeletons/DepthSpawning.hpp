@@ -67,6 +67,11 @@ struct DepthSpawns {
       } else {
       hpx::cout << "Using Bounding: false\n";
     }
+    if constexpr (std::is_same<Policy, Workstealing::Policies::Workpool>::value) {
+      hpx::cout << "Workpool: Deque\n";
+    } else {
+      hpx::cout << "Workpool: DepthPool\n";
+    }
     hpx::cout << hpx::flush;
   }
 
