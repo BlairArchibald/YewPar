@@ -39,6 +39,7 @@ struct Ordered {
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthBounded_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool discrepancySearch = parameter::value_type<args, API::tag::DiscrepancySearch_, std::integral_constant<bool, false> >::type::value;
 
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
@@ -62,7 +63,6 @@ struct Ordered {
     hpx::cout << hpx::flush;
   }
 
-
   struct OrderedTask {
     OrderedTask(const Node n, unsigned priority) : node(n), priority(priority) {
       started.get_future();
@@ -84,21 +84,47 @@ struct Ordered {
                                                   unsigned spawnDepth,
                                                   const Node & root) {
     std::vector<OrderedTask> tasks;
-
-    std::function<void(unsigned, unsigned, const Node &)>
-        fn = [&](unsigned depth, unsigned numDisc, const Node & n) {
-      if (depth == 0) {
-        tasks.emplace_back(OrderedTask(n, numDisc));
-      } else {
-        auto newCands = Generator(space, n);
-        for (auto i = 0; i < newCands.numChildren; ++i) {
-          auto node = newCands.next();
-          fn(depth - 1, numDisc + i, node);
+    if constexpr (discrepancySearch) {
+      std::function<void(unsigned, unsigned, const Node &)>
+          fn = [&](unsigned depth, unsigned numDisc, const Node & n) {
+        if (depth == 0) {
+          tasks.emplace_back(OrderedTask(n, numDisc));
+        } else {
+          auto newCands = Generator(space, n);
+          for (auto i = 0; i < newCands.numChildren; ++i) {
+            auto node = newCands.next();
+            fn(depth - 1, numDisc + i, node);
+          }
         }
-      }
-    };
+      };
+      fn(spawnDepth, 0, root);
+      // Linear task spawning
+    } else {
+      std::function<void(unsigned, const Node &)> fn =
+          [&](unsigned depth, const Node & n) {
+        if (depth == 0) {
+          tasks.emplace_back(OrderedTask(n, 0));
+        } else {
+          auto newCands = Generator(space, n);
+          for (auto i = 0; i < newCands.numChildren; ++i) {
+            auto node = newCands.next();
+            fn(depth - 1, node);
+          }
+        }
+      };
+      fn(spawnDepth, root);
 
-    fn(spawnDepth, 0, root);
+      // Reassign priorities from 0 to get a fixed order
+      for (auto i = 0; i < tasks.size(); ++i) {
+        tasks[i].priority = i;
+      }
+    }
+
+    if (verbose > 1) {
+      hpx::cout <<
+          (boost::format("Ordered Skeleton Spawned %1% Tasks\n") % tasks.size())
+                << hpx::flush;
+    }
 
     return tasks;
   }

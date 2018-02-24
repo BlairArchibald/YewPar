@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
   name = "YewPar";
   version = "0.0.1";
 
-  buildInputs = [ boost newHPX mpich2 gperftools hwloc ];
+  buildInputs = [ boost newHPX gperftools mpich2 hwloc ];
   nativeBuildInputs = [ cmake ];
 
   src =

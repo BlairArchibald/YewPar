@@ -33,6 +33,12 @@ BOOST_PARAMETER_TEMPLATE_KEYWORD(MaxStackDepth)
 // Optimisations
 DEF_PRESENT_PARAMETER(PruneLevel, PruneLevel_)
 
+// Depth bounded policies
+BOOST_PARAMETER_TEMPLATE_KEYWORD(DepthBoundedPoolPolicy)
+
+// Ordered Discrpancy search toggle
+DEF_PRESENT_PARAMETER(DiscrepancySearch, DiscrepancySearch_)
+
 // Verbose output
 BOOST_PARAMETER_TEMPLATE_KEYWORD(Verbose_)
 // Basic Info

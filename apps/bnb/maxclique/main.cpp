@@ -261,6 +261,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                           YewPar::Skeletons::API::Optimisation,
                                           YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                           YewPar::Skeletons::API::PruneLevel,
+                                          YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                                            Workstealing::Policies::DepthPoolPolicy>,
                                           YewPar::Skeletons::API::MoreVerbose>
             ::search(graph, root, searchParameters);
     }
