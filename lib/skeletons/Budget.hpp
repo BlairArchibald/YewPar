@@ -32,6 +32,8 @@ struct Budget {
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
 
+  typedef typename parameter::value_type<args, API::tag::DepthBoundedPoolPolicy, Workstealing::Policies::DepthPoolPolicy>::type Policy;
+
   static void printSkeletonDetails() {
     hpx::cout << "Skeleton Type: Budget\n";
     hpx::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
@@ -44,6 +46,11 @@ struct Budget {
         hpx::cout << "PruneLevel Optimisation: " << std::boolalpha << pruneLevel << "\n";
       } else {
       hpx::cout << "Using Bounding: false\n";
+    }
+    if constexpr (std::is_same<Policy, Workstealing::Policies::Workpool>::value) {
+        hpx::cout << "Workpool: Deque\n";
+      } else {
+      hpx::cout << "Workpool: DepthPool\n";
     }
     hpx::cout << hpx::flush;
   }
@@ -206,8 +213,12 @@ struct Budget {
     hpx::util::function<void(hpx::naming::id_type)> task;
     task = hpx::util::bind(t, hpx::util::placeholders::_1, taskRoot, childDepth, pid);
 
-    auto workPool = std::static_pointer_cast<Workstealing::Policies::Workpool>(Workstealing::Scheduler::local_policy);
-    workPool->addwork(task);
+    auto workPool = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy);
+    if constexpr (std::is_same<Policy, Workstealing::Policies::Workpool>::value) {
+      workPool->addwork(task);
+    } else {
+      workPool->addwork(task, childDepth - 1);
+    }
 
     return pfut;
   }
@@ -222,7 +233,7 @@ struct Budget {
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
-    Workstealing::Policies::Workpool::initPolicy();
+    Policy::initPolicy();
 
     auto threadCount = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 1;
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(
