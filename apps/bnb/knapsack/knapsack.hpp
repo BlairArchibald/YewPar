@@ -14,29 +14,35 @@
 
 /* A representation of a knapsack current solution */
 struct KPSolution {
-  friend class boost::serialization::access;
-
-  int numItems; // FIXME: should really be in the space not the sol?
-  int capacity; // FIXME: should really be in the space not the sol?
   std::vector<int> items;
   int profit;
   int weight;
 
   template <class Archive>
   void serialize(Archive & ar, const unsigned int version) {
-    ar & capacity;
     ar & items;
     ar & profit;
     ar & weight;
   }
 };
 
-template <unsigned numItems>
-using KPSpace = std::pair< std::array<int, numItems>, std::array<int, numItems> >;
+template <unsigned N>
+struct KPSpace {
+  std::array<int, N> profits;
+  std::array<int, N> weights;
+  int numItems;
+  int capacity;
+
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+    ar & profits;
+    ar & weights;
+    ar & numItems;
+    ar & capacity;
+  }
+};
 
 struct KPNode {
-  friend class boost::serialization::access;
-
   KPSolution sol;
   std::vector<int> rem;
 
@@ -56,33 +62,30 @@ struct GenNode : YewPar::NodeGenerator<KPNode, KPSpace<numItems> > {
   std::vector<int> items;
   int pos;
 
-  const KPSpace<numItems> & space;
-  const KPNode & n;
+  std::reference_wrapper<const KPSpace<numItems> > space;
+  std::reference_wrapper<const KPNode> n;
 
   GenNode (const KPSpace<numItems> & space, const KPNode & n) :
-      pos(0), space(space), n(n) {
-
-    auto cands = n.rem;
-    std::copy_if(cands.begin(), cands.end(), std::inserter(items, items.end()), [&](const int i) {
-        return n.sol.weight + std::get<1>(space)[i] <= n.sol.capacity;
-      });
-
-    this->numChildren = items.size();
+      pos(0), space(std::cref(space)), n(std::cref(n)) {
+    this->numChildren = n.rem.size();
   }
 
   KPNode next() override {
-    auto i = items[pos];
-
-    auto newSol = n.sol;
+    auto i = n.get().rem[pos];
+    auto newSol = n.get().sol;
     newSol.items.push_back(i);
-    newSol.profit += std::get<0>(space)[i];
-    newSol.weight += std::get<1>(space)[i];
+    newSol.profit += space.get().profits[i];
+    newSol.weight += space.get().weights[i];
 
-    auto newCands = n.rem;
-    newCands.erase(std::remove(newCands.begin(), newCands.end(), i), newCands.end());
+    ++pos;
 
-    pos++;
-    return {newSol, newCands};
+    std::vector<int> newRem;
+    std::copy_if(n.get().rem.begin() + pos, n.get().rem.end(), std::back_inserter(newRem),
+                 [&](const int i) {
+                   return newSol.weight + space.get().weights[i] <= space.get().capacity;
+                 });
+
+    return { newSol, std::move(newRem) };
   }
 };
 
@@ -93,14 +96,14 @@ int upperBound(const KPSpace<numItems> & space, const KPNode & n) {
   double profit = sol.profit;
   auto weight  = sol.weight;
 
-  for (auto i = sol.items.back() + 1; i < sol.numItems; i++) {
+  for (auto i = sol.items.back() + 1; i < space.numItems; i++) {
     // If there is enough space for a full item we take it all
-    if (hpx::util::get<1>(space)[i] + weight <= sol.capacity) {
-      profit += std::get<0>(space)[i];
-      weight += std::get<1>(space)[i];
+    if (space.weights[i] + weight <= space.capacity) {
+      profit += space.profits[i];
+      weight += space.weights[i];
     } else {
       // Only space for some fraction of the last item
-      profit = profit + (sol.capacity - weight) * ((double) std::get<0>(space)[i] / (double) std::get<1>(space)[i]);
+      profit = profit + (space.capacity - weight) * ((double) space.profits[i] / (double) space.weights[i]);
       break;
     }
   }

@@ -106,8 +106,6 @@ int hpx_main(boost::program_options::variables_map & opts) {
     i++;
   }
 
-  auto space = std::make_pair(profits, weights);
-
   int numItems = problem.items.size();
 
   // Check profit density ordering (required for bounding to work correctly)
@@ -123,7 +121,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto start_time = std::chrono::steady_clock::now();
 
-  KPSolution initSol = {numItems, problem.capacity, std::vector<int>(), 0, 0};
+  KPSpace<NUMITEMS> space {profits, weights, numItems, problem.capacity};
+  KPSolution initSol = {std::vector<int>(), 0, 0};
 
   std::vector<int> initRem;
   for (int i = 0; i < numItems; i++) {
