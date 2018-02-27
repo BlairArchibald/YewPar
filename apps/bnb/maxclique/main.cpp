@@ -261,8 +261,6 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                           YewPar::Skeletons::API::Optimisation,
                                           YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                           YewPar::Skeletons::API::PruneLevel,
-                                          YewPar::Skeletons::API::DepthBoundedPoolPolicy<
-                                            Workstealing::Policies::DepthPoolPolicy>,
                                           YewPar::Skeletons::API::MoreVerbose>
             ::search(graph, root, searchParameters);
     }
@@ -275,11 +273,20 @@ int hpx_main(boost::program_options::variables_map & opts) {
   } else if (skeletonType == "ordered") {
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.spawnDepth = spawnDepth;
+    if (opts.count("discrepancyOrder")) {
+      sol = YewPar::Skeletons::Ordered<GenNode,
+                                       YewPar::Skeletons::API::Optimisation,
+                                       YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                       YewPar::Skeletons::API::DiscrepancySearch,
+                                       YewPar::Skeletons::API::PruneLevel>
+          ::search(graph, root, searchParameters);
+    } else {
     sol = YewPar::Skeletons::Ordered<GenNode,
                                          YewPar::Skeletons::API::Optimisation,
                                          YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                          YewPar::Skeletons::API::PruneLevel>
           ::search(graph, root, searchParameters);
+    }
   } else if (skeletonType == "budget") {
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
@@ -324,6 +331,7 @@ int main (int argc, char* argv[]) {
       boost::program_options::value<std::string>(),
       "DIMACS formatted input graph"
       )
+    ( "discrepancyOrder", "Use discrepancy order for the ordered skeleton")
     ( "decisionBound",
     boost::program_options::value<int>()->default_value(0),
     "For Decision Skeletons. Size of the clique to search for"
