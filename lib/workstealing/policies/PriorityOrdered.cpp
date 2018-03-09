@@ -4,6 +4,7 @@
 
 namespace Workstealing { namespace Policies { namespace PriorityOrderedPerf {
 
+std::atomic<std::uint64_t> perf_spawns(0);
 std::atomic<std::uint64_t> perf_steals(0);
 std::atomic<std::uint64_t> perf_failedSteals(0);
 
@@ -13,10 +14,17 @@ std::uint64_t get_and_reset(std::atomic<std::uint64_t> & cntr, bool reset) {
   return res;
 }
 
+std::uint64_t getSpawns (bool reset) {get_and_reset(perf_spawns, reset);}
 std::uint64_t getSteals(bool reset) {get_and_reset(perf_steals, reset);}
 std::uint64_t getFailedSteals(bool reset) {get_and_reset(perf_failedSteals, reset);}
 
 void registerPerformanceCounters() {
+  hpx::performance_counters::install_counter_type(
+      "/workstealing/PriorityOrdered/spawns",
+      &getSpawns,
+      "Number of tasks spawned on the global workpool"
+                                                  );
+
   hpx::performance_counters::install_counter_type(
       "/workstealing/PriorityOrdered/steals",
       &getSteals,

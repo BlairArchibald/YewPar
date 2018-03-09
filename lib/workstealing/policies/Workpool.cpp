@@ -12,6 +12,7 @@ namespace Workstealing { namespace Policies {
 
 namespace WorkpoolPerf {
 
+std::atomic<std::uint64_t> perf_spawns(0);
 std::atomic<std::uint64_t> perf_localSteals(0);
 std::atomic<std::uint64_t> perf_distributedSteals(0);
 std::atomic<std::uint64_t> perf_failedLocalSteals(0);
@@ -23,12 +24,19 @@ std::uint64_t get_and_reset(std::atomic<std::uint64_t> & cntr, bool reset) {
   return res;
 }
 
+std::uint64_t getSpawns (bool reset) {get_and_reset(perf_spawns, reset);}
 std::uint64_t getLocalSteals(bool reset) {get_and_reset(perf_localSteals, reset);}
 std::uint64_t getDistributedSteals (bool reset) {get_and_reset(perf_distributedSteals, reset);}
 std::uint64_t getFailedLocalSteals(bool reset) {get_and_reset(perf_failedLocalSteals, reset);}
 std::uint64_t getFailedDistributedSteals(bool reset) {get_and_reset(perf_failedDistributedSteals, reset);}
 
 void registerPerformanceCounters() {
+  hpx::performance_counters::install_counter_type(
+      "/workstealing/Workpool/spawns",
+      &getSpawns,
+      "Returns the number of tasks spawned on this locality"
+                                                  );
+
   hpx::performance_counters::install_counter_type(
       "/workstealing/Workpool/localSteals",
       &getLocalSteals,
@@ -111,6 +119,7 @@ hpx::util::function<void(), false> Workpool::getWork() {
 
 void Workpool::addwork(hpx::util::function<void(hpx::naming::id_type)> task) {
   std::unique_lock<mutex_t> l(mtx);
+  WorkpoolPerf::perf_spawns++;
   hpx::apply<workstealing::workqueue::addWork_action>(local_workqueue, task);
 }
 

@@ -14,6 +14,8 @@ namespace Workstealing { namespace Scheduler {extern std::shared_ptr<Policy> loc
 namespace Workstealing { namespace Policies {
 
 namespace PriorityOrderedPerf {
+
+extern std::atomic<std::uint64_t> perf_spawns;
 extern std::atomic<std::uint64_t> perf_steals;
 extern std::atomic<std::uint64_t> perf_failedSteals;
 
@@ -49,6 +51,7 @@ class PriorityOrderedPolicy : public Policy {
 
   void addwork(int priority, hpx::util::function<void(hpx::naming::id_type)> task) {
     std::unique_lock<mutex_t> l(mtx);
+    PriorityOrderedPerf::perf_spawns++;
     hpx::apply<workstealing::priorityworkqueue::addWork_action>(globalWorkqueue, priority, task);
   }
 

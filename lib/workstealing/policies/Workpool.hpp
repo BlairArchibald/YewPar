@@ -25,7 +25,6 @@ namespace WorkpoolPerf {
 void registerPerformanceCounters();
 }
 
-// TODO: Performance counters
 class Workpool : public Policy {
 
  private:

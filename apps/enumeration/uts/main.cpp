@@ -9,18 +9,18 @@
 #include "skeletons/StackStealing.hpp"
 
 enum GeometricType {
-  LINEAR, CYCLIC, FIXED, EXPDEC
+  LINEAR = 0, CYCLIC, FIXED, EXPDEC
 };
 
 // UTS state stores program parameters
 struct UTSState {
-  int rootBF;
-  int nonLeafBF;
+  double rootBF;
+  double nonLeafBF;
   double nonLeafProb;
 
   // For geometric trees
-  int gen_mx; //TODO: needs a default
-  GeometricType geoType = LINEAR;
+  int gen_mx = 6;
+  GeometricType geoType = GeometricType::LINEAR;
 
   template <class Archive>
   void serialize(Archive & ar, const unsigned int version) {
@@ -122,20 +122,20 @@ struct NodeGen<TreeType::GEOMETRIC> : YewPar::NodeGenerator<UTSNode, UTSState> {
 
     if (!parent.isRoot) {
       switch (params.geoType) {
-        case CYCLIC:
+        case GeometricType::CYCLIC:
           if (depth > 5 * params.gen_mx){
             branchFactor = 0.0;
             break;
           }
           branchFactor = pow(params.rootBF, sin(2.0*3.141592653589793*(double) depth / (double) params.gen_mx));
           break;
-        case FIXED:
+        case GeometricType::FIXED:
           branchFactor = (depth < params.gen_mx) ? params.rootBF : 0;
           break;
         case EXPDEC:
           branchFactor = params.rootBF * pow((double) depth, -log(params.rootBF)/log((double) params.gen_mx));
           break;
-        case LINEAR:
+        case GeometricType::LINEAR:
         default:
           branchFactor =  params.rootBF * (1.0 - (double)depth / (double) params.gen_mx);
           break;
@@ -171,7 +171,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto start_time = std::chrono::steady_clock::now();
 
-  UTSState params { opts["uts-b"].as<int>(), opts["uts-m"].as<int>(), opts["uts-q"].as<double>(),
+  UTSState params { opts["uts-b"].as<double>(), opts["uts-m"].as<double>(), opts["uts-q"].as<double>(),
         opts["uts-d"].as<int>(), static_cast<GeometricType>(opts["uts-a"].as<int>()) };
 
   UTSNode root { true, 0 };
@@ -230,7 +230,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
                       (std::chrono::steady_clock::now() - start_time);
 
-  std::cout << "Total Nodes: " << std::accumulate(counts.begin(), counts.end(), 0) << std::endl;
+  std::cout << "Total Nodes: " << std::accumulate<std::vector<std::uint64_t>::iterator, std::uint64_t>(counts.begin(), counts.end(), 0) << std::endl;
+
   std::cout << "=====" << std::endl;
   std::cout << "cpu = " << overall_time.count() << std::endl;
 
@@ -257,9 +258,9 @@ int main(int argc, char* argv[]) {
       // UTS Options
       //LINEAR, CYCLIC, FIXED, EXPDEC
       ( "uts-t", boost::program_options::value<std::string>()->default_value("binomial"), "Which tree type to use" )
-      ( "uts-b", boost::program_options::value<int>()->default_value(4), "Root branching factor" )
+      ( "uts-b", boost::program_options::value<double>()->default_value(4.0), "Root branching factor" )
       ( "uts-q", boost::program_options::value<double>()->default_value(15.0 / 64.0), "BIN: Probability of non-leaf node" )
-      ( "uts-m", boost::program_options::value<int>()->default_value(4), "BIN: Number of children for non-leaf node" )
+      ( "uts-m", boost::program_options::value<double>()->default_value(4.0), "BIN: Number of children for non-leaf node" )
       ( "uts-r", boost::program_options::value<int>()->default_value(0), "root seed" )
       ( "uts-d", boost::program_options::value<int>()->default_value(6), "GEO: Tree Depth" )
       ( "uts-a", boost::program_options::value<int>()->default_value(0), "GEO: Tree shape function (0: LINEAR, 1: CYCLIC, 2: FIXED, 3: EXPDEC)" )

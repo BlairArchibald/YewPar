@@ -54,8 +54,6 @@ typedef parameter::parameters<parameter::optional<tag::null> > skeleton_signatur
 
 template <typename Obj = bool>
 struct Params {
-  friend class boost::serialization::access;
-
   // For depth limited searches
   unsigned maxDepth = 5000;
 
@@ -81,7 +79,10 @@ struct Params {
   void serialize(Archive & ar, const unsigned int version) {
     ar & maxDepth;
     ar & expectedObjective;
+    ar & initialBound;
     ar & spawnDepth;
+    ar & stealAll;
+    ar & backtrackBudget;
   }
 };
 

@@ -141,11 +141,7 @@ struct DepthSpawns {
       }
 
       // Spawn new tasks for all children (that are still alive after pruning)
-      if constexpr (std::is_same<Policy, Workstealing::Policies::Workpool>::value) {
-        childFutures.push_back(createTask(childDepth + 1, c));
-      } else {
-        childFutures.push_back(createTask(childDepth + 1, c, childDepth));
-      }
+      childFutures.push_back(createTask(childDepth + 1, c));
     }
   }
 
@@ -258,8 +254,7 @@ struct DepthSpawns {
   }
 
   static hpx::future<void> createTask(const unsigned childDepth,
-                                      const Node & taskRoot,
-                                      const unsigned depth = 0) {
+                                      const Node & taskRoot) {
     hpx::lcos::promise<void> prom;
     auto pfut = prom.get_future();
     auto pid  = prom.get_id();
@@ -272,7 +267,7 @@ struct DepthSpawns {
     if constexpr (std::is_same<Policy, Workstealing::Policies::Workpool>::value) {
       workPool->addwork(task);
     } else {
-      workPool->addwork(task, depth);
+      workPool->addwork(task, childDepth - 1);
     }
 
      return pfut;
@@ -302,7 +297,7 @@ struct DepthSpawns {
     }
 
     // Issue is updateCounts by the looks of things. Something probably isn't initialised correctly.
-    createTask(1, root, 0).get();
+    createTask(1, root).get();
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
