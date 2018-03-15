@@ -10,6 +10,7 @@
 
 #include "knapsack.hpp"
 
+#include "YewPar.hpp"
 #include "util/func.hpp"
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
@@ -197,6 +198,8 @@ int main(int argc, char* argv[]) {
       boost::program_options::value<unsigned>()->default_value(0),
       "Depth in the tree to spawn until (for parallel skeletons only)"
     );
+
+  YewPar::registerPerformanceCounters();
 
   return hpx::init(desc_commandline, argc, argv);
 }

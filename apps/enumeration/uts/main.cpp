@@ -4,6 +4,7 @@
 #define BRG_RNG
 #include "uts-rng/rng.h"
 
+#include "YewPar.hpp"
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
 #include "skeletons/StackStealing.hpp"
@@ -266,7 +267,7 @@ int main(int argc, char* argv[]) {
       ( "uts-a", boost::program_options::value<int>()->default_value(0), "GEO: Tree shape function (0: LINEAR, 1: CYCLIC, 2: FIXED, 3: EXPDEC)" )
       ;
 
-  hpx::register_startup_function(&Workstealing::Policies::SearchManagerPerf::registerPerformanceCounters);
+  YewPar::registerPerformanceCounters();
 
   return hpx::init(desc_commandline, argc, argv);
 }

@@ -7,6 +7,7 @@
 #include <vector>
 #include <chrono>
 
+#include "YewPar.hpp"
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
 #include "skeletons/StackStealing.hpp"
@@ -107,7 +108,7 @@ int main(int argc, char* argv[]) {
     )
     ( "stealall", "Steal all when chunking" );
 
-  hpx::register_startup_function(&Workstealing::Policies::SearchManagerPerf::registerPerformanceCounters);
+  YewPar::registerPerformanceCounters();
 
   return hpx::init(desc_commandline, argc, argv);
 }
