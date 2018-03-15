@@ -11,6 +11,7 @@
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
 #include "skeletons/StackStealing.hpp"
+#include "skeletons/Budget.hpp"
 
 #include "monoid.hpp"
 
@@ -67,6 +68,14 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                               YewPar::Skeletons::API::CountNodes,
                                               YewPar::Skeletons::API::DepthBounded>
              ::search(Empty(), root, searchParameters);
+  } else if (skeleton == "budget"){
+    YewPar::Skeletons::API::Params<> searchParameters;
+    searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
+    searchParameters.maxDepth   = maxDepth;
+    counts = YewPar::Skeletons::Budget<NodeGen,
+                                       YewPar::Skeletons::API::CountNodes,
+                                       YewPar::Skeletons::API::DepthBounded>
+        ::search(Empty(), root, searchParameters);
   } else {
     std::cout << "Invalid skeleton type: " << skeleton << std::endl;
     return hpx::finalize();
@@ -101,6 +110,10 @@ int main(int argc, char* argv[]) {
     ( "until-depth,d",
       boost::program_options::value<unsigned>()->default_value(0),
       "Depth in the tree to count until"
+    )
+    ( "backtrack-budget,b",
+      boost::program_options::value<unsigned>()->default_value(500),
+      "Number of backtracks before spawning work"
     )
     ( "verbose,v",
       boost::program_options::value<bool>()->default_value(false),

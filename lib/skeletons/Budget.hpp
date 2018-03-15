@@ -120,6 +120,7 @@ struct Budget {
                 if constexpr(pruneLevel) {
                     stackDepth--;
                     depth--;
+                    backtracks++;
                     continue;
                   } else {
                   continue;
@@ -133,6 +134,7 @@ struct Budget {
               if constexpr(pruneLevel) {
                   stackDepth--;
                   depth--;
+                  backtracks++;
                   continue;
                 } else {
                 continue;
