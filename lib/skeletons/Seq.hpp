@@ -84,8 +84,8 @@ struct Seq {
           if constexpr(isDecision) {
             if (!cmp(bnd, params.expectedObjective) && bnd != params.expectedObjective) {
               if constexpr(pruneLevel) {
-                  break;
-                } else {
+                break;
+              } else {
                 continue;
               }
             }
