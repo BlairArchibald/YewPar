@@ -171,9 +171,10 @@ struct Ordered {
 
       // Do we support bounding?
       if constexpr(!std::is_same<boundFn, nullFn__>::value) {
+          Objcmp cmp;
           auto bnd  = boundFn::invoke(space, c);
           if constexpr(isDecision) {
-            if (bnd < params.expectedObjective) {
+            if (!cmp(bnd, params.expectedObjective) && bnd != params.expectedObjective) {
               if constexpr(pruneLevel) {
                   break;
                 } else {
@@ -183,7 +184,6 @@ struct Ordered {
           // B&B Case
           } else {
             auto best = reg->localBound.load();
-            Objcmp cmp;
             if (!cmp(bnd,best)) {
               if constexpr(pruneLevel) {
                   break;

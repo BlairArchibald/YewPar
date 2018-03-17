@@ -12,6 +12,7 @@
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
 #include "skeletons/Ordered.hpp"
+#include "skeletons/Budget.hpp"
 
 #define MAX_CITIES  64
 
@@ -261,6 +262,13 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                      YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                      YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
               ::search(space, root, searchParameters);
+  } else if (skeletonType == "budget") {
+    searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
+    sol = YewPar::Skeletons::Budget<NodeGen,
+                                    YewPar::Skeletons::API::Optimisation,
+                                    YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                    YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
+        ::search(space, root, searchParameters);
   } else {
     std::cout << "Invalid skeleton type\n";
     return hpx::finalize();
@@ -293,6 +301,10 @@ int main(int argc, char* argv[]) {
       ( "input-file,f",
         boost::program_options::value<std::string>(),
         "Input problem"
+        )
+      ( "backtrack-budget,b",
+        boost::program_options::value<unsigned>()->default_value(500),
+        "Number of backtracks before spawning work"
         )
       ( "spawn-depth,d",
         boost::program_options::value<unsigned>()->default_value(0),

@@ -10,10 +10,12 @@
 
 #include "knapsack.hpp"
 
+#include "YewPar.hpp"
 #include "util/func.hpp"
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
 #include "skeletons/Ordered.hpp"
+#include "skeletons/Budget.hpp"
 
 #ifndef NUMITEMS
 #define NUMITEMS 50
@@ -156,6 +158,14 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                      YewPar::Skeletons::API::PruneLevel,
                                      YewPar::Skeletons::API::BoundFunction<bnd_func> >
           ::search(space, root, searchParameters);
+  } else if (skeletonType == "budget") {
+    YewPar::Skeletons::API::Params<int> searchParameters;
+    searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
+    sol = YewPar::Skeletons::Budget<GenNode<NUMITEMS>,
+                                    YewPar::Skeletons::API::Optimisation,
+                                    YewPar::Skeletons::API::PruneLevel,
+                                    YewPar::Skeletons::API::BoundFunction<bnd_func> >
+        ::search(space, root, searchParameters);
   } else {
     std::cout << "Invalid skeleton type\n";
     hpx::finalize();
@@ -193,10 +203,16 @@ int main(int argc, char* argv[]) {
       boost::program_options::value<std::string>(),
       "Input problem"
     )
+    ( "backtrack-budget,b",
+      boost::program_options::value<unsigned>()->default_value(500),
+      "Number of backtracks before spawning work"
+    )
     ( "spawn-depth,d",
       boost::program_options::value<unsigned>()->default_value(0),
       "Depth in the tree to spawn until (for parallel skeletons only)"
     );
+
+  YewPar::registerPerformanceCounters();
 
   return hpx::init(desc_commandline, argc, argv);
 }

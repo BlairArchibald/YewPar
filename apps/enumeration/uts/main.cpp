@@ -4,9 +4,11 @@
 #define BRG_RNG
 #include "uts-rng/rng.h"
 
+#include "YewPar.hpp"
 #include "skeletons/Seq.hpp"
 #include "skeletons/DepthSpawning.hpp"
 #include "skeletons/StackStealing.hpp"
+#include "skeletons/Budget.hpp"
 
 enum GeometricType {
   LINEAR = 0, CYCLIC, FIXED, EXPDEC
@@ -200,6 +202,16 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                                   std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >
                ::search(params, root, searchParameters);
     }
+    else if (skeleton == "stacksteal") {
+      YewPar::Skeletons::API::Params<> searchParameters;
+      searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
+      counts = YewPar::Skeletons::Budget<NodeGen<TreeType::BINOMIAL>,
+                                                YewPar::Skeletons::API::CountNodes,
+                                                YewPar::Skeletons::API::DepthBounded,
+                                                YewPar::Skeletons::API::MaxStackDepth<
+                                                  std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >
+          ::search(params, root, searchParameters);
+    }
   } else if (treeType == "geometric"){
     if (skeleton == "seq") {
       YewPar::Skeletons::API::Params<> searchParameters;
@@ -255,6 +267,10 @@ int main(int argc, char* argv[]) {
         boost::program_options::value<unsigned>()->default_value(0),
         "Depth in the tree to count until"
         )
+      ( "backtrack-budget,b",
+        boost::program_options::value<unsigned>()->default_value(500),
+        "Number of backtracks before spawning work"
+        )
       // UTS Options
       //LINEAR, CYCLIC, FIXED, EXPDEC
       ( "uts-t", boost::program_options::value<std::string>()->default_value("binomial"), "Which tree type to use" )
@@ -266,7 +282,7 @@ int main(int argc, char* argv[]) {
       ( "uts-a", boost::program_options::value<int>()->default_value(0), "GEO: Tree shape function (0: LINEAR, 1: CYCLIC, 2: FIXED, 3: EXPDEC)" )
       ;
 
-  hpx::register_startup_function(&Workstealing::Policies::SearchManagerPerf::registerPerformanceCounters);
+  YewPar::registerPerformanceCounters();
 
   return hpx::init(desc_commandline, argc, argv);
 }

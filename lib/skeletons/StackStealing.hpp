@@ -218,9 +218,10 @@ struct StackStealing {
 
         // Do we support bounding?
         if constexpr(!std::is_same<boundFn, nullFn__>::value) {
+            Objcmp cmp;
             auto bnd  = boundFn::invoke(space, child);
             if constexpr(isDecision) {
-                if (bnd < reg->params.expectedObjective) {
+                if (!cmp(bnd, reg->params.expectedObjective) && bnd != reg->params.expectedObjective) {
                   if constexpr(pruneLevel) {
                       stackDepth--;
                       depth--;
@@ -230,20 +231,19 @@ struct StackStealing {
                   }
                 }
               // B&B Case
-              } else {
-              auto best = reg->localBound.load();
-              Objcmp cmp;
-              if (!cmp(bnd, best)) {
-                if constexpr(pruneLevel) {
-                    stackDepth--;
-                    depth--;
-                    continue;
-                  } else {
+          } else {
+            auto best = reg->localBound.load();
+            if (!cmp(bnd, best)) {
+              if constexpr(pruneLevel) {
+                  stackDepth--;
+                  depth--;
                   continue;
-                }
+                } else {
+                continue;
               }
             }
           }
+        }
 
         if constexpr(isOptimisation) {
           // FIXME: unsure about loading this twice in terms of performance
