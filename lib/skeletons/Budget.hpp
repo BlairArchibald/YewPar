@@ -67,8 +67,9 @@ struct Budget {
     auto backtracks = 0;
 
     // Init the stack
-    auto initGen = Generator(space, n);
-    GeneratorStack<Generator> genStack(maxStackDepth, StackElem(initGen));
+    StackElem<Generator> initElem(space, n);
+    GeneratorStack<Generator> genStack(maxStackDepth, initElem);
+
 
     auto stackDepth = 0;
     while (stackDepth >= 0) {
@@ -95,7 +96,9 @@ struct Budget {
 
       // If there's still children at this stackDepth we move into them
       if (genStack[stackDepth].seen < genStack[stackDepth].gen.numChildren) {
-        const auto child = genStack[stackDepth].gen.next();
+        genStack[stackDepth + 1].node = genStack[stackDepth].gen.next();
+        const auto & child = genStack[stackDepth + 1].node;
+
         genStack[stackDepth].seen++;
 
         if constexpr(isDecision) {
@@ -172,7 +175,8 @@ struct Budget {
           }
         }
 
-        genStack[stackDepth] = StackElem(childGen);
+        genStack[stackDepth].seen = 0;
+        genStack[stackDepth].gen = childGen;
       } else {
         stackDepth--;
         depth--;
