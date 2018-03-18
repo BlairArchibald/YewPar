@@ -342,6 +342,7 @@ auto propagate(
   for (typename Domains<n_words_>::iterator branch_domain = find_unit_domain(new_domains) ;
        branch_domain != new_domains.end() ;
        branch_domain = find_unit_domain(new_domains)) {
+
     // what are we assigning?
     Assignment current_assignment = { branch_domain->v, branch_domain->values.first_set_bit() };
 
@@ -585,7 +586,6 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
   array<unsigned, n_words_ * bits_per_word + 1> branch_v;
 
   typename array<unsigned, n_words_ * bits_per_word + 1>::iterator f_v;
-  unsigned branch_v_end;
 
   bool sat = false;
 
@@ -595,11 +595,11 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
   GenNode(const Model<n_words_> & m, const SIPNode<n_words_> & n) :
     model(std::cref(m)), parent(std::cref(n)) {
 
-    if (!n.propagationSuccess) {
+    if (!parent.get().propagationSuccess) {
       this->numChildren = 0;
     } else {
       // If we have no more domains then we are done so give a single SAT child
-      branch_domain = find_branch_domain(m, n.domains);
+      branch_domain = find_branch_domain(model.get(), parent.get().domains);
       if (!branch_domain) {
         this->numChildren = 1;
         sat = true;
@@ -613,7 +613,7 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
         }
 
         f_v = branch_v.begin();
-        this->numChildren = std::distance(branch_v.begin(), branch_v.begin() + branch_v_end);
+        this->numChildren = branch_v_end;
       }
     }
   }
@@ -627,13 +627,15 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
     Assignment a {branch_domain->v, *f_v};
     newAssignments.values.push_back(hpx::util::make_tuple(std::move(a), true));
 
-    auto new_domains = copy_domains_and_assign(parent.get().domains, branch_domain->v, *f_v);
+    auto dom = parent.get().domains;
+    auto new_domains = copy_domains_and_assign(dom, branch_domain->v, *f_v);
 
     auto prop = propagate(model.get(), new_domains, newAssignments);
 
     ++f_v;
 
-    return SIPNode<n_words_>(std::move(new_domains), std::move(newAssignments), prop);
+    //return SIPNode<n_words_>(std::move(new_domains), std::move(newAssignments), prop);
+    return SIPNode<n_words_>(new_domains, std::move(newAssignments), prop);
   }
 };
 
@@ -680,6 +682,17 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                         YewPar::Skeletons::API::Decision,
                                         YewPar::Skeletons::API::MoreVerbose>
         ::search(m, root, searchParameters);
+  } else if (skeleton ==  "stackstealing") {
+    sol = YewPar::Skeletons::StackStealing<GenNode<NWORDS>,
+                                         YewPar::Skeletons::API::Decision,
+                                         YewPar::Skeletons::API::MoreVerbose>
+        ::search(m, root, searchParameters);
+  } else if (skeleton ==  "budget") {
+    searchParameters.backtrackBudget = opts["backtrack-budget"].as<std::uint64_t>();
+    sol = YewPar::Skeletons::Budget<GenNode<NWORDS>,
+                                    YewPar::Skeletons::API::Decision,
+                                    YewPar::Skeletons::API::MoreVerbose>
+        ::search(m, root, searchParameters);
   } else {
     std::cerr << "Invalid skeleton type\n";
     return hpx::finalize();
@@ -695,6 +708,14 @@ int hpx_main(boost::program_options::variables_map & opts) {
       (std::chrono::steady_clock::now() - start_time);
 
   std::cout << "Solution found: " << std::boolalpha << !res_isomorphism.empty() << std::endl;
+  if (!res_isomorphism.empty()) {
+    std::cout << "mapping = ";
+    for (auto v : res_isomorphism)
+      std::cout << "(" << v.first << " -> " << v.second << ") ";
+    std::cout << std::endl;
+  }
+
+  std::cout << "cpu = " << overall_time.count() << std::endl;
 
   return hpx::finalize();
 }
@@ -711,6 +732,10 @@ int main (int argc, char* argv[]) {
       ( "spawn-depth,d",
         boost::program_options::value<std::uint64_t>()->default_value(0),
         "Depth in the tree to spawn at"
+      )
+      ( "backtrack-budget,b",
+        boost::program_options::value<std::uint64_t>()->default_value(0),
+        "Backtrack budget for budget skeleton"
       )
       ("pattern", boost::program_options::value<std::string>(), "Specify the pattern file (LAD format)")
       ("target",  boost::program_options::value<std::string>(), "Specify the target file (LAD format)");
