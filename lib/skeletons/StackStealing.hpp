@@ -70,18 +70,16 @@ struct StackStealing {
     std::vector<std::uint64_t> cntMap;
 
     // Setup the stack with root node
-    auto rootGen = Generator(reg->space, initNode);
+    StackElem<Generator> rootElem(reg->space, initNode);
 
-    GeneratorStack<Generator> generatorStack(maxStackDepth, StackElem(rootGen));
+    GeneratorStack<Generator> generatorStack(maxStackDepth, rootElem);
     if constexpr (isCountNodes) {
         cntMap.resize(reg->params.maxDepth + 1);
       }
 
     if constexpr (isCountNodes) {
-      cntMap[depth] += rootGen.numChildren;
+      cntMap[depth] += rootElem.gen.numChildren;
     }
-
-    generatorStack[0] = StackElem(rootGen);
 
     // Register with the Policy to allow stealing from this stack
     std::shared_ptr<SharedState> stealReq;
@@ -99,7 +97,7 @@ struct StackStealing {
   using Response    = typename Policy::Response_t;
   using SharedState = typename Policy::SharedState_t;
 
-  // Find the required depth to create "totalThreads" tasks
+  // Find the required depth<Generator> to create "totalThreads" tasks
   static unsigned getRequiredSpawnDepth(const Space & space,
                                         const Node & root,
                                         const YewPar::Skeletons::API::Params<Bound> params,
@@ -198,8 +196,11 @@ struct StackStealing {
 
       // If there's still children at this stackDepth we move into them
       if (generatorStack[stackDepth].seen < generatorStack[stackDepth].gen.numChildren) {
+
         // Get the next child at this stackDepth
-        const auto child = generatorStack[stackDepth].gen.next();
+        generatorStack[stackDepth + 1].node = generatorStack[stackDepth].gen.next();
+        auto & child = generatorStack[stackDepth + 1].node;
+
         generatorStack[stackDepth].seen++;
 
         if constexpr(isDecision) {
@@ -274,7 +275,8 @@ struct StackStealing {
           }
         }
 
-        generatorStack[stackDepth] = StackElem(childGen);
+        generatorStack[stackDepth].seen = 0;
+        generatorStack[stackDepth].gen = childGen;
       } else {
         stackDepth--;
         depth--;
@@ -340,8 +342,11 @@ struct StackStealing {
     while (stackDepth >= 0) {
       // If there's still children at this stackDepth we move into them
       if (generatorStack[stackDepth].seen < generatorStack[stackDepth].gen.numChildren) {
+
         // Get the next child at this stackDepth
-        const auto child = generatorStack[stackDepth].gen.next();
+        generatorStack[stackDepth + 1].node = generatorStack[stackDepth].gen.next();
+        auto & child = generatorStack[stackDepth + 1].node;
+
         generatorStack[stackDepth].seen++;
 
         // Going down
@@ -374,7 +379,8 @@ struct StackStealing {
               countMap[depth] += childGen.numChildren;
           }
 
-          generatorStack[stackDepth] = StackElem(childGen);
+          generatorStack[stackDepth].seen = 0;
+          generatorStack[stackDepth].gen = childGen;
         }
       } else {
         stackDepth--;
@@ -396,18 +402,18 @@ struct StackStealing {
     }
 
     // Master stack
-    auto rootGen = Generator(space, root);
+    StackElem<Generator> rootElem(space, root);
+    // rootElem.seen = 0;
+    // rootElem.node = root;
+    // rootElem.gen = Generator(space, rootElem.node);
 
-    GeneratorStack<Generator> genStack(maxStackDepth, StackElem(rootGen));
+    GeneratorStack<Generator> genStack(maxStackDepth, rootElem);
 
     std::vector<std::uint64_t> countMap;
     if constexpr (isCountNodes) {
         countMap.resize(params.maxDepth + 1);
-        countMap[1] += rootGen.numChildren;
+        countMap[1] += rootElem.gen.numChildren;
     }
-
-    genStack[0].seen = 0;
-    genStack[0].gen  = rootGen;
 
     auto stackDepth = 0;
     auto depth = 1;

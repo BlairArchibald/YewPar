@@ -47,9 +47,13 @@ static std::vector<std::uint64_t> totalNodeCounts(const unsigned maxDepth) {
 template <typename Generator>
 struct StackElem {
   unsigned seen;
+  typename Generator::Nodetype node;
   Generator gen;
 
   StackElem(Generator gen) : seen(0), gen(gen) {};
+  StackElem(const typename Generator::Spacetype & s,
+            const typename Generator::Nodetype & n)
+      : seen(0), node(n), gen(Generator(s, node)) {};
 };
 
 template <typename Generator>
