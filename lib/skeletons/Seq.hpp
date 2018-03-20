@@ -124,38 +124,31 @@ struct Seq {
     return false;
   }
 
-  static Node doBnB (const Space & space,
-                     const Node  & root,
-                     const API::Params<Bound> & params) {
-    std::pair<Node, Bound> incumbent = std::make_pair(root, params.initialBound);
-    std::vector<std::uint64_t> counts(0);
-    expand(space, root, params, incumbent, 1, counts);
-    return std::get<0>(incumbent);
-  }
-
-  static std::vector<std::uint64_t> countNodes(const Space & space,
-                                               const Node & root,
-                                               const API::Params<Bound> & params) {
-    std::pair<Node, Bound> incumbent = std::make_pair(root, params.initialBound);
-    std::vector<std::uint64_t> counts(params.maxDepth + 1);
-    counts[0] = 1;
-    expand(space, root, params, incumbent, 1, counts);
-    return counts;
-  }
-
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
+    static_assert(isCountNodes || isBnB || isDecision, "Please provide a supported search type: CountNodes, BnB, Decision");
+
     if constexpr (verbose) {
       printSkeletonDetails();
     }
 
+    std::vector<std::uint64_t> counts;
+
     if constexpr(isCountNodes) {
-      return countNodes(space, root, params);
-    } else if constexpr(isBnB || isDecision) {
-      return doBnB(space, root, params);
+      counts.resize(params.maxDepth + 1);
+      counts[0] = 1;
+    }
+
+    std::pair<Node, Bound> incumbent = std::make_pair(root, params.initialBound);
+    expand(space, root, params, incumbent, 1, counts);
+
+    if constexpr(isCountNodes && (isBnB || isDecision)) {
+        return std::make_pair(std::get<0>(incumbent), counts);
+    } else if constexpr(isCountNodes) {
+      return counts;
     } else {
-      static_assert(isCountNodes || isBnB || isDecision, "Please provide a supported search type: CountNodes, BnB, Decision");
+      return std::get<0>(incumbent);
     }
   }
 };
