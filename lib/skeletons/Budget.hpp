@@ -7,7 +7,7 @@ namespace YewPar { namespace Skeletons {
 
 namespace detail {
 template <typename Generator, typename ...Args>
-struct SubtreeTask;
+struct BudgetSubtreeTask;
 }
 
 
@@ -215,7 +215,7 @@ struct Budget {
     auto pfut = prom.get_future();
     auto pid  = prom.get_id();
 
-    detail::SubtreeTask<Generator, Args...> t;
+    detail::BudgetSubtreeTask<Generator, Args...> t;
     hpx::util::function<void(hpx::naming::id_type)> task;
     task = hpx::util::bind(t, hpx::util::placeholders::_1, taskRoot, childDepth, pid);
 
@@ -273,12 +273,21 @@ struct Budget {
 
 namespace detail {
 template <typename Generator, typename ...Args>
-struct SubtreeTask : hpx::actions::make_action<
+struct BudgetSubtreeTask : hpx::actions::make_action<
   decltype(&Budget<Generator, Args...>::subtreeTask),
   &Budget<Generator, Args...>::subtreeTask,
-  SubtreeTask<Generator, Args...>>::type {};
+  BudgetSubtreeTask<Generator, Args...>>::type {};
 
 }
+
+}}
+
+namespace hpx { namespace traits {
+
+template <typename Generator, typename ...Args>
+struct action_stacksize<YewPar::Skeletons::detail::BudgetSubtreeTask<Generator, Args...> >  {
+  enum { value = threads::thread_stacksize_huge };
+};
 
 }}
 

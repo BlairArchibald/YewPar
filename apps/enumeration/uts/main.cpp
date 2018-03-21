@@ -185,15 +185,13 @@ int hpx_main(boost::program_options::variables_map & opts) {
       counts = YewPar::Skeletons::Seq<NodeGen<TreeType::BINOMIAL>,
                                       YewPar::Skeletons::API::CountNodes>
                ::search(params, root);
-    }
-    if (skeleton == "depthbounded") {
+    } else if (skeleton == "depthbounded") {
       YewPar::Skeletons::API::Params<> searchParameters;
       searchParameters.spawnDepth = spawnDepth;
       counts = YewPar::Skeletons::DepthSpawns<NodeGen<TreeType::BINOMIAL>,
                                               YewPar::Skeletons::API::CountNodes>
                ::search(params, root, searchParameters);
-    }
-    else if (skeleton == "stacksteal") {
+    } else if (skeleton == "stacksteal") {
       YewPar::Skeletons::API::Params<> searchParameters;
       counts = YewPar::Skeletons::StackStealing<NodeGen<TreeType::BINOMIAL>,
                                                 YewPar::Skeletons::API::CountNodes,
@@ -201,15 +199,14 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                                 YewPar::Skeletons::API::MaxStackDepth<
                                                   std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >
                ::search(params, root, searchParameters);
-    }
-    else if (skeleton == "stacksteal") {
+    } else if (skeleton == "budget") {
       YewPar::Skeletons::API::Params<> searchParameters;
       searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
       counts = YewPar::Skeletons::Budget<NodeGen<TreeType::BINOMIAL>,
-                                                YewPar::Skeletons::API::CountNodes,
-                                                YewPar::Skeletons::API::DepthBounded,
-                                                YewPar::Skeletons::API::MaxStackDepth<
-                                                  std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >
+                                         YewPar::Skeletons::API::CountNodes,
+                                         YewPar::Skeletons::API::DepthBounded,
+                                         YewPar::Skeletons::API::MaxStackDepth<
+                                           std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >
           ::search(params, root, searchParameters);
     }
   } else if (treeType == "geometric"){
@@ -218,15 +215,13 @@ int hpx_main(boost::program_options::variables_map & opts) {
       counts = YewPar::Skeletons::Seq<NodeGen<TreeType::GEOMETRIC>,
                                       YewPar::Skeletons::API::CountNodes>
                ::search(params, root, searchParameters);
-    }
-    if (skeleton == "depthbounded") {
+    } else if (skeleton == "depthbounded") {
       YewPar::Skeletons::API::Params<> searchParameters;
       searchParameters.spawnDepth = spawnDepth;
       counts = YewPar::Skeletons::DepthSpawns<NodeGen<TreeType::GEOMETRIC>,
                                               YewPar::Skeletons::API::CountNodes>
                ::search(params, root, searchParameters);
-    }
-    else if (skeleton == "stacksteal") {
+    } else if (skeleton == "stacksteal") {
       YewPar::Skeletons::API::Params<> searchParameters;
       counts = YewPar::Skeletons::StackStealing<NodeGen<TreeType::GEOMETRIC>,
                                                 YewPar::Skeletons::API::CountNodes,
@@ -234,6 +229,15 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                                 YewPar::Skeletons::API::MaxStackDepth<
                                                   std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >
                ::search(params, root, searchParameters);
+    } else if (skeleton == "budget") {
+      YewPar::Skeletons::API::Params<> searchParameters;
+      searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
+      counts = YewPar::Skeletons::Budget<NodeGen<TreeType::GEOMETRIC>,
+                                         YewPar::Skeletons::API::CountNodes,
+                                         YewPar::Skeletons::API::DepthBounded,
+                                         YewPar::Skeletons::API::MaxStackDepth<
+                                           std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >
+          ::search(params, root, searchParameters);
     }
   } else {
     std::cout << "Invalid tree type\n";
