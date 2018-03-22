@@ -39,6 +39,12 @@ DepthPool::fnType DepthPool::getLocal() {
 }
 
 void DepthPool::addWork(DepthPool::fnType task, unsigned depth) {
+  // Resize if we need to. We don't want this to happen too often, so we double it if we need to.
+  if (depth >= max_depth) {
+    max_depth = max_depth * 2;
+    pools.resize(max_depth);
+  }
+
   pools[depth].push(task);
 
   if (depth > lowest) {
