@@ -16,6 +16,7 @@
 #include "skeletons/DepthSpawning.hpp"
 #include "skeletons/Ordered.hpp"
 #include "skeletons/Budget.hpp"
+#include "skeletons/StackStealing.hpp"
 
 #ifndef NUMITEMS
 #define NUMITEMS 50
@@ -166,6 +167,12 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                     YewPar::Skeletons::API::PruneLevel,
                                     YewPar::Skeletons::API::BoundFunction<bnd_func> >
         ::search(space, root, searchParameters);
+  } else if (skeletonType == "stacksteal") {
+    sol = YewPar::Skeletons::StackStealing<GenNode<NUMITEMS>,
+                                           YewPar::Skeletons::API::Optimisation,
+                                           YewPar::Skeletons::API::PruneLevel,
+                                           YewPar::Skeletons::API::BoundFunction<bnd_func> >
+        ::search(space, root);
   } else {
     std::cout << "Invalid skeleton type\n";
     hpx::finalize();
