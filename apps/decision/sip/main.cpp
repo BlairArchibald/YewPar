@@ -683,6 +683,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                         YewPar::Skeletons::API::MoreVerbose>
         ::search(m, root, searchParameters);
   } else if (skeleton ==  "stackstealing") {
+    searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
     sol = YewPar::Skeletons::StackStealing<GenNode<NWORDS>,
                                          YewPar::Skeletons::API::Decision,
                                          YewPar::Skeletons::API::MoreVerbose>
@@ -737,6 +738,7 @@ int main (int argc, char* argv[]) {
         boost::program_options::value<std::uint64_t>()->default_value(0),
         "Backtrack budget for budget skeleton"
       )
+      ("chunked", "Use chunking with stack stealing")
       ("pattern", boost::program_options::value<std::string>(), "Specify the pattern file (LAD format)")
       ("target",  boost::program_options::value<std::string>(), "Specify the target file (LAD format)");
 

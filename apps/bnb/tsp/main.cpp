@@ -271,6 +271,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                     YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
         ::search(space, root, searchParameters);
   } else if (skeletonType == "stacksteal") {
+    searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
     sol = YewPar::Skeletons::StackStealing<NodeGen,
                                            YewPar::Skeletons::API::Optimisation,
                                            YewPar::Skeletons::API::BoundFunction<upperBound_func>,
@@ -313,7 +314,8 @@ int main(int argc, char* argv[]) {
         boost::program_options::value<unsigned>()->default_value(500),
         "Number of backtracks before spawning work"
         )
-      ( "spawn-depth,d",
+       ("chunked", "Use chunking with stack stealing")
+       ( "spawn-depth,d",
         boost::program_options::value<unsigned>()->default_value(0),
         "Depth in the tree to spawn until (for parallel skeletons only)"
         );

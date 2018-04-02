@@ -193,6 +193,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                ::search(params, root, searchParameters);
     } else if (skeleton == "stacksteal") {
       YewPar::Skeletons::API::Params<> searchParameters;
+      searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
       counts = YewPar::Skeletons::StackStealing<NodeGen<TreeType::BINOMIAL>,
                                                 YewPar::Skeletons::API::CountNodes,
                                                 YewPar::Skeletons::API::DepthBounded,
@@ -275,6 +276,7 @@ int main(int argc, char* argv[]) {
         boost::program_options::value<unsigned>()->default_value(500),
         "Number of backtracks before spawning work"
         )
+      ("chunked", "Use chunking with stack stealing")
       // UTS Options
       //LINEAR, CYCLIC, FIXED, EXPDEC
       ( "uts-t", boost::program_options::value<std::string>()->default_value("binomial"), "Which tree type to use" )

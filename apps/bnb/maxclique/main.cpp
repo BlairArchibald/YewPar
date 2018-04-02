@@ -268,17 +268,20 @@ int hpx_main(boost::program_options::variables_map & opts) {
     if (decisionBound != 0) {
       YewPar::Skeletons::API::Params<int> searchParameters;
       searchParameters.expectedObjective = decisionBound;
+      searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
       sol = YewPar::Skeletons::StackStealing<GenNode,
                                              YewPar::Skeletons::API::Decision,
                                              YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                              YewPar::Skeletons::API::PruneLevel>
           ::search(graph, root, searchParameters);
     } else {
+      YewPar::Skeletons::API::Params<int> searchParameters;
+      searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
       sol = YewPar::Skeletons::StackStealing<GenNode,
                                              YewPar::Skeletons::API::Optimisation,
                                              YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                              YewPar::Skeletons::API::PruneLevel>
-          ::search(graph, root);
+          ::search(graph, root, searchParameters);
     }
   } else if (skeletonType == "ordered") {
     YewPar::Skeletons::API::Params<int> searchParameters;
@@ -353,6 +356,7 @@ int main (int argc, char* argv[]) {
       "DIMACS formatted input graph"
       )
     ( "discrepancyOrder", "Use discrepancy order for the ordered skeleton")
+    ("chunked", "Use chunking with stack stealing")
     ( "decisionBound",
     boost::program_options::value<int>()->default_value(0),
     "For Decision Skeletons. Size of the clique to search for"
