@@ -30,7 +30,7 @@
 #include <hpx/util/tuple.hpp>
 
 #ifndef NWORDS
-#define NWORDS 8
+#define NWORDS 64
 #endif
 
 using std::array;
