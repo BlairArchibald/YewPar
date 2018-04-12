@@ -692,6 +692,12 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                     YewPar::Skeletons::API::Decision,
                                     YewPar::Skeletons::API::MoreVerbose>
         ::search(m, root, searchParameters);
+  } else if (skeleton ==  "ordered") {
+    searchParameters.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
+    sol = YewPar::Skeletons::Ordered<GenNode<NWORDS>,
+                                     YewPar::Skeletons::API::Decision,
+                                     YewPar::Skeletons::API::MoreVerbose>
+        ::search(m, root, searchParameters);
   } else {
     std::cerr << "Invalid skeleton type\n";
     return hpx::finalize();
