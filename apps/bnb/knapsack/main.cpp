@@ -16,6 +16,7 @@
 #include "skeletons/DepthSpawning.hpp"
 #include "skeletons/Ordered.hpp"
 #include "skeletons/Budget.hpp"
+#include "skeletons/StackStealing.hpp"
 
 #ifndef NUMITEMS
 #define NUMITEMS 50
@@ -166,6 +167,14 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                     YewPar::Skeletons::API::PruneLevel,
                                     YewPar::Skeletons::API::BoundFunction<bnd_func> >
         ::search(space, root, searchParameters);
+  } else if (skeletonType == "stacksteal") {
+    YewPar::Skeletons::API::Params<int> searchParameters;
+    searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
+    sol = YewPar::Skeletons::StackStealing<GenNode<NUMITEMS>,
+                                           YewPar::Skeletons::API::Optimisation,
+                                           YewPar::Skeletons::API::PruneLevel,
+                                           YewPar::Skeletons::API::BoundFunction<bnd_func> >
+        ::search(space, root, searchParameters);
   } else {
     std::cout << "Invalid skeleton type\n";
     hpx::finalize();
@@ -207,6 +216,7 @@ int main(int argc, char* argv[]) {
       boost::program_options::value<unsigned>()->default_value(500),
       "Number of backtracks before spawning work"
     )
+    ("chunked", "Use chunking with stack stealing")
     ( "spawn-depth,d",
       boost::program_options::value<unsigned>()->default_value(0),
       "Depth in the tree to spawn until (for parallel skeletons only)"

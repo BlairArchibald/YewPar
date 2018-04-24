@@ -30,7 +30,7 @@
 #include <hpx/util/tuple.hpp>
 
 #ifndef NWORDS
-#define NWORDS 8
+#define NWORDS 64
 #endif
 
 using std::array;
@@ -543,8 +543,6 @@ auto cheap_all_different(Domains<n_words_> & domains) -> bool
   return true;
 }
 
-#define NWORDS 8
-
 template <unsigned n_words_>
 struct SIPNode {
   Domains<n_words_> domains;
@@ -585,7 +583,7 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
 
   array<unsigned, n_words_ * bits_per_word + 1> branch_v;
 
-  typename array<unsigned, n_words_ * bits_per_word + 1>::iterator f_v;
+  unsigned f_v;
 
   bool sat = false;
 
@@ -612,7 +610,7 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
           branch_v[branch_v_end++] = f_v;
         }
 
-        f_v = branch_v.begin();
+        f_v = 0;
         this->numChildren = branch_v_end;
       }
     }
@@ -624,11 +622,11 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
 
     // We need to do the copy in case we are running in parallel
     auto newAssignments = parent.get().assignments;
-    Assignment a {branch_domain->v, *f_v};
+    Assignment a {branch_domain->v, branch_v[f_v]};
     newAssignments.values.push_back(hpx::util::make_tuple(std::move(a), true));
 
     auto dom = parent.get().domains;
-    auto new_domains = copy_domains_and_assign(dom, branch_domain->v, *f_v);
+    auto new_domains = copy_domains_and_assign(dom, branch_domain->v, branch_v[f_v]);
 
     auto prop = propagate(model.get(), new_domains, newAssignments);
 
@@ -683,6 +681,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                         YewPar::Skeletons::API::MoreVerbose>
         ::search(m, root, searchParameters);
   } else if (skeleton ==  "stackstealing") {
+    searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
     sol = YewPar::Skeletons::StackStealing<GenNode<NWORDS>,
                                          YewPar::Skeletons::API::Decision,
                                          YewPar::Skeletons::API::MoreVerbose>
@@ -692,6 +691,12 @@ int hpx_main(boost::program_options::variables_map & opts) {
     sol = YewPar::Skeletons::Budget<GenNode<NWORDS>,
                                     YewPar::Skeletons::API::Decision,
                                     YewPar::Skeletons::API::MoreVerbose>
+        ::search(m, root, searchParameters);
+  } else if (skeleton ==  "ordered") {
+    searchParameters.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
+    sol = YewPar::Skeletons::Ordered<GenNode<NWORDS>,
+                                     YewPar::Skeletons::API::Decision,
+                                     YewPar::Skeletons::API::MoreVerbose>
         ::search(m, root, searchParameters);
   } else {
     std::cerr << "Invalid skeleton type\n";
@@ -737,6 +742,7 @@ int main (int argc, char* argv[]) {
         boost::program_options::value<std::uint64_t>()->default_value(0),
         "Backtrack budget for budget skeleton"
       )
+      ("chunked", "Use chunking with stack stealing")
       ("pattern", boost::program_options::value<std::string>(), "Specify the pattern file (LAD format)")
       ("target",  boost::program_options::value<std::string>(), "Specify the target file (LAD format)");
 

@@ -63,7 +63,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
              ::search(Empty(), root, searchParameters);
   } else if (skeleton == "stacksteal"){
     YewPar::Skeletons::API::Params<> searchParameters;
-    searchParameters.maxDepth   = maxDepth;
+    searchParameters.maxDepth = maxDepth;
+    searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
     counts = YewPar::Skeletons::StackStealing<NodeGen,
                                               YewPar::Skeletons::API::CountNodes,
                                               YewPar::Skeletons::API::DepthBounded>
@@ -119,7 +120,7 @@ int main(int argc, char* argv[]) {
       boost::program_options::value<bool>()->default_value(false),
       "Enable verbose output"
     )
-    ( "stealall", "Steal all when chunking" );
+    ("chunked", "Use chunking with stack stealing");
 
   YewPar::registerPerformanceCounters();
 

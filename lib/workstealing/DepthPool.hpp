@@ -25,11 +25,13 @@ class DepthPool : public hpx::components::locking_hook<
 
   // For quicker access
   unsigned lowest = 0;
+  unsigned max_depth;
 
  public:
   DepthPool() {
-    // TODO: Size should be settable/dynamic
-    pools.resize(30);
+    // TODO: Size should be settable/dynamic. Currently the same as the default max_depth
+    max_depth = 5000;
+    pools.resize(max_depth);
   }
 
   fnType getLocal();
