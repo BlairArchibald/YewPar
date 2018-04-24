@@ -249,12 +249,18 @@ struct Ordered {
     Workstealing::Scheduler::startSchedulers(threadCountLocal);
 
     // Make this thread the sequential thread of execution.
+    auto reg = Registry<Space, Node, Bound>::gReg;
     for (auto & t : tasks) {
+      // Allow early termination of sequential thread
+      if constexpr(isDecision) {
+        if (reg->stopSearch) {
+          break;
+        }
+      }
+
       auto weStarted = hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(
           t.startedPromise, true).get();
       if (weStarted) {
-        auto reg = Registry<Space, Node, Bound>::gReg;
-
         std::vector<std::uint64_t> countMap;
         if constexpr(isCountNodes) {
           countMap.resize(reg->params.maxDepth + 1);
@@ -264,19 +270,7 @@ struct Ordered {
       }
     }
 
-    // Wait till the queues are empty and then kill the schedulers
-    if (threadCountLocal > 0) {
-      for (;;) {
-        auto noTasksRemaining = std::static_pointer_cast<Workstealing::Policies::PriorityOrderedPolicy>
-            (Workstealing::Scheduler::local_policy)->workRemaining().get();
-        if (noTasksRemaining) {
-          break;
-        } else {
-          hpx::this_thread::suspend();
-        }
-      }
-    }
-
+    // We have either seen everything or terminated early to make sure everyone stops
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
@@ -294,12 +288,18 @@ struct Ordered {
 
   static void subtreeTask(const Node taskRoot,
                           const hpx::naming::id_type started) {
+    // Don't bother checking if the sequential thread has done this task since we are stopping anyway
+    auto reg = Registry<Space, Node, Bound>::gReg;
+    if constexpr (isDecision) {
+      if (reg->stopSearch) {
+        return;
+      }
+    }
+
     auto weStarted = hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(
         started, true).get();
     // Sequential thread has beaten us to this task. Don't bother executing it again.
     if (weStarted) {
-      auto reg = Registry<Space, Node, Bound>::gReg;
-
       std::vector<std::uint64_t> countMap;
       if constexpr(isCountNodes) {
         countMap.resize(reg->params.maxDepth + 1);
