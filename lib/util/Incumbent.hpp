@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <memory>
+#include <chrono>
 
 #include <hpx/include/components.hpp>
 #include <hpx/include/iostreams.hpp>
@@ -40,6 +41,11 @@ struct Incumbent : public hpx::components::locking_hook<
    private:
     static constexpr unsigned verbose = Verbose::value;
 
+    using Clock = std::chrono::steady_clock;
+
+    // Timing code for performance analysis/debugging
+    std::chrono::time_point<Clock> component_creation;
+
     Node incumbentNode;
     Bound bnd;
 
@@ -47,6 +53,7 @@ struct Incumbent : public hpx::components::locking_hook<
     void initialiseIncumbent(Node n, Bound b) {
       incumbentNode = n;
       bnd = b;
+      component_creation = std::chrono::steady_clock::now();
     }
 
     void updateIncumbent(Node incumbent) {
@@ -55,9 +62,20 @@ struct Incumbent : public hpx::components::locking_hook<
         incumbentNode = incumbent;
         bnd = incumbent.getObj();
         if constexpr(verbose >= 1) {
-          hpx::cout << (boost::format("New Incumbent Bound: %1%\n") % incumbentNode.getObj()) << hpx::flush;
+
+          // Handle update timing. Just printing for now.
+          auto update_time = std::chrono::duration_cast<std::chrono::milliseconds>
+                (std::chrono::steady_clock::now() - component_creation);
+          hpx::cout <<
+              (boost::format("INCUMBENT: Successful Incumbent Update at %1% ms\nNew bound: %2%\n")
+               % update_time.count() % incumbentNode.getObj())
+                    << hpx::flush;
         }
-      }
+      } else {
+        auto update_time = std::chrono::duration_cast<std::chrono::milliseconds>
+            (std::chrono::steady_clock::now() - component_creation);
+        hpx::cout << (boost::format("INCUMBENT: Unsuccessful Incumbent Update at %1% ms\n") % update_time.count()) << hpx::flush;
+     }
     }
 
     Node getIncumbent() const {

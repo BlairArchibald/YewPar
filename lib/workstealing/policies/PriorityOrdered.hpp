@@ -52,7 +52,7 @@ class PriorityOrderedPolicy : public Policy {
   void addwork(int priority, hpx::util::function<void(hpx::naming::id_type)> task) {
     std::unique_lock<mutex_t> l(mtx);
     PriorityOrderedPerf::perf_spawns++;
-    hpx::apply<workstealing::priorityworkqueue::addWork_action>(globalWorkqueue, priority, task);
+    hpx::async<workstealing::priorityworkqueue::addWork_action>(globalWorkqueue, priority, task).get();
   }
 
   hpx::future<bool> workRemaining() {

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <cstdint>
+#include <chrono>
 
 #include <hpx/lcos/broadcast.hpp>
 #include <hpx/include/iostreams.hpp>
@@ -228,6 +229,8 @@ struct Ordered {
     Workstealing::Policies::PriorityOrderedPolicy::initPolicy();
 
     // Spawn all tasks to some depth *ordered*
+    auto pre_spawn = std::chrono::steady_clock::now();
+
     auto tasks = prioritiseTasks(space, params.spawnDepth, root);
     for (auto const & t : tasks) {
       Ordered_::SubtreeTask<Generator, Args...> child;
@@ -237,7 +240,15 @@ struct Ordered {
           (Workstealing::Scheduler::local_policy)->addwork(t.priority, std::move(task));
     }
 
-    // We need to start 1 less thread on the master locality than everywhere
+    auto spawn_time = std::chrono::duration_cast<std::chrono::milliseconds>
+        (std::chrono::steady_clock::now() - pre_spawn);
+    if constexpr (verbose > 1) {
+        hpx::cout <<
+            (boost::format("Ordered Skeleton initial work spawns took %1% ms\n") % spawn_time.count())
+                  << hpx::flush;
+    }
+
+    // We start 1 less thread on the master locality than everywhere
     // else to handle the sequential order
     auto allLocs = hpx::find_all_localities();
     allLocs.erase(std::remove(allLocs.begin(), allLocs.end(), hpx::find_here()), allLocs.end());

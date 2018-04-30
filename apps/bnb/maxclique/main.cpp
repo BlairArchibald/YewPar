@@ -291,13 +291,15 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                        YewPar::Skeletons::API::Optimisation,
                                        YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                        YewPar::Skeletons::API::DiscrepancySearch,
-                                       YewPar::Skeletons::API::PruneLevel>
+                                       YewPar::Skeletons::API::PruneLevel,
+                                       YewPar::Skeletons::API::MoreVerbose>
           ::search(graph, root, searchParameters);
     } else {
     sol = YewPar::Skeletons::Ordered<GenNode,
-                                         YewPar::Skeletons::API::Optimisation,
-                                         YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                         YewPar::Skeletons::API::PruneLevel>
+                                     YewPar::Skeletons::API::Optimisation,
+                                     YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                     YewPar::Skeletons::API::PruneLevel,
+                                     YewPar::Skeletons::API::MoreVerbose>
           ::search(graph, root, searchParameters);
     }
   } else if (skeletonType == "budget") {
