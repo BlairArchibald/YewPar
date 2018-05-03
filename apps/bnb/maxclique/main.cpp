@@ -257,12 +257,26 @@ int hpx_main(boost::program_options::variables_map & opts) {
     } else {
       YewPar::Skeletons::API::Params<int> searchParameters;
       searchParameters.spawnDepth = spawnDepth;
-      sol = YewPar::Skeletons::DepthSpawns<GenNode,
-                                          YewPar::Skeletons::API::Optimisation,
-                                          YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                          YewPar::Skeletons::API::PruneLevel,
-                                          YewPar::Skeletons::API::MoreVerbose>
+      auto poolType = opts["poolType"].as<std::string>();
+      if (poolType == "deque") {
+        sol = YewPar::Skeletons::DepthSpawns<GenNode,
+                                             YewPar::Skeletons::API::Optimisation,
+                                             YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                             YewPar::Skeletons::API::PruneLevel,
+                                             YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                                               Workstealing::Policies::Workpool>,
+                                             YewPar::Skeletons::API::MoreVerbose>
             ::search(graph, root, searchParameters);
+      } else {
+        sol = YewPar::Skeletons::DepthSpawns<GenNode,
+                                             YewPar::Skeletons::API::Optimisation,
+                                             YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                             YewPar::Skeletons::API::PruneLevel,
+                                             YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                                               Workstealing::Policies::DepthPoolPolicy>,
+                                             YewPar::Skeletons::API::MoreVerbose>
+            ::search(graph, root, searchParameters);
+      }
     }
   } else if (skeletonType == "stacksteal") {
     if (decisionBound != 0) {
@@ -355,8 +369,11 @@ int main (int argc, char* argv[]) {
       boost::program_options::value<std::string>(),
       "DIMACS formatted input graph"
       )
-    ( "discrepancyOrder", "Use discrepancy order for the ordered skeleton")
+    ("discrepancyOrder", "Use discrepancy order for the ordered skeleton")
     ("chunked", "Use chunking with stack stealing")
+    ("poolType",
+     boost::program_options::value<std::string>()->default_value("depthpool"),
+     "Pool type for depthbounded skeleton")
     ( "decisionBound",
     boost::program_options::value<int>()->default_value(0),
     "For Decision Skeletons. Size of the clique to search for"
