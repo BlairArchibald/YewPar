@@ -14,7 +14,7 @@
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
 #include "util/func.hpp"
-#include "util/doubleWritePromise.hpp"
+#include "util/DistSetOnceFlag.hpp"
 
 #include "Common.hpp"
 
@@ -65,16 +65,11 @@ struct Ordered {
 
   struct OrderedTask {
     OrderedTask(const Node n, unsigned priority) : node(n), priority(priority) {
-      started.get_future();
-      startedPromise = hpx::new_<YewPar::util::DoubleWritePromise<bool> >(
-          hpx::find_here(), started.get_id()).get();
-    }
-
-    hpx::promise<bool> started;
-    hpx::naming::id_type startedPromise; // YewPar::Util::DoubleWritePromise
-
+      startedFlag = hpx::new_<YewPar::util::DistSetOnceFlag>(hpx::find_here()).get();
+    };
     const Node node;
     unsigned priority;
+    hpx::naming::id_type startedFlag;
   };
 
   // Spawn tasks in a discrepancy search fashion
@@ -232,7 +227,7 @@ struct Ordered {
     for (auto const & t : tasks) {
       Ordered_::SubtreeTask<Generator, Args...> child;
       hpx::util::function<void(hpx::naming::id_type)> task;
-      task = hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedPromise);
+      task = hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedFlag);
       std::static_pointer_cast<Workstealing::Policies::PriorityOrderedPolicy>
           (Workstealing::Scheduler::local_policy)->addwork(t.priority, std::move(task));
     }
@@ -258,8 +253,7 @@ struct Ordered {
         }
       }
 
-      auto weStarted = hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(
-          t.startedPromise, true).get();
+      auto weStarted = hpx::async<YewPar::util::DistSetOnceFlag::set_value_action>(t.startedFlag).get();
       if (weStarted) {
         std::vector<std::uint64_t> countMap;
         if constexpr(isCountNodes) {
@@ -296,8 +290,7 @@ struct Ordered {
       }
     }
 
-    auto weStarted = hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(
-        started, true).get();
+    auto weStarted = hpx::async<YewPar::util::DistSetOnceFlag::set_value_action>(started).get();
     // Sequential thread has beaten us to this task. Don't bother executing it again.
     if (weStarted) {
       std::vector<std::uint64_t> countMap;
