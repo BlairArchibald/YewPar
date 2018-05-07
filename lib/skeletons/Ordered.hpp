@@ -224,13 +224,24 @@ struct Ordered {
 
     // Spawn all tasks to some depth *ordered*
     auto tasks = prioritiseTasks(space, params.spawnDepth, root);
-    for (auto const & t : tasks) {
-      Ordered_::SubtreeTask<Generator, Args...> child;
-      hpx::util::function<void(hpx::naming::id_type)> task;
-      task = hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedFlag);
-      std::static_pointer_cast<Workstealing::Policies::PriorityOrderedPolicy>
-          (Workstealing::Scheduler::local_policy)->addwork(t.priority, std::move(task));
-    }
+
+    // Ensure the "tasks" vector is maintained since we need this for sequential (hence why we have two temporary vectors)
+    std::vector<std::pair<unsigned, hpx::util::function<void(hpx::naming::id_type)> > > globalTasks(tasks.size());
+    std::transform(tasks.begin(), tasks.end(), globalTasks.begin(), [](const auto & t) {
+        Ordered_::SubtreeTask<Generator, Args...> child;
+        return std::make_pair(t.priority, hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedFlag));
+      });
+
+    std::sort(globalTasks.begin(), globalTasks.end(), [](const auto & x, const auto & y) {
+        return std::get<0>(x) < std::get<0>(y);
+      });
+
+    std::vector<hpx::util::function<void(hpx::naming::id_type)> > orderedTasks(globalTasks.size());
+    std::transform(globalTasks.begin(), globalTasks.end(), orderedTasks.begin(), [](const auto & t) {
+        return std::get<1>(t);
+      });
+
+    std::static_pointer_cast<Workstealing::Policies::PriorityOrderedPolicy>(Workstealing::Scheduler::local_policy)->addwork(orderedTasks);
 
     // We need to start 1 less thread on the master locality than everywhere
     // else to handle the sequential order
