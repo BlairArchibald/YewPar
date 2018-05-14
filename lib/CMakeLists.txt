@@ -23,5 +23,6 @@ add_hpx_library(YewPar
   DepthPool
   Incumbent
   SearchManager
+  DistSetOnceFlag
   iostreams
 )

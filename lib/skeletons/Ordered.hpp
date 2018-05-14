@@ -15,7 +15,7 @@
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
 #include "util/func.hpp"
-#include "util/doubleWritePromise.hpp"
+#include "util/DistSetOnceFlag.hpp"
 
 #include "Common.hpp"
 
@@ -66,16 +66,11 @@ struct Ordered {
 
   struct OrderedTask {
     OrderedTask(const Node n, unsigned priority) : node(n), priority(priority) {
-      started.get_future();
-      startedPromise = hpx::new_<YewPar::util::DoubleWritePromise<bool> >(
-          hpx::find_here(), started.get_id()).get();
-    }
-
-    hpx::promise<bool> started;
-    hpx::naming::id_type startedPromise; // YewPar::Util::DoubleWritePromise
-
+      startedFlag = hpx::new_<YewPar::util::DistSetOnceFlag>(hpx::find_here()).get();
+    };
     const Node node;
     unsigned priority;
+    hpx::naming::id_type startedFlag;
   };
 
   // Spawn tasks in a discrepancy search fashion
@@ -228,16 +223,36 @@ struct Ordered {
 
     Workstealing::Policies::PriorityOrderedPolicy::initPolicy();
 
+    auto spawn_start_time = std::chrono::steady_clock::now();
     // Spawn all tasks to some depth *ordered*
     auto pre_spawn = std::chrono::steady_clock::now();
 
     auto tasks = prioritiseTasks(space, params.spawnDepth, root);
-    for (auto const & t : tasks) {
-      Ordered_::SubtreeTask<Generator, Args...> child;
-      hpx::util::function<void(hpx::naming::id_type)> task;
-      task = hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedPromise);
-      std::static_pointer_cast<Workstealing::Policies::PriorityOrderedPolicy>
-          (Workstealing::Scheduler::local_policy)->addwork(t.priority, std::move(task));
+
+    // Ensure the "tasks" vector is maintained since we need this for sequential (hence why we have two temporary vectors)
+    std::vector<std::pair<unsigned, hpx::util::function<void(hpx::naming::id_type)> > > globalTasks(tasks.size());
+    std::transform(tasks.begin(), tasks.end(), globalTasks.begin(), [](const auto & t) {
+        Ordered_::SubtreeTask<Generator, Args...> child;
+        return std::make_pair(t.priority, hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedFlag));
+      });
+
+    std::sort(globalTasks.begin(), globalTasks.end(), [](const auto & x, const auto & y) {
+        return std::get<0>(x) < std::get<0>(y);
+      });
+
+    std::vector<hpx::util::function<void(hpx::naming::id_type)> > orderedTasks(globalTasks.size());
+    std::transform(globalTasks.begin(), globalTasks.end(), orderedTasks.begin(), [](const auto & t) {
+        return std::get<1>(t);
+      });
+
+    std::static_pointer_cast<Workstealing::Policies::PriorityOrderedPolicy>(Workstealing::Scheduler::local_policy)->addwork(orderedTasks);
+
+    if (verbose > 1) {
+      auto spawn_time = std::chrono::duration_cast<std::chrono::milliseconds>
+          (std::chrono::steady_clock::now() - spawn_start_time);
+      hpx::cout <<
+          (boost::format("Ordered Skeleton, time to spawn tasks: %1% ms\n") % spawn_time.count())
+                << hpx::flush;
     }
 
     auto spawn_time = std::chrono::duration_cast<std::chrono::milliseconds>
@@ -269,8 +284,17 @@ struct Ordered {
         }
       }
 
-      auto weStarted = hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(
-          t.startedPromise, true).get();
+      // Quick prune path to avoid writing global flags
+      if constexpr(isOptimisation && !std::is_same<boundFn, nullFn__>::value) {
+        Objcmp cmp;
+        auto best = reg->localBound.load();
+        auto bnd  = boundFn::invoke(space, t.node);
+        if (!cmp(bnd,best)) {
+          continue;
+        }
+      }
+
+      auto weStarted = hpx::async<YewPar::util::DistSetOnceFlag::set_value_action>(t.startedFlag).get();
       if (weStarted) {
         std::vector<std::uint64_t> countMap;
         if constexpr(isCountNodes) {
@@ -307,8 +331,17 @@ struct Ordered {
       }
     }
 
-    auto weStarted = hpx::async<YewPar::util::DoubleWritePromise<bool>::set_value_action>(
-        started, true).get();
+    // Quick prune path
+    if constexpr(isOptimisation && !std::is_same<boundFn, nullFn__>::value) {
+      Objcmp cmp;
+      auto best = reg->localBound.load();
+      auto bnd  = boundFn::invoke(reg->space, taskRoot);
+      if (!cmp(bnd,best)) {
+        return;
+      }
+    }
+
+    auto weStarted = hpx::async<YewPar::util::DistSetOnceFlag::set_value_action>(started).get();
     // Sequential thread has beaten us to this task. Don't bother executing it again.
     if (weStarted) {
       std::vector<std::uint64_t> countMap;

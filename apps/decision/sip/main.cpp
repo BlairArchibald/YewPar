@@ -676,10 +676,22 @@ int hpx_main(boost::program_options::variables_map & opts) {
         ::search(m, root, searchParameters);
   } else if (skeleton ==  "depthbounded") {
     searchParameters.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
-    sol = YewPar::Skeletons::DepthSpawns<GenNode<NWORDS>,
-                                        YewPar::Skeletons::API::Decision,
-                                        YewPar::Skeletons::API::MoreVerbose>
-        ::search(m, root, searchParameters);
+    auto poolType = opts["poolType"].as<std::string>();
+    if (poolType == "deque") {
+      sol = YewPar::Skeletons::DepthSpawns<GenNode<NWORDS>,
+                                           YewPar::Skeletons::API::Decision,
+                                           YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                                             Workstealing::Policies::Workpool>,
+                                           YewPar::Skeletons::API::MoreVerbose>
+          ::search(m, root, searchParameters);
+    } else {
+      sol = YewPar::Skeletons::DepthSpawns<GenNode<NWORDS>,
+                                           YewPar::Skeletons::API::Decision,
+                                           YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                                             Workstealing::Policies::DepthPoolPolicy>,
+                                           YewPar::Skeletons::API::MoreVerbose>
+          ::search(m, root, searchParameters);
+    }
   } else if (skeleton ==  "stackstealing") {
     searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
     sol = YewPar::Skeletons::StackStealing<GenNode<NWORDS>,
@@ -742,6 +754,9 @@ int main (int argc, char* argv[]) {
         boost::program_options::value<std::uint64_t>()->default_value(0),
         "Backtrack budget for budget skeleton"
       )
+      ("poolType",
+       boost::program_options::value<std::string>()->default_value("depthpool"),
+       "Pool type for depthbounded skeleton")
       ("chunked", "Use chunking with stack stealing")
       ("pattern", boost::program_options::value<std::string>(), "Specify the pattern file (LAD format)")
       ("target",  boost::program_options::value<std::string>(), "Specify the target file (LAD format)");

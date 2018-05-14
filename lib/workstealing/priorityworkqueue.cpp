@@ -19,21 +19,19 @@ namespace workstealing {
 
 using funcType = hpx::util::function<void(hpx::naming::id_type)>;
 funcType priorityworkqueue::steal() {
-  if (!tasks.empty()) {
-    auto task = tasks.top();
-    tasks.pop();
-    return hpx::util::get<1>(task);
+  funcType task;
+  if (!tasks.pop_left(task)) {
+    return nullptr;
   }
-  return nullptr;
+  return task;
 }
 
-void priorityworkqueue::addWork(int priority, funcType task) {
-  tasks.push(hpx::util::make_tuple(priority, std::move(task)));
+void priorityworkqueue::addWork(std::vector<funcType> ts) {
+  for (const auto & t : ts) {
+    tasks.push_right(std::move(t));
+  }
 }
 
-bool priorityworkqueue::workRemaining() {
-  return tasks.empty();
-}
 }
 HPX_REGISTER_COMPONENT_MODULE();
 
@@ -43,4 +41,3 @@ HPX_REGISTER_COMPONENT(workqueue_type, priority_workqueue);
 
 HPX_REGISTER_ACTION(workstealing::priorityworkqueue::steal_action, workqueue_prio_steal_action);
 HPX_REGISTER_ACTION(workstealing::priorityworkqueue::addWork_action, workqueue_prio_addWork_action);
-HPX_REGISTER_ACTION(workstealing::priorityworkqueue::workRemaining_action, workqueue_prio_workRemaining_action);
