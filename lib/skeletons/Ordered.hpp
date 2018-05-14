@@ -222,6 +222,7 @@ struct Ordered {
 
     Workstealing::Policies::PriorityOrderedPolicy::initPolicy();
 
+    auto spawn_start_time = std::chrono::steady_clock::now();
     // Spawn all tasks to some depth *ordered*
     auto tasks = prioritiseTasks(space, params.spawnDepth, root);
     for (auto const & t : tasks) {
@@ -230,6 +231,14 @@ struct Ordered {
       task = hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedFlag);
       std::static_pointer_cast<Workstealing::Policies::PriorityOrderedPolicy>
           (Workstealing::Scheduler::local_policy)->addwork(t.priority, std::move(task));
+    }
+
+    if (verbose > 1) {
+      auto spawn_time = std::chrono::duration_cast<std::chrono::milliseconds>
+          (std::chrono::steady_clock::now() - spawn_start_time);
+      hpx::cout <<
+          (boost::format("Ordered Skeleton, time to spawn tasks: %1% ms\n") % spawn_time.count())
+                << hpx::flush;
     }
 
     // We need to start 1 less thread on the master locality than everywhere
@@ -250,6 +259,16 @@ struct Ordered {
       if constexpr(isDecision) {
         if (reg->stopSearch) {
           break;
+        }
+      }
+
+      // Quick prune path to avoid writing global flags
+      if constexpr(isOptimisation && !std::is_same<boundFn, nullFn__>::value) {
+        Objcmp cmp;
+        auto best = reg->localBound.load();
+        auto bnd  = boundFn::invoke(space, t.node);
+        if (!cmp(bnd,best)) {
+          continue;
         }
       }
 
@@ -286,6 +305,16 @@ struct Ordered {
     auto reg = Registry<Space, Node, Bound>::gReg;
     if constexpr (isDecision) {
       if (reg->stopSearch) {
+        return;
+      }
+    }
+
+    // Quick prune path
+    if constexpr(isOptimisation && !std::is_same<boundFn, nullFn__>::value) {
+      Objcmp cmp;
+      auto best = reg->localBound.load();
+      auto bnd  = boundFn::invoke(reg->space, taskRoot);
+      if (!cmp(bnd,best)) {
         return;
       }
     }
