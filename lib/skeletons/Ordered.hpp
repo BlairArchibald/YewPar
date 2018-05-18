@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 #include <cstdint>
-#include <chrono>
 
 #include <hpx/lcos/broadcast.hpp>
 #include <hpx/include/iostreams.hpp>
@@ -223,47 +222,17 @@ struct Ordered {
 
     Workstealing::Policies::PriorityOrderedPolicy::initPolicy();
 
-    auto spawn_start_time = std::chrono::steady_clock::now();
     // Spawn all tasks to some depth *ordered*
-    auto pre_spawn = std::chrono::steady_clock::now();
-
     auto tasks = prioritiseTasks(space, params.spawnDepth, root);
-
-    // Ensure the "tasks" vector is maintained since we need this for sequential (hence why we have two temporary vectors)
-    std::vector<std::pair<unsigned, hpx::util::function<void(hpx::naming::id_type)> > > globalTasks(tasks.size());
-    std::transform(tasks.begin(), tasks.end(), globalTasks.begin(), [](const auto & t) {
-        Ordered_::SubtreeTask<Generator, Args...> child;
-        return std::make_pair(t.priority, hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedFlag));
-      });
-
-    std::sort(globalTasks.begin(), globalTasks.end(), [](const auto & x, const auto & y) {
-        return std::get<0>(x) < std::get<0>(y);
-      });
-
-    std::vector<hpx::util::function<void(hpx::naming::id_type)> > orderedTasks(globalTasks.size());
-    std::transform(globalTasks.begin(), globalTasks.end(), orderedTasks.begin(), [](const auto & t) {
-        return std::get<1>(t);
-      });
-
-    std::static_pointer_cast<Workstealing::Policies::PriorityOrderedPolicy>(Workstealing::Scheduler::local_policy)->addwork(orderedTasks);
-
-    if (verbose > 1) {
-      auto spawn_time = std::chrono::duration_cast<std::chrono::milliseconds>
-          (std::chrono::steady_clock::now() - spawn_start_time);
-      hpx::cout <<
-          (boost::format("Ordered Skeleton, time to spawn tasks: %1% ms\n") % spawn_time.count())
-                << hpx::flush;
+    for (auto const & t : tasks) {
+      Ordered_::SubtreeTask<Generator, Args...> child;
+      hpx::util::function<void(hpx::naming::id_type)> task;
+      task = hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedFlag);
+      std::static_pointer_cast<Workstealing::Policies::PriorityOrderedPolicy>
+          (Workstealing::Scheduler::local_policy)->addwork(t.priority, std::move(task));
     }
 
-    auto spawn_time = std::chrono::duration_cast<std::chrono::milliseconds>
-        (std::chrono::steady_clock::now() - pre_spawn);
-    if constexpr (verbose > 1) {
-        hpx::cout <<
-            (boost::format("Ordered Skeleton initial work spawns took %1% ms\n") % spawn_time.count())
-                  << hpx::flush;
-    }
-
-    // We start 1 less thread on the master locality than everywhere
+    // We need to start 1 less thread on the master locality than everywhere
     // else to handle the sequential order
     auto allLocs = hpx::find_all_localities();
     allLocs.erase(std::remove(allLocs.begin(), allLocs.end(), hpx::find_here()), allLocs.end());
@@ -281,16 +250,6 @@ struct Ordered {
       if constexpr(isDecision) {
         if (reg->stopSearch) {
           break;
-        }
-      }
-
-      // Quick prune path to avoid writing global flags
-      if constexpr(isOptimisation && !std::is_same<boundFn, nullFn__>::value) {
-        Objcmp cmp;
-        auto best = reg->localBound.load();
-        auto bnd  = boundFn::invoke(space, t.node);
-        if (!cmp(bnd,best)) {
-          continue;
         }
       }
 
@@ -327,16 +286,6 @@ struct Ordered {
     auto reg = Registry<Space, Node, Bound>::gReg;
     if constexpr (isDecision) {
       if (reg->stopSearch) {
-        return;
-      }
-    }
-
-    // Quick prune path
-    if constexpr(isOptimisation && !std::is_same<boundFn, nullFn__>::value) {
-      Objcmp cmp;
-      auto best = reg->localBound.load();
-      auto bnd  = boundFn::invoke(reg->space, taskRoot);
-      if (!cmp(bnd,best)) {
         return;
       }
     }

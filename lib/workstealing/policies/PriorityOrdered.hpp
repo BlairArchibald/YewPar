@@ -49,10 +49,15 @@ class PriorityOrderedPolicy : public Policy {
     return nullptr;
   }
 
-  void addwork(const std::vector<hpx::util::function<void(hpx::naming::id_type)> > & tasks) {
+  void addwork(int priority, hpx::util::function<void(hpx::naming::id_type)> task) {
     std::unique_lock<mutex_t> l(mtx);
-    PriorityOrderedPerf::perf_spawns + tasks.size();
-    hpx::async<workstealing::priorityworkqueue::addWork_action>(globalWorkqueue, tasks).get();
+    PriorityOrderedPerf::perf_spawns++;
+    hpx::apply<workstealing::priorityworkqueue::addWork_action>(globalWorkqueue, priority, task);
+  }
+
+  hpx::future<bool> workRemaining() {
+    std::unique_lock<mutex_t> l(mtx);
+    return hpx::async<workstealing::priorityworkqueue::workRemaining_action>(globalWorkqueue);
   }
 
   // Policy initialiser
