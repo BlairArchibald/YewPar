@@ -320,11 +320,6 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
     searchParameters.expectedObjective = decisionBound;
     sol = YewPar::Skeletons::Budget<GenNode,
-                                    YewPar::Skeletons::API::Decision,
-                                    YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                    YewPar::Skeletons::API::PruneLevel>
-          ::search(graph, root, searchParameters);
-    sol = YewPar::Skeletons::Budget<GenNode,
                                     YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                     YewPar::Skeletons::API::Decision,
                                     YewPar::Skeletons::API::PruneLevel>
