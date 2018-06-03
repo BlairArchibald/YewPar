@@ -153,7 +153,6 @@ struct StackStealing {
           // Work left at this level:
           if (generatorStack[i].seen < generatorStack[i].gen.numChildren) {
             if (reg->params.stealAll) {
-              std::cout << "Stealing all" << std::endl;
               Response res;
               while (generatorStack[i].seen < generatorStack[i].gen.numChildren) {
                 generatorStack[i].seen++;
@@ -176,7 +175,6 @@ struct StackStealing {
               break;
               // Steal the first task only
             } else {
-              std::cout << "Not stealing all" << std::endl;
               generatorStack[i].seen++;
 
               promises.emplace_back();
