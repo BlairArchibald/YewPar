@@ -152,8 +152,8 @@ struct StackStealing {
         for (auto i = 0; i < stackDepth; ++i) {
           // Work left at this level:
           if (generatorStack[i].seen < generatorStack[i].gen.numChildren) {
-            // Steal it all
-            if (std::get<2>(*stealRequest)) {
+            if (reg->params.stealAll) {
+              std::cout << "Stealing all" << std::endl;
               Response res;
               while (generatorStack[i].seen < generatorStack[i].gen.numChildren) {
                 generatorStack[i].seen++;
@@ -166,11 +166,17 @@ struct StackStealing {
                 const auto stolenSol = generatorStack[i].gen.next();
                 res.emplace_back(hpx::util::make_tuple(stolenSol, startingDepth + i + 1, prom.get_id()));
               }
+
+              if constexpr (verbose >= 1) {
+                hpx::cout << (boost::format("Chunk stolen. Size: %1%\n") % res.size()) << hpx::flush;
+              }
+
               std::get<1>(*stealRequest).set(res);
               responded = true;
               break;
-              // Steal the first task
+              // Steal the first task only
             } else {
+              std::cout << "Not stealing all" << std::endl;
               generatorStack[i].seen++;
 
               promises.emplace_back();
@@ -457,7 +463,7 @@ struct StackStealing {
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
-    Policy::initPolicy(params.stealAll);
+    Policy::initPolicy();
 
     if constexpr(isOptimisation || isDecision) {
       auto inc = hpx::new_<Incumbent>(hpx::find_here()).get();
@@ -470,6 +476,8 @@ struct StackStealing {
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
+
+    hpx::cout << hpx::flush;
 
     // Return the right thing
     if constexpr(isCountNodes) {

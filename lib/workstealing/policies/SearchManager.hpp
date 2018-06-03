@@ -86,8 +86,8 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
   std::shared_ptr<void> ptr;
 
   template <typename SearchInfo, typename FuncToCall, typename ...Args>
-  void init(bool stealAll) {
-    ptr = std::shared_ptr<void>(new SearchManagerComp<SearchInfo, FuncToCall, Args...>(stealAll));
+  void init() {
+    ptr = std::shared_ptr<void>(new SearchManagerComp<SearchInfo, FuncToCall, Args...>());
   }
 
   template <typename SearchInfo, typename FuncToCall, typename ...Args>
@@ -135,9 +135,6 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
     // Task Buffer for chunking
     boost::lockfree::deque<Task> taskBuffer;
 
-    // Should we steal all tasks at a level when we perform a steal?
-    bool stealAll = false;
-
     // Last steal optimisation
     hpx::naming::id_type last_remote;
 
@@ -182,9 +179,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
 
    public:
 
-    SearchManagerComp() : SearchManagerComp(false) {}
-
-    SearchManagerComp(bool stealAll) : stealAll(stealAll){
+    SearchManagerComp() {
       for (auto i = 0; i < hpx::get_os_thread_count(); ++i) {
         activeIds.push(i);
       }
@@ -230,7 +225,9 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
       inactive[pos] = stealReqPtr;
 
       // Signal the thread that we need work from it and wait for some (or Nothing)
+      //std::get<2>(*stealReqPtr) = true;
       std::get<0>(*stealReqPtr).store(true);
+
       auto resF = std::get<1>(*stealReqPtr).get();
       l.unlock();
       auto res = resF.get();
@@ -349,11 +346,11 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
       SetLocalPolicyAct>::type {};
 
     // Helper function to setup the components/policies on each node and register required information
-    static void initPolicy(bool stealAll) {
+    static void initPolicy() {
       std::vector<hpx::naming::id_type> searchManagers;
       for (auto const& loc : hpx::find_all_localities()) {
         auto searchManager = hpx::new_<SearchManager>(loc).get();
-        hpx::async<InitComponentAct<SearchInfo, FuncToCall, Args...> >(searchManager, stealAll).get();
+        hpx::async<InitComponentAct<SearchInfo, FuncToCall, Args...> >(searchManager).get();
         hpx::async<SetLocalPolicyAct>(loc, searchManager).get();
         searchManagers.push_back(searchManager);
       }
