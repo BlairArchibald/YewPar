@@ -47,7 +47,7 @@ struct StackStealing {
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
 
-  static void printSkeletonDetails() {
+  static void printSkeletonDetails(const API::Params<Bound> & params) {
     hpx::cout << "Skeleton Type: StackStealing\n";
     hpx::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
     hpx::cout << "Optimisation: " << std::boolalpha << isOptimisation << "\n";
@@ -57,9 +57,10 @@ struct StackStealing {
     if constexpr(!std::is_same<boundFn, nullFn__>::value) {
         hpx::cout << "Using Bounding: true\n";
         hpx::cout << "PruneLevel Optimisation: " << std::boolalpha << pruneLevel << "\n";
-      } else {
+    } else {
       hpx::cout << "Using Bounding: false\n";
     }
+    hpx::cout << "Chunking Enabled: " << std::boolalpha << params.stealAll << "\n";
     hpx::cout << hpx::flush;
   }
 
@@ -455,7 +456,7 @@ struct StackStealing {
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
     if constexpr(verbose) {
-      printSkeletonDetails();
+      printSkeletonDetails(params);
     }
 
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
