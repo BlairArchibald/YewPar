@@ -16,6 +16,11 @@ void scheduler(hpx::util::function<void(), false> initialTask) {
     return;
   }
 
+  {
+    std::unique_lock<hpx::lcos::local::mutex> l(mtx);
+    numRunningSchedulers++;
+  }
+
   // If we are pre-initialised then run that task first then enter the scheduler in this thread
   if (initialTask) {
     initialTask();
@@ -63,11 +68,6 @@ void startSchedulers(unsigned n) {
                                                 hpx::threads::thread_stacksize_huge);
   for (auto i = 0; i < n; ++i) {
     hpx::apply(exe, &scheduler, nullptr);
-  }
-
-  {
-    std::unique_lock<hpx::lcos::local::mutex> l(mtx);
-    numRunningSchedulers += n;
   }
 }
 
