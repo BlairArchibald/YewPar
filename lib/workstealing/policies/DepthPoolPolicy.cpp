@@ -24,11 +24,11 @@ std::uint64_t get_and_reset(std::atomic<std::uint64_t> & cntr, bool reset) {
   return res;
 }
 
-std::uint64_t getSpawns (bool reset) {get_and_reset(perf_spawns, reset);}
-std::uint64_t getLocalSteals(bool reset) {get_and_reset(perf_localSteals, reset);}
-std::uint64_t getDistributedSteals (bool reset) {get_and_reset(perf_distributedSteals, reset);}
-std::uint64_t getFailedLocalSteals(bool reset) {get_and_reset(perf_failedLocalSteals, reset);}
-std::uint64_t getFailedDistributedSteals(bool reset) {get_and_reset(perf_failedDistributedSteals, reset);}
+std::uint64_t getSpawns (bool reset) { return get_and_reset(perf_spawns, reset);}
+std::uint64_t getLocalSteals(bool reset) { return get_and_reset(perf_localSteals, reset);}
+std::uint64_t getDistributedSteals (bool reset) { return get_and_reset(perf_distributedSteals, reset);}
+std::uint64_t getFailedLocalSteals(bool reset) { return get_and_reset(perf_failedLocalSteals, reset);}
+std::uint64_t getFailedDistributedSteals(bool reset) { return get_and_reset(perf_failedDistributedSteals, reset);}
 
 void registerPerformanceCounters() {
   hpx::performance_counters::install_counter_type(
