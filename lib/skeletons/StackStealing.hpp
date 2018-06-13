@@ -111,6 +111,7 @@ struct StackStealing {
       auto numNodes = YewPar::Skeletons::Seq<Generator,
                                              YewPar::Skeletons::API::CountNodes,
                                              YewPar::Skeletons::API::BoundFunction<boundFn>,
+                                             YewPar::Skeletons::API::ObjectiveComparison<Objcmp>,
                                              YewPar::Skeletons::API::DepthBounded>
                       ::search(space, root, localParams);
       if (numNodes[depthRequired] >= totalThreads) {
