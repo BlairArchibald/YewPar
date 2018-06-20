@@ -70,6 +70,9 @@ struct Budget {
     StackElem<Generator> initElem(space, n);
     GeneratorStack<Generator> genStack(maxStackDepth, initElem);
 
+    if constexpr (isCountNodes) {
+      counts[depth] += initElem.gen.numChildren;
+    }
 
     auto stackDepth = 0;
     while (stackDepth >= 0) {
