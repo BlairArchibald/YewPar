@@ -28,6 +28,7 @@
 
 #include <hpx/hpx_init.hpp>
 #include <hpx/util/tuple.hpp>
+#include <hpx/include/iostreams.hpp>
 
 #ifndef NWORDS
 #define NWORDS 64
@@ -638,8 +639,8 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
 };
 
 int hpx_main(boost::program_options::variables_map & opts) {
-  std::cout << "Using pattern file: " << opts["pattern"].as<std::string>() << std::endl;
-  std::cout << "Using target file: " << opts["target"].as<std::string>() << std::endl;
+  hpx::cout << "Using pattern file: " << opts["pattern"].as<std::string>() << hpx::endl;
+  hpx::cout << "Using target file: " << opts["target"].as<std::string>() << hpx::endl;
   auto patternG = read_lad(opts["pattern"].as<std::string>());
   auto targetG  = read_lad(opts["target"].as<std::string>());
 
@@ -724,15 +725,15 @@ int hpx_main(boost::program_options::variables_map & opts) {
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
       (std::chrono::steady_clock::now() - start_time);
 
-  std::cout << "Solution found: " << std::boolalpha << !res_isomorphism.empty() << std::endl;
+  hpx::cout << "Solution found: " << std::boolalpha << !res_isomorphism.empty() << hpx::endl;
   if (!res_isomorphism.empty()) {
-    std::cout << "mapping = ";
+    hpx::cout << "mapping = ";
     for (auto v : res_isomorphism)
-      std::cout << "(" << v.first << " -> " << v.second << ") ";
-    std::cout << std::endl;
+      hpx::cout << "(" << v.first << " -> " << v.second << ") ";
+    hpx::cout << hpx::endl;
   }
 
-  std::cout << "cpu = " << overall_time.count() << std::endl;
+  hpx::cout << "cpu = " << overall_time.count() << hpx::endl;
 
   return hpx::finalize();
 }

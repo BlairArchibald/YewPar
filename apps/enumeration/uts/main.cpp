@@ -1,4 +1,5 @@
 #include <hpx/hpx_init.hpp>
+#include <hpx/include/iostreams.hpp>
 
 // We just use the default RNG for simplicity
 #define BRG_RNG
@@ -241,16 +242,16 @@ int hpx_main(boost::program_options::variables_map & opts) {
           ::search(params, root, searchParameters);
     }
   } else {
-    std::cout << "Invalid tree type\n";
+    hpx::cout << "Invalid tree type\n";
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
                       (std::chrono::steady_clock::now() - start_time);
 
-  std::cout << "Total Nodes: " << std::accumulate<std::vector<std::uint64_t>::iterator, std::uint64_t>(counts.begin(), counts.end(), 0) << std::endl;
+  hpx::cout << "Total Nodes: " << std::accumulate<std::vector<std::uint64_t>::iterator, std::uint64_t>(counts.begin(), counts.end(), 0) << hpx::endl;
 
-  std::cout << "=====" << std::endl;
-  std::cout << "cpu = " << overall_time.count() << std::endl;
+  hpx::cout << "=====" << hpx::endl;
+  hpx::cout << "cpu = " << overall_time.count() << hpx::endl;
 
   return hpx::finalize();
 }

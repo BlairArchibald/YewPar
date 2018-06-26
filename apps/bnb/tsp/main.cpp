@@ -4,6 +4,7 @@
 #include <bitset>
 
 #include <hpx/hpx_init.hpp>
+#include <hpx/include/iostreams.hpp>
 #include <hpx/runtime/serialization/bitset.hpp>
 
 #include "parser.hpp"
@@ -208,7 +209,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   try {
     inputData = parseFile(inputFile);
   } catch (SomethingWentWrong & e) {
-    std::cerr << e.what() << std::endl;
+    std::cerr << e.what() << hpx::endl;
     hpx::finalize();
   }
 
@@ -278,21 +279,21 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                            YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
         ::search(space, root, searchParameters);
   } else {
-    std::cout << "Invalid skeleton type\n";
+    hpx::cout << "Invalid skeleton type\n";
     return hpx::finalize();
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
                       (std::chrono::steady_clock::now() - start_time);
 
-  std::cout << "Tour: ";
+  hpx::cout << "Tour: ";
   for (const auto c : sol.sol.cities) {
-    std::cout << c << ",";
+    hpx::cout << c << ",";
   }
-  std::cout << std::endl;
-  std::cout << "Optimal tour length: " << sol.sol.tourLength << "\n";
+  hpx::cout << hpx::endl;
+  hpx::cout << "Optimal tour length: " << sol.sol.tourLength << "\n";
 
-  std::cout << "cpu = " << overall_time.count() << std::endl;
+  hpx::cout << "cpu = " << overall_time.count() << hpx::endl;
 
   return hpx::finalize();
 }

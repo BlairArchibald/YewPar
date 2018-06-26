@@ -3,6 +3,7 @@
  */
 
 #include <hpx/hpx_init.hpp>
+#include <hpx/include/iostreams.hpp>
 
 #include <vector>
 #include <chrono>
@@ -78,19 +79,19 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                        YewPar::Skeletons::API::DepthBounded>
         ::search(Empty(), root, searchParameters);
   } else {
-    std::cout << "Invalid skeleton type: " << skeleton << std::endl;
+    hpx::cout << "Invalid skeleton type: " << skeleton << hpx::endl;
     return hpx::finalize();
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
                       (std::chrono::steady_clock::now() - start_time);
 
-  std::cout << "Results Table: " << std::endl;
+  hpx::cout << "Results Table: " << hpx::endl;
   for (auto i = 0; i <= maxDepth; ++i) {
-    std::cout << i << ": " << counts[i] << std::endl;
+    hpx::cout << i << ": " << counts[i] << hpx::endl;
   }
-  std::cout << "=====" << std::endl;
-  std::cout << "cpu = " << overall_time.count() << std::endl;
+  hpx::cout << "=====" << hpx::endl;
+  hpx::cout << "cpu = " << overall_time.count() << hpx::endl;
 
   return hpx::finalize();
 }

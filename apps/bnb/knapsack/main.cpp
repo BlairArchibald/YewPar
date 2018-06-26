@@ -7,6 +7,7 @@
 #include <chrono>
 
 #include <hpx/hpx_init.hpp>
+#include <hpx/include/iostreams.hpp>
 
 #include "knapsack.hpp"
 
@@ -73,7 +74,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   try {
     problem = read_knapsack(inputFile);
   } catch (std::string e) {
-    std::cout << "Error in file parsing" << std::endl;
+    hpx::cout << "Error in file parsing" << hpx::endl;
     hpx::finalize();
     return EXIT_FAILURE;
   }
@@ -116,7 +117,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     auto x = (double) profits[i + 1] / (double) weights[i + 1];
     auto y = (double) profits[i] / (double) weights[i];
     if (x > y) {
-      std::cout << "Input not in profit density ordering" << std::endl;
+      hpx::cout << "Input not in profit density ordering" << hpx::endl;
       hpx::finalize();
       return EXIT_FAILURE;
     }
@@ -176,7 +177,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                            YewPar::Skeletons::API::BoundFunction<bnd_func> >
         ::search(space, root, searchParameters);
   } else {
-    std::cout << "Invalid skeleton type\n";
+    hpx::cout << "Invalid skeleton type\n";
     hpx::finalize();
     return EXIT_FAILURE;
   }
@@ -185,16 +186,16 @@ int hpx_main(boost::program_options::variables_map & opts) {
                       (std::chrono::steady_clock::now() - start_time);
 
   auto finalSol = sol.sol;
-  std::cout << "Final Profit: " << finalSol.profit << std::endl;
-  std::cout << "Final Weight: " << finalSol.weight << std::endl;
-  std::cout << "Expected Result: " << std::boolalpha << (finalSol.profit == problem.expectedResult) << std::endl;
-  std::cout << "Items: ";
+  hpx::cout << "Final Profit: " << finalSol.profit << hpx::endl;
+  hpx::cout << "Final Weight: " << finalSol.weight << hpx::endl;
+  hpx::cout << "Expected Result: " << std::boolalpha << (finalSol.profit == problem.expectedResult) << hpx::endl;
+  hpx::cout << "Items: ";
   for (auto const & i : finalSol.items) {
-    std::cout << i << " ";
+    hpx::cout << i << " ";
   }
-  std::cout << std::endl;
+  hpx::cout << hpx::endl;
 
-  std::cout << "cpu = " << overall_time.count() << std::endl;
+  hpx::cout << "cpu = " << overall_time.count() << hpx::endl;
 
   return hpx::finalize();
 }
