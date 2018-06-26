@@ -43,6 +43,7 @@ void registerPerformanceCounters() {
                                                   );
 }
 
+// Debugging information that doesn't fit a counter format
 void printDistributedStealsList() {
   for (const auto &p : distributedStealsList) {
     std::cout
@@ -50,6 +51,16 @@ void printDistributedStealsList() {
             % static_cast<std::int64_t>(hpx::get_locality_id())
             % static_cast<std::int64_t>(hpx::naming::get_locality_id_from_id(p.first))
             % p.second)
+        << std::endl;
+  }
+}
+
+void printChunkSizeList() {
+  for (const auto &c : chunkSizeList) {
+    std::cout
+        << (boost::format("%1% Stole Chunk of Size %2%")
+            % static_cast<std::int64_t>(hpx::get_locality_id())
+            % c)
         << std::endl;
   }
 }

@@ -168,10 +168,6 @@ struct StackStealing {
                 res.emplace_back(hpx::util::make_tuple(stolenSol, startingDepth + i + 1, prom.get_id()));
               }
 
-              if constexpr (verbose >= 1) {
-                hpx::cout << (boost::format("Chunk stolen. Size: %1%\n") % res.size()) << hpx::flush;
-              }
-
               std::get<1>(*stealRequest).set(res);
               responded = true;
               break;
@@ -478,6 +474,10 @@ struct StackStealing {
         hpx::find_all_localities()));
 
     hpx::cout << hpx::flush;
+
+    if (verbose >= 3) {
+      hpx::lcos::broadcast<Workstealing::Policies::SearchManagerPerf::printChunkSizeList_act>(hpx::find_all_localities());
+    }
 
     // Return the right thing
     if constexpr(isCountNodes) {

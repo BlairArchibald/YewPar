@@ -61,10 +61,15 @@ std::atomic<std::uint64_t> perf_failedDistributedSteals(0);
 
 std::vector<std::pair<hpx::naming::id_type, bool> > distributedStealsList;
 
+std::vector<std::uint32_t> chunkSizeList;
+
 void registerPerformanceCounters();
 
 void printDistributedStealsList();
 HPX_DEFINE_PLAIN_ACTION(printDistributedStealsList, printDistributedStealsList_act);
+
+void printChunkSizeList();
+HPX_DEFINE_PLAIN_ACTION(printChunkSizeList, printChunkSizeList_act);
 
 }}}
 
@@ -282,6 +287,8 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
       }
 
       if (!maybeStolen.empty()) {
+        SearchManagerPerf::chunkSizeList.emplace_back(maybeStolen.size());
+
         // Take off the first task and queue up anything else that was returned
         auto first = maybeStolen[0];
         SearchInfo searchInfo; int depth; hpx::naming::id_type prom;
