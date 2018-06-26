@@ -476,7 +476,10 @@ struct StackStealing {
     hpx::cout << hpx::flush;
 
     if (verbose >= 3) {
-      hpx::lcos::broadcast<Workstealing::Policies::SearchManagerPerf::printChunkSizeList_act>(hpx::find_all_localities());
+      for (const auto &l : hpx::find_all_localities()) {
+        // We don't broadcast here to avoid racy output.
+        hpx::async<Workstealing::Policies::SearchManagerPerf::printChunkSizeList_act>(l).get();
+      }
     }
 
     // Return the right thing

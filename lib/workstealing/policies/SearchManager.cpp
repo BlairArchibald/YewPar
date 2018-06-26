@@ -2,6 +2,8 @@
 #include "hpx/runtime/components/component_factory_base.hpp"  // for HPX_REG...
 #include "hpx/runtime/components/static_factory_data.hpp"     // for static_...
 
+#include <hpx/include/iostreams.hpp>
+
 HPX_REGISTER_COMPONENT_MODULE();
 
 namespace Workstealing { namespace Policies { namespace SearchManagerPerf {
@@ -46,22 +48,22 @@ void registerPerformanceCounters() {
 // Debugging information that doesn't fit a counter format
 void printDistributedStealsList() {
   for (const auto &p : distributedStealsList) {
-    std::cout
+    hpx::cout
         << (boost::format("Steal %1% - %2% , success: %3%")
             % static_cast<std::int64_t>(hpx::get_locality_id())
             % static_cast<std::int64_t>(hpx::naming::get_locality_id_from_id(p.first))
             % p.second)
-        << std::endl;
+        << hpx::endl;
   }
 }
 
 void printChunkSizeList() {
   for (const auto &c : chunkSizeList) {
-    std::cout
+    hpx::cout
         << (boost::format("%1% Stole Chunk of Size %2%")
             % static_cast<std::int64_t>(hpx::get_locality_id())
             % c)
-        << std::endl;
+        << hpx::endl;
   }
 }
 
