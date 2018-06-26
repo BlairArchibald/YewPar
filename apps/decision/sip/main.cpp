@@ -693,7 +693,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                            YewPar::Skeletons::API::MoreVerbose>
           ::search(m, root, searchParameters);
     }
-  } else if (skeleton ==  "stackstealing") {
+  } else if (skeleton ==  "stacksteal") {
     searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
     sol = YewPar::Skeletons::StackStealing<GenNode<NWORDS>,
                                          YewPar::Skeletons::API::Decision,
