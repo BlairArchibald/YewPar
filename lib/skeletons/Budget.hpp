@@ -90,7 +90,7 @@ struct Budget {
           if (genStack[i].seen < genStack[i].gen.numChildren) {
             while (genStack[i].seen < genStack[i].gen.numChildren) {
               genStack[i].seen++;
-              childFutures.push_back(createTask(childDepth + i, genStack[i].gen.next()));
+              childFutures.push_back(createTask(childDepth + i + 1, genStack[i].gen.next()));
             }
           }
         }
