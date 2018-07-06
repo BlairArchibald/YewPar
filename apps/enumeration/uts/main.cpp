@@ -225,6 +225,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                ::search(params, root, searchParameters);
     } else if (skeleton == "stacksteal") {
       YewPar::Skeletons::API::Params<> searchParameters;
+      searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
       counts = YewPar::Skeletons::StackStealing<NodeGen<TreeType::GEOMETRIC>,
                                                 YewPar::Skeletons::API::CountNodes,
                                                 YewPar::Skeletons::API::DepthBounded,
