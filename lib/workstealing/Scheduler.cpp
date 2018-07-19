@@ -53,6 +53,7 @@ void scheduler(hpx::util::function<void(), false> initialTask) {
 void stopSchedulers() {
   running.store(false);
 
+  /* FIXME: Causes the programs to hang when using Stack-Stealing
   {
     // Block until all schedulers have finished
     std::unique_lock<hpx::lcos::local::mutex> l(mtx);
@@ -60,6 +61,7 @@ void stopSchedulers() {
       exit_cv.wait(l);
     }
   }
+  */
   return;
 }
 

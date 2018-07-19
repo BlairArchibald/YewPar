@@ -1,11 +1,13 @@
 set(YEWPAR_BUILD_BNB_APPS_MAXCLIQUE "ON" CACHE BOOL "Build Branch and Bound Maximum Clique")
-set(YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS 8 CACHE INT "Number of Words in Branch and Bound Maximum Clique BitSets")
+set(YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS 8;14;32;90 CACHE STRING "Number of Words in Branch and Bound Maximum Clique BitSets. Accepts multiple values.")
 
 if(YEWPAR_BUILD_BNB_APPS_MAXCLIQUE)
-add_hpx_executable(maxclique-${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS}
+foreach(NWORDS ${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS})
+add_hpx_executable(maxclique-${NWORDS}
   SOURCES main.cpp DimacsParser.cpp
-  COMPILE_FLAGS "-DNWORDS=${YEWPAR_BUILD_BNB_APPS_MAXCLIQUE_NWORDS}"
+  COMPILE_FLAGS "-DNWORDS=${NWORDS}"
   DEPENDENCIES YewPar_lib)
+endforeach(NWORDS)
 
 if (YEWPAR_BUILD_TEST_APPS)
   add_test(
