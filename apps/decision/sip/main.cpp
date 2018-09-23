@@ -707,10 +707,19 @@ int hpx_main(boost::program_options::variables_map & opts) {
         ::search(m, root, searchParameters);
   } else if (skeleton ==  "ordered") {
     searchParameters.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
-    sol = YewPar::Skeletons::Ordered<GenNode<NWORDS>,
-                                     YewPar::Skeletons::API::Decision,
-                                     YewPar::Skeletons::API::MoreVerbose>
-        ::search(m, root, searchParameters);
+    if (opts.count("discrepancyOrder")) {
+      sol = YewPar::Skeletons::Ordered<GenNode<NWORDS>,
+                                      YewPar::Skeletons::API::Decision,
+                                      YewPar::Skeletons::API::DiscrepancySearch,
+                                      YewPar::Skeletons::API::MoreVerbose>
+          ::search(m, root, searchParameters);
+    } else {
+      sol = YewPar::Skeletons::Ordered<GenNode<NWORDS>,
+                                      YewPar::Skeletons::API::Decision,
+                                      YewPar::Skeletons::API::MoreVerbose>
+          ::search(m, root, searchParameters);
+
+    }
   } else {
     std::cerr << "Invalid skeleton type\n";
     return hpx::finalize();
@@ -758,6 +767,7 @@ int main (int argc, char* argv[]) {
       ("poolType",
        boost::program_options::value<std::string>()->default_value("depthpool"),
        "Pool type for depthbounded skeleton")
+      ("discrepancyOrder", "Use discrepancy order for the ordered skeleton")
       ("chunked", "Use chunking with stack stealing")
       ("pattern", boost::program_options::value<std::string>(), "Specify the pattern file (LAD format)")
       ("target",  boost::program_options::value<std::string>(), "Specify the target file (LAD format)");

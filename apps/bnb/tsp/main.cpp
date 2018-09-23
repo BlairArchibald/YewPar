@@ -259,11 +259,20 @@ int hpx_main(boost::program_options::variables_map & opts) {
                ::search(space, root, searchParameters);
   } else if (skeletonType == "ordered") {
     searchParameters.spawnDepth = spawnDepth;
-    sol = YewPar::Skeletons::Ordered<NodeGen,
-                                     YewPar::Skeletons::API::Optimisation,
-                                     YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                     YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
-              ::search(space, root, searchParameters);
+    if (opts.count("discrepancyOrder")) {
+      sol = YewPar::Skeletons::Ordered<NodeGen,
+                                      YewPar::Skeletons::API::Optimisation,
+                                      YewPar::Skeletons::API::DiscrepancySearch,
+                                      YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                      YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
+                ::search(space, root, searchParameters);
+    } else {
+      sol = YewPar::Skeletons::Ordered<NodeGen,
+                                      YewPar::Skeletons::API::Optimisation,
+                                      YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                      YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>
+                ::search(space, root, searchParameters);
+    }
   } else if (skeletonType == "budget") {
     searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
     sol = YewPar::Skeletons::Budget<NodeGen,
@@ -315,6 +324,7 @@ int main(int argc, char* argv[]) {
         boost::program_options::value<unsigned>()->default_value(500),
         "Number of backtracks before spawning work"
         )
+       ("discrepancyOrder", "Use discrepancy order for the ordered skeleton")
        ("chunked", "Use chunking with stack stealing")
        ( "spawn-depth,d",
         boost::program_options::value<unsigned>()->default_value(0),
