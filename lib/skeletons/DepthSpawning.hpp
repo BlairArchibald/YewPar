@@ -5,6 +5,8 @@
 #include <vector>
 #include <cstdint>
 
+#include <boost/format.hpp>
+
 #include "API.hpp"
 
 #include <hpx/lcos/broadcast.hpp>

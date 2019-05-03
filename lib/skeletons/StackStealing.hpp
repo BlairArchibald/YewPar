@@ -10,6 +10,8 @@
 #include <hpx/lcos/broadcast.hpp>
 #include <hpx/include/iostreams.hpp>
 
+#include <boost/format.hpp>
+
 #include "util/NodeGenerator.hpp"
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
@@ -322,7 +324,9 @@ struct StackStealing {
                        const hpx::naming::id_type donePromise) {
     hpx::threads::executors::default_executor exe(hpx::threads::thread_priority_critical,
                                                   hpx::threads::thread_stacksize_huge);
-    hpx::apply(exe, &Workstealing::Scheduler::scheduler, hpx::util::bind(SubTreeTask::fn_ptr(), initNode, depth, donePromise));
+    hpx::util::function<void(),false> fn = hpx::util::bind(SubTreeTask::fn_ptr(), initNode, depth, donePromise);
+    auto f = hpx::util::bind(&Workstealing::Scheduler::scheduler, fn);
+    exe.add(f);
   }
   struct addWorkAct : hpx::actions::make_action<
     decltype(&StackStealing<Generator, Args...>::addWork),
@@ -441,8 +445,9 @@ struct StackStealing {
     } else {
       hpx::threads::executors::default_executor exe(hpx::threads::thread_priority_critical,
                                                     hpx::threads::thread_stacksize_huge);
-      hpx::apply(exe, &Workstealing::Scheduler::scheduler,
-                hpx::util::bind(&runTaskFromStack, 1, space, genStack, stealRequest, countMap, pid, std::get<1>(searchMgrInfo), stackDepth, depth));
+      hpx::util::function<void(), false> fn = hpx::util::bind(&runTaskFromStack, 1, space, genStack, stealRequest, countMap, pid, std::get<1>(searchMgrInfo), stackDepth, depth);
+      auto f = hpx::util::bind(&Workstealing::Scheduler::scheduler, fn);
+      exe.add(f);
     }
 
     futures.push_back(std::move(f));

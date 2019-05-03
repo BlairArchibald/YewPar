@@ -60,14 +60,15 @@ void stopSchedulers() {
       exit_cv.wait(l);
     }
   }
-  return;
+ // return;
 }
 
 void startSchedulers(unsigned n) {
   hpx::threads::executors::default_executor exe(hpx::threads::thread_priority_critical,
                                                 hpx::threads::thread_stacksize_huge);
+
   for (auto i = 0; i < n; ++i) {
-    hpx::apply(exe, &scheduler, nullptr);
+    exe.add(hpx::util::bind(&scheduler, nullptr));
   }
 }
 

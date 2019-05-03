@@ -3,6 +3,8 @@
 
 #include <hpx/include/iostreams.hpp>
 
+#include <boost/format.hpp>
+
 namespace YewPar { namespace Skeletons {
 
 namespace detail {

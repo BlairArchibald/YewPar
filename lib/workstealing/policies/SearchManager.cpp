@@ -3,6 +3,7 @@
 #include "hpx/runtime/components/static_factory_data.hpp"     // for static_...
 
 #include <hpx/include/iostreams.hpp>
+#include <boost/format.hpp>
 
 HPX_REGISTER_COMPONENT_MODULE();
 

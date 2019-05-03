@@ -7,6 +7,8 @@
 #include <hpx/include/components.hpp>
 #include <hpx/include/iostreams.hpp>
 
+#include <boost/format.hpp>
+
 namespace YewPar {
 
 struct Incumbent : public hpx::components::locking_hook<

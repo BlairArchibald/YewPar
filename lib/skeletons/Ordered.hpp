@@ -8,6 +8,8 @@
 #include <hpx/lcos/broadcast.hpp>
 #include <hpx/include/iostreams.hpp>
 
+#include <boost/format.hpp>
+
 #include "API.hpp"
 
 #include "util/NodeGenerator.hpp"
