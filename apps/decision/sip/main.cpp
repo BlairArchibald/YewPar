@@ -754,7 +754,7 @@ int main (int argc, char* argv[]) {
   desc_commandline.add_options()
       ( "skeleton",
         boost::program_options::value<std::string>()->default_value("seq"),
-        "Which skeleton to use: seq, depthbound, stacksteal or ordered"
+        "Which skeleton to use: seq, depthbound, stacksteal, budget, or ordered"
       )
       ( "spawn-depth,d",
         boost::program_options::value<std::uint64_t>()->default_value(0),
@@ -769,8 +769,14 @@ int main (int argc, char* argv[]) {
        "Pool type for depthbounded skeleton")
       ("discrepancyOrder", "Use discrepancy order for the ordered skeleton")
       ("chunked", "Use chunking with stack stealing")
-      ("pattern", boost::program_options::value<std::string>(), "Specify the pattern file (LAD format)")
-      ("target",  boost::program_options::value<std::string>(), "Specify the target file (LAD format)");
+      ("pattern",
+      boost::program_options::value<std::string>()->required(),
+      "Specify the pattern file (LAD format)"
+      )
+      ("target",
+      boost::program_options::value<std::string>()->required(),
+      "Specify the target file (LAD format)"
+      );
 
   YewPar::registerPerformanceCounters();
 

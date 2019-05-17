@@ -314,10 +314,10 @@ int main(int argc, char* argv[]) {
   desc_commandline.add_options()
       ( "skeleton",
         boost::program_options::value<std::string>()->default_value("seq"),
-        "Type of skeleton to use: seq, depthbounded, ordered"
+        "Which skeleton to use: seq, depthbound, stacksteal, budget, or ordered"
         )
       ( "input-file,f",
-        boost::program_options::value<std::string>(),
+        boost::program_options::value<std::string>()->required(),
         "Input problem"
         )
       ( "backtrack-budget,b",

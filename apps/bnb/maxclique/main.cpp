@@ -197,11 +197,17 @@ typedef func<decltype(&upperBound), &upperBound> upperBound_func;
 
 
 int hpx_main(boost::program_options::variables_map & opts) {
-  auto inputFile = opts["input-file"].as<std::string>();
-  if (inputFile.empty()) {
+  /*
+  if (!opts.count("input-file")) {
+    std::cerr << "You must provide an DIMACS input file with \n";
     hpx::finalize();
     return EXIT_FAILURE;
   }
+  */
+
+  //boost::program_options::notify(opts);
+
+  auto inputFile = opts["input-file"].as<std::string>();
 
   auto gFile = dimacs::read_dimacs(inputFile);
 
@@ -234,15 +240,13 @@ int hpx_main(boost::program_options::variables_map & opts) {
       sol = YewPar::Skeletons::Seq<GenNode,
                                    YewPar::Skeletons::API::Decision,
                                    YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                   YewPar::Skeletons::API::PruneLevel,
-                                   YewPar::Skeletons::API::MoreVerbose>
+                                   YewPar::Skeletons::API::PruneLevel>
             ::search(graph, root, searchParameters);
     } else {
     sol = YewPar::Skeletons::Seq<GenNode,
                                  YewPar::Skeletons::API::Optimisation,
                                  YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                 YewPar::Skeletons::API::PruneLevel,
-                                 YewPar::Skeletons::API::MoreVerbose>
+                                 YewPar::Skeletons::API::PruneLevel>
           ::search(graph, root);
     }
   } else if (skeletonType == "depthbounded") {
@@ -265,8 +269,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                              YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                              YewPar::Skeletons::API::PruneLevel,
                                              YewPar::Skeletons::API::DepthBoundedPoolPolicy<
-                                               Workstealing::Policies::Workpool>,
-                                             YewPar::Skeletons::API::MoreVerbose>
+                                               Workstealing::Policies::Workpool> >
             ::search(graph, root, searchParameters);
       } else {
         sol = YewPar::Skeletons::DepthSpawns<GenNode,
@@ -274,8 +277,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                              YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                              YewPar::Skeletons::API::PruneLevel,
                                              YewPar::Skeletons::API::DepthBoundedPoolPolicy<
-                                               Workstealing::Policies::DepthPoolPolicy>,
-                                             YewPar::Skeletons::API::MoreVerbose>
+                                               Workstealing::Policies::DepthPoolPolicy> >
             ::search(graph, root, searchParameters);
       }
     }
@@ -356,7 +358,7 @@ int main (int argc, char* argv[]) {
   desc_commandline.add_options()
     ( "skeleton",
       boost::program_options::value<std::string>()->default_value("seq"),
-      "Which skeleton to use: seq, depthbound, stacksteal or ordered"
+      "Which skeleton to use: seq, depthbound, stacksteal, budget, or ordered"
       )
     ( "spawn-depth,d",
       boost::program_options::value<std::uint64_t>()->default_value(0),
@@ -367,7 +369,7 @@ int main (int argc, char* argv[]) {
       "Number of backtracks before spawning work"
       )
     ( "input-file,f",
-      boost::program_options::value<std::string>(),
+      boost::program_options::value<std::string>()->required(),
       "DIMACS formatted input graph"
       )
     ("discrepancyOrder", "Use discrepancy order for the ordered skeleton")
@@ -384,5 +386,3 @@ int main (int argc, char* argv[]) {
 
   return hpx::init(desc_commandline, argc, argv);
 }
-
-

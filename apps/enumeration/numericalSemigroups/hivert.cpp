@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
   desc_commandline.add_options()
     ( "skeleton",
       boost::program_options::value<std::string>()->default_value("seq"),
-      "Which skeleton to use"
+      "Which skeleton to use: seq, depthbound, stacksteal, or budget"
     )
     ( "spawn-depth,s",
       boost::program_options::value<unsigned>()->default_value(0),
