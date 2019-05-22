@@ -16,7 +16,6 @@
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
 #include "util/func.hpp"
-#include "util/doubleWritePromise.hpp"
 #include "util/util.hpp"
 
 #include "Common.hpp"
