@@ -23,7 +23,7 @@ DEF_PRESENT_PARAMETER(Optimisation, Optimisation_)
 DEF_PRESENT_PARAMETER(Decision, Decision_)
 
 // Search Shape changers
-DEF_PRESENT_PARAMETER(DepthBounded, DepthBounded_)
+DEF_PRESENT_PARAMETER(DepthLimited, DepthLimited_)
 
 // Bounding/Pruning
 BOOST_PARAMETER_TEMPLATE_KEYWORD(BoundFunction)

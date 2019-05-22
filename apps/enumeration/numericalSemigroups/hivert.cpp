@@ -10,7 +10,7 @@
 
 #include "YewPar.hpp"
 #include "skeletons/Seq.hpp"
-#include "skeletons/DepthSpawning.hpp"
+#include "skeletons/DepthBounded.hpp"
 #include "skeletons/StackStealing.hpp"
 #include "skeletons/Budget.hpp"
 
@@ -37,7 +37,7 @@ struct NodeGen : YewPar::NodeGenerator<Monoid, Empty> {
 
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
-  auto maxDepth   = opts["until-depth"].as<unsigned>();
+  auto maxDepth   = opts["genus"].as<unsigned>();
   auto skeleton   = opts["skeleton"].as<std::string>();
   //auto stealAll   = opts["stealall"].as<bool>();
 
@@ -52,15 +52,15 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.maxDepth = maxDepth;
     counts = YewPar::Skeletons::Seq<NodeGen,
                                     YewPar::Skeletons::API::CountNodes,
-                                    YewPar::Skeletons::API::DepthBounded>
+                                    YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), root, searchParameters);
   } else if (skeleton == "depthbounded") {
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.maxDepth   = maxDepth;
     searchParameters.spawnDepth = spawnDepth;
-    counts = YewPar::Skeletons::DepthSpawns<NodeGen,
+    counts = YewPar::Skeletons::DepthBounded<NodeGen,
                                             YewPar::Skeletons::API::CountNodes,
-                                            YewPar::Skeletons::API::DepthBounded>
+                                            YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), root, searchParameters);
   } else if (skeleton == "stacksteal"){
     YewPar::Skeletons::API::Params<> searchParameters;
@@ -68,7 +68,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
     counts = YewPar::Skeletons::StackStealing<NodeGen,
                                               YewPar::Skeletons::API::CountNodes,
-                                              YewPar::Skeletons::API::DepthBounded>
+                                              YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), root, searchParameters);
   } else if (skeleton == "budget"){
     YewPar::Skeletons::API::Params<> searchParameters;
@@ -76,7 +76,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.maxDepth   = maxDepth;
     counts = YewPar::Skeletons::Budget<NodeGen,
                                        YewPar::Skeletons::API::CountNodes,
-                                       YewPar::Skeletons::API::DepthBounded>
+                                       YewPar::Skeletons::API::DepthLimited>
         ::search(Empty(), root, searchParameters);
   } else {
     hpx::cout << "Invalid skeleton type: " << skeleton << hpx::endl;
@@ -105,11 +105,11 @@ int main(int argc, char* argv[]) {
       boost::program_options::value<std::string>()->default_value("seq"),
       "Which skeleton to use: seq, depthbound, stacksteal, or budget"
     )
-    ( "spawn-depth,s",
+    ( "spawn-depth,d",
       boost::program_options::value<unsigned>()->default_value(0),
       "Depth in the tree to spawn until (for parallel skeletons only)"
     )
-    ( "until-depth,d",
+    ( "genus,g",
       boost::program_options::value<unsigned>()->default_value(0),
       "Depth in the tree to count until"
     )

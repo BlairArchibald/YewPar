@@ -2,7 +2,7 @@
 
 #include <hpx/hpx_init.hpp>
 
-#include "skeletons/DepthSpawning.hpp"
+#include "skeletons/DepthBounded.hpp"
 
 typedef unsigned char uchar;
 typedef unsigned short int usint;
@@ -108,9 +108,9 @@ int hpx_main(boost::program_options::variables_map & opts) {
   searchParameters.maxDepth   = maxDepth;
   searchParameters.spawnDepth = spawnDepth;
 
-  auto counts = YewPar::Skeletons::DepthSpawns<NodeGen,
+  auto counts = YewPar::Skeletons::DepthBounded<NodeGen,
                                                YewPar::Skeletons::API::CountNodes,
-                                               YewPar::Skeletons::API::DepthBounded>
+                                               YewPar::Skeletons::API::DepthLimited>
                 ::search(Empty(), SemiGroup(), searchParameters);
 
   std::cout << "Results Table: " << std::endl;

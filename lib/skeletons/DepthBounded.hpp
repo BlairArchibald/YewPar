@@ -26,7 +26,7 @@
 
 namespace YewPar { namespace Skeletons {
 
-namespace DepthSpawns_ {
+namespace DepthBounded_ {
 
 template <typename Generator, typename ...Args>
 struct SubtreeTask;
@@ -34,9 +34,8 @@ struct SubtreeTask;
 }
 
 // This skeleton allows spawning all tasks into a workqueue based policy based on some depth limit
-// TODO: Not sure on the name for this
 template <typename Generator, typename ...Args>
-struct DepthSpawns {
+struct DepthBounded {
   typedef typename Generator::Nodetype Node;
   typedef typename Generator::Spacetype Space;
 
@@ -45,7 +44,7 @@ struct DepthSpawns {
   static constexpr bool isCountNodes = parameter::value_type<args, API::tag::CountNodes_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isOptimisation = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
-  static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthBounded_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool isDepthLimited = parameter::value_type<args, API::tag::DepthLimited_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
 
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
@@ -57,12 +56,13 @@ struct DepthSpawns {
 
   typedef typename parameter::value_type<args, API::tag::DepthBoundedPoolPolicy, Workstealing::Policies::DepthPoolPolicy>::type Policy;
 
-  static void printSkeletonDetails() {
-    hpx::cout << "Skeleton Type: DepthSpawns\n";
+  static void printSkeletonDetails(const API::Params<Bound> & params) {
+    hpx::cout << "Skeleton Type: DepthBounded\n";
+    hpx::cout << "d_cutoff: " << params.spawnDepth << "\n";
     hpx::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
     hpx::cout << "Optimisation: " << std::boolalpha << isOptimisation << "\n";
     hpx::cout << "Decision: " << std::boolalpha << isDecision << "\n";
-    hpx::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
+    hpx::cout << "DepthLimited: " << std::boolalpha << isDepthLimited << "\n";
     if constexpr(!std::is_same<boundFn, nullFn__>::value) {
         hpx::cout << "Using Bounding: true\n";
         hpx::cout << "PruneLevel Optimisation: " << std::boolalpha << pruneLevel << "\n";
@@ -90,7 +90,7 @@ struct DepthSpawns {
         counts[childDepth] += newCands.numChildren;
     }
 
-    if constexpr(isDepthBounded) {
+    if constexpr(isDepthLimited) {
         if (childDepth == params.maxDepth) {
           return;
         }
@@ -165,7 +165,7 @@ struct DepthSpawns {
         counts[childDepth] += newCands.numChildren;
     }
 
-    if constexpr(isDepthBounded) {
+    if constexpr(isDepthLimited) {
         if (childDepth == params.maxDepth) {
           return;
         }
@@ -261,7 +261,7 @@ struct DepthSpawns {
     auto pfut = prom.get_future();
     auto pid  = prom.get_id();
 
-    DepthSpawns_::SubtreeTask<Generator, Args...> t;
+    DepthBounded_::SubtreeTask<Generator, Args...> t;
     hpx::util::function<void(hpx::naming::id_type)> task;
     task = hpx::util::bind(t, hpx::util::placeholders::_1, taskRoot, childDepth, pid);
 
@@ -279,7 +279,7 @@ struct DepthSpawns {
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
     if constexpr (verbose) {
-        printSkeletonDetails();
+        printSkeletonDetails(params);
     }
 
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
@@ -318,12 +318,12 @@ struct DepthSpawns {
   }
 };
 
-namespace DepthSpawns_ {
+namespace DepthBounded_{
 
 template <typename Generator, typename ...Args>
 struct SubtreeTask : hpx::actions::make_action<
-  decltype(&DepthSpawns<Generator, Args...>::subtreeTask),
-  &DepthSpawns<Generator, Args...>::subtreeTask,
+  decltype(&DepthBounded<Generator, Args...>::subtreeTask),
+  &DepthBounded<Generator, Args...>::subtreeTask,
   SubtreeTask<Generator, Args...>>::type {};
 
 }
@@ -333,7 +333,7 @@ struct SubtreeTask : hpx::actions::make_action<
 namespace hpx { namespace traits {
 
 template <typename Generator, typename ...Args>
-struct action_stacksize<YewPar::Skeletons::DepthSpawns_::SubtreeTask<Generator, Args...> > {
+struct action_stacksize<YewPar::Skeletons::DepthBounded_::SubtreeTask<Generator, Args...> > {
   enum { value = threads::thread_stacksize_huge };
 };
 

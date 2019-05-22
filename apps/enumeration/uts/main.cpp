@@ -7,7 +7,7 @@
 
 #include "YewPar.hpp"
 #include "skeletons/Seq.hpp"
-#include "skeletons/DepthSpawning.hpp"
+#include "skeletons/DepthBounded.hpp"
 #include "skeletons/StackStealing.hpp"
 #include "skeletons/Budget.hpp"
 
@@ -189,7 +189,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     } else if (skeleton == "depthbounded") {
       YewPar::Skeletons::API::Params<> searchParameters;
       searchParameters.spawnDepth = spawnDepth;
-      counts = YewPar::Skeletons::DepthSpawns<NodeGen<TreeType::BINOMIAL>,
+      counts = YewPar::Skeletons::DepthBounded<NodeGen<TreeType::BINOMIAL>,
                                               YewPar::Skeletons::API::CountNodes>
                ::search(params, root, searchParameters);
     } else if (skeleton == "stacksteal") {
@@ -197,7 +197,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
       searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
       counts = YewPar::Skeletons::StackStealing<NodeGen<TreeType::BINOMIAL>,
                                                 YewPar::Skeletons::API::CountNodes,
-                                                YewPar::Skeletons::API::DepthBounded,
+                                                YewPar::Skeletons::API::DepthLimited,
                                                 YewPar::Skeletons::API::MaxStackDepth<
                                                   std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >
                ::search(params, root, searchParameters);
@@ -206,7 +206,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
       searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
       counts = YewPar::Skeletons::Budget<NodeGen<TreeType::BINOMIAL>,
                                          YewPar::Skeletons::API::CountNodes,
-                                         YewPar::Skeletons::API::DepthBounded,
+                                         YewPar::Skeletons::API::DepthLimited,
                                          YewPar::Skeletons::API::MaxStackDepth<
                                            std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >
           ::search(params, root, searchParameters);
@@ -220,7 +220,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     } else if (skeleton == "depthbounded") {
       YewPar::Skeletons::API::Params<> searchParameters;
       searchParameters.spawnDepth = spawnDepth;
-      counts = YewPar::Skeletons::DepthSpawns<NodeGen<TreeType::GEOMETRIC>,
+      counts = YewPar::Skeletons::DepthBounded<NodeGen<TreeType::GEOMETRIC>,
                                               YewPar::Skeletons::API::CountNodes>
                ::search(params, root, searchParameters);
     } else if (skeleton == "stacksteal") {
@@ -228,7 +228,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
       searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
       counts = YewPar::Skeletons::StackStealing<NodeGen<TreeType::GEOMETRIC>,
                                                 YewPar::Skeletons::API::CountNodes,
-                                                YewPar::Skeletons::API::DepthBounded,
+                                                YewPar::Skeletons::API::DepthLimited,
                                                 YewPar::Skeletons::API::MaxStackDepth<
                                                   std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >
                ::search(params, root, searchParameters);
@@ -237,7 +237,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
       searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
       counts = YewPar::Skeletons::Budget<NodeGen<TreeType::GEOMETRIC>,
                                          YewPar::Skeletons::API::CountNodes,
-                                         YewPar::Skeletons::API::DepthBounded,
+                                         YewPar::Skeletons::API::DepthLimited,
                                          YewPar::Skeletons::API::MaxStackDepth<
                                            std::integral_constant<unsigned, UTS_MAX_TREE_DEPTH> > >
           ::search(params, root, searchParameters);

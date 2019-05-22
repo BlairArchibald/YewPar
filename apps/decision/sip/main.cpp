@@ -15,7 +15,7 @@
 #include "YewPar.hpp"
 
 #include "skeletons/Seq.hpp"
-#include "skeletons/DepthSpawning.hpp"
+#include "skeletons/DepthBounded.hpp"
 #include "skeletons/StackStealing.hpp"
 #include "skeletons/Ordered.hpp"
 #include "skeletons/Budget.hpp"
@@ -679,14 +679,14 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
     auto poolType = opts["poolType"].as<std::string>();
     if (poolType == "deque") {
-      sol = YewPar::Skeletons::DepthSpawns<GenNode<NWORDS>,
+      sol = YewPar::Skeletons::DepthBounded<GenNode<NWORDS>,
                                            YewPar::Skeletons::API::Decision,
                                            YewPar::Skeletons::API::DepthBoundedPoolPolicy<
                                              Workstealing::Policies::Workpool>,
                                            YewPar::Skeletons::API::MoreVerbose>
           ::search(m, root, searchParameters);
     } else {
-      sol = YewPar::Skeletons::DepthSpawns<GenNode<NWORDS>,
+      sol = YewPar::Skeletons::DepthBounded<GenNode<NWORDS>,
                                            YewPar::Skeletons::API::Decision,
                                            YewPar::Skeletons::API::DepthBoundedPoolPolicy<
                                              Workstealing::Policies::DepthPoolPolicy>,

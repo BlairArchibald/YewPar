@@ -16,7 +16,7 @@
 #include "BitSet.hpp"
 
 //#include "skeletons/Seq.hpp"
-#include "skeletons/DepthSpawning.hpp"
+#include "skeletons/DepthBounded.hpp"
 //#include "skeletons/StackStealing.hpp"
 
 // Number of Words to use in our bitset representation
@@ -250,7 +250,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   YewPar::Skeletons::API::Params<int> searchParameters;
   searchParameters.spawnDepth = spawnDepth;
-  auto result = YewPar::Skeletons::DepthSpawns<GenNode,
+  auto result = YewPar::Skeletons::DepthBounded<GenNode,
                                                YewPar::Skeletons::API::Optimisation,
                                                YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                                YewPar::Skeletons::API::PruneLevel>

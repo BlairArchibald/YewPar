@@ -5,7 +5,7 @@
 #include <chrono>
 
 #include "skeletons/Seq.hpp"
-#include "skeletons/DepthSpawning.hpp"
+#include "skeletons/DepthBounded.hpp"
 #include "skeletons/StackStealing.hpp"
 #include "util/NodeGenerator.hpp"
 
@@ -49,22 +49,22 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.maxDepth = maxDepth;
     counts = YewPar::Skeletons::Seq<NodeGen,
                                     YewPar::Skeletons::API::CountNodes,
-                                    YewPar::Skeletons::API::DepthBounded>
+                                    YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), maxDepth - 1, searchParameters);
   } else if (skeleton == "dist"){
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.maxDepth   = maxDepth;
     searchParameters.spawnDepth = spawnDepth;
-    counts = YewPar::Skeletons::DepthSpawns<NodeGen,
+    counts = YewPar::Skeletons::DepthBounded<NodeGen,
                                     YewPar::Skeletons::API::CountNodes,
-                                    YewPar::Skeletons::API::DepthBounded>
+                                    YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), maxDepth - 1, searchParameters);
   } else if (skeleton == "genstack"){
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.maxDepth = maxDepth;
     counts = YewPar::Skeletons::StackStealing<NodeGen,
                                               YewPar::Skeletons::API::CountNodes,
-                                              YewPar::Skeletons::API::DepthBounded>
+                                              YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), maxDepth - 1, searchParameters);
   }
 

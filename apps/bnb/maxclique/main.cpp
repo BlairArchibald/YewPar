@@ -19,7 +19,7 @@
 #include "YewPar.hpp"
 
 #include "skeletons/Seq.hpp"
-#include "skeletons/DepthSpawning.hpp"
+#include "skeletons/DepthBounded.hpp"
 #include "skeletons/StackStealing.hpp"
 #include "skeletons/Ordered.hpp"
 #include "skeletons/Budget.hpp"
@@ -254,7 +254,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
       YewPar::Skeletons::API::Params<int> searchParameters;
       searchParameters.expectedObjective = decisionBound;
       searchParameters.spawnDepth = spawnDepth;
-      sol = YewPar::Skeletons::DepthSpawns<GenNode,
+      sol = YewPar::Skeletons::DepthBounded<GenNode,
                                            YewPar::Skeletons::API::Decision,
                                            YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                            YewPar::Skeletons::API::PruneLevel>
@@ -264,7 +264,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
       searchParameters.spawnDepth = spawnDepth;
       auto poolType = opts["poolType"].as<std::string>();
       if (poolType == "deque") {
-        sol = YewPar::Skeletons::DepthSpawns<GenNode,
+        sol = YewPar::Skeletons::DepthBounded<GenNode,
                                              YewPar::Skeletons::API::Optimisation,
                                              YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                              YewPar::Skeletons::API::PruneLevel,
@@ -272,7 +272,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                                Workstealing::Policies::Workpool> >
             ::search(graph, root, searchParameters);
       } else {
-        sol = YewPar::Skeletons::DepthSpawns<GenNode,
+        sol = YewPar::Skeletons::DepthBounded<GenNode,
                                              YewPar::Skeletons::API::Optimisation,
                                              YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                              YewPar::Skeletons::API::PruneLevel,

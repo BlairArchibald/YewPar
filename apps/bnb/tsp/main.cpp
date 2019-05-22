@@ -11,7 +11,7 @@
 #include "YewPar.hpp"
 
 #include "skeletons/Seq.hpp"
-#include "skeletons/DepthSpawning.hpp"
+#include "skeletons/DepthBounded.hpp"
 #include "skeletons/Ordered.hpp"
 #include "skeletons/Budget.hpp"
 #include "skeletons/StackStealing.hpp"
@@ -252,7 +252,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
         ::search(space, root, searchParameters);
   } else if (skeletonType == "depthbounded") {
     searchParameters.spawnDepth = spawnDepth;
-    sol = YewPar::Skeletons::DepthSpawns<NodeGen,
+    sol = YewPar::Skeletons::DepthBounded<NodeGen,
                                          YewPar::Skeletons::API::Optimisation,
                                          YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                          YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>>

@@ -14,7 +14,7 @@
 #include "YewPar.hpp"
 #include "util/func.hpp"
 #include "skeletons/Seq.hpp"
-#include "skeletons/DepthSpawning.hpp"
+#include "skeletons/DepthBounded.hpp"
 #include "skeletons/Ordered.hpp"
 #include "skeletons/Budget.hpp"
 #include "skeletons/StackStealing.hpp"
@@ -146,7 +146,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     auto spawnDepth = opts["spawn-depth"].as<unsigned>();
     YewPar::Skeletons::API::Params<int> searchParameters;
     searchParameters.spawnDepth = spawnDepth;
-    sol = YewPar::Skeletons::DepthSpawns<GenNode<NUMITEMS>,
+    sol = YewPar::Skeletons::DepthBounded<GenNode<NUMITEMS>,
                                          YewPar::Skeletons::API::Optimisation,
                                          YewPar::Skeletons::API::PruneLevel,
                                          YewPar::Skeletons::API::BoundFunction<bnd_func> >
