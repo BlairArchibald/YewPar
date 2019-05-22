@@ -59,6 +59,72 @@ struct StackElem {
 template <typename Generator>
 using GeneratorStack = std::vector<StackElem<Generator>>;
 
+// General node processing
+enum ProcessNodeRet { Exit, Break, Continue };
+
+template <typename Space, typename Node, typename ...Args>
+struct ProcessNode {
+  typedef typename API::skeleton_signature::bind<Args...>::type args;
+
+  static constexpr bool isOptimisation = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
+
+  typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
+
+  typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
+  typedef typename boundFn::return_type Bound;
+  typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
+
+  static ProcessNodeRet processNode(const API::Params<Bound> & params,
+                                    const Space & space,
+                                    const Node & c) {
+    if constexpr(isDecision) {
+        if (c.getObj() == params.expectedObjective) {
+          updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(c, c.getObj());
+          hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
+          return ProcessNodeRet::Exit;
+        }
+      }
+
+    if constexpr(!std::is_same<boundFn, nullFn__>::value) {
+        Objcmp cmp;
+        auto bnd  = boundFn::invoke(space, c);
+        if constexpr(isDecision) {
+            if (!cmp(bnd, params.expectedObjective) && bnd != params.expectedObjective) {
+              if constexpr(pruneLevel) {
+                  return ProcessNodeRet::Break;
+                } else {
+                return ProcessNodeRet::Continue;
+              }
+            }
+            // B&B Case
+          } else {
+          auto reg = Registry<Space, Node, Bound>::gReg;
+          auto best = reg->localBound.load();
+          if (!cmp(bnd, best)) {
+            if constexpr(pruneLevel) {
+                return ProcessNodeRet::Break;
+              } else {
+              return ProcessNodeRet::Continue;
+            }
+          }
+        }
+      }
+
+    if constexpr(isOptimisation) {
+        auto reg = Registry<Space, Node, Bound>::gReg;
+        auto best = reg->localBound.load();
+
+        Objcmp cmp;
+        if (cmp(c.getObj(),best)) {
+          updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(c, c.getObj());
+        }
+      }
+    return ProcessNodeRet::Continue;
+  }
+};
+
 }}
 
 #endif

@@ -106,58 +106,13 @@ struct Budget {
 
         genStack[stackDepth].seen++;
 
-        if constexpr(isDecision) {
-          if (child.getObj() == reg->params.expectedObjective) {
-            updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(child, child.getObj());
-            hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
-            if constexpr (verbose >= 1) {
-              hpx::cout <<
-                  (boost::format("Found solution on: %1%\n")
-                  % static_cast<std::int64_t>(hpx::get_locality_id()))
-                        << hpx::flush;
-            }
-            return;
-          }
-        }
-
-        // Do we support bounding?
-        if constexpr(!std::is_same<boundFn, nullFn__>::value) {
-          Objcmp cmp;
-          auto bnd  = boundFn::invoke(space, child);
-          if constexpr(isDecision) {
-            if (!cmp(bnd, reg->params.expectedObjective) && bnd != reg->params.expectedObjective) {
-                if constexpr(pruneLevel) {
-                    stackDepth--;
-                    depth--;
-                    backtracks++;
-                    continue;
-                  } else {
-                  continue;
-                }
-              }
-            // B&B Case
-            } else {
-            auto best = reg->localBound.load();
-            if (!cmp(bnd, best)) {
-              if constexpr(pruneLevel) {
-                  stackDepth--;
-                  depth--;
-                  backtracks++;
-                  continue;
-                } else {
-                continue;
-              }
-            }
-          }
-        }
-
-        if constexpr(isOptimisation) {
-          // FIXME: unsure about loading this twice in terms of performance
-          auto best = reg->localBound.load();
-          Objcmp cmp;
-          if (cmp(child.getObj(), best)) {
-            updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(child, child.getObj());
-          }
+        auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, child);
+        if (pn == ProcessNodeRet::Exit) { return; }
+        else if (pn == ProcessNodeRet::Break) {
+          stackDepth--;
+          depth--;
+          backtracks++;
+          continue;
         }
 
         // Going down

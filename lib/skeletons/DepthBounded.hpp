@@ -83,7 +83,6 @@ struct DepthBounded {
                                std::vector<uint64_t> & counts,
                                std::vector<hpx::future<void> > & childFutures,
                                const unsigned childDepth) {
-    auto reg = Registry<Space, Node, Bound>::gReg;
     Generator newCands = Generator(space, n);
 
     if constexpr(isCountNodes) {
@@ -99,48 +98,10 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      if constexpr(isDecision) {
-        if (c.getObj() == params.expectedObjective) {
-          updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(c, c.getObj());
-          hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
-          return;
-        }
-      }
-
-      // Do we support bounding?
-      if constexpr(!std::is_same<boundFn, nullFn__>::value) {
-          Objcmp cmp;
-          auto bnd  = boundFn::invoke(space, c);
-          if constexpr(isDecision) {
-            if (!cmp(bnd, params.expectedObjective) && bnd != params.expectedObjective) {
-              if constexpr(pruneLevel) {
-                  break;
-                } else {
-                continue;
-              }
-            }
-          // B&B Case
-          } else {
-            auto best = reg->localBound.load();
-            if (!cmp(bnd, best)) {
-              if constexpr(pruneLevel) {
-                  break;
-                } else {
-                continue;
-              }
-            }
-        }
-      }
-
-      if constexpr(isOptimisation) {
-        // FIXME: unsure about loading this twice in terms of performance
-        auto best = reg->localBound.load();
-
-        Objcmp cmp;
-        if (cmp(c.getObj(),best)) {
-          updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(c, c.getObj());
-        }
-      }
+      auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
+      if (pn == ProcessNodeRet::Exit) { return; }
+      else if (pn == ProcessNodeRet::Break) { break; }
+      //default continue
 
       // Spawn new tasks for all children (that are still alive after pruning)
       childFutures.push_back(createTask(childDepth + 1, c));
@@ -174,53 +135,9 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      if constexpr(isDecision) {
-        if (c.getObj() == params.expectedObjective) {
-          updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(c, c.getObj());
-          hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
-          if constexpr (verbose >= 1) {
-            hpx::cout <<
-                (boost::format("Found solution on: %1%\n")
-                % static_cast<std::int64_t>(hpx::get_locality_id()))
-                      << hpx::flush;
-          }
-          return;
-        }
-      }
-
-      // Do we support bounding?
-      if constexpr(!std::is_same<boundFn, nullFn__>::value) {
-          Objcmp cmp;
-          auto bnd  = boundFn::invoke(space, c);
-          if constexpr(isDecision) {
-              if (!cmp(bnd, params.expectedObjective) && bnd != params.expectedObjective) {
-              if constexpr(pruneLevel) {
-                  break;
-                } else {
-                continue;
-              }
-            }
-          // B&B Case
-          } else {
-            auto best = reg->localBound.load();
-            if (!cmp(bnd, best)) {
-              if constexpr(pruneLevel) {
-                  break;
-                } else {
-                continue;
-              }
-            }
-        }
-      }
-
-      if constexpr(isOptimisation) {
-        // FIXME: unsure about loading this twice in terms of performance
-        auto best = reg->localBound.load();
-        Objcmp cmp;
-        if (cmp(c.getObj(), best)) {
-          updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(c, c.getObj());
-        }
-      }
+      auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
+      if (pn == ProcessNodeRet::Exit) { return; }
+      else if (pn == ProcessNodeRet::Break) { break; }
 
       expandNoSpawns(space, c, params, counts, childDepth + 1);
     }
