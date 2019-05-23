@@ -21,7 +21,7 @@ namespace hpx { namespace naming { struct id_type; } }
 namespace workstealing
 {
   namespace detail {
-    struct priorityworkqueueCompare {
+    struct PriorityWorkqueueCompare {
       using funcType  = hpx::util::function<void(hpx::naming::id_type)>;
       using queueType = hpx::util::tuple<int, funcType>;
 
@@ -33,28 +33,28 @@ namespace workstealing
     };
   }
 
-  class priorityworkqueue : public hpx::components::locking_hook<
-    hpx::components::component_base<priorityworkqueue>
+  class PriorityWorkqueue : public hpx::components::locking_hook<
+    hpx::components::component_base<PriorityWorkqueue>
     >
     {
     private:
       using funcType  = hpx::util::function<void(hpx::naming::id_type)>;
       using queueType = hpx::util::tuple<int, funcType>;
 
-      std::priority_queue<queueType, std::vector<queueType>, detail::priorityworkqueueCompare> tasks;
+      std::priority_queue<queueType, std::vector<queueType>, detail::PriorityWorkqueueCompare> tasks;
 
     public:
       funcType steal();
-      HPX_DEFINE_COMPONENT_ACTION(priorityworkqueue, steal);
+      HPX_DEFINE_COMPONENT_ACTION(PriorityWorkqueue, steal);
       void addWork(int priority, funcType task);
-      HPX_DEFINE_COMPONENT_ACTION(priorityworkqueue, addWork);
+      HPX_DEFINE_COMPONENT_ACTION(PriorityWorkqueue, addWork);
       bool workRemaining();
-      HPX_DEFINE_COMPONENT_ACTION(priorityworkqueue, workRemaining);
+      HPX_DEFINE_COMPONENT_ACTION(PriorityWorkqueue, workRemaining);
     };
 }
 
-HPX_REGISTER_ACTION_DECLARATION(workstealing::priorityworkqueue::steal_action, workqueue_prio_steal_action);
-HPX_REGISTER_ACTION_DECLARATION(workstealing::priorityworkqueue::addWork_action, workqueue_prio_addWork_action);
-HPX_REGISTER_ACTION_DECLARATION(workstealing::priorityworkqueue::workRemaining_action, workqueue_prio_workRemaining_action);
+HPX_REGISTER_ACTION_DECLARATION(workstealing::PriorityWorkqueue::steal_action, workqueue_prio_steal_action);
+HPX_REGISTER_ACTION_DECLARATION(workstealing::PriorityWorkqueue::addWork_action, workqueue_prio_addWork_action);
+HPX_REGISTER_ACTION_DECLARATION(workstealing::PriorityWorkqueue::workRemaining_action, workqueue_prio_workRemaining_action);
 
 #endif

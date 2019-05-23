@@ -1,4 +1,4 @@
-#include "priorityworkqueue.hpp"
+#include "PriorityWorkqueue.hpp"
 #include "hpx/runtime/components/component_factory.hpp"        // for compon...
 #include "hpx/runtime/components/component_factory_base.hpp"   // for compon...
 #include "hpx/runtime/components/component_registry.hpp"       // for compon...
@@ -17,7 +17,7 @@ namespace hpx { namespace util { namespace plugin { template <class BasePlugin> 
 namespace workstealing {
 
 using funcType = hpx::util::function<void(hpx::naming::id_type)>;
-funcType priorityworkqueue::steal() {
+funcType PriorityWorkqueue::steal() {
   if (!tasks.empty()) {
     auto task = tasks.top();
     tasks.pop();
@@ -26,20 +26,20 @@ funcType priorityworkqueue::steal() {
   return nullptr;
 }
 
-void priorityworkqueue::addWork(int priority, funcType task) {
+void PriorityWorkqueue::addWork(int priority, funcType task) {
   tasks.push(hpx::util::make_tuple(priority, std::move(task)));
 }
 
-bool priorityworkqueue::workRemaining() {
+bool PriorityWorkqueue::workRemaining() {
   return tasks.empty();
 }
 }
 HPX_REGISTER_COMPONENT_MODULE();
 
-typedef hpx::components::component<workstealing::priorityworkqueue> workqueue_type;
+typedef hpx::components::component<workstealing::PriorityWorkqueue> workqueue_type;
 
 HPX_REGISTER_COMPONENT(workqueue_type, priority_workqueue);
 
-HPX_REGISTER_ACTION(workstealing::priorityworkqueue::steal_action, workqueue_prio_steal_action);
-HPX_REGISTER_ACTION(workstealing::priorityworkqueue::addWork_action, workqueue_prio_addWork_action);
-HPX_REGISTER_ACTION(workstealing::priorityworkqueue::workRemaining_action, workqueue_prio_workRemaining_action);
+HPX_REGISTER_ACTION(workstealing::PriorityWorkqueue::steal_action, workqueue_prio_steal_action);
+HPX_REGISTER_ACTION(workstealing::PriorityWorkqueue::addWork_action, workqueue_prio_addWork_action);
+HPX_REGISTER_ACTION(workstealing::PriorityWorkqueue::workRemaining_action, workqueue_prio_workRemaining_action);

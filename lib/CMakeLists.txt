@@ -18,8 +18,8 @@ add_hpx_library(YewPar
   util/util.cpp
 
   COMPONENT_DEPENDENCIES
-  workqueue
-  priorityworkqueue
+  Workqueue
+  PriorityWorkqueue
   DepthPool
   Incumbent
   SearchManager

@@ -77,7 +77,7 @@ hpx::util::function<void(), false> Workpool::getWork() {
   std::unique_lock<mutex_t> l(mtx);
 
   hpx::util::function<void(hpx::naming::id_type)> task;
-  task = hpx::async<workstealing::workqueue::getLocal_action>(local_workqueue).get();
+  task = hpx::async<workstealing::Workqueue::getLocal_action>(local_workqueue).get();
 
   if (task) {
     WorkpoolPerf::perf_localSteals++;
@@ -89,7 +89,7 @@ hpx::util::function<void(), false> Workpool::getWork() {
   if (!distributed_workqueues.empty()) {
     // Last steal optimisation
     if (last_remote != hpx::find_here()) {
-      task = hpx::async<workstealing::workqueue::steal_action>(last_remote).get();
+      task = hpx::async<workstealing::Workqueue::steal_action>(last_remote).get();
       if (task) {
         WorkpoolPerf::perf_distributedSteals++;
         return hpx::util::bind(task, hpx::find_here());
@@ -103,7 +103,7 @@ hpx::util::function<void(), false> Workpool::getWork() {
     std::uniform_int_distribution<int> rand(0, distributed_workqueues.size() - 1);
     auto victim = distributed_workqueues.begin();
     std::advance(victim, rand(randGenerator));
-    task = hpx::async<workstealing::workqueue::steal_action>(*victim).get();
+    task = hpx::async<workstealing::Workqueue::steal_action>(*victim).get();
 
     if (task) {
       last_remote = *victim;
@@ -120,7 +120,7 @@ hpx::util::function<void(), false> Workpool::getWork() {
 void Workpool::addwork(hpx::util::function<void(hpx::naming::id_type)> task) {
   std::unique_lock<mutex_t> l(mtx);
   WorkpoolPerf::perf_spawns++;
-  hpx::apply<workstealing::workqueue::addWork_action>(local_workqueue, task);
+  hpx::apply<workstealing::Workqueue::addWork_action>(local_workqueue, task);
 }
 
 void Workpool::registerDistributedWorkqueues(std::vector<hpx::naming::id_type> workqueues) {

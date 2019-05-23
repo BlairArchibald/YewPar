@@ -16,23 +16,23 @@ namespace hpx { namespace naming { struct id_type; } }
 
 namespace workstealing
 {
-  class workqueue : public hpx::components::component_base<workqueue> {
+  class Workqueue : public hpx::components::component_base<Workqueue> {
     private:
       using funcType = hpx::util::function<void(hpx::naming::id_type)>;
       boost::lockfree::deque<funcType> tasks; // From HPX
 
     public:
       funcType getLocal();
-      HPX_DEFINE_COMPONENT_ACTION(workqueue, getLocal);
+      HPX_DEFINE_COMPONENT_ACTION(Workqueue, getLocal);
       funcType steal();
-      HPX_DEFINE_COMPONENT_ACTION(workqueue, steal);
+      HPX_DEFINE_COMPONENT_ACTION(Workqueue, steal);
       void addWork(funcType task);
-      HPX_DEFINE_COMPONENT_ACTION(workqueue, addWork);
+      HPX_DEFINE_COMPONENT_ACTION(Workqueue, addWork);
     };
 }
 
-HPX_REGISTER_ACTION_DECLARATION(workstealing::workqueue::getLocal_action, workqueue_getLocal_action);
-HPX_REGISTER_ACTION_DECLARATION(workstealing::workqueue::steal_action, workqueue_steal_action);
-HPX_REGISTER_ACTION_DECLARATION(workstealing::workqueue::addWork_action, workqueue_addWork_action);
+HPX_REGISTER_ACTION_DECLARATION(workstealing::Workqueue::getLocal_action, Workqueue_getLocal_action);
+HPX_REGISTER_ACTION_DECLARATION(workstealing::Workqueue::steal_action, Workqueue_steal_action);
+HPX_REGISTER_ACTION_DECLARATION(workstealing::Workqueue::addWork_action, Workqueue_addWork_action);
 
 #endif

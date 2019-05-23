@@ -12,7 +12,7 @@
 #include <hpx/runtime/actions/plain_action.hpp>
 #include <hpx/runtime/actions/basic_action.hpp>
 
-#include "../workqueue.hpp"
+#include "workstealing/Workqueue.hpp"
 
 #include <random>
 #include <vector>
@@ -70,7 +70,7 @@ class Workpool : public Policy {
     std::vector<hpx::future<void> > futs;
     std::vector<hpx::naming::id_type> workqueues;
     for (auto const& loc : hpx::find_all_localities()) {
-      auto workqueue = hpx::new_<workstealing::workqueue>(loc).get();
+      auto workqueue = hpx::new_<workstealing::Workqueue>(loc).get();
       futs.push_back(hpx::async<setWorkqueue_act>(loc, workqueue));
       workqueues.push_back(workqueue);
     }

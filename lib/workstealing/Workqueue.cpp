@@ -1,4 +1,4 @@
-#include "workqueue.hpp"
+#include "Workqueue.hpp"
 #include "hpx/runtime/components/component_factory.hpp"        // for compon...
 #include "hpx/runtime/components/component_factory_base.hpp"   // for compon...
 #include "hpx/runtime/components/component_registry.hpp"       // for compon...
@@ -17,7 +17,7 @@ namespace hpx { namespace util { namespace plugin { template <class BasePlugin> 
 namespace workstealing
 {
   using funcType = hpx::util::function<void(hpx::naming::id_type)>;
-  funcType workqueue::steal() {
+  funcType Workqueue::steal() {
     funcType task;
     if (!tasks.pop_right(task)) {
       return nullptr;
@@ -25,7 +25,7 @@ namespace workstealing
     return task;
   }
 
-  funcType workqueue::getLocal() {
+  funcType Workqueue::getLocal() {
     funcType task;
     if (!tasks.pop_left(task)) {
       return nullptr;
@@ -33,16 +33,16 @@ namespace workstealing
     return task;
   }
 
-  void workqueue::addWork(funcType task) {
+  void Workqueue::addWork(funcType task) {
     tasks.push_left(task);
   }
 }
 HPX_REGISTER_COMPONENT_MODULE();
 
-typedef hpx::components::component<workstealing::workqueue> workqueue_type;
+typedef hpx::components::component<workstealing::Workqueue> Workqueue_type;
 
-HPX_REGISTER_COMPONENT(workqueue_type, workqueue);
+HPX_REGISTER_COMPONENT(Workqueue_type, Workqueue);
 
-HPX_REGISTER_ACTION(workstealing::workqueue::getLocal_action, workqueue_getLocal_action);
-HPX_REGISTER_ACTION(workstealing::workqueue::steal_action, workqueue_steal_action);
-HPX_REGISTER_ACTION(workstealing::workqueue::addWork_action, workqueue_addWork_action);
+HPX_REGISTER_ACTION(workstealing::Workqueue::getLocal_action, Workqueue_getLocal_action);
+HPX_REGISTER_ACTION(workstealing::Workqueue::steal_action, Workqueue_steal_action);
+HPX_REGISTER_ACTION(workstealing::Workqueue::addWork_action, Workqueue_addWork_action);

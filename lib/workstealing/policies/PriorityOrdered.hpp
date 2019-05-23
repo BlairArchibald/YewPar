@@ -7,7 +7,7 @@
 #include <hpx/lcos/local/mutex.hpp>
 
 #include "Policy.hpp"
-#include "workstealing/priorityworkqueue.hpp"
+#include "workstealing/PriorityWorkqueue.hpp"
 
 namespace Workstealing { namespace Scheduler {extern std::shared_ptr<Policy> local_policy; }}
 
@@ -39,7 +39,7 @@ class PriorityOrderedPolicy : public Policy {
     std::unique_lock<mutex_t> l(mtx);
 
     hpx::util::function<void(hpx::naming::id_type)> task;
-    task = hpx::async<workstealing::priorityworkqueue::steal_action>(globalWorkqueue).get();
+    task = hpx::async<workstealing::PriorityWorkqueue::steal_action>(globalWorkqueue).get();
     if (task) {
       PriorityOrderedPerf::perf_steals++;
       return hpx::util::bind(task, hpx::find_here());
@@ -52,12 +52,12 @@ class PriorityOrderedPolicy : public Policy {
   void addwork(int priority, hpx::util::function<void(hpx::naming::id_type)> task) {
     std::unique_lock<mutex_t> l(mtx);
     PriorityOrderedPerf::perf_spawns++;
-    hpx::apply<workstealing::priorityworkqueue::addWork_action>(globalWorkqueue, priority, task);
+    hpx::apply<workstealing::PriorityWorkqueue::addWork_action>(globalWorkqueue, priority, task);
   }
 
   hpx::future<bool> workRemaining() {
     std::unique_lock<mutex_t> l(mtx);
-    return hpx::async<workstealing::priorityworkqueue::workRemaining_action>(globalWorkqueue);
+    return hpx::async<workstealing::PriorityWorkqueue::workRemaining_action>(globalWorkqueue);
   }
 
   // Policy initialiser
@@ -70,7 +70,7 @@ class PriorityOrderedPolicy : public Policy {
     setPriorityWorkqueuePolicy_act>::type {};
 
   static void initPolicy () {
-    auto globalWorkqueue = hpx::new_<workstealing::priorityworkqueue>(hpx::find_here()).get();
+    auto globalWorkqueue = hpx::new_<workstealing::PriorityWorkqueue>(hpx::find_here()).get();
     hpx::wait_all(hpx::lcos::broadcast<setPriorityWorkqueuePolicy_act>(
         hpx::find_all_localities(), globalWorkqueue));
   }
