@@ -88,11 +88,11 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
   // is a little strange, but that's okay since it should only be called form
   // the library, never user code.
   // This ptr is shared with the local scheduler to ask the manager for more work.
-  std::shared_ptr<void> ptr;
+  // std::shared_ptr<void> ptr;
 
   template <typename SearchInfo, typename FuncToCall, typename ...Args>
   void init() {
-    ptr = std::shared_ptr<void>(new SearchManagerComp<SearchInfo, FuncToCall, Args...>());
+    Workstealing::Scheduler::local_policy = std::make_shared<SearchManagerComp<SearchInfo, FuncToCall, Args...> >();
   }
 
   template <typename SearchInfo, typename FuncToCall, typename ...Args>
@@ -341,24 +341,12 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
     typedef Response Response_t;
     typedef SharedState SharedState_t;
 
-    // Called on each node to set the scheduler policy pointer
-    // managerId must exist on the locality this is called on
-    static void setLocalPolicy(hpx::naming::id_type managerId) {
-      auto searchMgr = hpx::get_ptr<SearchManager>(managerId).get();
-      Workstealing::Scheduler::local_policy = searchMgr->getInnerPolicy<SearchInfo, FuncToCall, Args...>();
-    }
-    struct SetLocalPolicyAct : hpx::actions::make_action<
-      decltype(&setLocalPolicy),
-      &setLocalPolicy,
-      SetLocalPolicyAct>::type {};
-
     // Helper function to setup the components/policies on each node and register required information
     static void initPolicy() {
       std::vector<hpx::naming::id_type> searchManagers;
       for (auto const& loc : hpx::find_all_localities()) {
         auto searchManager = hpx::new_<SearchManager>(loc).get();
         hpx::async<InitComponentAct<SearchInfo, FuncToCall, Args...> >(searchManager).get();
-        hpx::async<SetLocalPolicyAct>(loc, searchManager).get();
         searchManagers.push_back(searchManager);
       }
 
@@ -370,17 +358,12 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
 
   };
 
-  template <typename SearchInfo, typename FuncToCall, typename ...Args>
-  std::shared_ptr<SearchManagerComp<SearchInfo, FuncToCall, Args...> > getInnerPolicy() {
-    return std::static_pointer_cast<SearchManagerComp<SearchInfo, FuncToCall, Args...> >(ptr);
-  }
-
   // Public component API (managing the types as required)
   template <typename SearchInfo, typename FuncToCall, typename ...Args>
   void registerDistributedManagers(std::vector<hpx::naming::id_type> distributedSearchMgrs) {
-    auto p = ptr.get();
-    auto comp = static_cast<SearchManagerComp<SearchInfo, FuncToCall, Args...>*>(p);
-    comp->registerDistributedManagers(distributedSearchMgrs);
+    auto sm = std::static_pointer_cast<SearchManagerComp<SearchInfo, FuncToCall, Args...>>
+      (Workstealing::Scheduler::local_policy);
+    sm->registerDistributedManagers(distributedSearchMgrs);
   }
   template <typename SearchInfo, typename FuncToCall, typename ...Args>
   struct RegisterDistributedManagersAct : hpx::actions::make_action<
@@ -390,16 +373,15 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
 
   template <typename SearchInfo, typename FuncToCall, typename ...Args>
   typename SearchManagerComp<SearchInfo, FuncToCall, Args...>::Response_t getDistributedWork() {
-    auto p = ptr.get();
-    auto comp = static_cast<SearchManagerComp<SearchInfo, FuncToCall, Args...>*>(p);
-    return comp->getDistributedWork();
+    auto sm = std::static_pointer_cast<SearchManagerComp<SearchInfo, FuncToCall, Args...>>
+      (Workstealing::Scheduler::local_policy);
+    return sm->getDistributedWork();
   }
   template <typename SearchInfo, typename FuncToCall, typename ...Args>
   struct GetDistributedWorkAct : hpx::actions::make_action<
     decltype(&SearchManager::getDistributedWork<SearchInfo, FuncToCall, Args...>),
     &SearchManager::getDistributedWork<SearchInfo, FuncToCall, Args...>,
     GetDistributedWorkAct<SearchInfo, FuncToCall, Args...> >::type {};
-
 };
 
 }}
