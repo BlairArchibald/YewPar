@@ -154,6 +154,7 @@ struct Ordered {
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
+      else if (pn == ProcessNodeRet::Prune) { continue; }
       else if (pn == ProcessNodeRet::Break) { break; }
 
       expandNoSpawns(space, c, params, counts, childDepth + 1);

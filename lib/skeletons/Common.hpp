@@ -60,7 +60,7 @@ template <typename Generator>
 using GeneratorStack = std::vector<StackElem<Generator>>;
 
 // General node processing
-enum ProcessNodeRet { Exit, Break, Continue };
+enum ProcessNodeRet { Exit, Prune, Break, Continue };
 
 template <typename Space, typename Node, typename ...Args>
 struct ProcessNode {
@@ -95,7 +95,7 @@ struct ProcessNode {
               if constexpr(pruneLevel) {
                   return ProcessNodeRet::Break;
                 } else {
-                return ProcessNodeRet::Continue;
+                return ProcessNodeRet::Prune;
               }
             }
             // B&B Case
@@ -105,8 +105,8 @@ struct ProcessNode {
           if (!cmp(bnd, best)) {
             if constexpr(pruneLevel) {
                 return ProcessNodeRet::Break;
-              } else {
-              return ProcessNodeRet::Continue;
+            } else {
+              return ProcessNodeRet::Prune;
             }
           }
         }
@@ -120,7 +120,7 @@ struct ProcessNode {
         if (cmp(c.getObj(),best)) {
           updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(c, c.getObj());
         }
-      }
+    }
     return ProcessNodeRet::Continue;
   }
 };

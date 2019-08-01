@@ -208,6 +208,7 @@ struct StackStealing {
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child);
         if (pn == ProcessNodeRet::Exit) { return; }
+        else if (pn == ProcessNodeRet::Prune) { continue; }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
           depth--;
