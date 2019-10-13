@@ -146,17 +146,17 @@ struct DepthBounded {
 
       expandNoSpawns(space, c, params, counts, childDepth + 1);
     }
-    auto t2 = std::chrono::high_resolution_clock::now();
-    auto diff = t2 - t1;
-    std::cout << "expandNoSpawns function\n";
-    std::cout << diff.count() << std::endl;
+   // auto t2 = std::chrono::high_resolution_clock::now();
+   // auto diff = t2 - t1;
+  //  std::cout << "expandNoSpawns function\nAt depth " << childDepth << std::endl;
+//    std::cout << diff.count() << std::endl;
   }
 
   static void subtreeTask(const Node taskRoot,
                           const unsigned childDepth,
                           const hpx::naming::id_type donePromiseId) {
     auto reg = Registry<Space, Node, Bound>::gReg;
-    std::cout << "subTreeTask function\n";
+
     std::vector<std::uint64_t> countMap;
     if constexpr(isCountNodes) {
         countMap.resize(reg->params.maxDepth + 1);
@@ -164,23 +164,12 @@ struct DepthBounded {
 
     std::vector<hpx::future<void> > childFutures;
 
-    auto pVec = reg->counts.get();
-    for (const auto& p : *pVec)
-    {
-      std::cout << p << std::endl;
-    }
-
     auto t1 = std::chrono::high_resolution_clock::now();
     if (childDepth <= reg->params.spawnDepth) {
       expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth);
     } else {
       expandNoSpawns(reg->space, taskRoot, reg->params, countMap, childDepth);
     }
-
-    auto t2 = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> diff = t2 - t1;
-    std::cout << diff.count() << "ms\n";  
-
     // Atomically updates the (process) local counter
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
@@ -198,7 +187,6 @@ struct DepthBounded {
     auto pfut = prom.get_future();
     auto pid  = prom.get_id();
 
-    auto t1 = std::chrono::high_resolution_clock::now();
     DepthBounded_::SubtreeTask<Generator, Args...> t;
     hpx::util::function<void(hpx::naming::id_type)> task;
     task = hpx::util::bind(t, hpx::util::placeholders::_1, taskRoot, childDepth, pid);
@@ -209,12 +197,8 @@ struct DepthBounded {
     } else {
       workPool->addwork(task, childDepth - 1);
     }
-    auto t2 = std::chrono::high_resolution_clock::now();
-    auto diff = t2 - t1;
-    std::cout << "createTask function\n";
-    std::cout << diff.count() << "ms" << std::endl;
 
-     return pfut;
+    return pfut;
   }
 
   static auto search (const Space & space,
@@ -223,7 +207,6 @@ struct DepthBounded {
     if constexpr (verbose) {
         printSkeletonDetails(params);
     }
-    auto t1 = std::chrono::high_resolution_clock::now();
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
@@ -253,10 +236,6 @@ struct DepthBounded {
       auto reg = Registry<Space, Node, Bound>::gReg;
 
       typedef typename Incumbent::GetIncumbentAct<Node, Bound, Objcmp, Verbose> getInc;
-      auto t2 = std::chrono::high_resolution_clock::now();
-      auto diff = t2 - t1;
-      std::cout << "search function\n";
-      std::cout << diff.count() << "ms" << std::endl;;
       return hpx::async<getInc>(reg->globalIncumbent).get();
     } else {
       static_assert(isCountNodes || isOptimisation || isDecision, "Please provide a supported search type: CountNodes, Optimisation, Decision");
