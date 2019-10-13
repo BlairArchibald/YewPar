@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <atomic>
 #include <cstdint>
+#include <forward_list>
 #include <iterator>
 #include <memory>
 #include <vector>
@@ -37,6 +38,10 @@ struct Registry {
   using countMapT = std::vector<std::atomic<std::uint64_t> >;
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
 
+  // Counts for Dissertation
+  std::unique_ptr<std::vector<std::list<std::atomic<double> > > > timeCounts;
+  std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > nodesVisited;
+
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
   // locality.
@@ -46,6 +51,8 @@ struct Registry {
     this->params = params;
     this->localBound = params.initialBound;
     counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
+    timeCounts = std::make_unique<std::vector<std::list<std::atomic<double> > > >(params.maxDepth + 1);
+    nodesVisited = std::make_unique<std::uint64_t> > >(0);
   }
 
   // Counting
@@ -56,10 +63,17 @@ struct Registry {
     }
   }
 
-  std::vector<std::uint64_t> getCounts() {
-    // Convert std::atomic<std::uint64_t> -> uint64_t by loading it
-    std::vector<std::uint64_t> res;
-    std::transform(counts->begin(), counts->end(), std::back_inserter(res), [](const auto & c) { return c.load(); });
+  template <typename T>
+  std::vector<T> getCounts(const bool && getTimes=false) {
+    // Convert std::atomic<T> -> T by loading it
+    std::vector<T> res;
+    auto begin = std::begin(getTimes ? *counts : *timeCounts);
+    auto end = std::end(getTimes ? *counts : *timeCounts);
+    std::transform(begin, end, std::back_inserter(res),
+    [](const auto & c) -> T
+    {
+      return c.load();
+    });
     return res;
   }
 

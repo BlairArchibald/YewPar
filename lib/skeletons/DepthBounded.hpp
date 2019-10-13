@@ -84,7 +84,8 @@ struct DepthBounded {
                                std::vector<hpx::future<void> > & childFutures,
                                const unsigned childDepth) {
     Generator newCands = Generator(space, n);
-    auto t1 = std::chrono::steady_clock::now();
+    auto reg = Registry<Space, Node, Bound>::gReg;
+
     if constexpr(isCountNodes) {
         counts[childDepth] += newCands.numChildren;
     }
@@ -98,6 +99,8 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
+      (*reg->nodesVisited) += 1;
+
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Break) { break; }
@@ -106,10 +109,6 @@ struct DepthBounded {
       // Spawn new tasks for all children (that are still alive after pruning)
       childFutures.push_back(createTask(childDepth + 1, c));
     }
-    auto t2 = std::chrono::steady_clock::now();
-    auto diff = t2 - t1;
-    hpx::cout << "expandWithSpawns function\n";
-    hpx::cout << diff.count() << std::endl;
   }
 
   static void expandNoSpawns(const Space & space,
@@ -139,6 +138,8 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
+      (*reg->nodesVisited) += 1;
+
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Prune) { continue; }
@@ -146,10 +147,6 @@ struct DepthBounded {
 
       expandNoSpawns(space, c, params, counts, childDepth + 1);
     }
-   // auto t2 = std::chrono::steady_clock::now();
-   // auto diff = t2 - t1;
-  //  std::cout << "expandNoSpawns function\nAt depth " << childDepth << std::endl;
-//    std::cout << diff.count() << std::endl;
   }
 
   static void subtreeTask(const Node taskRoot,
@@ -173,16 +170,19 @@ struct DepthBounded {
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
+    
     auto t2 = std::chrono::steady_clock::now();
-    auto diff = t2 - t1;
-    hpx::cout << "subtreeTask function\nAt depth " << childDepth << std::endl;
-    hpx::cout << diff.count() << std::endl;
+    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+    auto pVec = reg->timesCounts.get();
+    (*pVec)[childDepth].push_front(std::atomic<double>(diff));
 
-    hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
-          hpx::wait_all(futs);
-          hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
-        }, std::move(childFutures)));
-    }
+    hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) -> void
+    {
+      hpx::wait_all(futs);
+      hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
+    },
+    std::move(childFutures)));
+  }
 
   static hpx::future<void> createTask(const unsigned childDepth,
                                       const Node & taskRoot) {
@@ -232,6 +232,8 @@ struct DepthBounded {
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
+    auto reg = Registry<Space, Node, Bound>::gReg;
+    hpx::cout << reg->nodesVisited;
     // Return the right thing
     if constexpr(isCountNodes) {
       return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
