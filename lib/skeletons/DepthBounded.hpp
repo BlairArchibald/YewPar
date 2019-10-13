@@ -163,7 +163,6 @@ struct DepthBounded {
     }
 
     std::vector<hpx::future<void> > childFutures;
-
     auto t1 = std::chrono::high_resolution_clock::now();
     if (childDepth <= reg->params.spawnDepth) {
       expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth);
@@ -174,6 +173,10 @@ struct DepthBounded {
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
+    auto t2 = std::chrono::high_resolution_clock::now();
+    auto diff = t2 - t1;
+    std::cout << "expandNoSpawns function\nAt depth " << childDepth << std::endl;
+    std::cout << diff.count() << std::endl;
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
           hpx::wait_all(futs);
