@@ -99,7 +99,7 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      (*reg->nodesVisited) += 1;
+      (*reg->nodesVisited)[childDepth] += 1;
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
@@ -138,7 +138,7 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      (*reg->nodesVisited) += 1;
+      (*reg->nodesVisited)[childDepth] += 1;
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
