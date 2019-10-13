@@ -67,9 +67,7 @@ struct Registry {
   std::vector<T> getCounts(const bool && getTimes=false) {
     // Convert std::atomic<T> -> T by loading it
     std::vector<T> res;
-    auto begin = getTimes ? timeCounts->begin() : counts->begin();
-    auto end = getTimes ? timeCounts->end() : counts->end();
-    std::transform(begin, end, std::back_inserter(res),
+    std::transform(counts->begin(), counts->end(), std::back_inserter(res),
     [](const auto & c) -> T
     {
       return c.load();
