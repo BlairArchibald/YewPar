@@ -40,7 +40,7 @@ struct Registry {
 
   // Counts for Dissertation
   std::unique_ptr<std::vector<std::list<std::atomic<double> > > > timeCounts;
-  std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > nodesVisited;
+  std::unique_ptr<std::atomic<std::uint64_t> > nodesVisited;
 
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
@@ -52,7 +52,7 @@ struct Registry {
     this->localBound = params.initialBound;
     counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
     timeCounts = std::make_unique<std::vector<std::list<std::atomic<double> > > >(params.maxDepth + 1);
-    nodesVisited = std::make_unique<std::uint64_t> > >(0);
+    nodesVisited = std::make_unique<std::atomic<std::uint64_t> >(0);
   }
 
   // Counting
@@ -63,12 +63,11 @@ struct Registry {
     }
   }
 
-  template <typename T>
-  std::vector<T> getCounts(const bool && getTimes=false) {
+  std::vector<std::atomic<std::uint64_t> > getCounts(const bool && getTimes=false) {
     // Convert std::atomic<T> -> T by loading it
-    std::vector<T> res;
+    std::vector<std::atomic<std::uint64_t> > res;
     std::transform(counts->begin(), counts->end(), std::back_inserter(res),
-    [](const auto & c) -> T
+    [](const auto & c)
     {
       return c.load();
     });
