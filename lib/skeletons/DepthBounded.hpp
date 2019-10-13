@@ -84,7 +84,7 @@ struct DepthBounded {
                                std::vector<hpx::future<void> > & childFutures,
                                const unsigned childDepth) {
     Generator newCands = Generator(space, n);
-    auto t1 = std::chrono::high_resolution_clock::now();
+    auto t1 = std::chrono::steady_clock::now();
     if constexpr(isCountNodes) {
         counts[childDepth] += newCands.numChildren;
     }
@@ -106,10 +106,10 @@ struct DepthBounded {
       // Spawn new tasks for all children (that are still alive after pruning)
       childFutures.push_back(createTask(childDepth + 1, c));
     }
-    auto t2 = std::chrono::high_resolution_clock::now();
+    auto t2 = std::chrono::steady_clock::now();
     auto diff = t2 - t1;
-    std::cout << "expandWithSpawns function\n";
-    std::cout << diff.count() << std::endl;
+    hpx::cout << "expandWithSpawns function\n";
+    hpx::cout << diff.count() << std::endl;
   }
 
   static void expandNoSpawns(const Space & space,
@@ -119,7 +119,7 @@ struct DepthBounded {
                              const unsigned childDepth) {
     auto reg = Registry<Space, Node, Bound>::gReg;
     Generator newCands = Generator(space, n);
-    auto t1 = std::chrono::high_resolution_clock::now();
+    auto t1 = std::chrono::steady_clock::now();
     if constexpr(isDecision) {
         if (reg->stopSearch) {
           return;
@@ -146,7 +146,7 @@ struct DepthBounded {
 
       expandNoSpawns(space, c, params, counts, childDepth + 1);
     }
-   // auto t2 = std::chrono::high_resolution_clock::now();
+   // auto t2 = std::chrono::steady_clock::now();
    // auto diff = t2 - t1;
   //  std::cout << "expandNoSpawns function\nAt depth " << childDepth << std::endl;
 //    std::cout << diff.count() << std::endl;
@@ -163,7 +163,7 @@ struct DepthBounded {
     }
 
     std::vector<hpx::future<void> > childFutures;
-    auto t1 = std::chrono::high_resolution_clock::now();
+    auto t1 = std::chrono::steady_clock::now();
     if (childDepth <= reg->params.spawnDepth) {
       expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth);
     } else {
@@ -173,10 +173,10 @@ struct DepthBounded {
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
-    auto t2 = std::chrono::high_resolution_clock::now();
+    auto t2 = std::chrono::steady_clock::now();
     auto diff = t2 - t1;
-    std::cout << "expandNoSpawns function\nAt depth " << childDepth << std::endl;
-    std::cout << diff.count() << std::endl;
+    hpx::cout << "subtreeTask function\nAt depth " << childDepth << std::endl;
+    hpx::cout << diff.count() << std::endl;
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
           hpx::wait_all(futs);
