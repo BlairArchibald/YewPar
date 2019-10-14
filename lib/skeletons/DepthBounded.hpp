@@ -99,7 +99,7 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      reg->nodesVisited->store(reg->nodesVisited->load() + 1);
+      reg->nodesVisited->store(reg->nodesVisited->load() + 1.0);
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
@@ -137,7 +137,7 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      reg->nodesVisited->store(reg->nodesVisited->load() + 1);
+      reg->nodesVisited->store(reg->nodesVisited->load() + 1.0);
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
@@ -159,7 +159,7 @@ struct DepthBounded {
     }
 
     std::vector<hpx::future<void> > childFutures;
-    //auto t1 = std::chrono::steady_clock::now();
+    auto t1 = std::chrono::steady_clock::now();
     if (childDepth <= reg->params.spawnDepth) {
       expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth);
     } else {
@@ -171,12 +171,12 @@ struct DepthBounded {
       reg->updateCounts(countMap);
     }
     
-    //auto t2 = std::chrono::steady_clock::now();
-    //auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
-    ////auto pVec = reg->timeCounts.get();
-    //double time = diff.count();
-    ////(*pVec)[childDepth].push_front(time);
-    //(void)time;
+    auto t2 = std::chrono::steady_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
+    double time = diff.count();
+
+    auto pVec = reg->timeCounts.get();
+    (*pVec)[childDepth].push_back(time);
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) -> void
     {
@@ -235,7 +235,17 @@ struct DepthBounded {
         hpx::find_all_localities()));
 
     auto reg = Registry<Space, Node, Bound>::gReg;
-    hpx::cout << reg->nodesVisited;
+    hpx::cout << reg->nodesVisited->load() << hpx::endl;
+
+    auto timeCounts = reg->getTimes();
+    for (auto vec : *timeCounts)
+    {
+      for (double d : vec)
+      {
+        hpx::cout << d << "ms\n";
+      }
+    }
+
     // Return the right thing
     if constexpr(isCountNodes) {
       return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
