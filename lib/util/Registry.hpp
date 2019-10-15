@@ -42,6 +42,10 @@ struct Registry {
   std::unique_ptr<std::vector<std::vector<double> > > timeCounts;
   std::unique_ptr<std::atomic<std::uint64_t> > nodesVisited;
 
+  std::atomic<unsigned> maxDepth;
+  std::atomic_flag lock{ATOMIC_FLAG_INIT};
+  std::atomic_flag lockCount{ATOMIC_FLAG_INIT};
+
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
   // locality.
@@ -50,6 +54,7 @@ struct Registry {
     this->root = root;
     this->params = params;
     this->localBound = params.initialBound;
+    maxDepth.store(params.maxDepth);
     counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
     timeCounts = std::make_unique<std::vector<std::vector<double> > >(params.maxDepth + 1);
     nodesVisited = std::make_unique<std::atomic<std::uint64_t> >(0);
@@ -74,6 +79,23 @@ struct Registry {
   std::vector<std::vector<double> > *getTimes()
   {
     return timeCounts.get();
+  }
+
+  void addTime(int depth, double time)
+  {
+    // Use spin locks for efficiency
+    while (lock.test_and_set(std::memory_order_acquire))
+      ;
+    (*timeCounts)[depth].push_back(time);
+    lock.clear(std::memory_order_release);
+  }
+
+  void updateCount()
+  {
+    while (lockCount.test_and_set(std::memory_order_release))
+      ;
+    nodesVisited->store(nodesVisited->load() + 1.0);
+    lockCount.clear(std::memory_order_release);
   }
 
   // BNB

@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <mutex>
 #include <vector>
 #include <cstdint>
 
@@ -99,7 +100,7 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      reg->nodesVisited->store(reg->nodesVisited->load() + 1.0);
+      reg->updateCount();
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
@@ -137,7 +138,7 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      reg->nodesVisited->store(reg->nodesVisited->load() + 1.0);
+      reg->updateCount();
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
@@ -170,14 +171,13 @@ struct DepthBounded {
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
-    
+   
     auto t2 = std::chrono::steady_clock::now();
-    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
+    auto diff = std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1);
     double time = diff.count();
 
-    auto pVec = reg->timeCounts.get();
-    (*pVec)[childDepth].push_back(time);
-
+    reg->addTime(childDepth, time);
+    
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) -> void
     {
       hpx::wait_all(futs);
@@ -238,13 +238,24 @@ struct DepthBounded {
     hpx::cout << reg->nodesVisited->load() << hpx::endl;
 
     auto timeCounts = reg->getTimes();
+    int depth = 0;
+    hpx::cout << "================" << hpx::endl;
     for (auto vec : *timeCounts)
     {
-      for (double d : vec)
+      if (vec.size() > 0)
       {
-        hpx::cout << d << "ms\n";
+        hpx::cout << "Times at depth " << depth++ << hpx::endl;
+        hpx::cout << "================" << hpx::endl;
+        for (double d : vec)
+        {
+          hpx::cout << d << "ns\n";
+
+        }
+        hpx::cout << "================" << hpx::endl;
       }
     }
+    hpx::cout << "Total number of nodes: " << reg->nodesVisited->load();
+    hpx::cout << hpx::endl; 
 
     // Return the right thing
     if constexpr(isCountNodes) {
