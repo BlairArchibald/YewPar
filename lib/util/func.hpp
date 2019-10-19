@@ -22,7 +22,7 @@ struct func<Ret(*)(Args...), F> {
   }
 };
 
-static bool null__() {};
+static bool null__() { return false; };
 typedef func<decltype(&null__), &null__> nullFn__;
 
 #endif

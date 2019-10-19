@@ -42,7 +42,6 @@ struct Registry {
   std::unique_ptr<std::vector<std::vector<double> > > timeCounts;
   std::unique_ptr<std::atomic<std::uint64_t> > nodesVisited;
 
-  std::atomic<unsigned> maxDepth;
   std::atomic_flag lock{ATOMIC_FLAG_INIT};
   std::atomic_flag lockCount{ATOMIC_FLAG_INIT};
 
@@ -54,7 +53,6 @@ struct Registry {
     this->root = root;
     this->params = params;
     this->localBound = params.initialBound;
-    maxDepth.store(params.maxDepth);
     counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
     timeCounts = std::make_unique<std::vector<std::vector<double> > >(params.maxDepth + 1);
     nodesVisited = std::make_unique<std::atomic<std::uint64_t> >(0);
@@ -76,9 +74,9 @@ struct Registry {
     return res;
   }
 
-  std::vector<std::vector<double> > *getTimes()
+  std::vector<std::vector<double> > &getTimes() const
   {
-    return timeCounts.get();
+    return *timeCounts;
   }
 
   void addTime(int depth, double time)
@@ -140,6 +138,31 @@ template <typename Space, typename Node, typename Bound>
 struct GetCountsAct : hpx::actions::make_direct_action<
   decltype(&getCounts<Space, Node, Bound>), &getCounts<Space, Node, Bound>, GetCountsAct<Space, Node, Bound> >::type {};
 
+///////////////////////////////////////////////////////
+template<typename Space, typename Node, typename Bound>
+std::vector<std::vector<double> > getTimes() {
+  return Registry<Space, Node, Bound>::gReg->getTimes();
+}
+template <typename Space, typename Node, typename Bound>
+struct GetTimesAct : hpx::actions::make_direct_action<
+  decltype(&getTimes<Space, Node, Bound>), &getTimes<Space, Node, Bound>, GetTimesAct<Space, Node, Bound> >::type {};
+
+template <typename Space, typename Node, typename Bound>
+void addTime(int depth, double time) {
+  Registry<Space, Node, Bound>::gReg->addTime(depth, time);
+}
+template <typename Space, typename Node, typename Bound>
+struct AddTimeAct : hpx::actions::make_direct_action<
+  decltype(&addTime<Space, Node, Bound>), &addTime<Space, Node, Bound>, AddTimeAct<Space, Node, Bound> >::type {};
+
+template <typename Space, typename Node, typename Bound>
+void updateCount() {
+  Registry<Space, Node, Bound>::gReg->updateCount();
+}
+template <typename Space, typename Node, typename Bound>
+struct UpdateCountsAct : hpx::actions::make_direct_action<
+  decltype(&updateCount<Space, Node, Bound>), &updateCount<Space, Node, Bound>, UpdateCountsAct<Space, Node, Bound> >::type {};
+///////////////////////////////////////////////////////
 template <typename Space, typename Node, typename Bound>
 void setStopSearchFlag() {
   Registry<Space, Node, Bound>::gReg->setStopSearchFlag();

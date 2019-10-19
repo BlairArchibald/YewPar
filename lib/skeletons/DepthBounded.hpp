@@ -171,13 +171,13 @@ struct DepthBounded {
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
-   
+
     auto t2 = std::chrono::steady_clock::now();
-    auto diff = std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1);
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
     double time = diff.count();
 
     reg->addTime(childDepth, time);
-    
+
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) -> void
     {
       hpx::wait_all(futs);
@@ -235,11 +235,11 @@ struct DepthBounded {
         hpx::find_all_localities()));
 
     auto reg = Registry<Space, Node, Bound>::gReg;
-    hpx::cout << reg->nodesVisited->load() << hpx::endl;
 
     auto timeCounts = reg->getTimes();
     int depth = 0;
     hpx::cout << "================" << hpx::endl;
+
     for (auto vec : *timeCounts)
     {
       if (vec.size() > 0)
@@ -249,11 +249,12 @@ struct DepthBounded {
         for (double d : vec)
         {
           hpx::cout << d << "ns\n";
-
         }
         hpx::cout << "================" << hpx::endl;
+        hpx::cout << hpx::endl;
       }
     }
+
     hpx::cout << "Total number of nodes: " << reg->nodesVisited->load();
     hpx::cout << hpx::endl; 
 
