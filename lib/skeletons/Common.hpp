@@ -29,17 +29,11 @@ static void updateIncumbent(const Node & node, const Bound & bnd) {
   hpx::async<act>(reg->globalIncumbent, node).get();
 }
 
-template<typename Space, typename Node, typename Bound>
-static void addTime(const Node & node, const int depth, const double time)
-{
-  auto reg = Registry<Space, Node, Bound>::gReg;
-
-  reg->addTime(depth, time);
-  hpx::lcos::broadcast<AddTimeAct<Space, Node, Bound> >(
-    hpx::find_all_localities(), depth, time);
-
-    typedef typename Incumbent::AddTimeAct<Space, Node, Bound> act;
-    hpx::async<act>(reg->timeCounts).get();
+template <typename Space, typename Node, typename Bound>
+static std::uint64_t totalNodesVisited() {
+  auto cnt = hpx::lcos::broadcast<GetCountAct<Space, Node, Bound> >(
+    hpx::find_all_localities()).get();
+  return cnt;
 }
 
 template<typename Space, typename Node, typename Bound>

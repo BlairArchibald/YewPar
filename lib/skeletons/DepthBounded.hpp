@@ -83,6 +83,7 @@ struct DepthBounded {
                                const API::Params<Bound> & params,
                                std::vector<uint64_t> & counts,
                                std::vector<hpx::future<void> > & childFutures,
+                               std::uint64_t & count,
                                const unsigned childDepth) {
     Generator newCands = Generator(space, n);
     auto reg = Registry<Space, Node, Bound>::gReg;
@@ -100,7 +101,8 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      reg->updateCount();
+      ++count;
+      //reg->updateCount();
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
@@ -116,6 +118,7 @@ struct DepthBounded {
                              const Node & n,
                              const API::Params<Bound> & params,
                              std::vector<uint64_t> & counts,
+                             std::uint64_t & count,
                              const unsigned childDepth) {
     auto reg = Registry<Space, Node, Bound>::gReg;
     Generator newCands = Generator(space, n);
@@ -138,14 +141,15 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      reg->updateCount();
+      //reg->updateCount();
+      ++count;
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Prune) { continue; }
       else if (pn == ProcessNodeRet::Break) { break; }
 
-      expandNoSpawns(space, c, params, counts, childDepth + 1);
+      expandNoSpawns(space, c, params, counts, count, childDepth + 1);
     }
   }
 
@@ -160,23 +164,25 @@ struct DepthBounded {
     }
 
     std::vector<hpx::future<void> > childFutures;
+    std::uint64_t count;
+
     auto t1 = std::chrono::steady_clock::now();
     if (childDepth <= reg->params.spawnDepth) {
-      expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth);
+      expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, count, childDepth);
     } else {
-      expandNoSpawns(reg->space, taskRoot, reg->params, countMap, childDepth);
+      expandNoSpawns(reg->space, taskRoot, reg->params, countMap, count, childDepth);
     }
 
     // Atomically updates the (process) local counter
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
+    reg->updateCount(count);
 
     auto t2 = std::chrono::steady_clock::now();
     auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
     double time = diff.count();
-
-    reg->addTime(childDepth, time);
+    //hpx::cout << "Depth: " << childDepth << ":Time: " << time << hpx::endl;
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) -> void
     {
@@ -235,12 +241,12 @@ struct DepthBounded {
         hpx::find_all_localities()));
 
     auto reg = Registry<Space, Node, Bound>::gReg;
-
+    /*
     auto timeCounts = reg->getTimes();
     int depth = 0;
     hpx::cout << "================" << hpx::endl;
 
-    for (auto vec : *timeCounts)
+    for (auto vec : timeCounts)
     {
       if (vec.size() > 0)
       {
@@ -253,7 +259,7 @@ struct DepthBounded {
         hpx::cout << "================" << hpx::endl;
         hpx::cout << hpx::endl;
       }
-    }
+    }*/
 
     hpx::cout << "Total number of nodes: " << reg->nodesVisited->load();
     hpx::cout << hpx::endl; 

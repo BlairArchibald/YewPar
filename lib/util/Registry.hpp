@@ -39,11 +39,7 @@ struct Registry {
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
 
   // Counts for Dissertation
-  std::unique_ptr<std::vector<std::vector<double> > > timeCounts;
   std::unique_ptr<std::atomic<std::uint64_t> > nodesVisited;
-
-  std::atomic_flag lock{ATOMIC_FLAG_INIT};
-  std::atomic_flag lockCount{ATOMIC_FLAG_INIT};
 
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
@@ -54,7 +50,6 @@ struct Registry {
     this->params = params;
     this->localBound = params.initialBound;
     counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
-    timeCounts = std::make_unique<std::vector<std::vector<double> > >(params.maxDepth + 1);
     nodesVisited = std::make_unique<std::atomic<std::uint64_t> >(0);
   }
 
@@ -74,26 +69,14 @@ struct Registry {
     return res;
   }
 
-  std::vector<std::vector<double> > &getTimes() const
+  constexpr void updateCount(std::uint64_t & count)
   {
-    return *timeCounts;
+    *nodesVisited += count;
   }
 
-  void addTime(int depth, double time)
+  std::uint64_t getCount() const
   {
-    // Use spin locks for efficiency
-    while (lock.test_and_set(std::memory_order_acquire))
-      ;
-    (*timeCounts)[depth].push_back(time);
-    lock.clear(std::memory_order_release);
-  }
-
-  void updateCount()
-  {
-    while (lockCount.test_and_set(std::memory_order_release))
-      ;
-    nodesVisited->store(nodesVisited->load() + 1.0);
-    lockCount.clear(std::memory_order_release);
+    return nodesVisited->load();
   }
 
   // BNB
@@ -139,22 +122,6 @@ struct GetCountsAct : hpx::actions::make_direct_action<
   decltype(&getCounts<Space, Node, Bound>), &getCounts<Space, Node, Bound>, GetCountsAct<Space, Node, Bound> >::type {};
 
 ///////////////////////////////////////////////////////
-template<typename Space, typename Node, typename Bound>
-std::vector<std::vector<double> > getTimes() {
-  return Registry<Space, Node, Bound>::gReg->getTimes();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetTimesAct : hpx::actions::make_direct_action<
-  decltype(&getTimes<Space, Node, Bound>), &getTimes<Space, Node, Bound>, GetTimesAct<Space, Node, Bound> >::type {};
-
-template <typename Space, typename Node, typename Bound>
-void addTime(int depth, double time) {
-  Registry<Space, Node, Bound>::gReg->addTime(depth, time);
-}
-template <typename Space, typename Node, typename Bound>
-struct AddTimeAct : hpx::actions::make_direct_action<
-  decltype(&addTime<Space, Node, Bound>), &addTime<Space, Node, Bound>, AddTimeAct<Space, Node, Bound> >::type {};
-
 template <typename Space, typename Node, typename Bound>
 void updateCount() {
   Registry<Space, Node, Bound>::gReg->updateCount();
@@ -162,6 +129,14 @@ void updateCount() {
 template <typename Space, typename Node, typename Bound>
 struct UpdateCountsAct : hpx::actions::make_direct_action<
   decltype(&updateCount<Space, Node, Bound>), &updateCount<Space, Node, Bound>, UpdateCountsAct<Space, Node, Bound> >::type {};
+
+template <typename Space, typename Node, typename Bound>
+std::uint64_t getCount() {
+  return Registry<Space, Node, Bound>::gReg->getCount();
+}
+template <typename Space, typename Node, typename Bound>
+struct GetCountAct : hpx::actions::make_direct_action<
+  decltype(&getCount<Space, Node, Bound>), &getCount<Space, Node, Bound>, GetCountAct<Space, Node, Bound> >::type {};
 ///////////////////////////////////////////////////////
 template <typename Space, typename Node, typename Bound>
 void setStopSearchFlag() {
