@@ -267,11 +267,7 @@ struct DepthBounded {
     // Return the right thing
     if constexpr(isCountNodes) {
       auto vec = totalNodeCounts<Space, Node, Bound>(params.maxDepth);
-      std::uint64_t sum = 0;
-      std::for_each(vec.begin(), vec.end(), [&](const auto & c) -> void
-      {
-        sum += c.load();
-      });
+      auto sum = std::accumulate(vec.begin(), vec.end(), 0)
       hpx::cout << "Total number of nodes: " << sum << std::endl;
       return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
     } else if constexpr(isOptimisation || isDecision) {
