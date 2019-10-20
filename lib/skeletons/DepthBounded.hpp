@@ -267,8 +267,8 @@ struct DepthBounded {
     // Return the right thing
     if constexpr(isCountNodes) {
       auto vec = totalNodeCounts<Space, Node, Bound>(params.maxDepth);
-      auto sum = std::accumulate(vec.begin(), vec.end(), 0)
-      hpx::cout << "Total number of nodes: " << sum << std::endl;
+      auto sum = std::accumulate(vec.begin(), vec.end(), 0);
+      hpx::cout << "Total number of nodes: " << sum << hpx::endl;
       return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
     } else if constexpr(isOptimisation || isDecision) {
       auto reg = Registry<Space, Node, Bound>::gReg;
