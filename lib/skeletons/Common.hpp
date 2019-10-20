@@ -4,6 +4,7 @@
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
 
+
 namespace YewPar { namespace Skeletons {
 
 template<typename Space, typename Node, typename Bound, typename Cmp, typename Verbose>
@@ -30,9 +31,37 @@ static void updateIncumbent(const Node & node, const Bound & bnd) {
 }
 
 template <typename Space, typename Node, typename Bound>
-static std::uint64_t totalNodesVisited() {
-  auto cnt = hpx::lcos::broadcast<GetCountAct<Space, Node, Bound> >(
+static std::vector<std::vector<double> > collectTimes(const unsigned maxDepth)
+{
+  auto timesVec = hpx::lcos::broadcast<GetTimesAct<Space, Node, Bound>>(
     hpx::find_all_localities()).get();
+
+  std::vector<std::vector<double> > times(maxDepth + 1);
+  int idx = 0;
+
+  for (int i = 0; i <= maxDepth; i++)
+  {
+    for (const auto  vec : timesVec)
+    {
+      for (const auto  time : vec)
+      {
+        times[idx].push_back(time); 
+      }
+      idx++;
+    }
+  }
+
+  return times;
+}
+
+template <typename Space, typename Node, typename Bound>
+static std::uint64_t totalNodesVisited()
+{
+  auto cntVec = hpx::lcos::broadcast<GetCountAct<Space, Node, Bound> >(
+    hpx::find_all_localities()).get();
+
+  std::uint64_t cnt = 0;
+  for (const auto & n : cntVec) cnt += n;
   return cnt;
 }
 

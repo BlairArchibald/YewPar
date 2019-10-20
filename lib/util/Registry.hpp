@@ -11,6 +11,7 @@
 
 #include <hpx/runtime/actions/basic_action.hpp>
 #include <hpx/traits/action_stacksize.hpp>
+#include <hpx/lcos/local/channel.hpp>
 
 #include "skeletons/API.hpp"
 
@@ -38,8 +39,13 @@ struct Registry {
   using countMapT = std::vector<std::atomic<std::uint64_t> >;
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
 
-  // Counts for Dissertation
+  // Dissertation
   std::unique_ptr<std::atomic<std::uint64_t> > nodesVisited;
+  std::unique_ptr<std::vector<std::vector<double> > > times;
+  hpx::naming::id_type timeThreadId;
+
+  // Communication channel to insert into time vector
+  hpx::lcos::local::channel<std::pair<unsigned,double> > chan;
 
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
@@ -50,6 +56,7 @@ struct Registry {
     this->params = params;
     this->localBound = params.initialBound;
     counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
+    times = std::make_unique<std::vector<std::vector<double> > >(); 
     nodesVisited = std::make_unique<std::atomic<std::uint64_t> >(0);
   }
 
@@ -69,6 +76,15 @@ struct Registry {
     return res;
   }
 
+  void addTime()
+  {
+    while (!stopSearch.load())
+    {
+      std::pair<unsigned,double> depthTime = chan.get().get();
+      (*times)[depthTime.first].push_back(depthTime.second);
+    }
+  }
+
   constexpr void updateCount(std::uint64_t & count)
   {
     *nodesVisited += count;
@@ -77,6 +93,11 @@ struct Registry {
   std::uint64_t getCount() const
   {
     return nodesVisited->load();
+  }
+
+  constexpr std::vector<std::vector<double > > getTimes() const
+  {
+    return *times;
   }
 
   // BNB
@@ -137,6 +158,14 @@ std::uint64_t getCount() {
 template <typename Space, typename Node, typename Bound>
 struct GetCountAct : hpx::actions::make_direct_action<
   decltype(&getCount<Space, Node, Bound>), &getCount<Space, Node, Bound>, GetCountAct<Space, Node, Bound> >::type {};
+
+template <typename Space, typename Node, typename Bound>
+std::vector<std::vector<double> > getTimes() {
+  return Registry<Space, Node, Bound>::gReg->getTimes();
+}
+template <typename Space, typename Node, typename Bound>
+struct GetTimesAct : hpx::actions::make_direct_action<
+  decltype(&getTimes<Space, Node, Bound>), &getTimes<Space, Node, Bound>, GetTimesAct<Space, Node, Bound> >::type {};
 ///////////////////////////////////////////////////////
 template <typename Space, typename Node, typename Bound>
 void setStopSearchFlag() {

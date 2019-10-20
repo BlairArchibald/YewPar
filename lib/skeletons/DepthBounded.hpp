@@ -8,6 +8,8 @@
 #include <cstdint>
 
 #include <boost/format.hpp>
+#include <boost/mpi/environment.hpp>
+#include <boost/mpi/communicator.hpp>
 
 #include "API.hpp"
 
@@ -102,7 +104,6 @@ struct DepthBounded {
       auto c = newCands.next();
 
       ++count;
-      //reg->updateCount();
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
@@ -141,7 +142,6 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      //reg->updateCount();
       ++count;
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
@@ -182,7 +182,8 @@ struct DepthBounded {
     auto t2 = std::chrono::steady_clock::now();
     auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
     double time = diff.count();
-    //hpx::cout << "Depth: " << childDepth << ":Time: " << time << hpx::endl;
+
+    reg->chan.set({childDepth, time});
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) -> void
     {
@@ -190,6 +191,12 @@ struct DepthBounded {
       hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
     },
     std::move(childFutures)));
+  }
+
+  static void subtreeTimeTask()
+  {
+    auto reg = Registry<Space, Node, Bound>::gReg;
+    reg->addTime();
   }
 
   static hpx::future<void> createTask(const unsigned childDepth,
@@ -208,6 +215,20 @@ struct DepthBounded {
     } else {
       workPool->addwork(task, childDepth - 1);
     }
+
+    return pfut;
+  }
+
+  static hpx::future<void> spawnTimeThread(hpx::lcos::promise<void> prom)
+  {
+    auto pfut = prom.get_future();
+    auto pid = prom.get_id();
+
+    /*
+    hpx::util::function<void()> task;
+    task = hpx::util::bind(t, hpx::util::placeholders::_1);
+    auto workPool = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy);
+    workPool->addwork(task);*/
 
     return pfut;
   }
@@ -234,15 +255,17 @@ struct DepthBounded {
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
 
+    hpx::lcos::promise<double> prom;
     // Issue is updateCounts by the looks of things. Something probably isn't initialised correctly.
     createTask(1, root).get();
+
+    auto reg = Registry<Space, Node, Bound>::gReg;
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
-    auto reg = Registry<Space, Node, Bound>::gReg;
-    /*
-    auto timeCounts = reg->getTimes();
+    
+    auto timeCounts = collectTimes<Space, Node, Bound>(params.maxDepth); 
     int depth = 0;
     hpx::cout << "================" << hpx::endl;
 
@@ -259,9 +282,9 @@ struct DepthBounded {
         hpx::cout << "================" << hpx::endl;
         hpx::cout << hpx::endl;
       }
-    }*/
+    }
 
-    hpx::cout << "Total number of nodes: " << reg->nodesVisited->load();
+    hpx::cout << "Total number of nodes: " << totalNodesVisited<Space, Node, Bound>();
     hpx::cout << hpx::endl; 
 
     // Return the right thing
@@ -284,14 +307,20 @@ struct DepthBounded {
 namespace DepthBounded_{
 
 template <typename Generator, typename ...Args>
+struct SubtreeTimeTask : hpx::actions::make_action<
+  decltype(&DepthBounded<Generator, Args...>::subtreeTimeTask),
+  &DepthBounded<Generator, Args...>::subtreeTimeTask,
+  SubtreeTimeTask<Generator, Args...>>::type {};
+
+}}
+/*
+template <typename Generator, typename ...Args>
 struct SubtreeTask : hpx::actions::make_action<
   decltype(&DepthBounded<Generator, Args...>::subtreeTask),
   &DepthBounded<Generator, Args...>::subtreeTask,
-  SubtreeTask<Generator, Args...>>::type {};
+  SubtreeTask<Generator, Args...>>::type {};/
 
-}
-
-}}
+}}*/
 
 namespace hpx { namespace traits {
 
@@ -299,6 +328,12 @@ template <typename Generator, typename ...Args>
 struct action_stacksize<YewPar::Skeletons::DepthBounded_::SubtreeTask<Generator, Args...> > {
   enum { value = threads::thread_stacksize_huge };
 };
+
+template <typename Generator, typename ...Args>
+struct action_time_stacksize<YewPar::Skeletons::DepthBounded_::SubtreeTimeTask<Generator, Args...> >{
+  enum { value = threads::thread_stacksize_hude }
+};
+
 
 }}
 
