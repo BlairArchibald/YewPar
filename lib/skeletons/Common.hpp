@@ -33,25 +33,24 @@ static void updateIncumbent(const Node & node, const Bound & bnd) {
 template <typename Space, typename Node, typename Bound>
 static std::vector<std::vector<double> > collectTimes(const unsigned maxDepth)
 {
-  auto timesVec = hpx::lcos::broadcast<GetTimesAct<Space, Node, Bound>>(
-    hpx::find_all_localities()).get();
+  auto timesVecAll = hpx::lcos::broadcast<GetTimesAct<Space, Node, Bound> >(
+      hpx::find_all_localities()).get();
 
-  std::vector<std::vector<double> > times(maxDepth + 1);
-  int idx = 0;
-
-  for (int i = 0; i <= maxDepth; i++)
+  std::vector<std::vector<double> > timesVec(maxDepth);
+  for (const auto & subVec : timesVecAll)
   {
-    for (const auto  vec : timesVec)
+    int i = 0;
+    for (const auto & timeVec : subVec)
     {
-      for (const auto  time : vec)
+      for (const auto & time : timeVec)
       {
-        times[idx].push_back(time); 
+        timesVec[i].push_back(time);
       }
-      idx++;
+      i++;
     }
   }
 
-  return times;
+  return timesVec;
 }
 
 template <typename Space, typename Node, typename Bound>

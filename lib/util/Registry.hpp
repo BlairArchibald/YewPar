@@ -47,6 +47,8 @@ struct Registry {
   // Communication channel to insert into time vector
   hpx::lcos::local::channel<std::pair<unsigned,double> > chan;
 
+  std::atomic_flag spinLock{ATOMIC_FLAG_INIT};
+
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
   // locality.
@@ -56,7 +58,7 @@ struct Registry {
     this->params = params;
     this->localBound = params.initialBound;
     counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
-    times = std::make_unique<std::vector<std::vector<double> > >(); 
+    times = std::make_unique<std::vector<std::vector<double> > >(params.maxDepth + 1); 
     nodesVisited = std::make_unique<std::atomic<std::uint64_t> >(0);
   }
 
@@ -76,16 +78,15 @@ struct Registry {
     return res;
   }
 
-  void addTime()
+  void addTime(unsigned depth, double time)
   {
-    while (!stopSearch.load())
-    {
-      std::pair<unsigned,double> depthTime = chan.get().get();
-      (*times)[depthTime.first].push_back(depthTime.second);
-    }
+    while (spinLock.test_and_set(std::memory_order_acquire))
+      ;
+    (*times)[depth].push_back(time);
+    spinLock.clear(std::memory_order_release);
   }
 
-  constexpr void updateCount(std::uint64_t & count)
+  void updateCount(std::uint64_t & count)
   {
     *nodesVisited += count;
   }
@@ -95,9 +96,13 @@ struct Registry {
     return nodesVisited->load();
   }
 
-  constexpr std::vector<std::vector<double > > getTimes() const
+  std::vector<std::vector<double > > getTimes() const
   {
     return *times;
+  }
+
+  hpx::lcos::local::channel<std::pair<unsigned,double> > getChan() const {
+    return chan;
   }
 
   // BNB
@@ -166,6 +171,15 @@ std::vector<std::vector<double> > getTimes() {
 template <typename Space, typename Node, typename Bound>
 struct GetTimesAct : hpx::actions::make_direct_action<
   decltype(&getTimes<Space, Node, Bound>), &getTimes<Space, Node, Bound>, GetTimesAct<Space, Node, Bound> >::type {};
+
+template <typename Space, typename Node, typename Bound>
+hpx::lcos::local::channel<std::pair<unsigned,double> > getChan() {
+  return Registry<Space, Node, Bound>::gReg->getChan();
+}
+template <typename Space, typename Node, typename Bound>
+struct GetChanAct : hpx::actions::make_direct_action<
+  decltype(&getChan<Space, Node, Bound>), &getChan<Space, Node, Bound>, GetChanAct<Space, Node, Bound> >::type {};
+
 ///////////////////////////////////////////////////////
 template <typename Space, typename Node, typename Bound>
 void setStopSearchFlag() {
