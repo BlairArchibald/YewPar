@@ -8,7 +8,9 @@
 #include <iterator>
 #include <memory>
 #include <vector>
+#include <mutex>
 
+#include <hpx/lcos/local/composable_guard.hpp>
 #include <hpx/runtime/actions/basic_action.hpp>
 #include <hpx/traits/action_stacksize.hpp>
 #include <hpx/lcos/local/channel.hpp>
@@ -41,13 +43,8 @@ struct Registry {
 
   // Dissertation
   std::unique_ptr<std::atomic<std::uint64_t> > nodesVisited;
+  std::unique_ptr<std::atomic<std::uint64_t> > prunes;
   std::unique_ptr<std::vector<std::vector<double> > > times;
-  hpx::naming::id_type timeThreadId;
-
-  // Communication channel to insert into time vector
-  hpx::lcos::local::channel<std::pair<unsigned,double> > chan;
-
-  std::atomic_flag spinLock{ATOMIC_FLAG_INIT};
 
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
@@ -58,8 +55,9 @@ struct Registry {
     this->params = params;
     this->localBound = params.initialBound;
     counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
-    times = std::make_unique<std::vector<std::vector<double> > >(params.maxDepth + 1); 
+    times = std::make_unique<std::vector<std::vector<double> > >(params.maxDepth + 1);
     nodesVisited = std::make_unique<std::atomic<std::uint64_t> >(0);
+    prunes = std::make_unique<std::atomic<std::uint64_t> >(0);
   }
 
   // Counting
@@ -78,17 +76,15 @@ struct Registry {
     return res;
   }
 
-  void addTime(unsigned depth, double time)
+  void addTime(const unsigned & depth, double & time)
   {
-    while (spinLock.test_and_set(std::memory_order_acquire))
-      ;
     (*times)[depth].push_back(time);
-    spinLock.clear(std::memory_order_release);
   }
 
-  void updateCount(std::uint64_t & count)
+  void updateCountOrPrune(std::uint64_t & count, const bool && incrVisit=true)
   {
-    *nodesVisited += count;
+    if (incrVisit) *nodesVisited += count;
+    else *prunes += count;
   }
 
   std::uint64_t getCount() const
@@ -101,8 +97,9 @@ struct Registry {
     return *times;
   }
 
-  hpx::lcos::local::channel<std::pair<unsigned,double> > getChan() const {
-    return chan;
+  std::uint64_t getPrunes() const
+  {
+    return prunes->load();
   }
 
   // BNB
@@ -149,14 +146,6 @@ struct GetCountsAct : hpx::actions::make_direct_action<
 
 ///////////////////////////////////////////////////////
 template <typename Space, typename Node, typename Bound>
-void updateCount() {
-  Registry<Space, Node, Bound>::gReg->updateCount();
-}
-template <typename Space, typename Node, typename Bound>
-struct UpdateCountsAct : hpx::actions::make_direct_action<
-  decltype(&updateCount<Space, Node, Bound>), &updateCount<Space, Node, Bound>, UpdateCountsAct<Space, Node, Bound> >::type {};
-
-template <typename Space, typename Node, typename Bound>
 std::uint64_t getCount() {
   return Registry<Space, Node, Bound>::gReg->getCount();
 }
@@ -173,13 +162,19 @@ struct GetTimesAct : hpx::actions::make_direct_action<
   decltype(&getTimes<Space, Node, Bound>), &getTimes<Space, Node, Bound>, GetTimesAct<Space, Node, Bound> >::type {};
 
 template <typename Space, typename Node, typename Bound>
-hpx::lcos::local::channel<std::pair<unsigned,double> > getChan() {
-  return Registry<Space, Node, Bound>::gReg->getChan();
+std::uint64_t getPrunes() {
+  return Registry<Space, Node, Bound>::gReg->getPrunes();
 }
 template <typename Space, typename Node, typename Bound>
-struct GetChanAct : hpx::actions::make_direct_action<
-  decltype(&getChan<Space, Node, Bound>), &getChan<Space, Node, Bound>, GetChanAct<Space, Node, Bound> >::type {};
-
+void addTime(const unsigned depth, double time) {
+  Registry<Space, Node, Bound>::gReg->addTime(depth, time);
+}
+template <typename Space, typename Node, typename Bound>
+struct AddTimeAct : hpx::actions::make_direct_action<
+  decltype(&addTime<Space, Node, Bound>), &addTime<Space, Node, Bound>, AddTimeAct<Space, Node, Bound> >::type {};
+template <typename Space, typename Node, typename Bound>
+struct GetPrunesAct : hpx::actions::make_direct_action<
+  decltype(&getPrunes<Space, Node, Bound>), &getPrunes<Space, Node, Bound>, GetPrunesAct<Space, Node, Bound> >::type {};
 ///////////////////////////////////////////////////////
 template <typename Space, typename Node, typename Bound>
 void setStopSearchFlag() {
@@ -213,6 +208,12 @@ void setFoundPromiseId(hpx::naming::id_type id) {
 template <typename Space, typename Node, typename Bound>
 struct SetFoundPromiseIdAct : hpx::actions::make_direct_action<
   decltype(&setFoundPromiseId<Space, Node, Bound>), &setFoundPromiseId<Space, Node, Bound>, SetFoundPromiseIdAct<Space, Node, Bound> >::type {};
+
+template <typename Space, typename Node, typename Bound>
+void collectTimes()
+{
+
+}
 
 } // YewPar
 

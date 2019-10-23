@@ -89,6 +89,7 @@ struct StackStealing {
     std::tie(stealReq, threadId) = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->registerThread();
 
     runTaskFromStack(depth, reg->space, generatorStack, stealReq, cntMap, donePromise, threadId);
+
   }
 
   using SubTreeTask = func<
@@ -130,6 +131,8 @@ struct StackStealing {
                            std::shared_ptr<SharedState> stealRequest,
                            std::vector<std::uint64_t> & cntMap,
                            std::vector<hpx::future<void> > & futures,
+                           std::uint64_t & nodeCount,
+                           std::uint64_t & prunes,
                            int stackDepth = 0,
                            int depth = -1) {
     auto reg = Registry<Space, Node, Bound>::gReg;
@@ -207,8 +210,12 @@ struct StackStealing {
         generatorStack[stackDepth].seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child);
+        ++nodeCount;
         if (pn == ProcessNodeRet::Exit) { return; }
-        else if (pn == ProcessNodeRet::Prune) { continue; }
+        else if (pn == ProcessNodeRet::Prune) {
+          ++prunes;
+          continue;
+        }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
           depth--;
@@ -257,13 +264,23 @@ struct StackStealing {
     auto reg = Registry<Space, Node, Bound>::gReg;
     std::vector<hpx::future<void> > futures;
 
-    runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, stackDepth, depth);
-
+    std::uint64_t nodeCount = 0, prunes = 0;
+    auto t1 = std::chrono::steady_clock::now();
+    runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, stackDepth, depth);
+    
+    auto t2 = std::chrono::steady_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1);
+    const double time = diff.count();
+    hpx::apply<AddTimeAct<Space, Node, Bound>>(hpx::find_here(), depth, time);
+    
     // Atomically updates the (process) local counter
     if constexpr(isCountNodes) {
         reg->updateCounts(cntMap);
     }
+    reg->updateCountOrPrune(nodeCount);
+    reg->updateCountOrPrune(prunes, false);
 
+   
     std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
@@ -442,6 +459,10 @@ struct StackStealing {
         hpx::async<Workstealing::Policies::SearchManagerPerf::printChunkSizeList_act>(l).get();
       }
     }
+    
+    printTimes<Space, Node, Bound>(params.maxDepth);
+    pruneOrNodePrint<Space, Node, Bound>();
+    pruneOrNodePrint<Space, Node, Bound>(true);
 
     // Return the right thing
     if constexpr(isCountNodes) {

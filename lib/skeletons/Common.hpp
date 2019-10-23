@@ -31,37 +31,42 @@ static void updateIncumbent(const Node & node, const Bound & bnd) {
 }
 
 template <typename Space, typename Node, typename Bound>
-static std::vector<std::vector<double> > collectTimes(const unsigned maxDepth)
+static auto printTimes(const unsigned maxDepth)
 {
   auto timesVecAll = hpx::lcos::broadcast<GetTimesAct<Space, Node, Bound> >(
       hpx::find_all_localities()).get();
 
-  std::vector<std::vector<double> > timesVec(maxDepth);
-  for (const auto & subVec : timesVecAll)
+  std::vector<std::vector<double> > timesVec(maxDepth + 1);
+  int depth = 0;
+  for (const auto & vec : timesVecAll)
   {
-    int i = 0;
-    for (const auto & timeVec : subVec)
+    for (const auto & timeDepth : vec)
     {
-      for (const auto & time : timeVec)
+      for (const auto & time : timeDepth)
       {
-        timesVec[i].push_back(time);
+        hpx::cout << depth << ":" << time << hpx::endl; 
       }
-      i++;
+      depth++;
     }
+    depth = 0;
   }
 
-  return timesVec;
 }
 
 template <typename Space, typename Node, typename Bound>
-static std::uint64_t totalNodesVisited()
+static void pruneOrNodePrint(const bool && nodeCount=true)
 {
-  auto cntVec = hpx::lcos::broadcast<GetCountAct<Space, Node, Bound> >(
-    hpx::find_all_localities()).get();
+  auto cntVec = nodeCount ? 
+    hpx::lcos::broadcast<GetCountAct<Space, Node, Bound> >(
+      hpx::find_all_localities()).get() :
+    hpx::lcos::broadcast<GetPrunesAct<Space, Node, Bound> >(
+      hpx::find_all_localities()).get();
 
   std::uint64_t cnt = 0;
+  hpx::cout << cntVec.size();
   for (const auto & n : cntVec) cnt += n;
-  return cnt;
+  hpx::cout << "Total number of " << (nodeCount ? "Nodes: " : "Prunes: ") << cnt << hpx::endl;
+
 }
 
 template<typename Space, typename Node, typename Bound>

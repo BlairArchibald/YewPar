@@ -62,7 +62,9 @@ struct Budget {
                      const API::Params<Bound> & params,
                      std::vector<uint64_t> & counts,
                      std::vector<hpx::future<void> > & childFutures,
-                     const unsigned childDepth) {
+                     const unsigned childDepth,
+                     std::uint64_t & nodeCount,
+                     std::uint64_t & prunes) {
     auto reg = Registry<Space, Node, Bound>::gReg;
 
     auto depth = childDepth;
@@ -107,8 +109,13 @@ struct Budget {
         genStack[stackDepth].seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, child);
+        ++nodeCount;
+
         if (pn == ProcessNodeRet::Exit) { return; }
-        else if (pn == ProcessNodeRet::Prune) { continue; }
+        else if (pn == ProcessNodeRet::Prune) {
+          ++prunes;
+          continue;
+        }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
           depth--;
@@ -157,12 +164,21 @@ struct Budget {
     }
 
     std::vector<hpx::future<void> > childFutures;
-    expand(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth);
+    std::uint64_t nodeCount = 0, prunes = 0;
+
+    auto t1 = std::chrono::steady_clock::now();
+    expand(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth, nodeCount, prunes);
+    auto t2 = std::chrono::steady_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1);
+    const double time = diff.count();
+    hpx::apply<AddTimeAct<Space, Node, Bound> >(hpx::find_here(), childDepth, time);
 
     // Atomically updates the (process) local counter
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
+    reg->updateCountOrPrune(nodeCount);
+    reg->updateCountOrPrune(prunes, true);
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
           hpx::wait_all(futs);
@@ -217,6 +233,10 @@ struct Budget {
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
+  
+    printTimes<Space, Node, Bound>(params.maxDepth);
+    pruneOrNodePrint<Space, Node, Bound>();
+    pruneOrNodePrint<Space, Node, Bound>(true);
 
     // Return the right thing
     if constexpr(isCountNodes) {

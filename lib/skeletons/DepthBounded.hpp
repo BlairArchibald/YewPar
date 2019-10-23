@@ -8,11 +8,14 @@
 #include <cstdint>
 
 #include <boost/format.hpp>
+#include <boost/mpi.hpp>
+
 
 #include "API.hpp"
 
 #include <hpx/lcos/broadcast.hpp>
 #include <hpx/include/iostreams.hpp>
+#include <hpx/lcos/local/spinlock.hpp>
 
 #include "util/NodeGenerator.hpp"
 #include "util/Registry.hpp"
@@ -31,6 +34,9 @@ namespace DepthBounded_ {
 
 template <typename Generator, typename ...Args>
 struct SubtreeTask;
+
+template <typename Generator, typename ...Args>
+struct TestAct;
 
 }
 
@@ -83,7 +89,7 @@ struct DepthBounded {
                                const API::Params<Bound> & params,
                                std::vector<uint64_t> & counts,
                                std::vector<hpx::future<void> > & childFutures,
-                               std::uint64_t & count,
+                               std::uint64_t & nodeCount,
                                const unsigned childDepth) {
     Generator newCands = Generator(space, n);
     auto reg = Registry<Space, Node, Bound>::gReg;
@@ -101,7 +107,7 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      ++count;
+      ++nodeCount;
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
@@ -117,7 +123,8 @@ struct DepthBounded {
                              const Node & n,
                              const API::Params<Bound> & params,
                              std::vector<uint64_t> & counts,
-                             std::uint64_t & count,
+                             std::uint64_t & nodeCount,
+                             std::uint64_t & prunes,
                              const unsigned childDepth) {
     auto reg = Registry<Space, Node, Bound>::gReg;
     Generator newCands = Generator(space, n);
@@ -140,17 +147,20 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      ++count;
+      ++nodeCount;
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
-      else if (pn == ProcessNodeRet::Prune) { continue; }
+      else if (pn == ProcessNodeRet::Prune) {
+        ++prunes;
+        continue;
+      }
       else if (pn == ProcessNodeRet::Break) { break; }
 
-      expandNoSpawns(space, c, params, counts, count, childDepth + 1);
+      expandNoSpawns(space, c, params, counts, nodeCount, prunes, childDepth + 1);
     }
   }
-
+  
   static void subtreeTask(const Node taskRoot,
                           const unsigned childDepth,
                           const hpx::naming::id_type donePromiseId) {
@@ -162,29 +172,26 @@ struct DepthBounded {
     }
 
     std::vector<hpx::future<void> > childFutures;
-    std::uint64_t count;
+    std::uint64_t nodeCount = 0, prunes = 0;
 
     auto t1 = std::chrono::steady_clock::now();
     if (childDepth <= reg->params.spawnDepth) {
-      expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, count, childDepth);
+      expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, nodeCount, childDepth);
     } else {
-      expandNoSpawns(reg->space, taskRoot, reg->params, countMap, count, childDepth);
+      expandNoSpawns(reg->space, taskRoot, reg->params, countMap, nodeCount, prunes, childDepth);
     }
+
+    auto t2 = std::chrono::steady_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+    const double time = diff.count();
+    hpx::apply<AddTimeAct<Space, Node, Bound> >(hpx::find_here(), childDepth, time);
 
     // Atomically updates the (process) local counter
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
-    reg->updateCount(count);
-
-    auto t2 = std::chrono::steady_clock::now();
-    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
-    double time = diff.count();
-
-    hpx::apply(hpx::util::bind([&]() -> void
-    {
-      reg->addTime(childDepth, time);
-    }), hpx::find_here());
+    reg->updateCountOrPrune(nodeCount);
+    reg->updateCountOrPrune(prunes, false); 
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) -> void
     {
@@ -217,6 +224,7 @@ struct DepthBounded {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
+
     if constexpr (verbose) {
         printSkeletonDetails(params);
     }
@@ -236,32 +244,20 @@ struct DepthBounded {
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
 
-     // Issue is updateCounts by the looks of things. Something probably isn't initialised correctly.
+    // Issue is updateCounts by the looks of things. Something probably isn't initialised correctly.
     createTask(1, root).get();
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
-    auto times = collectTimes<Space, Node, Bound>(params.maxDepth); 
-    int depth = 0;
-    for (const auto & vec : times)
-    {
-      hpx::cout << "================================";
-      hpx::cout << "Depth: " << depth++ << hpx::endl;
-      for (const double & t : vec)
-      {
-        hpx::cout << "Time: " << t << "\u03Bcs";
-      }
-    }
-
-    hpx::cout << "Total number of nodes: " << totalNodesVisited<Space, Node, Bound>();
-    hpx::cout << hpx::endl; 
+    printTimes<Space, Node, Bound>(params.maxDepth);
+    pruneOrNodePrint<Space, Node, Bound>();
+    pruneOrNodePrint<Space, Node, Bound>(true);
 
     // Return the right thing
     if constexpr(isCountNodes) {
       auto vec = totalNodeCounts<Space, Node, Bound>(params.maxDepth);
       auto sum = std::accumulate(vec.begin(), vec.end(), 0);
-      hpx::cout << "Total number of nodes: " << sum << hpx::endl;
       return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
     } else if constexpr(isOptimisation || isDecision) {
       auto reg = Registry<Space, Node, Bound>::gReg;
@@ -281,6 +277,12 @@ struct SubtreeTask : hpx::actions::make_action<
   decltype(&DepthBounded<Generator, Args...>::subtreeTask),
   &DepthBounded<Generator, Args...>::subtreeTask,
   SubtreeTask<Generator, Args...>>::type {};
+
+template <typename Generator, typename ...Args>
+struct TestAct : hpx::actions::make_direct_action<
+  decltype(&DepthBounded<Generator, Args...>::test),
+  &DepthBounded<Generator, Args...>::test,
+  TestAct<Generator, Args...>>::type {};
 
 }}}
 
