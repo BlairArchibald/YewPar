@@ -42,9 +42,10 @@ struct Registry {
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
 
   // Dissertation
+  std::unique_ptr<std::vector<std::atomic<double> > > timesVec;
   std::unique_ptr<std::atomic<std::uint64_t> > nodesVisited;
+  std::unique_ptr<std::atomic<std::uint64_t> > backtracks;
   std::unique_ptr<std::atomic<std::uint64_t> > prunes;
-  std::unique_ptr<std::vector<std::vector<double> > > times;
 
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
@@ -55,8 +56,9 @@ struct Registry {
     this->params = params;
     this->localBound = params.initialBound;
     counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
-    times = std::make_unique<std::vector<std::vector<double> > >(params.maxDepth + 1);
+    timesVec = std::make_unique<std::vector<std::atomic<double> > >(params.maxDepth + 1);
     nodesVisited = std::make_unique<std::atomic<std::uint64_t> >(0);
+    backtracks = std::make_unique<std::atomic<std::uint64_t> >(0);
     prunes = std::make_unique<std::atomic<std::uint64_t> >(0);
   }
 
@@ -68,38 +70,49 @@ struct Registry {
     }
   }
 
-  std::vector<std::uint64_t>  getCounts() {
-    // Convert std::atomic<T> -> T by loading it
-    std::vector<std::uint64_t> res;
-    std::transform(counts->begin(), counts->end(), std::back_inserter(res),
-    [](const auto & c) { return c.load(); });
-    return res;
+  std::vector<std::uint64_t>  getCounts() const {
+    return transformVec(*counts);
+  }
+  
+  void addTime(const unsigned depth, const double time) {
+    (*timesVec)[depth].store((*timesVec)[depth].load() + time);
   }
 
-  void addTime(const unsigned & depth, double & time)
-  {
-    (*times)[depth].push_back(time);
+  void updateBacktracks(const std::uint64_t count) {
+    *backtracks += count;
   }
 
-  void updateCountOrPrune(std::uint64_t & count, const bool && incrVisit=true)
-  {
-    if (incrVisit) *nodesVisited += count;
-    else *prunes += count;
+  void updateNodeCount(const std::uint64_t count) {
+    *nodesVisited += count;
   }
 
-  std::uint64_t getCount() const
-  {
+  void updatePrune(const std::uint64_t count) {
+    *prunes += count;
+  }
+
+  std::uint64_t getNodeCount() const {
     return nodesVisited->load();
   }
 
-  std::vector<std::vector<double > > getTimes() const
-  {
-    return *times;
+  std::vector<double> getTimes() const {
+    return transformVec(*timesVec);
   }
 
-  std::uint64_t getPrunes() const
-  {
+  std::uint64_t getPrunes() const {
     return prunes->load();
+  }
+
+  std::uint64_t getBacktracks() const {
+    return backtracks->load();
+  }
+
+  template <typename T>
+  inline std::vector<T> transformVec(std::vector<std::atomic<T> > & vec) const {
+    // Convert std::atomic<T> -> T by loading it
+    std::vector<T> res;
+    std::transform(vec.begin(), vec.end(), std::back_inserter(res),
+    [](const auto & c) { return c.load(); });
+    return res;
   }
 
   // BNB
@@ -146,15 +159,15 @@ struct GetCountsAct : hpx::actions::make_direct_action<
 
 ///////////////////////////////////////////////////////
 template <typename Space, typename Node, typename Bound>
-std::uint64_t getCount() {
-  return Registry<Space, Node, Bound>::gReg->getCount();
+std::uint64_t getNodeCount() {
+  return Registry<Space, Node, Bound>::gReg->getNodeCount();
 }
 template <typename Space, typename Node, typename Bound>
-struct GetCountAct : hpx::actions::make_direct_action<
-  decltype(&getCount<Space, Node, Bound>), &getCount<Space, Node, Bound>, GetCountAct<Space, Node, Bound> >::type {};
+struct GetNodeCountAct : hpx::actions::make_direct_action<
+  decltype(&getNodeCount<Space, Node, Bound>), &getNodeCount<Space, Node, Bound>, GetNodeCountAct<Space, Node, Bound> >::type {};
 
 template <typename Space, typename Node, typename Bound>
-std::vector<std::vector<double> > getTimes() {
+std::vector<double> getTimes() {
   return Registry<Space, Node, Bound>::gReg->getTimes();
 }
 template <typename Space, typename Node, typename Bound>
@@ -162,16 +175,17 @@ struct GetTimesAct : hpx::actions::make_direct_action<
   decltype(&getTimes<Space, Node, Bound>), &getTimes<Space, Node, Bound>, GetTimesAct<Space, Node, Bound> >::type {};
 
 template <typename Space, typename Node, typename Bound>
+std::uint64_t getBacktracks() {
+  return Registry<Space, Node, Bound>::gReg->getBacktracks();
+}
+template <typename Space, typename Node, typename Bound>
+struct GetBacktracksAct : hpx::actions::make_direct_action<
+  decltype(&getBacktracks<Space, Node, Bound>), &getBacktracks<Space, Node, Bound>, GetBacktracksAct<Space, Node, Bound> >::type {};
+
+template <typename Space, typename Node, typename Bound>
 std::uint64_t getPrunes() {
   return Registry<Space, Node, Bound>::gReg->getPrunes();
 }
-template <typename Space, typename Node, typename Bound>
-void addTime(const unsigned depth, double time) {
-  Registry<Space, Node, Bound>::gReg->addTime(depth, time);
-}
-template <typename Space, typename Node, typename Bound>
-struct AddTimeAct : hpx::actions::make_direct_action<
-  decltype(&addTime<Space, Node, Bound>), &addTime<Space, Node, Bound>, AddTimeAct<Space, Node, Bound> >::type {};
 template <typename Space, typename Node, typename Bound>
 struct GetPrunesAct : hpx::actions::make_direct_action<
   decltype(&getPrunes<Space, Node, Bound>), &getPrunes<Space, Node, Bound>, GetPrunesAct<Space, Node, Bound> >::type {};
@@ -208,12 +222,6 @@ void setFoundPromiseId(hpx::naming::id_type id) {
 template <typename Space, typename Node, typename Bound>
 struct SetFoundPromiseIdAct : hpx::actions::make_direct_action<
   decltype(&setFoundPromiseId<Space, Node, Bound>), &setFoundPromiseId<Space, Node, Bound>, SetFoundPromiseIdAct<Space, Node, Bound> >::type {};
-
-template <typename Space, typename Node, typename Bound>
-void collectTimes()
-{
-
-}
 
 } // YewPar
 

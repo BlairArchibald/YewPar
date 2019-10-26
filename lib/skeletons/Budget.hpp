@@ -64,7 +64,8 @@ struct Budget {
                      std::vector<hpx::future<void> > & childFutures,
                      const unsigned childDepth,
                      std::uint64_t & nodeCount,
-                     std::uint64_t & prunes) {
+                     std::uint64_t & prunes,
+                     std::uint64_t & totalBacktracks) {
     auto reg = Registry<Space, Node, Bound>::gReg;
 
     auto depth = childDepth;
@@ -120,6 +121,7 @@ struct Budget {
           stackDepth--;
           depth--;
           backtracks++;
+          totalBacktracks++;
           continue;
         }
 
@@ -139,6 +141,7 @@ struct Budget {
             stackDepth--;
             depth--;
             backtracks++;
+            totalBacktracks++;
             continue;
           }
         }
@@ -149,6 +152,7 @@ struct Budget {
         stackDepth--;
         depth--;
         backtracks++;
+        totalBacktracks++;
       }
     }
   }
@@ -164,21 +168,22 @@ struct Budget {
     }
 
     std::vector<hpx::future<void> > childFutures;
-    std::uint64_t nodeCount = 0, prunes = 0;
+    std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
 
     auto t1 = std::chrono::steady_clock::now();
-    expand(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth, nodeCount, prunes);
+    expand(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth, nodeCount, prunes, backtracks);
     auto t2 = std::chrono::steady_clock::now();
-    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1);
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1);
     const double time = diff.count();
-    hpx::apply<AddTimeAct<Space, Node, Bound> >(hpx::find_here(), childDepth, time);
+    reg->addTime(childDepth, time);
 
     // Atomically updates the (process) local counter
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
-    reg->updateCountOrPrune(nodeCount);
-    reg->updateCountOrPrune(prunes, true);
+    reg->updateNodeCount(nodeCount);
+    reg->updateBacktracks(backtracks);
+    reg->updatePrune(prunes);
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
           hpx::wait_all(futs);
@@ -235,8 +240,9 @@ struct Budget {
         hpx::find_all_localities()));
   
     printTimes<Space, Node, Bound>(params.maxDepth);
-    pruneOrNodePrint<Space, Node, Bound>();
-    pruneOrNodePrint<Space, Node, Bound>(true);
+    printPrunes<Space, Node, Bound>();
+    printNodeCounts<Space, Node, Bound>();
+    printBacktracks<Space, Node, Bound>();
 
     // Return the right thing
     if constexpr(isCountNodes) {

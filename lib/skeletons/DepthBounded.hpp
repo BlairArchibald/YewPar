@@ -90,6 +90,7 @@ struct DepthBounded {
                                std::vector<uint64_t> & counts,
                                std::vector<hpx::future<void> > & childFutures,
                                std::uint64_t & nodeCount,
+                               std::uint64_t & backtracks,
                                const unsigned childDepth) {
     Generator newCands = Generator(space, n);
     auto reg = Registry<Space, Node, Bound>::gReg;
@@ -111,7 +112,10 @@ struct DepthBounded {
 
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
-      else if (pn == ProcessNodeRet::Break) { break; }
+      else if (pn == ProcessNodeRet::Break) { 
+        ++backtracks;
+        break; 
+      }
       //default continue
 
       // Spawn new tasks for all children (that are still alive after pruning)
@@ -125,6 +129,7 @@ struct DepthBounded {
                              std::vector<uint64_t> & counts,
                              std::uint64_t & nodeCount,
                              std::uint64_t & prunes,
+                             std::uint64_t & backtracks,
                              const unsigned childDepth) {
     auto reg = Registry<Space, Node, Bound>::gReg;
     Generator newCands = Generator(space, n);
@@ -155,9 +160,12 @@ struct DepthBounded {
         ++prunes;
         continue;
       }
-      else if (pn == ProcessNodeRet::Break) { break; }
+      else if (pn == ProcessNodeRet::Break) {
+        ++backtracks; 
+        break;
+      }
 
-      expandNoSpawns(space, c, params, counts, nodeCount, prunes, childDepth + 1);
+      expandNoSpawns(space, c, params, counts, nodeCount, prunes, backtracks, childDepth + 1);
     }
   }
   
@@ -172,26 +180,27 @@ struct DepthBounded {
     }
 
     std::vector<hpx::future<void> > childFutures;
-    std::uint64_t nodeCount = 0, prunes = 0;
+    std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
 
     auto t1 = std::chrono::steady_clock::now();
     if (childDepth <= reg->params.spawnDepth) {
-      expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, nodeCount, childDepth);
+      expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, nodeCount, backtracks, childDepth);
     } else {
-      expandNoSpawns(reg->space, taskRoot, reg->params, countMap, nodeCount, prunes, childDepth);
+      expandNoSpawns(reg->space, taskRoot, reg->params, countMap, nodeCount, prunes, backtracks, childDepth);
     }
 
     auto t2 = std::chrono::steady_clock::now();
-    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
     const double time = diff.count();
-    hpx::apply<AddTimeAct<Space, Node, Bound> >(hpx::find_here(), childDepth, time);
+    reg->addTime(childDepth, time);
 
     // Atomically updates the (process) local counter
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
-    reg->updateCountOrPrune(nodeCount);
-    reg->updateCountOrPrune(prunes, false); 
+    reg->updateNodeCount(nodeCount);
+    reg->updatePrune(prunes);
+    reg->updateBacktracks(backtracks);
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) -> void
     {
@@ -250,9 +259,10 @@ struct DepthBounded {
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
-    printTimes<Space, Node, Bound>(params.maxDepth);
-    pruneOrNodePrint<Space, Node, Bound>();
-    pruneOrNodePrint<Space, Node, Bound>(true);
+    printTimes<Space, Node, Bound>(params.maxDepth + 1);
+    printPrunes<Space, Node, Bound>();
+    printNodeCounts<Space, Node, Bound>();
+    printBacktracks<Space, Node, Bound>();
 
     // Return the right thing
     if constexpr(isCountNodes) {
@@ -277,12 +287,6 @@ struct SubtreeTask : hpx::actions::make_action<
   decltype(&DepthBounded<Generator, Args...>::subtreeTask),
   &DepthBounded<Generator, Args...>::subtreeTask,
   SubtreeTask<Generator, Args...>>::type {};
-
-template <typename Generator, typename ...Args>
-struct TestAct : hpx::actions::make_direct_action<
-  decltype(&DepthBounded<Generator, Args...>::test),
-  &DepthBounded<Generator, Args...>::test,
-  TestAct<Generator, Args...>>::type {};
 
 }}}
 

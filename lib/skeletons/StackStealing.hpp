@@ -133,6 +133,7 @@ struct StackStealing {
                            std::vector<hpx::future<void> > & futures,
                            std::uint64_t & nodeCount,
                            std::uint64_t & prunes,
+                           std::uint64_t & backtracks,
                            int stackDepth = 0,
                            int depth = -1) {
     auto reg = Registry<Space, Node, Bound>::gReg;
@@ -218,6 +219,7 @@ struct StackStealing {
         }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
+          backtracks++;
           depth--;
           continue;
         }
@@ -237,6 +239,7 @@ struct StackStealing {
             // This doesn't look quite right to me, we want the next element at this level not the previous?
             if (depth == reg->params.maxDepth) {
               stackDepth--;
+              backtracks++;
               depth--;
               continue;
           }
@@ -247,6 +250,7 @@ struct StackStealing {
       } else {
         stackDepth--;
         depth--;
+        backtracks++;
       }
     }
   }
@@ -264,22 +268,22 @@ struct StackStealing {
     auto reg = Registry<Space, Node, Bound>::gReg;
     std::vector<hpx::future<void> > futures;
 
-    std::uint64_t nodeCount = 0, prunes = 0;
+    std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
     auto t1 = std::chrono::steady_clock::now();
-    runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, stackDepth, depth);
+    runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, backtracks, stackDepth, depth);
     
     auto t2 = std::chrono::steady_clock::now();
-    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1);
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1);
     const double time = diff.count();
-    hpx::apply<AddTimeAct<Space, Node, Bound>>(hpx::find_here(), depth, time);
-    
+    reg->addTime(depth, time);
+
     // Atomically updates the (process) local counter
     if constexpr(isCountNodes) {
         reg->updateCounts(cntMap);
     }
-    reg->updateCountOrPrune(nodeCount);
-    reg->updateCountOrPrune(prunes, false);
-
+    reg->updateNodeCount(nodeCount);
+    reg->updatePrune(prunes);
+    reg->updateBacktracks(backtracks);
    
     std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
 
@@ -461,8 +465,8 @@ struct StackStealing {
     }
     
     printTimes<Space, Node, Bound>(params.maxDepth);
-    pruneOrNodePrint<Space, Node, Bound>();
-    pruneOrNodePrint<Space, Node, Bound>(true);
+    printPrunes<Space, Node, Bound>();
+    printNodeCounts<Space, Node, Bound>();
 
     // Return the right thing
     if constexpr(isCountNodes) {
