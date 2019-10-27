@@ -188,7 +188,6 @@ struct DepthBounded {
     } else {
       expandNoSpawns(reg->space, taskRoot, reg->params, countMap, nodeCount, prunes, backtracks, childDepth);
     }
-
     auto t2 = std::chrono::steady_clock::now();
     auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
     const double time = diff.count();

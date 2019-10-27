@@ -57,7 +57,7 @@ static auto printNodeCounts() {
 
 template <typename Space, typename Node, typename Bound>
 static auto printPrunes() {
-  printMetric<GePrunesAct<Space, Node, Bound> >("Prunes");
+  printMetric<GetPrunesAct<Space, Node, Bound> >("Prunes");
 }
 
 template <typename Space, typename Node, typename Bound>
