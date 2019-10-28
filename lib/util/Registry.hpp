@@ -70,10 +70,6 @@ struct Registry {
     }
   }
 
-  std::vector<std::uint64_t>  getCounts() const {
-    return transformVec(*counts);
-  }
-  
   void addTime(const unsigned depth, const double time) {
     (*timesVec)[depth].store((*timesVec)[depth].load() + time);
   }
@@ -90,12 +86,16 @@ struct Registry {
     *prunes += count;
   }
 
-  std::uint64_t getNodeCount() const {
-    return nodesVisited->load();
-  }
-
   std::vector<double> getTimes() const {
     return transformVec(*timesVec);
+  }
+
+  std::vector<std::uint64_t> getCounts() const {
+    return transformVec(*counts);
+  }
+
+  std::uint64_t getNodeCount() const {
+    return nodesVisited->load();
   }
 
   std::uint64_t getPrunes() const {
@@ -104,15 +104,6 @@ struct Registry {
 
   std::uint64_t getBacktracks() const {
     return backtracks->load();
-  }
-
-  template <typename T>
-  inline std::vector<T> transformVec(std::vector<std::atomic<T> > & vec) const {
-    // Convert std::atomic<T> -> T by loading it
-    std::vector<T> res;
-    std::transform(vec.begin(), vec.end(), std::back_inserter(res),
-    [](const auto & c) { return c.load(); });
-    return res;
   }
 
   // BNB
@@ -133,6 +124,16 @@ struct Registry {
 
   void setStopSearchFlag() {
     stopSearch.store(true);
+  }
+
+private:
+  template <typename T>
+  inline std::vector<T> transformVec(std::vector<std::atomic<T> > & vec) const {
+    // Convert std::atomic<T> -> T by loading it
+    std::vector<T> res;
+    std::transform(vec.begin(), vec.end(), std::back_inserter(res),
+    [](const auto & c) { return c.load(); });
+    return res;
   }
 
 };

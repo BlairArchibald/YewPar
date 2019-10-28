@@ -71,10 +71,10 @@ static auto printTimes(const unsigned maxDepth) {
       hpx::find_all_localities()).get();
 
   auto times = countDepths<double>(timesVecAll, maxDepth);
-  times[0] = std::accumulate(times.begin(), times.end(), 0);
+  times[0] = std::accumulate(times.begin(), times.begin() + maxDepth + 1, 0);
   for (int i = 0; i <= maxDepth; i++) {
     if (times[i] > 1) {
-      hpx::cout << "Accumulated time at depth " << i << " " << times[i] << "ms" << hpx::endl;
+      hpx::cout << "Accumulated time at depth " << i << " " << times[i] << "\u03BCs" << hpx::endl;
     }
   }
 }

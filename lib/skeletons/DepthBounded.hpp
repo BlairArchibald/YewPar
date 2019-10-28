@@ -201,8 +201,7 @@ struct DepthBounded {
     reg->updatePrune(prunes);
     reg->updateBacktracks(backtracks);
 
-    hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) -> void
-    {
+    hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
       hpx::wait_all(futs);
       hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
     },
@@ -258,7 +257,7 @@ struct DepthBounded {
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
-    printTimes<Space, Node, Bound>(params.maxDepth + 1);
+    printTimes<Space, Node, Bound>(params.maxDepth);
     printPrunes<Space, Node, Bound>();
     printNodeCounts<Space, Node, Bound>();
     printBacktracks<Space, Node, Bound>();
