@@ -181,9 +181,9 @@ struct Budget {
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
-    reg->updateNodeCount(nodeCount);
-    reg->updateBacktracks(backtracks);
-    reg->updatePrune(prunes);
+    reg->updateNodeCount(childDepth, nodeCount);
+    reg->updateBacktracks(childDepth, backtracks);
+    reg->updatePrune(childDepth, prunes);
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
           hpx::wait_all(futs);
@@ -240,9 +240,9 @@ struct Budget {
         hpx::find_all_localities()));
   
     printTimes<Space, Node, Bound>(params.maxDepth);
-    printPrunes<Space, Node, Bound>();
-    printNodeCounts<Space, Node, Bound>();
-    printBacktracks<Space, Node, Bound>();
+    printPrunes<Space, Node, Bound>(params.maxDepth);
+    printNodeCounts<Space, Node, Bound>(params.maxDepth);
+    printBacktracks<Space, Node, Bound>(params.maxDepth);
 
     // Return the right thing
     if constexpr(isCountNodes) {

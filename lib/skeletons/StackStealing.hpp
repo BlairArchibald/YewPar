@@ -281,9 +281,9 @@ struct StackStealing {
     if constexpr(isCountNodes) {
         reg->updateCounts(cntMap);
     }
-    reg->updateNodeCount(nodeCount);
-    reg->updatePrune(prunes);
-    reg->updateBacktracks(backtracks);
+    reg->updateNodeCount(startingDepth, nodeCount);
+    reg->updatePrune(startingDepth, prunes);
+    reg->updateBacktracks(startingDepth, backtracks);
    
     std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
 
@@ -465,8 +465,9 @@ struct StackStealing {
     }
     
     printTimes<Space, Node, Bound>(params.maxDepth);
-    printPrunes<Space, Node, Bound>();
-    printNodeCounts<Space, Node, Bound>();
+    printPrunes<Space, Node, Bound>(params.maxDepth);
+    printNodeCounts<Space, Node, Bound>(params.maxDepth);
+    printBacktracks<Space, Node, Bound>(params.maxDepth);
 
     // Return the right thing
     if constexpr(isCountNodes) {

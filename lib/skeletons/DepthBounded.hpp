@@ -197,9 +197,9 @@ struct DepthBounded {
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
-    reg->updateNodeCount(nodeCount);
-    reg->updatePrune(prunes);
-    reg->updateBacktracks(backtracks);
+    reg->updateNodeCount(childDepth, nodeCount);
+    reg->updatePrune(childDepth, prunes);
+    reg->updateBacktracks(childDepth, backtracks);
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
       hpx::wait_all(futs);
@@ -258,9 +258,9 @@ struct DepthBounded {
         hpx::find_all_localities()));
 
     printTimes<Space, Node, Bound>(params.maxDepth);
-    printPrunes<Space, Node, Bound>();
-    printNodeCounts<Space, Node, Bound>();
-    printBacktracks<Space, Node, Bound>();
+    printPrunes<Space, Node, Bound>(params.maxDepth);
+    printNodeCounts<Space, Node, Bound>(params.maxDepth);
+    printBacktracks<Space, Node, Bound>(params.maxDepth);
 
     // Return the right thing
     if constexpr(isCountNodes) {

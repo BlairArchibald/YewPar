@@ -30,11 +30,12 @@ static void updateIncumbent(const Node & node, const Bound & bnd) {
   hpx::async<act>(reg->globalIncumbent, node).get();
 }
 
-template <typename T>
-static auto countDepths(std::vector<std::vector<T> > vec, const unsigned maxDepth) {
+template <typename Act, typename T>
+static auto countDepths(const unsigned maxDepth) {
+  auto cntVecAll = hpx::lcos::broadcast<Act>(hpx::find_all_localities()).get();
   std::vector<T> res(maxDepth + 1);
   for (auto i = 0; i <= maxDepth; ++i) {
-    for (const auto & cnt : vec) {
+    for (const auto & cnt : cntVecAll) {
       res[i] += cnt[i];
     }
   }
@@ -42,35 +43,36 @@ static auto countDepths(std::vector<std::vector<T> > vec, const unsigned maxDept
   return res;
 }
 
-template <typename Act>
-static auto printMetric(const std::string && metric) {
-  auto cntVec = hpx::lcos::broadcast<Act>(hpx::find_all_localities()).get();
-  
-  auto cnt = std::accumulate(cntVec.begin(), cntVec.end(), 0);
+template <typename T>
+static auto printMetric(const std::vector<T> & metricVec,
+                        const std::string && metric,
+                        const unsigned maxDepth) {
+  auto cnt = std::accumulate(metricVec.begin(), metricVec.begin() + maxDepth + 1, 0);
   hpx::cout << "Total number of " << metric << ": " << cnt << hpx::endl;
 }
 
 template <typename Space, typename Node, typename Bound>
-static auto printNodeCounts() {
-  printMetric<GetNodeCountAct<Space, Node, Bound> >("Nodes");
+static auto printNodeCounts(const unsigned maxDepth) {
+  auto cntDepths = countDepths<GetNodeCountAct<Space, Node, Bound>, std::uint64_t>(maxDepth);
+  printMetric(cntDepths, "Nodes", maxDepth);
 }
 
 template <typename Space, typename Node, typename Bound>
-static auto printPrunes() {
-  printMetric<GetPrunesAct<Space, Node, Bound> >("Prunes");
+static auto printPrunes(const unsigned maxDepth) {
+  auto cntDepths = countDepths<GetPrunesAct<Space, Node, Bound>, std::uint64_t>(maxDepth);
+  printMetric(cntDepths, "Prunes", maxDepth);
 }
 
 template <typename Space, typename Node, typename Bound>
-static auto printBacktracks() {
-  printMetric<GetBacktracksAct<Space, Node, Bound> >("Backtracks");
+static auto printBacktracks(const unsigned maxDepth) {
+  auto cntDepths = countDepths<GetBacktracksAct<Space, Node, Bound>, std::uint64_t>(maxDepth);
+  printMetric(cntDepths, "Backtracks", maxDepth);
 }
 
 template <typename Space, typename Node, typename Bound>
 static auto printTimes(const unsigned maxDepth) {
-  auto timesVecAll = hpx::lcos::broadcast<GetTimesAct<Space, Node, Bound> >(
-      hpx::find_all_localities()).get();
+  auto times = countDepths<GetTimesAct<Space, Node, Bound>, double>(maxDepth);
 
-  auto times = countDepths<double>(timesVecAll, maxDepth);
   times[0] = std::accumulate(times.begin(), times.begin() + maxDepth + 1, 0);
   for (int i = 0; i <= maxDepth; i++) {
     if (times[i] > 1) {
@@ -79,14 +81,11 @@ static auto printTimes(const unsigned maxDepth) {
   }
 }
 
-template<typename Space, typename Node, typename Bound>
+template <typename Space, typename Node, typename Bound>
 static std::vector<std::uint64_t> totalNodeCounts(const unsigned maxDepth) {
-  auto cntList = hpx::lcos::broadcast<GetCountsAct<Space, Node, Bound> >(
-      hpx::find_all_localities()).get();
+  auto res = countDepths<GetCountsAct<Space, Node, Bound>, std::uint64_t>(maxDepth);
 
-  auto res = countDepths<std::uint64_t>(cntList, maxDepth);
   res[0] = 1; //Account for root node
-
   return res;
 }
 
