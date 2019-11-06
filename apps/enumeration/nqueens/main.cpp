@@ -2,7 +2,7 @@
 //
 // [1] Richards, Martin (1997). Backtracking Algorithms in MCPL using
 //     Bit Patterns and Recursion (Technical report).
-//     University of Cambridge Computer Laboratory. UCAM-CL-TR-433.#include <hpx/hpx_init.hpp>
+//     University of Cambridge Computer Laboratory. UCAM-CL-TR-433.
 //
 // Based on code from Patrick Maier
 //
