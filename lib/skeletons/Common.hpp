@@ -39,7 +39,7 @@ static auto countDepths(const unsigned maxDepth) {
       res[i] += cnt[i];
     }
   }
-  
+
   return res;
 }
 
@@ -79,6 +79,7 @@ static auto printTimes(const unsigned maxDepth) {
       hpx::cout << "Accumulated time at depth " << i << " " << times[i] << "\u03BCs" << hpx::endl;
     }
   }
+
 }
 
 template <typename Space, typename Node, typename Bound>

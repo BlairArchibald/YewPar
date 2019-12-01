@@ -61,7 +61,7 @@ struct Registry {
     backtracks = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
     prunes = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
   }
-  // REMEMBER: Add Overhead of metrics, using a flag Verbose
+
   // Counting
   void updateCounts(std::vector<std::uint64_t> & cntMap) {
     for (auto i = 0; i <= params.maxDepth ; ++i) {
