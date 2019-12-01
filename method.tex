@@ -1,0 +1,74 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{hyperref}
+\usepackage[a4paper,margin=2.3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{listings}
+
+\usepackage{listings}
+\usepackage{xcolor}
+ 
+\title{Chapter 6 Rough Outline}
+\author{Ruairidh Macgregor}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Outline of the Chapter}
+
+Fill this out later (spec tested on etc.). Perhaps try to compare all of the values obtained with a sequential performance (if time permits...) and
+keep the number of hpx:threads constant (decide value for this later).
+
+\section{Backtracks}
+
+Show results for each of the three skeletons on increasing core count. Tables will probably be best for this.
+
+\subsection{Discussion}
+
+Reflect on results. Note, use a constant budget (probably the default) and present the \hyperref[sec:budget]{case study} which will use more values for the budget.
+
+\section{Node Throughput}
+
+Maybe use graphs to show the throughput values on increasing core count. Tables may also do, but will have to see how the numbers look at the time probably.
+
+\subsection{Discussion}
+
+Reflect on results.
+
+\section{Prunes}
+
+Use tables to display this.
+
+\subsection{Discussion}
+
+Discuss and evaluate the values obtained from each of the skeletons and each instance. 
+
+\section{Search Tree Irregularity}
+
+Perhaps show box plot on each core count for the values used to record this metric.
+
+\subsection{Discussion}
+
+Reflect on results.
+
+\section{Case Studies}
+
+Present case study to attempt to learn the optimal value for depthbounded using a combination of the above metrics.
+
+\subsection{Budget}
+\label{sec:budget}
+Perhaps do some parameter sweeps of the budget and record results for each of the problems and instances (although can imagine we could probably only do one instance for each problem
+for this part), and analyse performance. Show the results for increasing budget number in tables, probably only keep a constant core count for this one, can't imagine we'll have a
+lot of core hours left (maybe compare with GPG results to see if the value is similar/different?).
+
+\subsection{Depthbounded}
+\label{sec:depthbounded}
+Use the runtime irregularity metrics, with node throughput. Use box plots to show the irregularity measurements on increasing depth. Probably for this one in terms of method,
+it may be similar to the one above with using multiple parameters and using the metrics to compare.
+
+\end{document}
