@@ -148,7 +148,7 @@ struct Budget {
             stackDepth--;
             depth--;
             backtracks++;
-            if constexpr(metrics {
+            if constexpr(metrics) {
               totalBacktracks++;
             }
             continue;
