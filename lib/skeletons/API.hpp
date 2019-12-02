@@ -48,6 +48,10 @@ struct MoreVerbose : Verbose_<std::integral_constant<unsigned, 2> > {};
 // Basic Info + Updates + Parallelism information
 struct EvenMoreVerbose : Verbose_<std::integral_constant<unsigned, 3> > {};
 
+// Metrics output
+BOOST_PARAMETER_TEMPLATE_KEYWORD(Metrics_)
+struct Metrics : Metrics_<std::integral_constant, 1> > {};
+
 // Signature, everything is optional since the generators are explicitly passed as arg 1 on each skeleton
 BOOST_PARAMETER_TEMPLATE_KEYWORD(null)
 typedef parameter::parameters<parameter::optional<tag::null> > skeleton_signature;

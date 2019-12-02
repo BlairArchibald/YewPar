@@ -30,6 +30,9 @@ struct Budget {
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
+  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 1> >::type Metrics;
+  static constexpr unsigned metrics = Metrics::value;
+
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
@@ -114,14 +117,18 @@ struct Budget {
 
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
-          ++prunes;
+          if constexpr(metrics) {
+            ++prunes;
+          }
           continue;
         }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
           depth--;
           backtracks++;
-          totalBacktracks++;
+          if constexpr(metrics) {
+            totalBacktracks++;
+          }
           continue;
         }
 
@@ -141,7 +148,9 @@ struct Budget {
             stackDepth--;
             depth--;
             backtracks++;
-            totalBacktracks++;
+            if constexpr(metrics {
+              totalBacktracks++;
+            }
             continue;
           }
         }
@@ -152,7 +161,9 @@ struct Budget {
         stackDepth--;
         depth--;
         backtracks++;
-        totalBacktracks++;
+        if constexpr(metrics) {
+          totalBacktracks++;
+        }
       }
     }
   }
@@ -170,25 +181,33 @@ struct Budget {
     std::vector<hpx::future<void> > childFutures;
     std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
 
-    auto t1 = std::chrono::steady_clock::now();
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    
+    if constexpr(metrics) {
+      t1 = std::chrono::steady_clock::now();
+    }
+    
     expand(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth, nodeCount, prunes, backtracks);
-    auto t2 = std::chrono::steady_clock::now();
-    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1);
-    const double time = diff.count();
-    reg->addTime(childDepth, time);
+    
+    if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1);
+      const double time = diff.count();
+      reg->addTime(childDepth, time);
+      reg->updateNodeCount(childDepth, nodeCount);
+      reg->updateBacktracks(childDepth, backtracks);
+      reg->updatePrune(childDepth, prunes);
+    }
 
     // Atomically updates the (process) local counter
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
-    reg->updateNodeCount(childDepth, nodeCount);
-    reg->updateBacktracks(childDepth, backtracks);
-    reg->updatePrune(childDepth, prunes);
-
+    
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
-          hpx::wait_all(futs);
-          hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
-        }, std::move(childFutures)));
+      hpx::wait_all(futs);
+      hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
+    }, std::move(childFutures)));
   }
 
   static hpx::future<void> createTask(const unsigned childDepth,
@@ -238,11 +257,13 @@ struct Budget {
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
-  
-    printTimes<Space, Node, Bound>(params.maxDepth);
-    printPrunes<Space, Node, Bound>(params.maxDepth);
-    printNodeCounts<Space, Node, Bound>(params.maxDepth);
-    printBacktracks<Space, Node, Bound>(params.maxDepth);
+
+    if constexpr(metrics) { 
+      printTimes<Space, Node, Bound>(params.maxDepth);
+      printPrunes<Space, Node, Bound>(params.maxDepth);
+      printNodeCounts<Space, Node, Bound>(params.maxDepth);
+      printBacktracks<Space, Node, Bound>(params.maxDepth);
+    }
 
     // Return the right thing
     if constexpr(isCountNodes) {

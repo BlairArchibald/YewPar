@@ -211,15 +211,22 @@ struct StackStealing {
         generatorStack[stackDepth].seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child);
-        ++nodeCount;
+        if constexpr(metrics) {
+          ++nodeCount;
+        }
+        
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
-          ++prunes;
+          if constexpr(metrics) {
+            ++prunes;
+          }
           continue;
         }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
-          backtracks++;
+          if constexpr(metrics) {
+            backtracks++;
+          }
           depth--;
           continue;
         }
@@ -239,7 +246,9 @@ struct StackStealing {
             // This doesn't look quite right to me, we want the next element at this level not the previous?
             if (depth == reg->params.maxDepth) {
               stackDepth--;
-              backtracks++;
+              if constexpr(metrics) {
+                backtracks++;
+              }
               depth--;
               continue;
           }
@@ -250,7 +259,9 @@ struct StackStealing {
       } else {
         stackDepth--;
         depth--;
-        backtracks++;
+        if constexpr(metrics) {
+          backtracks++;
+        }
       }
     }
   }
@@ -269,23 +280,28 @@ struct StackStealing {
     std::vector<hpx::future<void> > futures;
 
     std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
-    auto t1 = std::chrono::steady_clock::now();
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+
+    if constexpr(metrics) {
+      t1 = std::chrono::steady_clock::now();
+    }
     runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, backtracks, stackDepth, depth);
     
-    auto t2 = std::chrono::steady_clock::now();
-    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1);
-    const double time = diff.count();
-    reg->addTime(depth, time);
+    if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1);
+      const double time = diff.count();
+      reg->addTime(depth, time);
+      reg->updateNodeCount(startingDepth, nodeCount);
+      reg->updatePrune(startingDepth, prunes);
+      reg->updateBacktracks(startingDepth, backtracks);
+    }
 
     // Atomically updates the (process) local counter
     if constexpr(isCountNodes) {
         reg->updateCounts(cntMap);
     }
-    reg->updateNodeCount(startingDepth, nodeCount);
-    reg->updatePrune(startingDepth, prunes);
-    reg->updateBacktracks(startingDepth, backtracks);
-   
-    std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
+       std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
           hpx::wait_all(futs);
