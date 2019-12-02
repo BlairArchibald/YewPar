@@ -47,7 +47,7 @@ template <typename T>
 static auto printMetric(const std::vector<T> & metricVec,
                         const std::string && metric,
                         const unsigned maxDepth) {
-  auto cnt = std::accumulate(metricVec.begin(), metricVec.begin() + maxDepth + 1, 0);
+  auto cnt = std::accumulate(metricVec.begin(), metricVec.end(), 0);
   hpx::cout << "Total number of " << metric << ": " << cnt << hpx::endl;
 }
 
