@@ -39,7 +39,7 @@ static auto countDepths(const unsigned maxDepth) {
       	res[i] += cnt[i];
     }
   }
-  
+
   return res;
 }
 

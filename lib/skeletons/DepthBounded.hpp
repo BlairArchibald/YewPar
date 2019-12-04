@@ -214,7 +214,7 @@ struct DepthBounded {
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
-        hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
+    hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
       hpx::wait_all(futs);
       hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
     },
