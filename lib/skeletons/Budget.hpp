@@ -113,7 +113,10 @@ struct Budget {
         genStack[stackDepth].seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, child);
-        ++nodeCount;
+        
+        if constexpr(metrics) {
+          ++nodeCount;
+        }
 
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
@@ -126,9 +129,6 @@ struct Budget {
           stackDepth--;
           depth--;
           backtracks++;
-          if constexpr(metrics) {
-            totalBacktracks++;
-          }
           continue;
         }
 
@@ -148,9 +148,6 @@ struct Budget {
             stackDepth--;
             depth--;
             backtracks++;
-            if constexpr(metrics) {
-              totalBacktracks++;
-            }
             continue;
           }
         }
@@ -161,10 +158,11 @@ struct Budget {
         stackDepth--;
         depth--;
         backtracks++;
-        if constexpr(metrics) {
-          totalBacktracks++;
-        }
       }
+    }
+
+    if constexpr(metrics) {
+      totalBackTracks = backtracks;
     }
   }
 
@@ -233,6 +231,12 @@ struct Budget {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
+    
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    if constexpr(metrics) {
+        t1 = std::chrono::steady_clock<std::chrono::milliseconds>::now();
+    }
+
     if constexpr (verbose) {
       printSkeletonDetails();
     }
@@ -258,7 +262,11 @@ struct Budget {
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
-    if constexpr(metrics) { 
+    if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+      const double time = diff.count();
+      hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
       printTimes<Space, Node, Bound>(params.maxDepth);
       printPrunes<Space, Node, Bound>(params.maxDepth);
       printNodeCounts<Space, Node, Bound>(params.maxDepth);

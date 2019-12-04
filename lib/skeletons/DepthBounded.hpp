@@ -191,7 +191,7 @@ struct DepthBounded {
 
     std::chrono::time_point<std::chrono::steady_clock> t1;
     if constexpr(metrics) {
-      t1 = std::chrono::steady_clock::now();
+      t1 = std::chrono::steady_clock<std::chrono::milliseconds>::now();
     }
     
     if (childDepth <= reg->params.spawnDepth) {
@@ -202,7 +202,7 @@ struct DepthBounded {
     
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const double time = diff.count();
       reg->addTime(childDepth, time);
       reg->updateNodeCount(childDepth, nodeCount);
@@ -244,6 +244,11 @@ struct DepthBounded {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
+    
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    if constexpr(metrics) {
+        t1 = std::chrono::steady_clock<std::chrono::milliseconds>::now();
+    }
 
     if constexpr (verbose) {
         printSkeletonDetails(params);
@@ -271,6 +276,10 @@ struct DepthBounded {
         hpx::find_all_localities()));
 
     if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+      const double time = diff.count();
+      hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
       printTimes<Space, Node, Bound>(params.maxDepth);
       printPrunes<Space, Node, Bound>(params.maxDepth);
       printNodeCounts<Space, Node, Bound>(params.maxDepth);

@@ -36,9 +36,7 @@ static auto countDepths(const unsigned maxDepth) {
   std::vector<T> res(maxDepth + 1);
   for (auto i = 0; i <= maxDepth; ++i) {
     for (const auto & cnt : cntVecAll) {
-			if (i < cnt.size()) {
       	res[i] += cnt[i];
-			}
     }
   }
   
@@ -78,7 +76,7 @@ static auto printTimes(const unsigned maxDepth) {
   times[0] = std::accumulate(times.begin(), times.begin() + maxDepth + 1, 0);
   for (int i = 0; i <= maxDepth; i++) {
     if (times[i] > 1) {
-      hpx::cout << "Accumulated time at depth " << i << " " << times[i] << "\u03BCs" << hpx::endl;
+      hpx::cout << "Accumulated time at depth " << i << " " << times[i] << "ms" << hpx::endl;
     }
   }
 }

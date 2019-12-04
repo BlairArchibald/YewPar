@@ -285,22 +285,23 @@ struct StackStealing {
     std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
     std::chrono::time_point<std::chrono::steady_clock> t1;
 
-      t1 = std::chrono::steady_clock::now();
+    t1 = std::chrono::steady_clock::now();
     runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, backtracks, stackDepth, depth);
     
+    if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1);
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1);
       const double time = diff.count();
       reg->addTime(depth, time);
       reg->updateNodeCount(startingDepth, nodeCount);
       reg->updatePrune(startingDepth, prunes);
       reg->updateBacktracks(startingDepth, backtracks);
-
+    }
     // Atomically updates the (process) local counter
     if constexpr(isCountNodes) {
         reg->updateCounts(cntMap);
     }
-       std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
+    std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
           hpx::wait_all(futs);
@@ -449,6 +450,12 @@ struct StackStealing {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
+    
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    if constexpr(metrics) {
+      t1 = std::chrono::steady_clock<std::chrono::milliseconds>::now();
+    }
+
     if constexpr(verbose) {
       printSkeletonDetails(params);
     }
@@ -480,11 +487,16 @@ struct StackStealing {
     }
     
 		if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock<std::chrono::milliseconds>::now();
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1);
+      const double time = diff.count();
+      hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
       printTimes<Space, Node, Bound>(params.maxDepth);
       printPrunes<Space, Node, Bound>(params.maxDepth);
       printNodeCounts<Space, Node, Bound>(params.maxDepth);
       printBacktracks<Space, Node, Bound>(params.maxDepth);
 		}
+
     // Return the right thing
     if constexpr(isCountNodes) {
       return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
