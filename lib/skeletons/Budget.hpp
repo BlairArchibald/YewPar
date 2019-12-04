@@ -162,7 +162,7 @@ struct Budget {
     }
 
     if constexpr(metrics) {
-      totalBackTracks = backtracks;
+      totalBacktracks = backtracks;
     }
   }
 
@@ -234,7 +234,7 @@ struct Budget {
     
     std::chrono::time_point<std::chrono::steady_clock> t1;
     if constexpr(metrics) {
-        t1 = std::chrono::steady_clock<std::chrono::milliseconds>::now();
+        t1 = std::chrono::steady_clock::now();
     }
 
     if constexpr (verbose) {

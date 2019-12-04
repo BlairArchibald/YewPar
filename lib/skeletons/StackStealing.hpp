@@ -453,7 +453,7 @@ struct StackStealing {
     
     std::chrono::time_point<std::chrono::steady_clock> t1;
     if constexpr(metrics) {
-      t1 = std::chrono::steady_clock<std::chrono::milliseconds>::now();
+      t1 = std::chrono::steady_clock::now();
     }
 
     if constexpr(verbose) {
@@ -487,7 +487,7 @@ struct StackStealing {
     }
     
 		if constexpr(metrics) {
-      auto t2 = std::chrono::steady_clock<std::chrono::milliseconds>::now();
+      auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1);
       const double time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
