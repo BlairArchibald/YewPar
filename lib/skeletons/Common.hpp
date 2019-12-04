@@ -36,7 +36,9 @@ static auto countDepths(const unsigned maxDepth) {
   std::vector<T> res(maxDepth + 1);
   for (auto i = 0; i <= maxDepth; ++i) {
     for (const auto & cnt : cntVecAll) {
-      res[i] += cnt[i];
+			if (i < cnt.size()) {
+      	res[i] += cnt[i];
+			}
     }
   }
   

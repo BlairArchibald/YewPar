@@ -44,8 +44,8 @@ struct StackStealing {
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
-	typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics;
-	static constexpr unsigned metrics = Metrics::value;
+  //typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics;
+  //static constexpr unsigned metrics = Metrics::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
@@ -80,7 +80,7 @@ struct StackStealing {
     GeneratorStack<Generator> generatorStack(maxStackDepth, rootElem);
     if constexpr (isCountNodes) {
         cntMap.resize(reg->params.maxDepth + 1);
-      }
+    }
 
     if constexpr (isCountNodes) {
       cntMap[depth] += rootElem.gen.numChildren;
@@ -482,13 +482,13 @@ struct StackStealing {
         hpx::async<Workstealing::Policies::SearchManagerPerf::printChunkSizeList_act>(l).get();
       }
     }
-    
+/*    
 		if constexpr(metrics) {
       printTimes<Space, Node, Bound>(params.maxDepth);
       printPrunes<Space, Node, Bound>(params.maxDepth);
       printNodeCounts<Space, Node, Bound>(params.maxDepth);
       printBacktracks<Space, Node, Bound>(params.maxDepth);
-		}
+		}*/
     // Return the right thing
     if constexpr(isCountNodes) {
       return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
