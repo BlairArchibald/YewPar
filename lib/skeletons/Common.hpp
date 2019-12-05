@@ -54,17 +54,17 @@ static auto printMetric(const std::string && metric, const unsigned maxDepth) {
 
 template <typename Space, typename Node, typename Bound>
 static auto printNodeCounts(const unsigned maxDepth) {
-  printMetric(cntDepths, "Nodes", maxDepth);
+  printMetric("Nodes", maxDepth);
 }
 
 template <typename Space, typename Node, typename Bound>
 static auto printPrunes(const unsigned maxDepth) {
-  printMetric(cntDepths, "Prunes", maxDepth);
+  printMetric("Prunes", maxDepth);
 }
 
 template <typename Space, typename Node, typename Bound>
 static auto printBacktracks(const unsigned maxDepth) {
-  printMetric(cntDepths, "Backtracks", maxDepth);
+  printMetric("Backtracks", maxDepth);
 }
 
 template <typename Space, typename Node, typename Bound>
@@ -73,14 +73,13 @@ static auto printTimes(const unsigned maxDepth) {
     hpx::find_all_localities()).get();
 
   // Get the median from each, compute the L1 norm and compute the mean
-  std::vector<std::uint64_t> > sums;
+  std::vector<std::uint64_t> sums;
   std::vector<std::vector<std::uint64_t> > vec(maxDepth + 1);
-  int i = 0;
   for (const auto & times : timesVec) {
     int depth = 0;
     for (const auto & time : times) {
       sums[depth] += time;
-      vec[i][depth].push_back(time);
+      vec[depth].push_back(time);
     }
   }
 

@@ -42,7 +42,7 @@ struct Registry {
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
 
   // Dissertation
-  using MetricsVecPtr = std::uinque_ptr<std::vector<std::atomic<std::uint64_t> > >;
+  using MetricsVecPtr = std::unique_ptr<std::vector<std::atomic<std::uint64_t> > >;
   using MetricsVec = std::vector<std::uint64_t>;
   MetricsVecPtr maxTimes;
   MetricsVecPtr minTimes;
@@ -82,7 +82,7 @@ struct Registry {
     (*timesVec)[depth] += time;
     (*maxTimes)[depth] = (time > (*maxTimes[depth])) ? (time) : (*maxTimes)[depth];
     (*minTimes)[depth] = (time < (*minTimes[depth])) ? (time) : (*minTimes)[depth];
-    (*runningAverage)][depth] = ((*runningAverage)[depth] + time)/nodesVisited;
+    (*runningAverage)[depth] = ((*runningAverage)[depth] + time)/nodesVisited;
   }
 
   void updatePrunes(const unsigned depth, std::uint64_t prunes) {
