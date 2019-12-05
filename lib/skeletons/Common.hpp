@@ -3,6 +3,7 @@
 
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
+#include <functional>
 #include <numeric>
 
 namespace YewPar { namespace Skeletons {
@@ -46,8 +47,9 @@ static auto countDepths(const unsigned maxDepth) {
 static auto printMetric(const std::vector<std::uint64_t> & metricVec,
                         const std::string && metric,
                         const unsigned maxDepth) {
-  auto cnt = std::accumulate(metricVec.begin(), metricVec.end(), 0);
-  hpx::cout << "Total number of " << metric << ": " << cnt << hpx::endl;
+  for (int i = 0; i < metricsVec.size(); i++) {
+    hpx::cout << "Total number of " << metric << " at Depth " << i << ": " << cnt << hpx::endl;
+  }
 }
 
 template <typename Space, typename Node, typename Bound>
@@ -70,17 +72,29 @@ static auto printBacktracks(const unsigned maxDepth) {
 
 template <typename Space, typename Node, typename Bound>
 static auto printTimes(const unsigned maxDepth) {
-  auto timesVecAll = hpx::lcos::broadcast<GetTimesAct<Space, Node, Bound> >(
-    hpx::find_all_localities());
+  auto timesVec = countDepths<GetTimesAct<Space, Node, Bound> >(maxDepth);
 
-  for (const auto & timesVec : timesVecAll) {
-    for (const auto & times : timesVec) {
-      int depth = 0;
-      for (const auto & time : times) {
-        hpx::cout << "Time at depth " << depth <<": " << time << hpx::endl;
+  auto minTimesAll = hpx::lcos::broadcast<GetMinTimesAct<Space, Node, Bound> >(
+    hpx::find_all_localities()).get();
+
+  auto maxTimesAll = hpx::lcos::broadcast<GetMaxTimesAct<Space, Node, Bound> >(
+    hpx::find_all_localities()).get();
+
+  std::vector<std::uint64_t> minVec(maxDepth + 1), maxVec(maxDepth + 1);
+  for (int i = 0; i < minTimesAll.size(); i++) {
+    for (int j = 0; j < minTimesAll[i].size(); j++) {
+      if (minVec[j] < minTimesAll[i][j]) {
+        minVec[j] = minTimesAll[i][j];
+      } else if (maxVec[j] > maxTimesAll[i][j]) {
+        maxVec[j] = maxTimesAll[i][j];
       }
-      depth++;
     }
+  }
+
+  for (int i = 0; i < timesVec.size(); i++) {
+    hpx::cout << "Accumulated time at Depth " << i << ": " << timesVec[i] << hpx::endl;
+    hpx::cout << "Min Time at Depth " << i << minVec[i] << hpx::endl;
+    hpx::cout << "Max Time at Depth " << i << maxVec[i] << hpx::endl;
   }
 
 }

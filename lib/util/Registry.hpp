@@ -42,10 +42,14 @@ struct Registry {
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
 
   // Dissertation
-  std::unique_ptr<std::vector<std::vector<std::atomic<std::uint64_t> > > > timesVec;
-  std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > nodesVisited;
-  std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > backtracks;
-  std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > prunes;
+  using MetricsVecPtr = std::uinque_ptr<std::vector<std::atomic<std::uint64_t> > >;
+  using MetricsVec = std::vector<std::uint64_t>;
+  MetricsVecPtr maxTimes;
+  MetricsVecPtr minTimes;
+  MetricsVecPtr timesVec;
+  MetricsVecPtr nodesVisited;
+  MetricsVecPtr backtracks;
+  MetricsVecPtr prunes;
 
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
@@ -55,11 +59,13 @@ struct Registry {
     this->root = root;
     this->params = params;
     this->localBound = params.initialBound;
-    counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
-    timesVec = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
-    nodesVisited = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
-    backtracks = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
-    prunes = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
+    maxTimes = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
+    minTimes = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
+    timesVec = std::make_unique<MetricsVecPtr>(params.maxDepth + 1)
+    counts = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);    
+    nodesVisited = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
+    backtracks = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
+    prunes = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
   }
 
   // Counting
@@ -70,46 +76,46 @@ struct Registry {
     }
   }
 
-  void addTime(const unsigned depth, const std::uint64_t time) {
-    (*timesVec)[depth].push_back(time);
-	}
-
-  void updateNodeCount(const unsigned depth, const std::uint64_t count) {
-		(*nodesVisited)[depth] += count;
+  void updateTimes(const unsigned depth, const std::uint64_t time) {
+    (*timesVec)[depth] += time;
+    (*maxTimes)[depth] = (time > (*maxTimes[depth])) ? (time) : (*maxTimes)[depth];
+    (*minTimes)[depth] = (time < (*minTimes[depth])) ? (time) : (*minTimes)[depth];
   }
 
-  void updateBacktracks(const unsigned depth, const std::uint64_t count) {
-		(*backtracks)[depth] += count;
+  void updatePrunes(const unsigned depth, std::uint64_t prunes) {
+    (*prunes)[depth] += prunes;
   }
 
-  void updatePrune(const unsigned depth, const std::uint64_t count) {
-		(*prunes)[depth] += count;
+  void updateNodesVisited(const unsigned depth, std::uint64_t nodes) {
+    (*nodesVisited)[depth] += nodes;
   }
 
-  std::vector<std::uint64_t> getCounts() const {
-    return transformVec(*counts);
+  void updateBacktracks(const unsigned depth, std::uint64_t backtracks) {
+    (*backtracks)[depth] += backtracks;
   }
 
-  std::vector<std::vector<std::uint64_t> > getTimes() const {
-    std::vector<std::vector<std::uint64_t> > res;
-
-    for (const auto & vec : *timesVec) {
-      res.push_back(timesVec[i]);
-    }
-
-    return res;
-  }
-
-  std::vector<std::uint64_t> getNodeCount() const {
+  MetricsVec getNodeCount() const {
     return transformVec(*nodesVisited);
   }
 
-  std::vector<std::uint64_t> getBacktracks() const {
+  MetricsVec getBacktracks() const {
     return transformVec(*backtracks);
   }
 
-  std::vector<std::uint64_t> getPrunes() const {
+  MetricsVec getPrunes() const {
     return transformVec(*prunes);
+  }
+
+  MetricsVec getAccumulatedTimes() const {
+    return transformVec(*timesVec);
+  }
+
+  MetricsVec getMinTimes() const {
+    return transformVec(*minTime);
+  }
+
+  MetricsVec getMaxTimes() const {
+    return transformVec(*maxTime);
   }
 
   // BNB
@@ -133,11 +139,11 @@ struct Registry {
   }
 
 private:
-  inline std::vector<std::uint64_t> transformVec(
+  inline MetricsVec transformVec(
     const std::vector<std::atomic<std::uint64_t> > & vec
   ) const {
     // Convert std::atomic<T> -> T by loading it
-    std::vector<std::uint64_t> res;
+    MetricsVec res;
     std::transform(vec.begin(), vec.end(), std::back_inserter(res),
     [](const auto & c) { return c.load(); });
     return res;
@@ -181,6 +187,22 @@ std::vector<std::vector<std::uint64_t> > getTimes() {
 template <typename Space, typename Node, typename Bound>
 struct GetTimesAct : hpx::actions::make_direct_action<
   decltype(&getTimes<Space, Node, Bound>), &getTimes<Space, Node, Bound>, GetTimesAct<Space, Node, Bound> >::type {};
+
+template<typename Space, typename Node, typename Bound>
+std::vector<std::uint64_t> getMaxTimes() {
+  return Registry<Space, Node, Bound>::gReg->getMaxTimes();
+}
+template <typename Space, typename Node, typename Bound>
+struct GetMaxTimesAct : hpx::actions::make_direct_action<
+  decltype(&getTimes<Space, Node, Bound>), &getMaxTimes<Space, Node, Bound>, GetMaxTimesAct<Space, Node, Bound> >::type {};
+
+template<typename Space, typename Node, typename Bound>
+std::vector<std::uint64_t> getMinTimes() {
+  return Registry<Space, Node, Bound>::gReg->getMaxTimes();
+}
+template <typename Space, typename Node, typename Bound>
+struct GetMinTimesAct : hpx::actions::make_direct_action<
+  decltype(&getTimes<Space, Node, Bound>), &getMinTimes<Space, Node, Bound>, GetMaxTimesAct<Space, Node, Bound> >::type {};
 
 template <typename Space, typename Node, typename Bound>
 std::vector<std::uint64_t> getBacktracks() {
