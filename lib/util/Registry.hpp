@@ -71,27 +71,19 @@ struct Registry {
   }
 
   void addTime(const unsigned depth, const std::uint64_t time) {
-		if (depth < timesVec->size()) {
-  	  (*timesVec)[depth] += time;
-		}  
+    (*timesVec)[depth] += time;
 	}
 
   void updateNodeCount(const unsigned depth, const std::uint64_t count) {
-    if (depth < nodesVisited->size()) {
-			(*nodesVisited)[depth] += count;
-		}
+		(*nodesVisited)[depth] += count;
   }
 
   void updateBacktracks(const unsigned depth, const std::uint64_t count) {
-    if (depth < backtracks->size()) {
-			(*backtracks)[depth] += count;
-		}
+		(*backtracks)[depth] += count;
   }
 
   void updatePrune(const unsigned depth, const std::uint64_t count) {
-    if (depth < prunes->size()) {
-			(*prunes)[depth] += count;
-		}
+		(*prunes)[depth] += count;
   }
 
   std::vector<std::uint64_t> getCounts() const {
