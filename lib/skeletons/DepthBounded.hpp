@@ -52,8 +52,8 @@ struct DepthBounded {
 
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
-  
-  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics;
+
+  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 1> >::type Metrics;
   static constexpr unsigned metrics = Metrics::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
@@ -193,17 +193,17 @@ struct DepthBounded {
     if constexpr(metrics) {
       t1 = std::chrono::steady_clock::now();
     }
-    
+
     if (childDepth <= reg->params.spawnDepth) {
       expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, nodeCount, backtracks, childDepth);
     } else {
       expandNoSpawns(reg->space, taskRoot, reg->params, countMap, nodeCount, prunes, backtracks, childDepth);
     }
-    
+
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
-      const double time = diff.count();
+      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+     	const std::uint64_t time = (std::uint64_t) diff.count();
       reg->addTime(childDepth, time);
       reg->updateNodeCount(childDepth, nodeCount);
       reg->updatePrune(childDepth, prunes);
@@ -277,7 +277,7 @@ struct DepthBounded {
 
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const double time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
       printTimes<Space, Node, Bound>(params.maxDepth);

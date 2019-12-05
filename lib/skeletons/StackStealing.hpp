@@ -285,13 +285,16 @@ struct StackStealing {
     std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
     std::chrono::time_point<std::chrono::steady_clock> t1;
 
-    t1 = std::chrono::steady_clock::now();
-    runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, backtracks, stackDepth, depth);
+		if constexpr(metrics) {
+    	t1 = std::chrono::steady_clock::now();
+    }
+
+		runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, backtracks, stackDepth, depth);
     
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1);
-      const double time = diff.count();
+      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+      const std::uint64_t time = diff.count();
       reg->addTime(depth, time);
       reg->updateNodeCount(startingDepth, nodeCount);
       reg->updatePrune(startingDepth, prunes);
@@ -488,7 +491,7 @@ struct StackStealing {
     
 		if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1);
+      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2-t1);
       const double time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
       printTimes<Space, Node, Bound>(params.maxDepth);

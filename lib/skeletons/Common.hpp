@@ -71,13 +71,12 @@ static auto printBacktracks(const unsigned maxDepth) {
 
 template <typename Space, typename Node, typename Bound>
 static auto printTimes(const unsigned maxDepth) {
-  auto times = countDepths<GetTimesAct<Space, Node, Bound>, double>(maxDepth);
+  auto times = countDepths<GetTimesAct<Space, Node, Bound>, std::uint64_t>(maxDepth);
 
-  times[0] = std::accumulate(times.begin(), times.begin() + maxDepth + 1, 0);
-  for (int i = 0; i <= maxDepth; i++) {
-    if (times[i] > 1) {
-      hpx::cout << "Accumulated time at depth " << i << " " << times[i] << "ms" << hpx::endl;
-    }
+  for (int i = 1; i <= maxDepth; i++) {
+	  if (times[i] > 0) {
+			hpx::cout << "Accumulated time at depth " << i << " " << times[i] << "s" << hpx::endl;
+		}
   }
 }
 
