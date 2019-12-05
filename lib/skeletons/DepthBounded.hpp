@@ -278,7 +278,7 @@ struct DepthBounded {
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
-      const double time = diff.count();
+      const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
       printTimes<Space, Node, Bound>(params.maxDepth);
       printPrunes<Space, Node, Bound>(params.maxDepth);
