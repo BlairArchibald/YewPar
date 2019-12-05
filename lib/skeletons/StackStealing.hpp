@@ -44,6 +44,9 @@ struct StackStealing {
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
+  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 1> >::type Metrics;
+  static constexpr unsigned metrics = Metrics::value;
+
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
@@ -77,7 +80,7 @@ struct StackStealing {
     GeneratorStack<Generator> generatorStack(maxStackDepth, rootElem);
     if constexpr (isCountNodes) {
         cntMap.resize(reg->params.maxDepth + 1);
-      }
+    }
 
     if constexpr (isCountNodes) {
       cntMap[depth] += rootElem.gen.numChildren;
@@ -211,15 +214,22 @@ struct StackStealing {
         generatorStack[stackDepth].seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child);
-        ++nodeCount;
+        if constexpr(metrics) {
+					++nodeCount;
+				}
+        
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
-          ++prunes;
+          if constexpr(metrics) {
+						++prunes;
+					}
           continue;
         }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
-          backtracks++;
+          if constexpr(metrics) {
+				  	backtracks++;
+					}
           depth--;
           continue;
         }
@@ -239,7 +249,9 @@ struct StackStealing {
             // This doesn't look quite right to me, we want the next element at this level not the previous?
             if (depth == reg->params.maxDepth) {
               stackDepth--;
-              backtracks++;
+              if constexpr(metrics) {
+								backtracks++;
+							}
               depth--;
               continue;
           }
@@ -250,7 +262,9 @@ struct StackStealing {
       } else {
         stackDepth--;
         depth--;
-        backtracks++;
+        if constexpr(metrics) {
+					backtracks++;
+				}
       }
     }
   }
@@ -269,22 +283,27 @@ struct StackStealing {
     std::vector<hpx::future<void> > futures;
 
     std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
-    auto t1 = std::chrono::steady_clock::now();
-    runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, backtracks, stackDepth, depth);
-    
-    auto t2 = std::chrono::steady_clock::now();
-    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1);
-    const double time = diff.count();
-    reg->addTime(depth, time);
+    std::chrono::time_point<std::chrono::steady_clock> t1;
 
+		if constexpr(metrics) {
+    	t1 = std::chrono::steady_clock::now();
+    }
+
+		runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, backtracks, stackDepth, depth);
+    
+    if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+      const std::uint64_t time = (std::uint64_t) diff.count();
+      reg->addTime(startingDepth, time);
+      reg->updateNodeCount(startingDepth, nodeCount);
+      reg->updatePrune(startingDepth, prunes);
+      reg->updateBacktracks(startingDepth, backtracks);
+    }
     // Atomically updates the (process) local counter
     if constexpr(isCountNodes) {
         reg->updateCounts(cntMap);
     }
-    reg->updateNodeCount(startingDepth, nodeCount);
-    reg->updatePrune(startingDepth, prunes);
-    reg->updateBacktracks(startingDepth, backtracks);
-   
     std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
@@ -434,6 +453,12 @@ struct StackStealing {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
+    
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    if constexpr(metrics) {
+      t1 = std::chrono::steady_clock::now();
+    }
+
     if constexpr(verbose) {
       printSkeletonDetails(params);
     }
@@ -464,10 +489,16 @@ struct StackStealing {
       }
     }
     
-    printTimes<Space, Node, Bound>(params.maxDepth);
-    printPrunes<Space, Node, Bound>(params.maxDepth);
-    printNodeCounts<Space, Node, Bound>(params.maxDepth);
-    printBacktracks<Space, Node, Bound>(params.maxDepth);
+		if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2-t1);
+      const double time = diff.count();
+      hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
+      printTimes<Space, Node, Bound>(params.maxDepth);
+      printPrunes<Space, Node, Bound>(params.maxDepth);
+      printNodeCounts<Space, Node, Bound>(params.maxDepth);
+      printBacktracks<Space, Node, Bound>(params.maxDepth);
+		}
 
     // Return the right thing
     if constexpr(isCountNodes) {

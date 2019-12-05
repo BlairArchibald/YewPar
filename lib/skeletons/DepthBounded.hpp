@@ -7,10 +7,6 @@
 #include <vector>
 #include <cstdint>
 
-#include <boost/format.hpp>
-#include <boost/mpi.hpp>
-
-
 #include "API.hpp"
 
 #include <hpx/lcos/broadcast.hpp>
@@ -56,6 +52,9 @@ struct DepthBounded {
 
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
+
+  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 1> >::type Metrics;
+  static constexpr unsigned metrics = Metrics::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
@@ -108,12 +107,15 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      ++nodeCount;
-
+      if constexpr(metrics) {
+        ++nodeCount;
+      }
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Break) { 
-        ++backtracks;
+        if constexpr(metrics) {
+          ++backtracks;
+        }
         break; 
       }
       //default continue
@@ -152,16 +154,21 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      ++nodeCount;
-
+      if constexpr(metrics) {
+        ++nodeCount;
+      }
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Prune) {
-        ++prunes;
+        if constexpr(metrics) {
+          ++prunes;
+        }
         continue;
       }
       else if (pn == ProcessNodeRet::Break) {
-        ++backtracks; 
+        if constexpr(metrics) {
+          ++backtracks; 
+        }
         break;
       }
 
@@ -182,25 +189,31 @@ struct DepthBounded {
     std::vector<hpx::future<void> > childFutures;
     std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
 
-    auto t1 = std::chrono::steady_clock::now();
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    if constexpr(metrics) {
+      t1 = std::chrono::steady_clock::now();
+    }
+
     if (childDepth <= reg->params.spawnDepth) {
       expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, nodeCount, backtracks, childDepth);
     } else {
       expandNoSpawns(reg->space, taskRoot, reg->params, countMap, nodeCount, prunes, backtracks, childDepth);
     }
-    auto t2 = std::chrono::steady_clock::now();
-    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
-    const double time = diff.count();
-    reg->addTime(childDepth, time);
+
+    if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+     	const std::uint64_t time = (std::uint64_t) diff.count();
+      reg->addTime(childDepth, time);
+      reg->updateNodeCount(childDepth, nodeCount);
+      reg->updatePrune(childDepth, prunes);
+      reg->updateBacktracks(childDepth, backtracks);
+    }
 
     // Atomically updates the (process) local counter
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
-    reg->updateNodeCount(childDepth, nodeCount);
-    reg->updatePrune(childDepth, prunes);
-    reg->updateBacktracks(childDepth, backtracks);
-
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
       hpx::wait_all(futs);
       hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
@@ -231,6 +244,11 @@ struct DepthBounded {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
+    
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    if constexpr(metrics) {
+        t1 = std::chrono::steady_clock::now();
+    }
 
     if constexpr (verbose) {
         printSkeletonDetails(params);
@@ -257,11 +275,17 @@ struct DepthBounded {
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
-    printTimes<Space, Node, Bound>(params.maxDepth);
-    printPrunes<Space, Node, Bound>(params.maxDepth);
-    printNodeCounts<Space, Node, Bound>(params.maxDepth);
-    printBacktracks<Space, Node, Bound>(params.maxDepth);
-
+    if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+      const std::uint64_t time = diff.count();
+      hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
+      printTimes<Space, Node, Bound>(params.maxDepth);
+      printPrunes<Space, Node, Bound>(params.maxDepth);
+      printNodeCounts<Space, Node, Bound>(params.maxDepth);
+      printBacktracks<Space, Node, Bound>(params.maxDepth);
+    }
+    
     // Return the right thing
     if constexpr(isCountNodes) {
       auto vec = totalNodeCounts<Space, Node, Bound>(params.maxDepth);

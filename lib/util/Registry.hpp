@@ -42,7 +42,7 @@ struct Registry {
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
 
   // Dissertation
-  std::unique_ptr<std::vector<std::atomic<double> > > timesVec;
+  std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > timesVec;
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > nodesVisited;
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > backtracks;
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > prunes;
@@ -56,7 +56,7 @@ struct Registry {
     this->params = params;
     this->localBound = params.initialBound;
     counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
-    timesVec = std::make_unique<std::vector<std::atomic<double> > >(params.maxDepth + 1);
+    timesVec = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
     nodesVisited = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
     backtracks = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
     prunes = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
@@ -70,27 +70,27 @@ struct Registry {
     }
   }
 
-  void addTime(const unsigned depth, const double time) {
-    (*timesVec)[depth].store((*timesVec)[depth].load() + time);
-  }
+  void addTime(const unsigned depth, const std::uint64_t time) {
+    (*timesVec)[depth] += time;
+	}
 
   void updateNodeCount(const unsigned depth, const std::uint64_t count) {
-    (*nodesVisited)[depth] += count;
+		(*nodesVisited)[depth] += count;
   }
 
   void updateBacktracks(const unsigned depth, const std::uint64_t count) {
-    (*backtracks)[depth] += count;
+		(*backtracks)[depth] += count;
   }
 
   void updatePrune(const unsigned depth, const std::uint64_t count) {
-    (*prunes)[depth] += count;
+		(*prunes)[depth] += count;
   }
 
   std::vector<std::uint64_t> getCounts() const {
     return transformVec(*counts);
   }
 
-  std::vector<double> getTimes() const {
+  std::vector<std::uint64_t> getTimes() const {
     return transformVec(*timesVec);
   }
 
@@ -127,10 +127,9 @@ struct Registry {
   }
 
 private:
-  template <typename T>
-  inline std::vector<T> transformVec(const std::vector<std::atomic<T> > & vec) const {
+  inline std::vector<std::uint64_t> transformVec(const std::vector<std::atomic<std::uint64_t> > & vec) const {
     // Convert std::atomic<T> -> T by loading it
-    std::vector<T> res;
+    std::vector<std::uint64_t> res;
     std::transform(vec.begin(), vec.end(), std::back_inserter(res),
     [](const auto & c) { return c.load(); });
     return res;
@@ -168,7 +167,7 @@ struct GetNodeCountAct : hpx::actions::make_direct_action<
   decltype(&getNodeCount<Space, Node, Bound>), &getNodeCount<Space, Node, Bound>, GetNodeCountAct<Space, Node, Bound> >::type {};
 
 template <typename Space, typename Node, typename Bound>
-std::vector<double> getTimes() {
+std::vector<std::uint64_t> getTimes() {
   return Registry<Space, Node, Bound>::gReg->getTimes();
 }
 template <typename Space, typename Node, typename Bound>
