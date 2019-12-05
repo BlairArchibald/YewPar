@@ -244,7 +244,7 @@ struct DepthBounded {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
-    
+
     std::chrono::time_point<std::chrono::steady_clock> t1;
     if constexpr(metrics) {
         t1 = std::chrono::steady_clock::now();

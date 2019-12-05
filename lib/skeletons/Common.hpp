@@ -72,6 +72,10 @@ template <typename Space, typename Node, typename Bound>
 static auto printTimes(const unsigned maxDepth) {
   auto times = countDepths<GetTimesAct<Space, Node, Bound> >(maxDepth);
 
+  for (int i = 0; i <= maxDepth; i++) {
+    times[i] = std::accumulate(times[i].begin(), times.end(), 0);
+  }
+
   for (int i = 1; i <= maxDepth; i++) {
 	  if (times[i] > 0) {
 			hpx::cout << "Accumulated time at depth " << i << " " << times[i] << "s" << hpx::endl;
