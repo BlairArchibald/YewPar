@@ -189,8 +189,8 @@ struct Budget {
     
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2-t1);
-      const std::uint64_t time = diff.count();
+      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+      const std::uint64_t time = (std::uint64_t) diff.count();
       reg->addTime(childDepth, time);
       reg->updateNodeCount(childDepth, nodeCount);
       reg->updateBacktracks(childDepth, backtracks);
