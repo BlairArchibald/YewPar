@@ -48,7 +48,7 @@ struct MoreVerbose : Verbose_<std::integral_constant<unsigned, 2> > {};
 // Basic Info + Updates + Parallelism information
 struct EvenMoreVerbose : Verbose_<std::integral_constant<unsigned, 3> > {};
 
-// Metrics output
+// Get Metrics for Dissertation
 BOOST_PARAMETER_TEMPLATE_KEYWORD(Metrics_)
 struct Metrics : Metrics_<std::integral_constant<unsigned, 1> > {};
 
