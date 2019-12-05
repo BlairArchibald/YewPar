@@ -295,8 +295,8 @@ struct StackStealing {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const std::uint64_t time = (std::uint64_t) diff.count();
-      reg->addTime(startingDepth, time);
       reg->updateNodeCount(startingDepth, nodeCount);
+      reg->updateTime(startingDepth, time);
       reg->updatePrune(startingDepth, prunes);
       reg->updateBacktracks(startingDepth, backtracks);
     }
