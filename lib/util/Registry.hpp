@@ -42,7 +42,7 @@ struct Registry {
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
 
   // Dissertation
-  std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > timesVec;
+  std::unique_ptr<std::vector<std::vector<std::atomic<std::uint64_t> > > > timesVec;
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > nodesVisited;
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > backtracks;
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > prunes;
@@ -71,7 +71,7 @@ struct Registry {
   }
 
   void addTime(const unsigned depth, const std::uint64_t time) {
-    (*timesVec)[depth] += time;
+    (*timesVec)[depth].push_back(time);
 	}
 
   void updateNodeCount(const unsigned depth, const std::uint64_t count) {
@@ -90,8 +90,14 @@ struct Registry {
     return transformVec(*counts);
   }
 
-  std::vector<std::uint64_t> getTimes() const {
-    return transformVec(*timesVec);
+  std::vector<std::vector<std::uint64_t> > getTimes() const {
+    std::vector<std::vector<std::uint64_t> > res;
+
+    for (const auto & vec : *timesVec) {
+      res.push_back(timesVec[i]);
+    }
+
+    return res;
   }
 
   std::vector<std::uint64_t> getNodeCount() const {
@@ -127,7 +133,9 @@ struct Registry {
   }
 
 private:
-  inline std::vector<std::uint64_t> transformVec(const std::vector<std::atomic<std::uint64_t> > & vec) const {
+  inline std::vector<std::uint64_t> transformVec(
+    const std::vector<std::atomic<std::uint64_t> > & vec
+  ) const {
     // Convert std::atomic<T> -> T by loading it
     std::vector<std::uint64_t> res;
     std::transform(vec.begin(), vec.end(), std::back_inserter(res),
@@ -167,7 +175,7 @@ struct GetNodeCountAct : hpx::actions::make_direct_action<
   decltype(&getNodeCount<Space, Node, Bound>), &getNodeCount<Space, Node, Bound>, GetNodeCountAct<Space, Node, Bound> >::type {};
 
 template <typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getTimes() {
+std::vector<std::vector<std::uint64_t> > getTimes() {
   return Registry<Space, Node, Bound>::gReg->getTimes();
 }
 template <typename Space, typename Node, typename Bound>

@@ -70,16 +70,17 @@ static auto printBacktracks(const unsigned maxDepth) {
 
 template <typename Space, typename Node, typename Bound>
 static auto printTimes(const unsigned maxDepth) {
-  auto times = countDepths<GetTimesAct<Space, Node, Bound> >(maxDepth);
+  auto timesVecAll = hpx::lcos::broadcast<GetTimesAct<Space, Node, Bound> >(
+    hpx::find_all_localities());
 
-  for (int i = 0; i <= maxDepth; i++) {
-    times[i] = std::accumulate(times[i].begin(), times.end(), 0);
-  }
-
-  for (int i = 1; i <= maxDepth; i++) {
-	  if (times[i] > 0) {
-			hpx::cout << "Accumulated time at depth " << i << " " << times[i] << "s" << hpx::endl;
-		}
+  for (const auto & timesVec : timesVecAll) {
+    for (const auto & times : timesVec) {
+      int depth = 0;
+      for (const auto & time : times) {
+        hpx::cout << "Time at depth " << depth <<": " << time << hpx::endl;
+      }
+      depth++;
+    }
   }
 
 }
