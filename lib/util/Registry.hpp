@@ -72,7 +72,6 @@ struct Registry {
 
   void addTime(const unsigned depth, const std::uint64_t time) {
 		if (depth < timesVec->size()) {
-			hpx::cout << "Depth " << depth << " Time " << time << hpx::endl;
   	  (*timesVec)[depth] += time;
 		}  
 	}
