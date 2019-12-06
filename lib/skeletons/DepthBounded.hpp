@@ -202,11 +202,11 @@ struct DepthBounded {
 
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
      	const std::uint64_t time = (std::uint64_t) diff.count();
-      reg->updateNodeCount(childDepth, nodeCount);
-      reg->updateTime(childDepth, time);
-      reg->updatePrune(childDepth, prunes);
+      reg->updateNodesVisited(childDepth, nodeCount);
+      reg->updateTimes(childDepth, time);
+      reg->updatePrunes(childDepth, prunes);
       reg->updateBacktracks(childDepth, backtracks);
     }
 
@@ -254,7 +254,7 @@ struct DepthBounded {
         printSkeletonDetails(params);
     }
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
-        hpx::find_all_localities(), space, root, params));
+        hpx::find_all_localities(), space, root, params, metrics));
 
     Policy::initPolicy();
 

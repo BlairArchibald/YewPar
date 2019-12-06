@@ -191,10 +191,10 @@ struct Budget {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const std::uint64_t time = (std::uint64_t) diff.count();
-      reg->updateNodeCount(childDepth, nodeCount);
-      reg->updateTime(childDepth, time);
+      reg->updateNodesVisited(childDepth, nodeCount);
+      reg->updateTimes(childDepth, time);
       reg->updateBacktracks(childDepth, backtracks);
-      reg->updatePrune(childDepth, prunes);
+      reg->updatePrunes(childDepth, prunes);
     }
 
     // Atomically updates the (process) local counter
@@ -242,7 +242,7 @@ struct Budget {
     }
 
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
-        hpx::find_all_localities(), space, root, params));
+        hpx::find_all_localities(), space, root, params, metrics));
 
     Policy::initPolicy();
 

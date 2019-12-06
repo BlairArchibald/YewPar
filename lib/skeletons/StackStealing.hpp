@@ -295,9 +295,9 @@ struct StackStealing {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const std::uint64_t time = (std::uint64_t) diff.count();
-      reg->updateNodeCount(startingDepth, nodeCount);
-      reg->updateTime(startingDepth, time);
-      reg->updatePrune(startingDepth, prunes);
+      reg->updateNodesVisited(startingDepth, nodeCount);
+      reg->updateTimes(startingDepth, time);
+      reg->updatePrunes(startingDepth, prunes);
       reg->updateBacktracks(startingDepth, backtracks);
     }
     // Atomically updates the (process) local counter
@@ -488,7 +488,7 @@ struct StackStealing {
         hpx::async<Workstealing::Policies::SearchManagerPerf::printChunkSizeList_act>(l).get();
       }
     }
-    
+
 		if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2-t1);

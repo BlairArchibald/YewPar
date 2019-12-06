@@ -4,11 +4,13 @@
 #include <algorithm>
 #include <atomic>
 #include <cstdint>
-#include <forward_list>
 #include <iterator>
 #include <memory>
-#include <vector>
 #include <mutex>
+#include <set>
+#include <vector>
+
+#include <boost/random/random_device.hpp>
 
 #include <hpx/lcos/local/composable_guard.hpp>
 #include <hpx/runtime/actions/basic_action.hpp>
@@ -42,32 +44,52 @@ struct Registry {
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
 
   // Dissertation
-  using MetricsVecPtr = std::uinque_ptr<std::vector<std::atomic<std::uint64_t> > >;
+  using MetricsVecPtr = std::unique_ptr<std::vector<std::atomic<std::uint64_t> > >;
+  using MetricsVecAtomic = std::vector<std::atomic<std::uint64_t> >;
   using MetricsVec = std::vector<std::uint64_t>;
+  using TimesVecPtr = std::unique_ptr<std::vector<std::vector<std::uint64_t> > >;
+  using TimesVec = std::vector<std::vector<std::uint64_t> >;
+
+  // Regularity Metrics
   MetricsVecPtr maxTimes;
   MetricsVecPtr minTimes;
-  MetricsVecPtr runningAverage;
-  MetricsVecPtr timesVec;
+  MetricsVecPtr runningAverages;
+  MetricsVecPtr accumulatedTimes;
+  TimesVecPtr workerTimes;
+
+  // For node throughput
   MetricsVecPtr nodesVisited;
+  
+  // For Backtracking budget
   MetricsVecPtr backtracks;
+
+  // Counting pruning
   MetricsVecPtr prunes;
+
+  // Random number generator, for sampling from times
+  boost::random::random_device gen;
 
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
   // locality.
-  void initialise(Space space, Node root, Skeletons::API::Params<Bound> params) {
+  void initialise(Space space, Node root, Skeletons::API::Params<Bound> params, const unsigned includeMetrics=true) {
     this->space = space;
     this->root = root;
     this->params = params;
     this->localBound = params.initialBound;
-    maxTimes = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
-    minTimes = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
-    runningAverage = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
-    timesVec = std::make_unique<MetricsVecPtr>(params.maxDepth + 1)
-    counts = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);   
-    nodesVisited = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
-    backtracks = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
-    prunes = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
+    counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
+    
+    if (includeMetrics) {
+      maxTimes = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
+      minTimes = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
+      runningAverages = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
+      accumulatedTimes = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
+      workerTimes = std::make_unique<TimesVec>(params.maxDepth + 1);
+      nodesVisited = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
+      backtracks = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
+      prunes = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
+    }
+
   }
 
   // Counting
@@ -79,22 +101,25 @@ struct Registry {
   }
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
-    (*timesVec)[depth] += time;
-    (*maxTimes)[depth] = (time > (*maxTimes[depth])) ? (time) : (*maxTimes)[depth];
-    (*minTimes)[depth] = (time < (*minTimes[depth])) ? (time) : (*minTimes)[depth];
-    (*runningAverage)][depth] = ((*runningAverage)[depth] + time)/nodesVisited;
+    (*accumulatedTimes)[depth] += time;
+    if (time > 0) {
+      (*workerTimes)[depth].push_back(time);
+    }
+    (*maxTimes)[depth] = (time > (*maxTimes)[depth].load()) ? time : (*maxTimes)[depth].load();
+    (*minTimes)[depth] = (time < (*minTimes)[depth].load()) ? time : (*minTimes)[depth].load();
+    (*runningAverages)[depth] = ((*runningAverages)[depth].load() + time)/(*nodesVisited)[depth];
   }
 
-  void updatePrunes(const unsigned depth, std::uint64_t prunes) {
-    (*prunes)[depth] += prunes;
+  void updatePrunes(const unsigned depth, std::uint64_t p) {
+    (*prunes)[depth] += p;
   }
 
   void updateNodesVisited(const unsigned depth, std::uint64_t nodes) {
     (*nodesVisited)[depth] += nodes;
   }
 
-  void updateBacktracks(const unsigned depth, std::uint64_t backtracks) {
-    (*backtracks)[depth] += backtracks;
+  void updateBacktracks(const unsigned depth, std::uint64_t b) {
+    (*backtracks)[depth] += b;
   }
 
   MetricsVec getNodeCount() const {
@@ -110,19 +135,23 @@ struct Registry {
   }
 
   MetricsVec getAccumulatedTimes() const {
-    return transformVec(*timesVec);
+    return transformVec(*accumulatedTimes);
   }
 
   MetricsVec getMinTimes() const {
-    return transformVec(*minTime);
+    return transformVec(*minTimes);
   }
 
   MetricsVec getMaxTimes() const {
-    return transformVec(*maxTime);
+    return transformVec(*maxTimes);
   }
 
   MetricsVec getRunningAverages() const {
-    return transformVec(*runningAverage);
+    return transformVec(*runningAverages);
+  }
+
+  TimesVec getTimes() const {
+    return *workerTimes;
   }
 
   // BNB
@@ -189,7 +218,7 @@ struct GetNodeCountAct : hpx::actions::make_direct_action<
 
 template <typename Space, typename Node, typename Bound>
 std::vector<std::vector<std::uint64_t> > getTimes() {
-  return Registry<Space, Node, Bound>::gReg->getAccumulatedTimes();
+  return Registry<Space, Node, Bound>::gReg->getTimes();
 }
 template <typename Space, typename Node, typename Bound>
 struct GetTimesAct : hpx::actions::make_direct_action<
@@ -201,22 +230,22 @@ std::vector<std::uint64_t> getMaxTimes() {
 }
 template <typename Space, typename Node, typename Bound>
 struct GetMaxTimesAct : hpx::actions::make_direct_action<
-  decltype(&getTimes<Space, Node, Bound>), &getMaxTimes<Space, Node, Bound>, GetMaxTimesAct<Space, Node, Bound> >::type {};
+  decltype(&getMaxTimes<Space, Node, Bound>), &getMaxTimes<Space, Node, Bound>, GetMaxTimesAct<Space, Node, Bound> >::type {};
 
 template<typename Space, typename Node, typename Bound>
 std::vector<std::uint64_t> getMinTimes() {
-  return Registry<Space, Node, Bound>::gReg->getMaxTimes();
+  return Registry<Space, Node, Bound>::gReg->getMinTimes();
 }
 template <typename Space, typename Node, typename Bound>
 struct GetMinTimesAct : hpx::actions::make_direct_action<
-  decltype(&getTimes<Space, Node, Bound>), &getMinTimes<Space, Node, Bound>, GetMaxTimesAct<Space, Node, Bound> >::type {};
+  decltype(&getMinTimes<Space, Node, Bound>), &getMinTimes<Space, Node, Bound>, GetMaxTimesAct<Space, Node, Bound> >::type {};
 
 template <typename Space, typename Node, typename Bound>
 std::vector<std::uint64_t> getRunningAverages() {
   return Registry<Space, Node, Bound>::gReg->getRunningAverages();
 }
 template <typename Space, typename Node, typename Bound>
-struct GetRunningAveragesAct : hpx::make_direct_action<
+struct GetRunningAveragesAct : hpx::actions::make_direct_action<
   decltype(&getRunningAverages<Space, Node, Bound>), &getRunningAverages<Space, Node, Bound>, GetRunningAveragesAct<Space, Node, Bound> >::type {};
 
 template <typename Space, typename Node, typename Bound>
