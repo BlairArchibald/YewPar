@@ -36,11 +36,12 @@ template <typename Act>
 static auto countDepths(const unsigned maxDepth) {
   auto cntVecAll = hpx::lcos::broadcast<Act>(hpx::find_all_localities()).get();
   std::vector<std::uint64_t> res(maxDepth + 1);
-  for (auto i = 0; i <= maxDepth; ++i) {
-    for (const auto & cnt : cntVecAll) {
-      	res[i] += cnt[i];
-    }
-  }
+
+	for (int i = 0; i <= maxDepth; i++) {
+		for (const auto & vec : cntVecAll) {
+			res[i] += vec[i];
+		}
+	}
 
   return res;
 }
@@ -81,7 +82,7 @@ static auto printTimes(const unsigned maxDepth) {
       }
     }
   }
-/*
+*
   for (int i = 0; i <= maxDepth; i++) {
     int size = vec.size();
     std::sort(vec[i].begin(), vec[i].end());
@@ -98,7 +99,7 @@ static auto printTimes(const unsigned maxDepth) {
     auto mean = std::accumulate(vec[i].begin(), vec[i].end(), 0)/size;
     hpx::cout << "Mean at Depth " << i << ": " << mean << hpx::endl;
   }
-*/
+
   auto minTimesAll = hpx::lcos::broadcast<GetMinTimesAct>(hpx::find_all_localities()).get();
 
   auto maxTimesAll = hpx::lcos::broadcast<GetMaxTimesAct>(hpx::find_all_localities()).get();

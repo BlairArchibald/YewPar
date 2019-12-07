@@ -56,7 +56,7 @@ struct Registry {
 
   std::vector<std::uint64_t> getCounts() {
     std::vector<std::uint64_t> res;
-    std::transform(counts->begin(), counts->end(), [](const auto & c) { return c.load(); });
+    std::transform(counts->begin(), counts->end(), [](const auto & c) { return c.load(); }, std::back_inserter(res));
     return res;
   }
 
