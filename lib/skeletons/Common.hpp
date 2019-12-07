@@ -69,7 +69,7 @@ static auto printBacktracks(const unsigned maxDepth) {
 }
 
 static auto printTimes(const unsigned maxDepth) {
-  auto timesVec = hpx::lcos::broadcast<GetTimesAct>(hpx::find_all_localities()).get();
+  auto timesVec = hpx::lcos::broadcast<GetAccumulatedTimesAct>(hpx::find_all_localities()).get();
 
 	std::uint64_t i;
   // Get the median from each, compute the L1 norm and compute the mean

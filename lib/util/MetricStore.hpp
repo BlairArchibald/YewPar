@@ -21,93 +21,83 @@ struct MetricStore {
   using MetricsVec = std::vector<std::uint64_t>;
   using TimesVecPtr = std::unique_ptr<std::vector<std::vector<std::uint64_t> > >;
   using TimesVec = std::vector<std::vector<std::uint64_t> >;
-  
+
   // Regularity Metrics
   MetricsVecPtr maxTimes;
   MetricsVecPtr minTimes;
   MetricsVecPtr runningAverages;
   MetricsVecPtr accumulatedTimes;
-  TimesVecPtr workerTimes;
-  
+
   // For node throughput
   MetricsVecPtr nodesVisited;
-  
+
   // For Backtracking budget
   MetricsVecPtr backtracks;
-  
+
   // Counting pruning
   MetricsVecPtr prunes;
-  
+
   MetricStore() = default;
-  
+
   // Initialises the store
   void init(const unsigned maxDepth) {
     maxTimes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     minTimes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     runningAverages = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     accumulatedTimes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
-    workerTimes = std::make_unique<TimesVec>(maxDepth + 1);
     nodesVisited = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     backtracks = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     prunes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
   }
-  
+
   void updateTimes(const unsigned depth, const std::uint64_t time) {
     (*accumulatedTimes)[depth] += time;
-    if (time > 0) {
-      (*workerTimes)[depth].push_back(time);
-    }
     (*maxTimes)[depth] = (time > (*maxTimes)[depth].load()) ? time : (*maxTimes)[depth].load();
     (*minTimes)[depth] = (time < (*minTimes)[depth].load()) ? time : (*minTimes)[depth].load();
     (*runningAverages)[depth] = ((*runningAverages)[depth].load() + time)/(*nodesVisited)[depth];
   }
-  
+
   void updatePrunes(const unsigned depth, std::uint64_t p) {
     (*prunes)[depth] += p;
   }
-  
+
   void updateNodesVisited(const unsigned depth, std::uint64_t nodes) {
     (*nodesVisited)[depth] += nodes;
   }
-  
+
   void updateBacktracks(const unsigned depth, std::uint64_t b) {
     (*backtracks)[depth] += b;
   }
-  
+
   MetricsVec getNodeCount() const {
     return transformVec(*nodesVisited);
   }
 
   MetricsVec getBacktracks() const {
     return transformVec(*backtracks);
-  }
-  
+	}
+
   MetricsVec getPrunes() const {
     return transformVec(*prunes);
   }
-  
+
   MetricsVec getAccumulatedTimes() const {
     return transformVec(*accumulatedTimes);
   }
-  
+
   MetricsVec getMinTimes() const {
     return transformVec(*minTimes);
   }
-  
+
   MetricsVec getMaxTimes() const {
     return transformVec(*maxTimes);
   }
-  
+
   MetricsVec getRunningAverages() const {
     return transformVec(*runningAverages);
   }
-  
-  TimesVec getTimes() const {
-    return *workerTimes;
-  }
 
   ~MetricStore() = default;
-
 
 private:
 
@@ -136,12 +126,6 @@ std::vector<std::uint64_t> getNodeCount() {
 struct GetNodeCountAct : hpx::actions::make_direct_action<
   decltype(&getNodeCount), &getNodeCount, GetNodeCountAct>::type {};
 
-std::vector<std::vector<std::uint64_t> > getTimes() {
-  return MetricStore::store->getTimes();
-}
-struct GetTimesAct : hpx::actions::make_direct_action<
-  decltype(&getTimes), &getTimes, GetTimesAct>::type {};
-
 std::vector<std::uint64_t> getMaxTimes() {
   return MetricStore::store->getMaxTimes();
 }
@@ -159,6 +143,12 @@ std::vector<std::uint64_t> getRunningAverages() {
 }
 struct GetRunningAveragesAct : hpx::actions::make_direct_action<
   decltype(&getRunningAverages), &getRunningAverages, GetRunningAveragesAct>::type {};
+
+std::vector<std::uint64_t> getAccumulatedTimes() {
+	return MetricStore::store->getAccumulatedTimes();
+}
+struct GetAccumulatedTimesAct : hpx::actions::make_direct_action<
+	decltype(&getAccumulatedTimes), &getAccumulatedTimes, GetAccumulatedTimesAct>::type {};
 
 std::vector<std::uint64_t> getBacktracks() {
   return MetricStore::store->getBacktracks();
