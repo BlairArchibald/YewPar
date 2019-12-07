@@ -37,7 +37,8 @@ static auto countDepths(const unsigned maxDepth) {
   auto cntVecAll = hpx::lcos::broadcast<Act>(hpx::find_all_localities()).get();
   std::vector<std::uint64_t> res(maxDepth + 1);
 
-	for (int i = 0; i <= maxDepth; i++) {
+  std::uint64_t i;
+	for (i = 0; i <= maxDepth; i++) {
 		for (const auto & vec : cntVecAll) {
 			res[i] += vec[i];
 		}
@@ -49,7 +50,6 @@ static auto countDepths(const unsigned maxDepth) {
 template <typename Act>
 static auto printMetric(const std::string && metric, const unsigned maxDepth) {
   auto metricsVec = countDepths<Act>(maxDepth);
-  std::vector<uint64_t> res;
   
   for (int i = 0; i < metricsVec.size(); i++) {
     hpx::cout << "Total number of " << metric << " at Depth " << i << ": " << metricsVec[i] << hpx::endl;
@@ -82,7 +82,7 @@ static auto printTimes(const unsigned maxDepth) {
       }
     }
   }
-*
+
   for (int i = 0; i <= maxDepth; i++) {
     int size = vec.size();
     std::sort(vec[i].begin(), vec[i].end());
