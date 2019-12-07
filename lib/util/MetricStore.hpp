@@ -4,6 +4,7 @@
 #include <atomic>
 #include <algorithm>
 #include <memory>
+#include <limits>
 #include <vector>
 
 #include <hpx/runtime/actions/basic_action.hpp>
@@ -43,6 +44,9 @@ struct MetricStore {
   void init(const unsigned maxDepth) {
     maxTimes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     minTimes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
+		for (int i = 0; i <= maxDepth; i++) {
+			(*minTimes)[i] = ULLONG_MAX;
+		}
     runningAverages = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     accumulatedTimes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     nodesVisited = std::make_unique<MetricsVecAtomic>(maxDepth + 1);

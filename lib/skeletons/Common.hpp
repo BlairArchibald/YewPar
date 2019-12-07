@@ -53,7 +53,9 @@ static auto printMetric(const std::string && metric, const unsigned maxDepth) {
   auto metricsVec = countDepths<Act>(maxDepth);
   
   for (int i = 0; i < metricsVec.size(); i++) {
-    hpx::cout << "Total number of " << metric << " at Depth " << i << ": " << metricsVec[i] << hpx::endl;
+		if (metricsVec[i] > 0) {
+    	hpx::cout << "Total number of " << metric << " at Depth " << i << ": " << metricsVec[i] << hpx::endl;
+		}
   }
 }
 
@@ -85,21 +87,23 @@ static auto printTimes(const unsigned maxDepth) {
   }
 
   for (i = 0; i <= maxDepth; i++) {
-    int size = vec.size();
-    std::sort(vec[i].begin(), vec[i].end());
-    std::uint64_t median;
-    auto mid = size/2;
+		if (vec[i].size() > 0) {
+      int size = vec.size();
+      std::sort(vec[i].begin(), vec[i].end());
+      std::uint64_t median;
+      auto mid = size/2;
 
-    if ((vec[i].size() % 2) == 0) {
-      median = (vec[i][mid-1] + vec[i][mid]) / 2;
-    } else {
-      median = vec[i][mid/2];
-    }
-    hpx::cout << "Median at Depth " << i << ": " << median << hpx::endl;
+      if ((vec[i].size() % 2) == 0) {
+        median = (vec[i][mid-1] + vec[i][mid]) / 2;
+      } else {
+        median = vec[i][mid/2];
+    	}
+    	hpx::cout << "Median at Depth " << i << ": " << median << hpx::endl;
 
-    auto mean = std::accumulate(vec[i].begin(), vec[i].end(), 0)/size;
-    hpx::cout << "Mean at Depth " << i << ": " << mean << hpx::endl;
-  }
+    	auto mean = std::accumulate(vec[i].begin(), vec[i].end(), 0)/size;
+    	hpx::cout << "Mean at Depth " << i << ": " << mean << hpx::endl;
+  	}
+	}
 
   auto minTimesAll = hpx::lcos::broadcast<GetMinTimesAct>(hpx::find_all_localities()).get();
 
@@ -119,9 +123,9 @@ static auto printTimes(const unsigned maxDepth) {
   }
 
   for (int i = 0; i < timesVec.size(); i++) {
-    hpx::cout << "Accumulated time at Depth " << i << ": " << sums[i] << hpx::endl;
-    hpx::cout << "Min Time at Depth " << i << minVec[i] << hpx::endl;
-    hpx::cout << "Max Time at Depth " << i << maxVec[i] << hpx::endl;
+    if (sums[i] > 0) hpx::cout << "Accumulated time at Depth " << i << ": " << sums[i] << hpx::endl;
+    if (minVec[i] > 0) hpx::cout << "Min Time at Depth " << i << minVec[i] << hpx::endl;
+    if (maxVec[i] > 0) hpx::cout << "Max Time at Depth " << i << maxVec[i] << hpx::endl;
   }
 
 }
