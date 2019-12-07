@@ -6,6 +6,7 @@
 #include "util/MetricStore.hpp"
 #include <algorithm>
 #include <numeric>
+#include <vector>
 
 namespace YewPar { namespace Skeletons {
 
@@ -69,22 +70,22 @@ static auto printBacktracks(const unsigned maxDepth) {
 }
 
 static auto printTimes(const unsigned maxDepth) {
+
   auto timesVec = hpx::lcos::broadcast<GetAccumulatedTimesAct>(hpx::find_all_localities()).get();
 
 	std::uint64_t i;
   // Get the median from each, compute the L1 norm and compute the mean
-  std::vector<std::uint64_t> sums;
   std::vector<std::vector<std::uint64_t> > vec(maxDepth + 1);
-  for (const auto & times : timesVec) {
-    for (i = 0; i <= maxDepth; i++) {
-      for (const auto & time : times[i]) {
-        vec[i].push_back(time);
-      }
+  std::vector<std::uint64_t> sums(maxDepth + 1);
+  for (i = 0; i <= maxDepth; i++) {
+    for (const auto & times : timesVec) {
+        vec[i].push_back(times[i]);
+        sums[i] += times[i];
     }
   }
 
   for (i = 0; i <= maxDepth; i++) {
-      int size = vec.size();
+    int size = vec.size();
     std::sort(vec[i].begin(), vec[i].end());
     std::uint64_t median;
     auto mid = size/2;
