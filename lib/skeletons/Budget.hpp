@@ -244,7 +244,7 @@ struct Budget {
     }
 
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
-        hpx::find_all_localities(), space, root, params, metrics));
+        hpx::find_all_localities(), space, root, params));
 
     if constexpr(metrics) {
       hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth));

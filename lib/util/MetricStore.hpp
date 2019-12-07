@@ -134,41 +134,41 @@ std::vector<std::uint64_t> getNodeCount() {
   return MetricStore::store->getNodeCount();
 }
 struct GetNodeCountAct : hpx::actions::make_direct_action<
-  decltype(&getNodeCount), &getNodeCount, GetNodeCountAct >::type {};
+  decltype(&getNodeCount), &getNodeCount, GetNodeCountAct>::type {};
 
 std::vector<std::vector<std::uint64_t> > getTimes() {
   return MetricStore::store->getTimes();
 }
 struct GetTimesAct : hpx::actions::make_direct_action<
-  decltype(&getTimes), &getTimes, GetTimesAct >::type {};
+  decltype(&getTimes), &getTimes, GetTimesAct>::type {};
 
 std::vector<std::uint64_t> getMaxTimes() {
   return MetricStore::store->getMaxTimes();
 }
 struct GetMaxTimesAct : hpx::actions::make_direct_action<
-  decltype(&getMaxTimes), &getMaxTimes, GetMaxTimesAct >::type {};
+  decltype(&getMaxTimes), &getMaxTimes, GetMaxTimesAct>::type {};
 
 std::vector<std::uint64_t> getMinTimes() {
   return MetricStore::store->getMinTimes();
 }
 struct GetMinTimesAct : hpx::actions::make_direct_action<
-  decltype(&getMinTimes), &getMinTimes, GetMaxTimesAct >::type {};
+  decltype(&getMinTimes), &getMinTimes, GetMinTimesAct>::type {};
 
 std::vector<std::uint64_t> getRunningAverages() {
   return MetricStore::store->getRunningAverages();
 }
 struct GetRunningAveragesAct : hpx::actions::make_direct_action<
-  decltype(&getRunningAverages), &getRunningAverages, GetRunningAveragesAct >::type {};
+  decltype(&getRunningAverages), &getRunningAverages, GetRunningAveragesAct>::type {};
 
 std::vector<std::uint64_t> getBacktracks() {
   return MetricStore::store->getBacktracks();
 }
 struct GetBacktracksAct : hpx::actions::make_direct_action<
-  decltype(&getBacktracks), &getBacktracks, GetBacktracksAct >::type {};
+  decltype(&getBacktracks), &getBacktracks, GetBacktracksAct>::type {};
 
 std::vector<std::uint64_t> getPrunes() {
   return MetricStore::store->getPrunes();
 }
 struct GetPrunesAct : hpx::actions::make_direct_action<
-  decltype(&getPrunes), &getPrunes, GetPrunesAct >::type {};
+  decltype(&getPrunes), &getPrunes, GetPrunesAct>::type {};
 }
