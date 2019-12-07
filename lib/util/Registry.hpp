@@ -119,7 +119,7 @@ struct Registry {
 */
   std::vector<std::uint64_t> getCounts() {
     std::vector<std::uint64_t> res;
-    std::transform(counts.begin(), counts.end(), [](const auto & c) { return c.load(); });
+    std::transform(counts->begin(), counts->end(), [](const auto & c) { return c.load(); });
     return res;
   }
   /*
@@ -173,17 +173,6 @@ struct Registry {
 
   void setStopSearchFlag() {
     stopSearch.store(true);
-  }
-
-private:
-  inline MetricsVec transformVec(
-    const std::vector<std::atomic<std::uint64_t> > & vec
-  ) const {
-    // Convert std::atomic<T> -> T by loading it
-    MetricsVec res;
-    std::transform(vec.begin(), vec.end(), std::back_inserter(res),
-    [](const auto & c) { return c.load(); });
-    return res;
   }
 
 };

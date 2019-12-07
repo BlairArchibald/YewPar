@@ -55,24 +55,20 @@ static auto printMetric(const std::string && metric, const unsigned maxDepth) {
   }
 }
 
-template <typename Space, typename Node, typename Bound>
 static auto printNodeCounts(const unsigned maxDepth) {
-  printMetric<GetNodeCountAct<Space, Node, Bound> >("Nodes", maxDepth);
+  printMetric<GetNodeCountAct>("Nodes", maxDepth);
 }
 
-template <typename Space, typename Node, typename Bound>
 static auto printPrunes(const unsigned maxDepth) {
-  printMetric<GetPrunesAct<Space, Node, Bound> >("Prunes", maxDepth);
+  printMetric<GetPrunesAct>("Prunes", maxDepth);
 }
 
-template <typename Space, typename Node, typename Bound>
 static auto printBacktracks(const unsigned maxDepth) {
-  printMetric<GetBacktracksAct<Space, Node, Bound> >("Backtracks", maxDepth);
+  printMetric<GetBacktracksAct>("Backtracks", maxDepth);
 }
 
-template <typename Space, typename Node, typename Bound>
 static auto printTimes(const unsigned maxDepth) {
-  auto timesVec = hpx::lcos::broadcast<GetTimesAct<Space, Node, Bound> >(
+  auto timesVec = hpx::lcos::broadcast<GetTimesAct>(
     hpx::find_all_localities()).get();
 
   // Get the median from each, compute the L1 norm and compute the mean
@@ -103,14 +99,11 @@ static auto printTimes(const unsigned maxDepth) {
     hpx::cout << "Mean at Depth " << i << ": " << mean << hpx::endl;
   }
 */
-  auto minTimesAll = hpx::lcos::broadcast<GetMinTimesAct<Space, Node, Bound> >(
-    hpx::find_all_localities()).get();
+  auto minTimesAll = hpx::lcos::broadcast<GetMinTimesAct>(hpx::find_all_localities()).get();
 
-  auto maxTimesAll = hpx::lcos::broadcast<GetMaxTimesAct<Space, Node, Bound> >(
-    hpx::find_all_localities()).get();
+  auto maxTimesAll = hpx::lcos::broadcast<GetMaxTimesAct>(hpx::find_all_localities()).get();
 
-  auto runningAveragesAll = hpx::lcos::broadcast<GetRunningAveragesAct<Space, Node, Bound> >(
-    hpx::find_all_localities()).get();
+  auto runningAveragesAll = hpx::lcos::broadcast<GetRunningAveragesAct>(hpx::find_all_localities()).get();
 
   std::vector<std::uint64_t> minVec(maxDepth + 1), maxVec(maxDepth + 1);
   for (int i = 0; i < minTimesAll.size(); i++) {
@@ -122,7 +115,6 @@ static auto printTimes(const unsigned maxDepth) {
       }
     }
   }
-
 
   for (int i = 0; i < timesVec.size(); i++) {
     hpx::cout << "Accumulated time at Depth " << i << ": " << sums[i] << hpx::endl;
