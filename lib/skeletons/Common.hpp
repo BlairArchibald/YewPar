@@ -72,18 +72,19 @@ static auto printTimes(const unsigned maxDepth) {
   auto timesVec = hpx::lcos::broadcast<GetTimesAct>(
     hpx::find_all_localities()).get();
 
+	std::uint64_t i;
   // Get the median from each, compute the L1 norm and compute the mean
   std::vector<std::uint64_t> sums;
   std::vector<std::vector<std::uint64_t> > vec(maxDepth + 1);
   for (const auto & times : timesVec) {
-    for (int i = 0; i <= maxDepth; i++) {
+    for (i = 0; i <= maxDepth; i++) {
       for (const auto & time : times[i]) {
         vec[i].push_back(time);
       }
     }
   }
 
-  for (int i = 0; i <= maxDepth; i++) {
+  for (i = 0; i <= maxDepth; i++) {
     int size = vec.size();
     std::sort(vec[i].begin(), vec[i].end());
     std::uint64_t median;
