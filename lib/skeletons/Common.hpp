@@ -80,7 +80,7 @@ static auto printTimes(const unsigned maxDepth) {
   std::vector<std::uint64_t> sums;
   std::vector<std::vector<std::uint64_t> > vec;
   for (i = 0; i <= maxDepth; i++) {
-    vec[i].push_back({});
+    vec.push_back({});
 		for (const auto & times : timesVec) {
       if (times[i] > 0 && times[i] != ULLONG_MAX) {
         sums[i] += times[i];
@@ -90,7 +90,7 @@ static auto printTimes(const unsigned maxDepth) {
     }
   }
 
-  for (i = 0; i <= maxDepth; i++) {
+  for (i = 0; i <= vec.size(); i++) {
 		if (vec[i].size() > 0) {
       int size = vec.size();
       std::sort(vec[i].begin(), vec[i].end());
