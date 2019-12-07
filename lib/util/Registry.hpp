@@ -3,14 +3,8 @@
 
 #include <algorithm>
 #include <atomic>
-#include <cstdint>
-#include <iterator>
 #include <memory>
-#include <mutex>
-#include <set>
 #include <vector>
-
-#include <boost/random/random_device.hpp>
 
 #include <hpx/runtime/actions/basic_action.hpp>
 #include <hpx/traits/action_stacksize.hpp>
@@ -40,30 +34,7 @@ struct Registry {
   // Counting Nodes
   using countMapT = std::vector<std::atomic<std::uint64_t> >;
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
-/*
-  // Dissertation
-  using MetricsVecPtr = std::unique_ptr<std::vector<std::atomic<std::uint64_t> > >;
-  using MetricsVecAtomic = std::vector<std::atomic<std::uint64_t> >;
-  using MetricsVec = std::vector<std::uint64_t>;
-  using TimesVecPtr = std::unique_ptr<std::vector<std::vector<std::uint64_t> > >;
-  using TimesVec = std::vector<std::vector<std::uint64_t> >;
 
-  // Regularity Metrics
-  MetricsVecPtr maxTimes;
-  MetricsVecPtr minTimes;
-  MetricsVecPtr runningAverages;
-  MetricsVecPtr accumulatedTimes;
-  TimesVecPtr workerTimes;
-
-  // For node throughput
-  MetricsVecPtr nodesVisited;
-  
-  // For Backtracking budget
-  MetricsVecPtr backtracks;
-
-  // Counting pruning
-  MetricsVecPtr prunes;
-*/
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
   // locality.
@@ -73,18 +44,6 @@ struct Registry {
     this->params = params;
     this->localBound = params.initialBound;
     counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
-    /*
-    if (includeMetrics) {
-      maxTimes = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
-      minTimes = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
-      runningAverages = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
-      accumulatedTimes = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
-      workerTimes = std::make_unique<TimesVec>(params.maxDepth + 1);
-      nodesVisited = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
-      backtracks = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
-      prunes = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
-    }*/
-
   }
 
   // Counting
@@ -94,66 +53,12 @@ struct Registry {
       (*counts)[i] += cntMap[i];
     }
   }
-/*
-  void updateTimes(const unsigned depth, const std::uint64_t time) {
-    (*accumulatedTimes)[depth] += time;
-    if (time > 0) {
-      (*workerTimes)[depth].push_back(time);
-    }
-    (*maxTimes)[depth] = (time > (*maxTimes)[depth].load()) ? time : (*maxTimes)[depth].load();
-    (*minTimes)[depth] = (time < (*minTimes)[depth].load()) ? time : (*minTimes)[depth].load();
-    (*runningAverages)[depth] = ((*runningAverages)[depth].load() + time)/(*nodesVisited)[depth];
-  }
 
-  void updatePrunes(const unsigned depth, std::uint64_t p) {
-    (*prunes)[depth] += p;
-  }
-
-  void updateNodesVisited(const unsigned depth, std::uint64_t nodes) {
-    (*nodesVisited)[depth] += nodes;
-  }
-
-  void updateBacktracks(const unsigned depth, std::uint64_t b) {
-    (*backtracks)[depth] += b;
-  }
-*/
   std::vector<std::uint64_t> getCounts() {
     std::vector<std::uint64_t> res;
     std::transform(counts->begin(), counts->end(), [](const auto & c) { return c.load(); });
     return res;
   }
-  /*
-  MetricsVec getNodeCount() const {
-    return transformVec(*nodesVisited);
-  }
-
-  MetricsVec getBacktracks() const {
-    return transformVec(*backtracks);
-  }
-
-  MetricsVec getPrunes() const {
-    return transformVec(*prunes);
-  }
-
-  MetricsVec getAccumulatedTimes() const {
-    return transformVec(*accumulatedTimes);
-  }
-
-  MetricsVec getMinTimes() const {
-    return transformVec(*minTimes);
-  }
-
-  MetricsVec getMaxTimes() const {
-    return transformVec(*maxTimes);
-  }
-
-  MetricsVec getRunningAverages() const {
-    return transformVec(*runningAverages);
-  }
-
-  TimesVec getTimes() const {
-    return *workerTimes;
-  }*/
 
   // BNB
   template <typename Cmp>
