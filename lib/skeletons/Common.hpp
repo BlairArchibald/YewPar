@@ -117,13 +117,11 @@ static auto printTimes(const unsigned maxDepth) {
   auto runningAveragesAll = hpx::lcos::broadcast<GetRunningAveragesAct>(hpx::find_all_localities()).get();
 
   std::vector<std::uint64_t> minVec(maxDepth + 1), maxVec(maxDepth + 1);
-  for (int i = 0; i < minTimesAll.size(); i++) {
-    for (int j = 0; j < minTimesAll[i].size(); j++) {
-      if (minVec[j] < minTimesAll[i][j]) {
-        minVec[j] = minTimesAll[i][j];
-      } else if (maxVec[j] > maxTimesAll[i][j]) {
-        maxVec[j] = maxTimesAll[i][j];
-      }
+  for (int i = 0; i <= 6; i++) {
+    for (int j = 0; j < minTimesAll.size()) {
+      hpx::cout << minTimesAll[i][j] << hpx::endl;
+      hpx::cout << maxTimesAll[i][j] << hpx::endl;
+      hpx::cout << runningAveragesAll[i][j] << hpx::endl;
     }
   }
 
