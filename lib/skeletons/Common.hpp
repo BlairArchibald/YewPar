@@ -78,9 +78,10 @@ static auto printTimes(const unsigned maxDepth) {
 	std::uint64_t i;
   // Get the median from each, compute the L1 norm and compute the mean
   std::vector<std::uint64_t> sums;
-  std::vector<std::vector<std::uint64_t> vec;
+  std::vector<std::vector<std::uint64_t> > vec;
   for (i = 0; i <= maxDepth; i++) {
-    for (const auto & times : timesVec) {
+    vec[i].push_back({});
+		for (const auto & times : timesVec) {
       if (times[i] > 0 && times[i] != ULLONG_MAX) {
         sums[i] += times[i];
         vec[i].push_back(times[i]);
@@ -90,20 +91,20 @@ static auto printTimes(const unsigned maxDepth) {
   }
 
   for (i = 0; i <= maxDepth; i++) {
-		if (timesVec[i].size() > 0 && ) {
-      int size = timesVec.size();
-      std::sort(timesVec[i].begin(), timesVec[i].end());
+		if (vec[i].size() > 0) {
+      int size = vec.size();
+      std::sort(vec[i].begin(), vec[i].end());
       std::uint64_t median;
       auto mid = size/2;
 
-      if ((timesVec[i].size() % 2) == 0) {
-        median = (timesVec[i][mid-1] + timesVec[i][mid]) / 2;
+      if ((vec[i].size() % 2) == 0) {
+        median = (vec[i][mid-1] + vec[i][mid]) / 2;
       } else {
-        median = timesVec[i][mid/2];
+        median = vec[i][mid/2];
     	}
     	hpx::cout << "Median at Depth " << i << ": " << median << hpx::endl;
 
-    	auto mean = std::accumulate(timesVec[i].begin(), timesVec[i].end(), 0)/size;
+    	auto mean = std::accumulate(vec[i].begin(), vec[i].end(), 0)/size;
     	hpx::cout << "Mean at Depth " << i << ": " << mean << hpx::endl;
   	}
 	}
