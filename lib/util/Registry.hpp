@@ -3,6 +3,8 @@
 
 #include <algorithm>
 #include <atomic>
+#include <cstdint>
+#include <iterator>
 #include <memory>
 #include <vector>
 
@@ -55,8 +57,9 @@ struct Registry {
   }
 
   std::vector<std::uint64_t> getCounts() {
+    // Convert std::atomic<std::uint64_t> -> uint64_t by loading it
     std::vector<std::uint64_t> res;
-    std::transform(counts->begin(), counts->end(), [](const auto & c) { return c.load(); }, std::back_inserter(res));
+    std::transform(counts->begin(), counts->end(), std::back_inserter(res), [](const auto & c) { return c.load(); });
     return res;
   }
 
