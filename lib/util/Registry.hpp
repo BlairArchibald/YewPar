@@ -38,7 +38,7 @@ struct Registry {
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
   // locality.
-  void initialise(Space space, Node root, Skeletons::API::Params<Bound> params, const unsigned includeMetrics=true) {
+  void initialise(Space space, Node root, Skeletons::API::Params<Bound> params) {
     this->space = space;
     this->root = root;
     this->params = params;
@@ -102,63 +102,6 @@ template <typename Space, typename Node, typename Bound>
 struct GetCountsAct : hpx::actions::make_direct_action<
   decltype(&getCounts<Space, Node, Bound>), &getCounts<Space, Node, Bound>, GetCountsAct<Space, Node, Bound> >::type {};
 
-///////////////////////////////////////////////////////
-/*template <typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getNodeCount() {
-  return Registry<Space, Node, Bound>::gReg->getNodeCount();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetNodeCountAct : hpx::actions::make_direct_action<
-  decltype(&getNodeCount<Space, Node, Bound>), &getNodeCount<Space, Node, Bound>, GetNodeCountAct<Space, Node, Bound> >::type {};
-
-template <typename Space, typename Node, typename Bound>
-std::vector<std::vector<std::uint64_t> > getTimes() {
-  return Registry<Space, Node, Bound>::gReg->getTimes();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetTimesAct : hpx::actions::make_direct_action<
-  decltype(&getTimes<Space, Node, Bound>), &getTimes<Space, Node, Bound>, GetTimesAct<Space, Node, Bound> >::type {};
-
-template<typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getMaxTimes() {
-  return Registry<Space, Node, Bound>::gReg->getMaxTimes();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetMaxTimesAct : hpx::actions::make_direct_action<
-  decltype(&getMaxTimes<Space, Node, Bound>), &getMaxTimes<Space, Node, Bound>, GetMaxTimesAct<Space, Node, Bound> >::type {};
-
-template<typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getMinTimes() {
-  return Registry<Space, Node, Bound>::gReg->getMinTimes();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetMinTimesAct : hpx::actions::make_direct_action<
-  decltype(&getMinTimes<Space, Node, Bound>), &getMinTimes<Space, Node, Bound>, GetMaxTimesAct<Space, Node, Bound> >::type {};
-
-template <typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getRunningAverages() {
-  return Registry<Space, Node, Bound>::gReg->getRunningAverages();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetRunningAveragesAct : hpx::actions::make_direct_action<
-  decltype(&getRunningAverages<Space, Node, Bound>), &getRunningAverages<Space, Node, Bound>, GetRunningAveragesAct<Space, Node, Bound> >::type {};
-
-template <typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getBacktracks() {
-  return Registry<Space, Node, Bound>::gReg->getBacktracks();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetBacktracksAct : hpx::actions::make_direct_action<
-  decltype(&getBacktracks<Space, Node, Bound>), &getBacktracks<Space, Node, Bound>, GetBacktracksAct<Space, Node, Bound> >::type {};
-
-template <typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getPrunes() {
-  return Registry<Space, Node, Bound>::gReg->getPrunes();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetPrunesAct : hpx::actions::make_direct_action<
-  decltype(&getPrunes<Space, Node, Bound>), &getPrunes<Space, Node, Bound>, GetPrunesAct<Space, Node, Bound> >::type {};
-*////////////////////////////////////////////////////////
 template <typename Space, typename Node, typename Bound>
 void setStopSearchFlag() {
   Registry<Space, Node, Bound>::gReg->setStopSearchFlag();

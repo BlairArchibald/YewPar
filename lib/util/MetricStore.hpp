@@ -171,5 +171,4 @@ std::vector<std::uint64_t> getPrunes() {
 }
 struct GetPrunesAct : hpx::actions::make_direct_action<
   decltype(&getPrunes), &getPrunes, GetPrunesAct >::type {};
-
 }
