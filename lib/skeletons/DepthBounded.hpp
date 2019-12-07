@@ -17,6 +17,7 @@
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
 #include "util/func.hpp"
+#include "util/MetricStore.hpp"
 
 #include "Common.hpp"
 
@@ -181,6 +182,8 @@ struct DepthBounded {
                           const hpx::naming::id_type donePromiseId) {
     auto reg = Registry<Space, Node, Bound>::gReg;
 
+    auto store = MetricStore::store;
+
     std::vector<std::uint64_t> countMap;
     if constexpr(isCountNodes) {
         countMap.resize(reg->params.maxDepth + 1);
@@ -204,10 +207,10 @@ struct DepthBounded {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
      	const std::uint64_t time = (std::uint64_t) diff.count();
-      reg->updateNodesVisited(childDepth, nodeCount);
-      reg->updateTimes(childDepth, time);
-      reg->updatePrunes(childDepth, prunes);
-      reg->updateBacktracks(childDepth, backtracks);
+      store->updateNodesVisited(childDepth, nodeCount);
+      store->updateTimes(childDepth, time);
+      store->updatePrunes(childDepth, prunes);
+      store->updateBacktracks(childDepth, backtracks);
     }
 
     // Atomically updates the (process) local counter
@@ -255,6 +258,10 @@ struct DepthBounded {
     }
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params, metrics));
+
+    if constexpr(metrics) {
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth));
+    }
 
     Policy::initPolicy();
 

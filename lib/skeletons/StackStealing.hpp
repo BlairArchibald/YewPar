@@ -280,6 +280,9 @@ struct StackStealing {
                                 const int stackDepth = 0,
                                 const int depth = -1) {
     auto reg = Registry<Space, Node, Bound>::gReg;
+
+    auto store = MetricStore::store;
+
     std::vector<hpx::future<void> > futures;
 
     std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
@@ -295,10 +298,10 @@ struct StackStealing {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const std::uint64_t time = (std::uint64_t) diff.count();
-      reg->updateNodesVisited(startingDepth, nodeCount);
-      reg->updateTimes(startingDepth, time);
-      reg->updatePrunes(startingDepth, prunes);
-      reg->updateBacktracks(startingDepth, backtracks);
+      store->updateNodesVisited(startingDepth, nodeCount);
+      store->updateTimes(startingDepth, time);
+      store->updatePrunes(startingDepth, prunes);
+      store->updateBacktracks(startingDepth, backtracks);
     }
     // Atomically updates the (process) local counter
     if constexpr(isCountNodes) {
@@ -453,7 +456,7 @@ struct StackStealing {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
-    
+
     std::chrono::time_point<std::chrono::steady_clock> t1;
     if constexpr(metrics) {
       t1 = std::chrono::steady_clock::now();
@@ -465,6 +468,10 @@ struct StackStealing {
 
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
+
+    if constexpr(metrics) {
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth));
+    }
 
     Policy::initPolicy();
 

@@ -12,10 +12,8 @@
 
 #include <boost/random/random_device.hpp>
 
-#include <hpx/lcos/local/composable_guard.hpp>
 #include <hpx/runtime/actions/basic_action.hpp>
 #include <hpx/traits/action_stacksize.hpp>
-#include <hpx/lcos/local/channel.hpp>
 
 #include "skeletons/API.hpp"
 
@@ -42,7 +40,7 @@ struct Registry {
   // Counting Nodes
   using countMapT = std::vector<std::atomic<std::uint64_t> >;
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
-
+/*
   // Dissertation
   using MetricsVecPtr = std::unique_ptr<std::vector<std::atomic<std::uint64_t> > >;
   using MetricsVecAtomic = std::vector<std::atomic<std::uint64_t> >;
@@ -65,10 +63,7 @@ struct Registry {
 
   // Counting pruning
   MetricsVecPtr prunes;
-
-  // Random number generator, for sampling from times
-  boost::random::random_device gen;
-
+*/
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
   // locality.
@@ -78,7 +73,7 @@ struct Registry {
     this->params = params;
     this->localBound = params.initialBound;
     counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
-    
+    /*
     if (includeMetrics) {
       maxTimes = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
       minTimes = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
@@ -88,7 +83,7 @@ struct Registry {
       nodesVisited = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
       backtracks = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
       prunes = std::make_unique<MetricsVecAtomic>(params.maxDepth + 1);
-    }
+    }*/
 
   }
 
@@ -99,7 +94,7 @@ struct Registry {
       (*counts)[i] += cntMap[i];
     }
   }
-
+/*
   void updateTimes(const unsigned depth, const std::uint64_t time) {
     (*accumulatedTimes)[depth] += time;
     if (time > 0) {
@@ -121,7 +116,13 @@ struct Registry {
   void updateBacktracks(const unsigned depth, std::uint64_t b) {
     (*backtracks)[depth] += b;
   }
-
+*/
+  std::vector<std::uint64_t> getCounts() {
+    std::vector<std::uint64_t> res;
+    std::transform(counts.begin(), counts.end(), [](const auto & c) { return c.load(); });
+    return res;
+  }
+  /*
   MetricsVec getNodeCount() const {
     return transformVec(*nodesVisited);
   }
@@ -152,7 +153,7 @@ struct Registry {
 
   TimesVec getTimes() const {
     return *workerTimes;
-  }
+  }*/
 
   // BNB
   template <typename Cmp>
@@ -208,7 +209,7 @@ struct GetCountsAct : hpx::actions::make_direct_action<
   decltype(&getCounts<Space, Node, Bound>), &getCounts<Space, Node, Bound>, GetCountsAct<Space, Node, Bound> >::type {};
 
 ///////////////////////////////////////////////////////
-template <typename Space, typename Node, typename Bound>
+/*template <typename Space, typename Node, typename Bound>
 std::vector<std::uint64_t> getNodeCount() {
   return Registry<Space, Node, Bound>::gReg->getNodeCount();
 }
@@ -263,7 +264,7 @@ std::vector<std::uint64_t> getPrunes() {
 template <typename Space, typename Node, typename Bound>
 struct GetPrunesAct : hpx::actions::make_direct_action<
   decltype(&getPrunes<Space, Node, Bound>), &getPrunes<Space, Node, Bound>, GetPrunesAct<Space, Node, Bound> >::type {};
-///////////////////////////////////////////////////////
+*////////////////////////////////////////////////////////
 template <typename Space, typename Node, typename Bound>
 void setStopSearchFlag() {
   Registry<Space, Node, Bound>::gReg->setStopSearchFlag();

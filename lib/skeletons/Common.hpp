@@ -3,6 +3,7 @@
 
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
+#include "util/MetricStore.hpp"
 #include <algorithm>
 #include <numeric>
 
