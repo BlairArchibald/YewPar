@@ -132,13 +132,7 @@ static auto printTimes(const unsigned maxDepth) {
     if (sums[i] > 0) hpx::cout << "Accumulated time at Depth " << i << ": " << sums[i] << hpx::endl;
     if (minVec[i] > 0) hpx::cout << "Min Time at Depth " << i << ": " << minVec[i] << hpx::endl;
     if (maxVec[i] > 0) hpx::cout << "Max Time at Depth " << i << ": " << maxVec[i]  << hpx::endl;
-    for (const auto & rv : runningAveragesAll[i]) {
-      if (rv > 0) {
-        hpx::cout << "Runnning average at depth " << i << ": " << rv << hpx::endl;
-      }
-    }
   }
-
 }
 
 template <typename Space, typename Node, typename Bound>
