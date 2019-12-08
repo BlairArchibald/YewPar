@@ -90,7 +90,7 @@ static auto printTimes(const unsigned maxDepth) {
       }
     }
   }
-
+/*
   for (i = 0; i <= vec.size(); i++) {
 		if (vec[i].size() > 0) {
       int size = vec.size();
@@ -109,7 +109,7 @@ static auto printTimes(const unsigned maxDepth) {
     	hpx::cout << "Mean at Depth " << i << ": " << mean << hpx::endl;
   	}
 	}
-
+*/
   auto minTimesAll = hpx::lcos::broadcast<GetMinTimesAct>(hpx::find_all_localities()).get();
 
   auto maxTimesAll = hpx::lcos::broadcast<GetMaxTimesAct>(hpx::find_all_localities()).get();
@@ -117,18 +117,26 @@ static auto printTimes(const unsigned maxDepth) {
   auto runningAveragesAll = hpx::lcos::broadcast<GetRunningAveragesAct>(hpx::find_all_localities()).get();
 
   std::vector<std::uint64_t> minVec(maxDepth + 1), maxVec(maxDepth + 1);
-  for (int i = 0; i <= 6; i++) {
+  for (int i = 0; i <= minTimesAll.size(); i++) {
     for (int j = 0; j < minTimesAll[i].size()) {
-      hpx::cout << minTimesAll[i][j] << hpx::endl;
-      hpx::cout << maxTimesAll[i][j] << hpx::endl;
-      hpx::cout << runningAveragesAll[i][j] << hpx::endl;
+      if (minTimesAll[i][j] < minVec[i]) {
+        minVec[i] = minTimesAll[i][j];
+      }
+      if (maxTimesAll[i][j] > maxVec[i]) {
+        maxVec[i] = maxTimesAll[i][j];
+      }
     }
   }
 
   for (int i = 0; i < 6; i++) {
     if (sums[i] > 0) hpx::cout << "Accumulated time at Depth " << i << ": " << sums[i] << hpx::endl;
-    if (minVec[i] > 0) hpx::cout << "Min Time at Depth " << i << minVec[i] << hpx::endl;
-    if (maxVec[i] > 0) hpx::cout << "Max Time at Depth " << i << maxVec[i] << hpx::endl;
+    if (minVec[i] > 0) hpx::cout << "Min Time at Depth " << i << ": " << minVec[i] << hpx::endl;
+    if (maxVec[i] > 0) hpx::cout << "Max Time at Depth " << i << ": " << maxVec[i]  << hpx::endl;
+    for (const auto & rv : runningAveragesAll[i]) {
+      if (rv > 0) {
+        hpx::cout << "Runnning average at depth " << i << ": " << rv << hpx::endl;
+      }
+    }
   }
 
 }
