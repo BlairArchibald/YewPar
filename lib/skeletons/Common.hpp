@@ -118,14 +118,14 @@ static auto printTimes(const unsigned maxDepth) {
 
   std::vector<std::uint64_t> minVec(maxDepth + 1), maxVec(maxDepth + 1);
   for (int i = 0; i <= 6; i++) {
-    for (int j = 0; j < minTimesAll.size()) {
+    for (int j = 0; j < minTimesAll[i].size()) {
       hpx::cout << minTimesAll[i][j] << hpx::endl;
       hpx::cout << maxTimesAll[i][j] << hpx::endl;
       hpx::cout << runningAveragesAll[i][j] << hpx::endl;
     }
   }
 
-  for (int i = 0; i < timesVec.size(); i++) {
+  for (int i = 0; i < 6; i++) {
     if (sums[i] > 0) hpx::cout << "Accumulated time at Depth " << i << ": " << sums[i] << hpx::endl;
     if (minVec[i] > 0) hpx::cout << "Min Time at Depth " << i << minVec[i] << hpx::endl;
     if (maxVec[i] > 0) hpx::cout << "Max Time at Depth " << i << maxVec[i] << hpx::endl;
