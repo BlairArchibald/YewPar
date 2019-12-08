@@ -118,7 +118,7 @@ static auto printTimes(const unsigned maxDepth) {
 
   std::vector<std::uint64_t> minVec(maxDepth + 1), maxVec(maxDepth + 1);
   for (int i = 0; i <= minTimesAll.size(); i++) {
-    for (int j = 0; j < minTimesAll[i].size()) {
+    for (int j = 0; j < minTimesAll[i].size(); j++) {
       if (minTimesAll[i][j] < minVec[i]) {
         minVec[i] = minTimesAll[i][j];
       }
