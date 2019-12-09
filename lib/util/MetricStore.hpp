@@ -58,7 +58,6 @@ struct MetricStore {
     (*accumulatedTimes)[depth] += time;
     (*maxTimes)[depth] = (time > (*maxTimes)[depth].load()) ? time : (*maxTimes)[depth].load();
     (*minTimes)[depth] = (time < (*minTimes)[depth].load()) ? time : (*minTimes)[depth].load();
-    (*runningAverages)[depth] = ((*runningAverages)[depth].load() + time)/(*nodesVisited)[depth];
   }
 
   void updatePrunes(const unsigned depth, std::uint64_t p) {
