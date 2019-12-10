@@ -111,7 +111,7 @@ static auto printTimes(const unsigned maxDepth) {
 	}
 */
   auto minTimesAll = hpx::lcos::broadcast<GetMinTimesAct>(hpx::find_all_localities()).get();
-
+/*
   auto maxTimesAll = hpx::lcos::broadcast<GetMaxTimesAct>(hpx::find_all_localities()).get();
 
   auto runningAveragesAll = hpx::lcos::broadcast<GetRunningAveragesAct>(hpx::find_all_localities()).get();
@@ -132,7 +132,7 @@ static auto printTimes(const unsigned maxDepth) {
     if (sums[i] > 0) hpx::cout << "Accumulated time at Depth " << i << ": " << sums[i] << hpx::endl;
     if (minVec[i] > 0) hpx::cout << "Min Time at Depth " << i << ": " << minVec[i] << hpx::endl;
     if (maxVec[i] > 0) hpx::cout << "Max Time at Depth " << i << ": " << maxVec[i]  << hpx::endl;
-  }
+  }*/
 }
 
 template <typename Space, typename Node, typename Bound>
