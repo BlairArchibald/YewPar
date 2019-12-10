@@ -114,8 +114,8 @@ static auto printTimes(const unsigned maxDepth) {
 /*
   auto maxTimesAll = hpx::lcos::broadcast<GetMaxTimesAct>(hpx::find_all_localities()).get();
 
-  auto runningAveragesAll = hpx::lcos::broadcast<GetRunningAveragesAct>(hpx::find_all_localities()).get();
-
+  //auto runningAveragesAll = hpx::lcos::broadcast<GetRunningAveragesAct>(hpx::find_all_localities()).get();
+/*
   std::vector<std::uint64_t> minVec(maxDepth + 1), maxVec(maxDepth + 1);
   for (int i = 0; i <= minTimesAll.size(); i++) {
     for (int j = 0; j < minTimesAll[i].size(); j++) {
@@ -126,7 +126,7 @@ static auto printTimes(const unsigned maxDepth) {
         maxVec[i] = maxTimesAll[i][j];
       }
     }
-  }
+  }*/
 
   for (int i = 0; i < 6; i++) {
     if (sums[i] > 0) hpx::cout << "Accumulated time at Depth " << i << ": " << sums[i] << hpx::endl;
