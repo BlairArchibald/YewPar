@@ -4,16 +4,12 @@
 #include <algorithm>
 #include <atomic>
 #include <cstdint>
-#include <forward_list>
 #include <iterator>
 #include <memory>
 #include <vector>
-#include <mutex>
 
-#include <hpx/lcos/local/composable_guard.hpp>
 #include <hpx/runtime/actions/basic_action.hpp>
 #include <hpx/traits/action_stacksize.hpp>
-#include <hpx/lcos/local/channel.hpp>
 
 #include "skeletons/API.hpp"
 
@@ -41,17 +37,6 @@ struct Registry {
   using countMapT = std::vector<std::atomic<std::uint64_t> >;
   std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
 
-  // Dissertation
-  using MetricsVecPtr = std::unique_ptr<std::vector<std::atomic<std::uint64_t> > >;
-  using MetricsVec = std::vector<std::uint64_t>;
-  MetricsVecPtr maxTimes;
-  MetricsVecPtr minTimes;
-  MetricsVecPtr runningAverage;
-  MetricsVecPtr timesVec;
-  MetricsVecPtr nodesVisited;
-  MetricsVecPtr backtracks;
-  MetricsVecPtr prunes;
-
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
   // locality.
@@ -60,14 +45,7 @@ struct Registry {
     this->root = root;
     this->params = params;
     this->localBound = params.initialBound;
-    maxTimes = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
-    minTimes = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
-    runningAverage = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
-    timesVec = std::make_unique<MetricsVecPtr>(params.maxDepth + 1)
-    counts = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);   
-    nodesVisited = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
-    backtracks = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
-    prunes = std::make_unique<MetricsVecPtr>(params.maxDepth + 1);
+    counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
   }
 
   // Counting
@@ -77,54 +55,7 @@ struct Registry {
       (*counts)[i] += cntMap[i];
     }
   }
-
-  void updateTimes(const unsigned depth, const std::uint64_t time) {
-    (*timesVec)[depth] += time;
-    (*maxTimes)[depth] = (time > (*maxTimes[depth])) ? (time) : (*maxTimes)[depth];
-    (*minTimes)[depth] = (time < (*minTimes[depth])) ? (time) : (*minTimes)[depth];
-    (*runningAverage)[depth] = ((*runningAverage)[depth] + time)/nodesVisited;
-  }
-
-  void updatePrunes(const unsigned depth, std::uint64_t prunes) {
-    (*prunes)[depth] += prunes;
-  }
-
-  void updateNodesVisited(const unsigned depth, std::uint64_t nodes) {
-    (*nodesVisited)[depth] += nodes;
-  }
-
-  void updateBacktracks(const unsigned depth, std::uint64_t backtracks) {
-    (*backtracks)[depth] += backtracks;
-  }
-
-  MetricsVec getNodeCount() const {
-    return transformVec(*nodesVisited);
-  }
-
-  MetricsVec getBacktracks() const {
-    return transformVec(*backtracks);
-  }
-
-  MetricsVec getPrunes() const {
-    return transformVec(*prunes);
-  }
-
-  MetricsVec getAccumulatedTimes() const {
-    return transformVec(*timesVec);
-  }
-
-  MetricsVec getMinTimes() const {
-    return transformVec(*minTime);
-  }
-
-  MetricsVec getMaxTimes() const {
-    return transformVec(*maxTime);
-  }
-
-  MetricsVec getRunningAverages() const {
-    return transformVec(*runningAverage);
-  }
-
+  
   // BNB
   template <typename Cmp>
   void updateRegistryBound(Bound bnd) {
@@ -143,17 +74,6 @@ struct Registry {
 
   void setStopSearchFlag() {
     stopSearch.store(true);
-  }
-
-private:
-  inline MetricsVec transformVec(
-    const std::vector<std::atomic<std::uint64_t> > & vec
-  ) const {
-    // Convert std::atomic<T> -> T by loading it
-    MetricsVec res;
-    std::transform(vec.begin(), vec.end(), std::back_inserter(res),
-    [](const auto & c) { return c.load(); });
-    return res;
   }
 
 };
@@ -178,63 +98,6 @@ template <typename Space, typename Node, typename Bound>
 struct GetCountsAct : hpx::actions::make_direct_action<
   decltype(&getCounts<Space, Node, Bound>), &getCounts<Space, Node, Bound>, GetCountsAct<Space, Node, Bound> >::type {};
 
-///////////////////////////////////////////////////////
-template <typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getNodeCount() {
-  return Registry<Space, Node, Bound>::gReg->getNodeCount();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetNodeCountAct : hpx::actions::make_direct_action<
-  decltype(&getNodeCount<Space, Node, Bound>), &getNodeCount<Space, Node, Bound>, GetNodeCountAct<Space, Node, Bound> >::type {};
-
-template <typename Space, typename Node, typename Bound>
-std::vector<std::vector<std::uint64_t> > getTimes() {
-  return Registry<Space, Node, Bound>::gReg->getAccumulatedTimes();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetTimesAct : hpx::actions::make_direct_action<
-  decltype(&getTimes<Space, Node, Bound>), &getTimes<Space, Node, Bound>, GetTimesAct<Space, Node, Bound> >::type {};
-
-template<typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getMaxTimes() {
-  return Registry<Space, Node, Bound>::gReg->getMaxTimes();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetMaxTimesAct : hpx::actions::make_direct_action<
-  decltype(&getTimes<Space, Node, Bound>), &getMaxTimes<Space, Node, Bound>, GetMaxTimesAct<Space, Node, Bound> >::type {};
-
-template<typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getMinTimes() {
-  return Registry<Space, Node, Bound>::gReg->getMaxTimes();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetMinTimesAct : hpx::actions::make_direct_action<
-  decltype(&getTimes<Space, Node, Bound>), &getMinTimes<Space, Node, Bound>, GetMaxTimesAct<Space, Node, Bound> >::type {};
-
-template <typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getRunningAverages() {
-  return Registry<Space, Node, Bound>::gReg->getRunningAverages();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetRunningAveragesAct : hpx::make_direct_action<
-  decltype(&getRunningAverages<Space, Node, Bound>), &getRunningAverages<Space, Node, Bound>, GetRunningAveragesAct<Space, Node, Bound> >::type {};
-
-template <typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getBacktracks() {
-  return Registry<Space, Node, Bound>::gReg->getBacktracks();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetBacktracksAct : hpx::actions::make_direct_action<
-  decltype(&getBacktracks<Space, Node, Bound>), &getBacktracks<Space, Node, Bound>, GetBacktracksAct<Space, Node, Bound> >::type {};
-
-template <typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getPrunes() {
-  return Registry<Space, Node, Bound>::gReg->getPrunes();
-}
-template <typename Space, typename Node, typename Bound>
-struct GetPrunesAct : hpx::actions::make_direct_action<
-  decltype(&getPrunes<Space, Node, Bound>), &getPrunes<Space, Node, Bound>, GetPrunesAct<Space, Node, Bound> >::type {};
-///////////////////////////////////////////////////////
 template <typename Space, typename Node, typename Bound>
 void setStopSearchFlag() {
   Registry<Space, Node, Bound>::gReg->setStopSearchFlag();

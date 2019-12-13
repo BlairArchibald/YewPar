@@ -30,7 +30,7 @@ struct Budget {
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
-  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 1> >::type Metrics;
+  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics;
   static constexpr unsigned metrics = Metrics::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
@@ -171,6 +171,8 @@ struct Budget {
                           const hpx::naming::id_type donePromiseId) {
     auto reg = Registry<Space, Node, Bound>::gReg;
 
+    auto store = MetricStore::store;
+
     std::vector<std::uint64_t> countMap;
     if constexpr(isCountNodes) {
         countMap.resize(reg->params.maxDepth + 1);
@@ -191,10 +193,10 @@ struct Budget {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const std::uint64_t time = (std::uint64_t) diff.count();
-      reg->updateNodeCount(childDepth, nodeCount);
-      reg->updateTime(childDepth, time);
-      reg->updateBacktracks(childDepth, backtracks);
-      reg->updatePrune(childDepth, prunes);
+      store->updateNodesVisited(childDepth, nodeCount);
+      store->updateTimes(childDepth, time);
+      store->updateBacktracks(childDepth, backtracks);
+      store->updatePrunes(childDepth, prunes);
     }
 
     // Atomically updates the (process) local counter
@@ -244,6 +246,10 @@ struct Budget {
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
+    if constexpr(metrics) {
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth));
+    }
+
     Policy::initPolicy();
 
     auto threadCount = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 1;
@@ -267,10 +273,10 @@ struct Budget {
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
-      printTimes<Space, Node, Bound>(params.maxDepth);
-      printPrunes<Space, Node, Bound>(params.maxDepth);
-      printNodeCounts<Space, Node, Bound>(params.maxDepth);
-      printBacktracks<Space, Node, Bound>(params.maxDepth);
+      printTimes(params.maxDepth);
+      printPrunes(params.maxDepth);
+      printNodeCounts(params.maxDepth);
+      printBacktracks(params.maxDepth);
     }
 
     // Return the right thing

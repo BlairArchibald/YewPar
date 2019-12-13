@@ -3,8 +3,10 @@
 
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
+#include "util/MetricStore.hpp"
 #include <algorithm>
 #include <numeric>
+#include <vector>
 
 namespace YewPar { namespace Skeletons {
 
@@ -35,93 +37,62 @@ template <typename Act>
 static auto countDepths(const unsigned maxDepth) {
   auto cntVecAll = hpx::lcos::broadcast<Act>(hpx::find_all_localities()).get();
   std::vector<std::uint64_t> res(maxDepth + 1);
-  for (auto i = 0; i <= maxDepth; ++i) {
-    for (const auto & cnt : cntVecAll) {
-      	res[i] += cnt[i];
-    }
-  }
+
+  std::uint64_t i;
+	for (i = 0; i <= maxDepth; i++) {
+		for (const auto & vec : cntVecAll) {
+			res[i] += vec[i];
+		}
+	}
 
   return res;
 }
 
 template <typename Act>
 static auto printMetric(const std::string && metric, const unsigned maxDepth) {
-  auto metricsVec = hpx::lcos::broadcast<Act>(hpx::find_all_localities()).get();
+  auto metricsVec = countDepths<Act>(maxDepth);
+  
   for (int i = 0; i < metricsVec.size(); i++) {
-    hpx::cout << "Total number of " << metric << " at Depth " << i << ": " << cnt << hpx::endl;
+		if (metricsVec[i] > 0) {
+    	hpx::cout << "Total number of " << metric << " at Depth " << i << ": " << metricsVec[i] << hpx::endl;
+		}
   }
 }
 
-template <typename Space, typename Node, typename Bound>
 static auto printNodeCounts(const unsigned maxDepth) {
-  printMetric("Nodes", maxDepth);
+  printMetric<GetNodeCountAct>("Nodes", maxDepth);
 }
 
-template <typename Space, typename Node, typename Bound>
 static auto printPrunes(const unsigned maxDepth) {
-  printMetric("Prunes", maxDepth);
+  printMetric<GetPrunesAct>("Prunes", maxDepth);
 }
 
-template <typename Space, typename Node, typename Bound>
 static auto printBacktracks(const unsigned maxDepth) {
-  printMetric("Backtracks", maxDepth);
+  printMetric<GetBacktracksAct>("Backtracks", maxDepth);
 }
 
-template <typename Space, typename Node, typename Bound>
 static auto printTimes(const unsigned maxDepth) {
-  auto timesVec = hpx::lcos::broadcast<GetTimesAct<Space, Node, Bound> >(
-    hpx::find_all_localities()).get();
 
+  auto timesVec = hpx::lcos::broadcast<GetAccumulatedTimesAct>(hpx::find_all_localities()).get();
+
+	std::uint64_t i;
   // Get the median from each, compute the L1 norm and compute the mean
   std::vector<std::uint64_t> sums;
-  std::vector<std::vector<std::uint64_t> > vec(maxDepth + 1);
-  for (const auto & times : timesVec) {
-    int depth = 0;
-    for (const auto & time : times) {
-      sums[depth] += time;
-      vec[depth].push_back(time);
-    }
-  }
-
-  for (int i = 0; i <= maxDepth; i++) {
-    auto size = times.size();
-    std::sort(vec[i].begin(), vec[i].end());
-    std::uint64_t median;
-    if ((times.size() % 2) == 0) {
-      median = (times[(size/2)-1] + times[(size/2)]) / 2;
-    } else {
-      median = times[size/2];
-    }
-    hpx::cout << "Median at Depth " << i << ": " << median << hpx::endl;
-
-    auto mean = std::accumulate(vec[i].begin(), vec[i].end(), 0)/size;
-    hpx::cout << "Mean at Depth " << i << ": " << mean << hpx::endl;
-  }  
-
-  auto minTimesAll = hpx::lcos::broadcast<GetMinTimesAct<Space, Node, Bound> >(
-    hpx::find_all_localities()).get();
-
-  auto maxTimesAll = hpx::lcos::broadcast<GetMaxTimesAct<Space, Node, Bound> >(
-    hpx::find_all_localities()).get();
-
-  auto runningAveragesAll = hpx::lcos::broadcast<GetRunningAveragesAct<Space, Node, Bound> >(
-    hpx::find_all_localities()).get();
-
-  std::vector<std::uint64_t> minVec(maxDepth + 1), maxVec(maxDepth + 1);
-  for (int i = 0; i < minTimesAll.size(); i++) {
-    for (int j = 0; j < minTimesAll[i].size(); j++) {
-      if (minVec[j] < minTimesAll[i][j]) {
-        minVec[j] = minTimesAll[i][j];
-      } else if (maxVec[j] > maxTimesAll[i][j]) {
-        maxVec[j] = maxTimesAll[i][j];
+  std::vector<std::vector<std::uint64_t> > vec;
+  for (i = 0; i <= maxDepth; i++) {
+    vec.push_back({});
+		sums.push_back(0);
+		for (const auto & times : timesVec) {
+      if (times[i] > 0 && times[i] != ULLONG_MAX) {
+        sums[i] += times[i];
+        vec[i].push_back(times[i]);
+        hpx::cout << times[i] << hpx::endl;
       }
     }
   }
 
-  for (int i = 0; i < timesVec.size(); i++) {
-    hpx::cout << "Accumulated time at Depth " << i << ": " << sums[i] << hpx::endl;
-    hpx::cout << "Min Time at Depth " << i << minVec[i] << hpx::endl;
-    hpx::cout << "Max Time at Depth " << i << maxVec[i] << hpx::endl;
+  for (int i = 0; i < 6; i++) {
+    if (sums[i] > 0) hpx::cout << "Accumulated time at Depth " << i << ": " << sums[i] << hpx::endl;
   }
 
 }
