@@ -17,6 +17,7 @@
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
 #include "util/func.hpp"
+#include "util/MetricStore.hpp"
 
 #include "Common.hpp"
 
@@ -53,7 +54,7 @@ struct DepthBounded {
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
-  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 1> >::type Metrics;
+  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics;
   static constexpr unsigned metrics = Metrics::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
@@ -181,6 +182,8 @@ struct DepthBounded {
                           const hpx::naming::id_type donePromiseId) {
     auto reg = Registry<Space, Node, Bound>::gReg;
 
+    auto store = MetricStore::store;
+
     std::vector<std::uint64_t> countMap;
     if constexpr(isCountNodes) {
         countMap.resize(reg->params.maxDepth + 1);
@@ -202,12 +205,12 @@ struct DepthBounded {
 
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
      	const std::uint64_t time = (std::uint64_t) diff.count();
-      reg->updateNodeCount(childDepth, nodeCount);
-      reg->updateTime(childDepth, time);
-      reg->updatePrune(childDepth, prunes);
-      reg->updateBacktracks(childDepth, backtracks);
+      store->updateNodesVisited(childDepth, nodeCount);
+      store->updateTimes(childDepth, time);
+      store->updatePrunes(childDepth, prunes);
+      store->updateBacktracks(childDepth, backtracks);
     }
 
     // Atomically updates the (process) local counter
@@ -250,11 +253,15 @@ struct DepthBounded {
         t1 = std::chrono::steady_clock::now();
     }
 
-    if constexpr (verbose) {
+    if constexpr(verbose) {
         printSkeletonDetails(params);
     }
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
+
+    if constexpr(metrics) {
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth));
+    }
 
     Policy::initPolicy();
 
@@ -280,10 +287,10 @@ struct DepthBounded {
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
-      printTimes<Space, Node, Bound>(params.maxDepth);
-      printPrunes<Space, Node, Bound>(params.maxDepth);
-      printNodeCounts<Space, Node, Bound>(params.maxDepth);
-      printBacktracks<Space, Node, Bound>(params.maxDepth);
+      printTimes(params.maxDepth);
+      printPrunes(params.maxDepth);
+      printNodeCounts(params.maxDepth);
+      printBacktracks(params.maxDepth);
     }
     
     // Return the right thing

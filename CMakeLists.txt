@@ -8,7 +8,6 @@ project(YewPar CXX)
 find_package(HPX)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 

@@ -1,0 +1,26 @@
+CPU Time (Before collecting metrics) 17
+Median at Depth 0: 0
+Mean at Depth 0: 0
+Median at Depth 1: 0
+Mean at Depth 1: 0
+Median at Depth 2: 140228970676224
+Mean at Depth 2: 0
+Median at Depth 3: 18040890176932804591
+Mean at Depth 3: 3
+Median at Depth 4: 140231756214240
+Mean at Depth 4: 15
+Median at Depth 5: 94178486500080
+Mean at Depth 5: 4
+Min Time at Depth 018446744073709551615
+Total number of Nodes at Depth 1: 130
+Total number of Nodes at Depth 2: 4494
+Total number of Nodes at Depth 3: 57860
+Total number of Nodes at Depth 4: 252511
+Total number of Nodes at Depth 5: 671943
+Total number of Backtracks at Depth 1: 1
+Total number of Backtracks at Depth 2: 129
+Total number of Backtracks at Depth 3: 4365
+Total number of Backtracks at Depth 4: 53495
+Total number of Backtracks at Depth 5: 435474
+MaxClique Size = 21
+cpu = 17700

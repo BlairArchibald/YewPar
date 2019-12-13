@@ -1,0 +1,30 @@
+MaxClique Size = 26
+cpu = 627688
+MaxClique Size = 26
+cpu = 597347
+MaxClique Size = 26
+cpu = 593452
+MaxClique Size = 26
+cpu = 607497
+MaxClique Size = 26
+cpu = 616725
+[mpiexec@gpgnode-04] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-04] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-04] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-04] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-04] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-04] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-04] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-04] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-04] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-04] Press Ctrl-C again to force abort
+MaxClique Size = 26
+cpu = 596299
+MaxClique Size = 26
+cpu = 528780
+MaxClique Size = 26
+cpu = 587012
+MaxClique Size = 26
+cpu = 312990
+MaxClique Size = 26
+cpu = 574586
