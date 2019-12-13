@@ -24,9 +24,6 @@ struct MetricStore {
   using TimesVec = std::vector<std::vector<std::uint64_t> >;
 
   // Regularity Metrics
-  MetricsVecPtr maxTimes;
-  MetricsVecPtr minTimes;
-  MetricsVecPtr runningAverages;
   MetricsVecPtr accumulatedTimes;
 
   // For node throughput
@@ -42,12 +39,6 @@ struct MetricStore {
 
   // Initialises the store
   void init(const unsigned maxDepth) {
-    maxTimes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
-    minTimes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
-		for (int i = 0; i <= maxDepth; i++) {
-			(*minTimes)[i] = ULLONG_MAX;
-		}
-    runningAverages = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     accumulatedTimes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     nodesVisited = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     backtracks = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
@@ -56,8 +47,6 @@ struct MetricStore {
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
     (*accumulatedTimes)[depth] += time;
-    (*maxTimes)[depth] = (time > (*maxTimes)[depth].load()) ? time : (*maxTimes)[depth].load();
-    (*minTimes)[depth] = (time < (*minTimes)[depth].load()) ? time : (*minTimes)[depth].load();
   }
 
   void updatePrunes(const unsigned depth, std::uint64_t p) {
@@ -88,18 +77,6 @@ struct MetricStore {
     return transformVec(*accumulatedTimes);
   }
 
-  MetricsVec getMinTimes() const {
-    return transformVec(*minTimes);
-  }
-
-  MetricsVec getMaxTimes() const {
-    return transformVec(*maxTimes);
-  }
-
-  MetricsVec getRunningAverages() const {
-    return transformVec(*runningAverages);
-  }
-
   ~MetricStore() = default;
 
 private:
@@ -128,24 +105,6 @@ std::vector<std::uint64_t> getNodeCount() {
 }
 struct GetNodeCountAct : hpx::actions::make_direct_action<
   decltype(&getNodeCount), &getNodeCount, GetNodeCountAct>::type {};
-
-std::vector<std::uint64_t> getMaxTimes() {
-  return MetricStore::store->getMaxTimes();
-}
-struct GetMaxTimesAct : hpx::actions::make_direct_action<
-  decltype(&getMaxTimes), &getMaxTimes, GetMaxTimesAct>::type {};
-
-std::vector<std::uint64_t> getMinTimes() {
-  return MetricStore::store->getMinTimes();
-}
-struct GetMinTimesAct : hpx::actions::make_direct_action<
-  decltype(&getMinTimes), &getMinTimes, GetMinTimesAct>::type {};
-
-std::vector<std::uint64_t> getRunningAverages() {
-  return MetricStore::store->getRunningAverages();
-}
-struct GetRunningAveragesAct : hpx::actions::make_direct_action<
-  decltype(&getRunningAverages), &getRunningAverages, GetRunningAveragesAct>::type {};
 
 std::vector<std::uint64_t> getAccumulatedTimes() {
 	return MetricStore::store->getAccumulatedTimes();
