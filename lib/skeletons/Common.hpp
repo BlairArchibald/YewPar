@@ -55,12 +55,6 @@ static auto countDepths(const unsigned maxDepth) {
 template <typename Act>
 static auto printMetric(const std::string && metric, const unsigned maxDepth) {
   auto metricsVec = countDepths<Act>(maxDepth);
-  
-  /*for (int i = 0; i < metricsVec.size(); i++) {
-    if (metricsVec[i] > 0) {
-      hpx::cout << "Total number of " << metric << " at Depth " << i << ": " << metricsVec[i] << hpx::endl;
-    }
-  }*/
 }
 
 static auto printNodeCounts(const unsigned maxDepth) {
