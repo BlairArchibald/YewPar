@@ -86,7 +86,7 @@ static auto printBacktracks(const unsigned maxDepth) {
 
 static auto printTimes(const unsigned maxDepth) {
 
-  auto timeVec = hpx::lcos::broadcast<GetAccumulatedTimesAct>(hpx::find_all_localities()).get();
+  auto timeVec = countDepths<GetAccumulatedTimesAct>(maxDepth);
 
   auto timeBucketsAll = hpx::lcos::broadcast<GetTimeBucketsAct>(hpx::find_all_localities()).get();
 
@@ -94,44 +94,12 @@ static auto printTimes(const unsigned maxDepth) {
   std::uint64_t idx = 0, depth = 0;
 
   for (std::vector<std::vector<std::uint64_t> > bucketsLocality : timeBucketsAll) {
-    for (const auto & buckets : bucketsLocality) {
-      for (std::uint64_t bucket : buckets) {
-        timeBuckets[idx][depth++] += bucket;
+    for (int i = 0; i <= maxDepth; i++) {
+      for (const auto & bucket : bucketsLocality[i]) {
+        hpx::cout << "Depth " << i << " Bucket " << ": " << bucket << hpx::endl;
       }
-      depth = 0;
-      idx++;
     }
   }
-
-  // Prints all of the data in the vec
-  auto printTimeMetrics = [&](
-    std::vector<std::vector<std::uint64_t> > && vec,
-    const std::string&& title,
-    const auto & fn) -> void {
-
-     hpx::cout  << title << hpx::endl;
-     hpx::cout << "=================" << hpx::endl;
-
-     int j = 0;
-     for (int i = 0; i <= maxDepth; i++) {
-       for (const auto & metric : vec[i]) {
-         if (metric > 0) {
-          fn(metric, i, j);
-         }
-       }
-     }
-
-    hpx::cout << "=================" << hpx::endl;
-  };
-
-  printTimeMetrics(std::move(timeVec), "Accumulated Times", [](const std::uint64_t t, const int i, const int j) -> void {
-    hpx::cout << "Accumulated time at Depth " << i << ": " << t << hpx::endl;
-    (void)j;
-   });
-
-  printTimeMetrics(std::move(timeBuckets), "Time Buckets", [](const std::uint64_t t, const int i, const int j) -> void {
-    hpx::cout << "Bucket at Depth " << i << " index " << j << ": " << t << hpx::endl;
-  });
 
 }
 
