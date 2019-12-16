@@ -36,14 +36,14 @@ static void updateIncumbent(const Node & node, const Bound & bnd) {
 }
 
 template <typename Act>
-static auto countDepths(const unsigned maxDepth) {
+static auto countDepths(const unsigned maxDepth, const std::string && metric="") {
   auto cntVecAll = hpx::lcos::broadcast<Act>(hpx::find_all_localities()).get();
   std::vector<std::uint64_t> res(maxDepth + 1); 
 
   for (int i = 0; i <= maxDepth; i++) {
     for (const auto & vec : cntVecAll) {
-      if(vec[i] > 0) {
-        hpx::cout << "Depth " << i << ": " << vec[i] << hpx::endl;
+      if(vec[i] >= 1) {
+        hpx::cout << "Metric " << metric << " Depth " << i << ": " << vec[i] << hpx::endl;
       }   
       res[i] += vec[i];
     }   
@@ -54,7 +54,7 @@ static auto countDepths(const unsigned maxDepth) {
 
 template <typename Act>
 static auto printMetric(const std::string && metric, const unsigned maxDepth) {
-  auto metricsVec = countDepths<Act>(maxDepth);
+  auto metricsVec = countDepths<Act>(maxDepth, std::move(metric));
 }
 
 static auto printNodeCounts(const unsigned maxDepth) {
@@ -90,7 +90,9 @@ static auto printTimes(const unsigned maxDepth) {
   for (std::vector<std::vector<std::uint64_t> > bucketsLocality : timeBucketsAll) {
     for (int i = 0; i <= maxDepth; i++) {
       for (const auto & bucket : bucketsLocality[i]) {
-        hpx::cout << "Depth " << i << " Bucket " << ": " << bucket << hpx::endl;
+        if (bucket >= 1) {
+          hpx::cout << "Depth " << i << " Bucket " << ": " << bucket << hpx::endl;
+        }
       }
     }
   }
