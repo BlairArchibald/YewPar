@@ -115,7 +115,9 @@ static auto printTimes(const unsigned maxDepth) {
      int j = 0;
      for (int i = 0; i <= maxDepth; i++) {
        for (const auto & metric : vec[i]) {
-         fn(metric, i, j);
+         if (metric > 0) {
+          fn(metric, i, j);
+         }
        }
      }
 
