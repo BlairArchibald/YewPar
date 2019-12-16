@@ -85,14 +85,15 @@ static auto printTimes(const unsigned maxDepth) {
   auto timeBucketsAll = hpx::lcos::broadcast<GetTimeBucketsAct>(hpx::find_all_localities()).get();
 
   std::vector<std::vector<std::uint64_t> > timeBuckets(maxDepth + 1, std::vector<std::uint64_t>(13));
-  std::uint64_t idx = 0, depth = 0;
+  std::uint64_t depth = 0;
 
   for (std::vector<std::vector<std::uint64_t> > bucketsLocality : timeBucketsAll) {
     for (int i = 0; i <= maxDepth; i++) {
       for (const auto & bucket : bucketsLocality[i]) {
         if (bucket >= 1) {
-          hpx::cout << "Depth " << i << " Bucket " << ": " << bucket << hpx::endl;
+          hpx::cout << "Depth " << i << " Bucket " << depth++ << ": " << bucket << hpx::endl;
         }
+				depth = 0;
       }
     }
   }
