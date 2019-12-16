@@ -25,6 +25,7 @@ struct MetricStore {
 
   // Regularity Metrics
   MetricsVecPtr accumulatedTimes;
+  TimesVecPtr timeBuckets;
 
   // For node throughput
   MetricsVecPtr nodesVisited;
@@ -40,6 +41,7 @@ struct MetricStore {
   // Initialises the store
   void init(const unsigned maxDepth) {
     accumulatedTimes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
+    timeBuckets = std::make_unique<TimesVec>(maxDepth + 1, std::vector<std::uint64_t>(13));
     nodesVisited = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     backtracks = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     prunes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
@@ -47,6 +49,33 @@ struct MetricStore {
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
     (*accumulatedTimes)[depth] += time;
+    if (time < 1) {
+      (*timeBuckets)[depth][0] += 1;
+    } else if (time >= 1 && time < 50) {
+      (*timeBuckets)[depth][1] += 1;
+    } else if (time >= 50 && time < 100) {
+      (*timeBuckets)[depth][2] += 1;
+    } else if (time >= 100 && time < 250) {
+      (*timeBuckets)[depth][3] += 1;
+    } else if (time >= 250 && time < 500) {
+      (*timeBuckets)[depth][4] += 1;
+    } else if (time >= 500 && time < 1000) {
+      (*timeBuckets)[depth][5] += 1;
+    } else if (time >= 1000 && time < 2000) {
+      (*timeBuckets)[depth][6] += 1;
+    } else if (time >= 2000 && time < 4000) {
+      (*timeBuckets)[depth][7] += 1;
+    } else if (time >= 4000 && time < 8000) {
+      (*timeBuckets)[depth][8] += 1;
+    } else if (time >= 8000 && time < 16000) {
+      (*timeBuckets)[depth][9] += 1;
+    } else if (time >= 16000 && time < 32000) {
+      (*timeBuckets)[depth][10] += 1;
+    } else if (time >= 32000 && time < 64000) {
+      (*timeBuckets)[depth][11] += 1;
+    } else {
+      (*timeBuckets)[depth][12] += 1;
+    }
   }
 
   void updatePrunes(const unsigned depth, std::uint64_t p) {
@@ -77,11 +106,15 @@ struct MetricStore {
     return transformVec(*accumulatedTimes);
   }
 
+  TimesVec getTimeBuckets() const {
+    return *timeBuckets;
+  }
+
   ~MetricStore() = default;
 
 private:
 
-  inline std::vector<std::uint64_t> transformVec(
+  inline MetricsVec transformVec(
     const std::vector<std::atomic<std::uint64_t> > & vec
   ) const {
     MetricsVec res;
@@ -91,7 +124,7 @@ private:
   }
 
 };
-   
+
 MetricStore* MetricStore::store = new MetricStore;
 
 void initMetricStore(const unsigned maxDepth) {
@@ -111,6 +144,12 @@ std::vector<std::uint64_t> getAccumulatedTimes() {
 }
 struct GetAccumulatedTimesAct : hpx::actions::make_direct_action<
 	decltype(&getAccumulatedTimes), &getAccumulatedTimes, GetAccumulatedTimesAct>::type {};
+
+std::vector<std::vector<std::uint64_t> > getTimeBuckets() {
+  return MetricStore::store->getTimeBuckets();
+}
+struct GetTimeBucketsAct : hpx::actions::make_direct_action<
+  decltype(&getTimeBuckets), &getTimeBuckets, GetTimeBucketsAct>::type {};
 
 std::vector<std::uint64_t> getBacktracks() {
   return MetricStore::store->getBacktracks();

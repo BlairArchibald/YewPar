@@ -5,6 +5,8 @@
 #include "util/Incumbent.hpp"
 #include "util/MetricStore.hpp"
 #include <algorithm>
+#include <cstdarg>
+#include <functional>
 #include <numeric>
 #include <vector>
 
@@ -36,14 +38,16 @@ static void updateIncumbent(const Node & node, const Bound & bnd) {
 template <typename Act>
 static auto countDepths(const unsigned maxDepth) {
   auto cntVecAll = hpx::lcos::broadcast<Act>(hpx::find_all_localities()).get();
-  std::vector<std::uint64_t> res(maxDepth + 1);
+  std::vector<std::uint64_t> res(maxDepth + 1); 
 
-  std::uint64_t i;
-	for (i = 0; i <= maxDepth; i++) {
-		for (const auto & vec : cntVecAll) {
-			res[i] += vec[i];
-		}
-	}
+  for (int i = 0; i <= maxDepth; i++) {
+    for (const auto & vec : cntVecAll) {
+      if(vec[i] > 0) {
+        hpx::cout << "Depth " << i << ": " << vec[i] << hpx::endl;
+      }   
+      res[i] += vec[i];
+    }   
+  }
 
   return res;
 }
@@ -52,48 +56,80 @@ template <typename Act>
 static auto printMetric(const std::string && metric, const unsigned maxDepth) {
   auto metricsVec = countDepths<Act>(maxDepth);
   
-  for (int i = 0; i < metricsVec.size(); i++) {
-		if (metricsVec[i] > 0) {
-    	hpx::cout << "Total number of " << metric << " at Depth " << i << ": " << metricsVec[i] << hpx::endl;
-		}
-  }
+  /*for (int i = 0; i < metricsVec.size(); i++) {
+    if (metricsVec[i] > 0) {
+      hpx::cout << "Total number of " << metric << " at Depth " << i << ": " << metricsVec[i] << hpx::endl;
+    }
+  }*/
 }
 
 static auto printNodeCounts(const unsigned maxDepth) {
+  hpx::cout << "Node Counts" << hpx::endl;
+  hpx::cout << "===========" << hpx::endl;
   printMetric<GetNodeCountAct>("Nodes", maxDepth);
+  hpx::cout << "===========" << hpx::endl;
 }
 
 static auto printPrunes(const unsigned maxDepth) {
+  hpx::cout << "Prunes" << hpx::endl;
+  hpx::cout << "===========" << hpx::endl;
   printMetric<GetPrunesAct>("Prunes", maxDepth);
+  hpx::cout << "===========" << hpx::endl;
 }
 
 static auto printBacktracks(const unsigned maxDepth) {
+  hpx::cout << "Backtracks" << hpx::endl;
+  hpx::cout << "===========" << hpx::endl;
   printMetric<GetBacktracksAct>("Backtracks", maxDepth);
+  hpx::cout << "===========" << hpx::endl;
 }
 
 static auto printTimes(const unsigned maxDepth) {
 
-  auto timesVec = hpx::lcos::broadcast<GetAccumulatedTimesAct>(hpx::find_all_localities()).get();
+  auto timeVec = hpx::lcos::broadcast<GetAccumulatedTimesAct>(hpx::find_all_localities()).get();
 
-	std::uint64_t i;
-  // Get the median from each, compute the L1 norm and compute the mean
-  std::vector<std::uint64_t> sums;
-  std::vector<std::vector<std::uint64_t> > vec;
-  for (i = 0; i <= maxDepth; i++) {
-    vec.push_back({});
-		sums.push_back(0);
-		for (const auto & times : timesVec) {
-      if (times[i] > 0 && times[i] != ULLONG_MAX) {
-        sums[i] += times[i];
-        vec[i].push_back(times[i]);
-        hpx::cout << times[i] << hpx::endl;
+  auto timeBucketsAll = hpx::lcos::broadcast<GetTimeBucketsAct>(hpx::find_all_localities()).get();
+
+  std::vector<std::vector<std::uint64_t> > timeBuckets(maxDepth + 1, std::vector<std::uint64_t>(13));
+  std::uint64_t idx = 0, depth = 0;
+
+  for (std::vector<std::vector<std::uint64_t> > bucketsLocality : timeBucketsAll) {
+    for (const auto & buckets : bucketsLocality) {
+      for (std::uint64_t bucket : buckets) {
+        timeBuckets[idx][depth++] += bucket;
       }
+      depth = 0;
+      idx++;
     }
   }
 
-  for (int i = 0; i < 6; i++) {
-    if (sums[i] > 0) hpx::cout << "Accumulated time at Depth " << i << ": " << sums[i] << hpx::endl;
-  }
+  // Prints all of the data in the vec
+  auto printTimeMetrics = [&](
+    std::vector<std::vector<std::uint64_t> > && vec,
+    const std::string&& title,
+    const auto & fn) -> void {
+
+     hpx::cout  << title << hpx::endl;
+     hpx::cout << "=================" << hpx::endl;
+
+     int j = 0;
+     for (int i = 0; i <= maxDepth; i++) {
+       for (const auto & metric : vec[i]) {
+         fn(metric, i, j);
+       }
+     }
+
+    hpx::cout << "=================" << hpx::endl;
+  };
+
+  printTimeMetrics(std::move(timeVec), "Accumulated Times", [](const std::uint64_t t, const int i, const int j) -> void {
+    hpx::cout << "Accumulated time at Depth " << i << ": " << t << hpx::endl;
+    (void)j;
+   });
+
+  printTimeMetrics(std::move(timeBuckets), "Time Buckets", [](const std::uint64_t t, const int i, const int j) -> void {
+    hpx::cout << "Bucket at Depth " << i << " index " << j << ": " << t << hpx::endl;
+  });
 
 }
 
