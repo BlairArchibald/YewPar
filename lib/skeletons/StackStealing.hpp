@@ -220,7 +220,7 @@ struct StackStealing {
         
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
-          if constexpr(metrics) {
+          if constexpr(metrics && isOptimisation) {
 						++prunes;
 					}
           continue;
@@ -296,23 +296,25 @@ struct StackStealing {
     
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = (std::uint64_t) diff.count();
       store->updateNodesVisited(startingDepth, nodeCount);
       store->updateTimes(startingDepth, time);
-      store->updatePrunes(startingDepth, prunes);
       store->updateBacktracks(startingDepth, backtracks);
+      if constexpr(isOptimisation) {
+        store->updatePrunes(startingDepth, prunes);
+      }
     }
     // Atomically updates the (process) local counter
     if constexpr(isCountNodes) {
-        reg->updateCounts(cntMap);
+      reg->updateCounts(cntMap);
     }
     std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
-          hpx::wait_all(futs);
-          hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromise, true);
-        }, std::move(futures)));
+      hpx::wait_all(futs);
+      hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromise, true);
+      }, std::move(futures)));
   }
 
 

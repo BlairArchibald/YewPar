@@ -30,7 +30,7 @@ struct Budget {
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
-  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics;
+  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 1> >::type Metrics;
   static constexpr unsigned metrics = Metrics::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
@@ -120,7 +120,7 @@ struct Budget {
 
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
-          if constexpr(metrics) {
+          if constexpr(metrics && isOptimisation) {
             ++prunes;
           }
           continue;
@@ -191,12 +191,14 @@ struct Budget {
     
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = (std::uint64_t) diff.count();
       store->updateNodesVisited(childDepth, nodeCount);
       store->updateTimes(childDepth, time);
       store->updateBacktracks(childDepth, backtracks);
-      store->updatePrunes(childDepth, prunes);
+      if constexpr(isOptimisation) {
+        store->updatePrunes(childDepth, prunes);
+      }
     }
 
     // Atomically updates the (process) local counter

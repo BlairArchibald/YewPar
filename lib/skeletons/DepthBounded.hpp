@@ -161,7 +161,7 @@ struct DepthBounded {
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Prune) {
-        if constexpr(metrics) {
+        if constexpr(metrics && isOptimisation) {
           ++prunes;
         }
         continue;
@@ -209,8 +209,10 @@ struct DepthBounded {
      	const std::uint64_t time = (std::uint64_t) diff.count();
       store->updateNodesVisited(childDepth, nodeCount);
       store->updateTimes(childDepth, time);
-      store->updatePrunes(childDepth, prunes);
       store->updateBacktracks(childDepth, backtracks);
+      if constexpr(isOptimisation) {
+        store->updatePrunes(childDepth, prunes);
+      }
     }
 
     // Atomically updates the (process) local counter
