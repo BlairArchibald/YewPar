@@ -24,7 +24,6 @@ struct MetricStore {
   using TimesVec = std::vector<std::vector<std::uint64_t> >;
 
   // Regularity Metrics
-  MetricsVecPtr accumulatedTimes;
   TimesVecPtr timeBuckets;
 
   // For node throughput
@@ -40,7 +39,6 @@ struct MetricStore {
 
   // Initialises the store
   void init(const unsigned maxDepth) {
-    accumulatedTimes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     timeBuckets = std::make_unique<TimesVec>(maxDepth + 1, std::vector<std::uint64_t>(13));
     nodesVisited = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     backtracks = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
@@ -48,7 +46,6 @@ struct MetricStore {
   }
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
-    (*accumulatedTimes)[depth] += time;
     if (time < 1) {
       (*timeBuckets)[depth][0] += 1;
     } else if (time >= 1 && time < 50) {
@@ -102,10 +99,6 @@ struct MetricStore {
     return transformVec(*prunes);
   }
 
-  MetricsVec getAccumulatedTimes() const {
-    return transformVec(*accumulatedTimes);
-  }
-
   TimesVec getTimeBuckets() const {
     return *timeBuckets;
   }
@@ -138,12 +131,6 @@ std::vector<std::uint64_t> getNodeCount() {
 }
 struct GetNodeCountAct : hpx::actions::make_direct_action<
   decltype(&getNodeCount), &getNodeCount, GetNodeCountAct>::type {};
-
-std::vector<std::uint64_t> getAccumulatedTimes() {
-	return MetricStore::store->getAccumulatedTimes();
-}
-struct GetAccumulatedTimesAct : hpx::actions::make_direct_action<
-	decltype(&getAccumulatedTimes), &getAccumulatedTimes, GetAccumulatedTimesAct>::type {};
 
 std::vector<std::vector<std::uint64_t> > getTimeBuckets() {
   return MetricStore::store->getTimeBuckets();

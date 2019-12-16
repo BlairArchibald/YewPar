@@ -36,15 +36,18 @@ static void updateIncumbent(const Node & node, const Bound & bnd) {
 }
 
 template <typename Act>
-static auto countDepths(const unsigned maxDepth, const std::string && metric="") {
+static auto countDepths(const unsigned maxDepth, const std::string && metric="", const bool && verbose=false) {
   auto cntVecAll = hpx::lcos::broadcast<Act>(hpx::find_all_localities()).get();
   std::vector<std::uint64_t> res(maxDepth + 1); 
 
   for (int i = 0; i <= maxDepth; i++) {
     for (const auto & vec : cntVecAll) {
-      if(vec[i] >= 1) {
-        hpx::cout << "Metric " << metric << " Depth " << i << ": " << vec[i] << hpx::endl;
-      }   
+        if (verbose) {
+          if(vec[i] >= 1) {
+            hpx::cout << "Metric " << metric << " Depth " << i << ": " << vec[i] << hpx::endl;
+          }
+        }
+      }
       res[i] += vec[i];
     }   
   }
@@ -60,27 +63,25 @@ static auto printMetric(const std::string && metric, const unsigned maxDepth) {
 static auto printNodeCounts(const unsigned maxDepth) {
   hpx::cout << "Node Counts" << hpx::endl;
   hpx::cout << "===========" << hpx::endl;
-  printMetric<GetNodeCountAct>("Nodes", maxDepth);
+  printMetric<GetNodeCountAct>("Nodes", maxDepth, true);
   hpx::cout << "===========" << hpx::endl;
 }
 
 static auto printPrunes(const unsigned maxDepth) {
   hpx::cout << "Prunes" << hpx::endl;
   hpx::cout << "===========" << hpx::endl;
-  printMetric<GetPrunesAct>("Prunes", maxDepth);
+  printMetric<GetPrunesAct>("Prunes", maxDepth, true);
   hpx::cout << "===========" << hpx::endl;
 }
 
 static auto printBacktracks(const unsigned maxDepth) {
   hpx::cout << "Backtracks" << hpx::endl;
   hpx::cout << "===========" << hpx::endl;
-  printMetric<GetBacktracksAct>("Backtracks", maxDepth);
+  printMetric<GetBacktracksAct>("Backtracks", maxDepth, true);
   hpx::cout << "===========" << hpx::endl;
 }
 
 static auto printTimes(const unsigned maxDepth) {
-
-  auto timeVec = countDepths<GetAccumulatedTimesAct>(maxDepth);
 
   auto timeBucketsAll = hpx::lcos::broadcast<GetTimeBucketsAct>(hpx::find_all_localities()).get();
 

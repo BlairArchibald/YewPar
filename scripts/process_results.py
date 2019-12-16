@@ -22,33 +22,10 @@ def read_results(filename, n_searches):
 
       if "=====" in line:
         continue
-
-      if "Accumulated" in line:
-        split_line = line.split(" ")
-        depth = int(split_line[-2])
-        print(depth)
-        if depth == 0:
-          continue
-        timeStr = split_line[-1].replace("ms", "")
-        results[depthCounter].append(int(timeStr))
-        lineCounter += 1
-      elif "Prunes" in line:
-        lineCounter = 0
-        depthCounter += 1
-        split_line = line.split(" ")
-        prunes = int(split_line[-1])
-      elif "Nodes" in line:
-        split_line = line.split(" ")
-        nodes = int(split_line[-1])
-      elif "Backtracks" in line:
-        split_line = line.split(" ")
-        backtracks = int(split_line[-1])
-      elif "cpu" in line:
-        split_line = line.split(" ")
-        time = int(split_line[-1])
+      
 
 
-  return (results, size, time, nodes, prunes, backtracks)
+  return (results, size, time, nodes//5, prunes, backtracks//5)
 
 def output_results(data, clique_size, exec_time, num_nodes, prunes, backtracks):
   """
@@ -67,6 +44,6 @@ def output_results(data, clique_size, exec_time, num_nodes, prunes, backtracks):
   ax1.boxplot(results)
   plt.show()
 
-results, size, time, nodes, prunes, backtracks = read_results("out.txt", 14)
+results, size, time, nodes, prunes, backtracks = read_results("", 14)
 print(results)
 output_results(results, size, time, nodes, prunes, backtracks)
