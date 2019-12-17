@@ -25,15 +25,20 @@ struct MetricStore {
 
   // Regularity Metrics
   TimesVecPtr timeBuckets;
+  // Keep track of the max depth reached for all metric vectors so we can resize later to avoid excessive amounts of print statements
+  std::atomic<unsigned> maxDepthBuckets;
 
   // For node throughput
   MetricsVecPtr nodesVisited;
+  std::atomic<unsigned> maxDepthNodesVisited;
 
   // For Backtracking budget
   MetricsVecPtr backtracks;
+  std::atomic<unsigned> maxDepthBacktracks;
 
   // Counting pruning
   MetricsVecPtr prunes;
+  std::atomic<unsigned> maxDepthPrunes;
 
   MetricStore() = default;
 
@@ -47,59 +52,65 @@ struct MetricStore {
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
     if (time < 1) {
-      (*timeBuckets)[depth][0] += 1;
+      (*timeBuckets)[depth][0]++;
     } else if (time >= 1 && time < 50) {
-      (*timeBuckets)[depth][1] += 1;
+      (*timeBuckets)[depth][1]++;
     } else if (time >= 50 && time < 100) {
-      (*timeBuckets)[depth][2] += 1;
+      (*timeBuckets)[depth][2]++;
     } else if (time >= 100 && time < 250) {
-      (*timeBuckets)[depth][3] += 1;
+      (*timeBuckets)[depth][3]++;
     } else if (time >= 250 && time < 500) {
-      (*timeBuckets)[depth][4] += 1;
+      (*timeBuckets)[depth][4]++;
     } else if (time >= 500 && time < 1000) {
-      (*timeBuckets)[depth][5] += 1;
+      (*timeBuckets)[depth][5]++;
     } else if (time >= 1000 && time < 2000) {
-      (*timeBuckets)[depth][6] += 1;
+      (*timeBuckets)[depth][6]++;
     } else if (time >= 2000 && time < 4000) {
-      (*timeBuckets)[depth][7] += 1;
+      (*timeBuckets)[depth][7]++;
     } else if (time >= 4000 && time < 8000) {
-      (*timeBuckets)[depth][8] += 1;
+      (*timeBuckets)[depth][8]++;
     } else if (time >= 8000 && time < 16000) {
-      (*timeBuckets)[depth][9] += 1;
+      (*timeBuckets)[depth][9]++;
     } else if (time >= 16000 && time < 32000) {
-      (*timeBuckets)[depth][10] += 1;
+      (*timeBuckets)[depth][10]++;
     } else if (time >= 32000 && time < 64000) {
-      (*timeBuckets)[depth][11] += 1;
+      (*timeBuckets)[depth][11]++;
     } else {
-      (*timeBuckets)[depth][12] += 1;
+      (*timeBuckets)[depth][12]++;
     }
+
+    maxDepthBuckets = depth > maxDepthBuckets.load() ? depth : maxDepthBuckets.load();
   }
 
   void updatePrunes(const unsigned depth, std::uint64_t p) {
     (*prunes)[depth] += p;
+    maxDepthPrunes = depth > maxDepthPrunes.load() ? depth : maxDepthPrunes.load();
   }
 
   void updateNodesVisited(const unsigned depth, std::uint64_t nodes) {
     (*nodesVisited)[depth] += nodes;
+    maxDepthNodesVisited = depth > maxDepthNodesVisited.load() ? depth : maxDepthNodesVisited.load();
   }
 
   void updateBacktracks(const unsigned depth, std::uint64_t b) {
     (*backtracks)[depth] += b;
+    maxDepthBacktracks = depth > maxDepthBacktracks.load() ? depth : maxDepthBacktracks.load();
   }
 
   MetricsVec getNodeCount() const {
-    return transformVec(*nodesVisited);
+    return transformVec(*nodesVisited, maxDepthNodesVisited);
   }
 
   MetricsVec getBacktracks() const {
-    return transformVec(*backtracks);
+    return transformVec(*backtracks, maxDepthBacktracks);
 	}
 
   MetricsVec getPrunes() const {
-    return transformVec(*prunes);
+    return transformVec(*prunes, maxDepthPrunes);
   }
 
   TimesVec getTimeBuckets() const {
+    timeBuckets->resize(maxDepthBuckets + 1);
     return *timeBuckets;
   }
 
@@ -107,12 +118,15 @@ struct MetricStore {
 
 private:
 
+
   inline MetricsVec transformVec(
-    const std::vector<std::atomic<std::uint64_t> > & vec
+    const std::vector<std::atomic<std::uint64_t> > & vec,
+    const unsigned newSize
   ) const {
     MetricsVec res;
     std::transform(vec.begin(), vec.end(), std::back_inserter(res),
     [](const auto & c) { return c.load(); });
+    res.resize(newSize + 1);
     return res;
   }
 
@@ -149,4 +163,5 @@ std::vector<std::uint64_t> getPrunes() {
 }
 struct GetPrunesAct : hpx::actions::make_direct_action<
   decltype(&getPrunes), &getPrunes, GetPrunesAct>::type {};
+
 }
