@@ -36,78 +36,67 @@ static void updateIncumbent(const Node & node, const Bound & bnd) {
 }
 
 template <typename Act>
-static auto countDepths(const unsigned maxDepth, const std::string && metric="", const bool && verbose=false) {
-  auto cntVecAll = hpx::lcos::broadcast<Act>(hpx::find_all_localities()).get();
-  std::vector<std::uint64_t> res(maxDepth + 1); 
+static auto printMetric(const std::string && metric) {
+  auto metricVecAll = hpx::lcos::broadcast<Act>(hpx::find_all_localities()).get();
 
-  for (int i = 0; i <= maxDepth; i++) {
-    for (const auto & vec : cntVecAll) {
-        if (verbose) {
-            if(vec[i] >= 1) {
-                hpx::cout << "Metric " << metric << " Depth " << i << ": " << vec[i] << hpx::endl;
-            }
-        }
-      	res[i] += vec[i];
-      }
+  std::uint64_t depth = 0;
+  for (const auto & metricVec : metricVecAll) {
+    for (const auto & item : metricVec) {
+      hpx::cout << "Metric " << metric << " Depth " << depth++ << ":" << item << hpx::endl;;
+    }
+    depth = 0;
   }
-
-  return res;
+  hpx::cout << hpx::endl;
 }
 
-template <typename Act>
-static auto printMetric(const std::string && metric, const unsigned maxDepth, const bool && verbose) {
-  auto metricsVec = countDepths<Act>(maxDepth, std::move(metric), std::move(verbose));
+static auto printNodeCounts() {
+  printMetric<GetNodeCountAct>("Nodes");
 }
 
-static auto printNodeCounts(const unsigned maxDepth) {
-  hpx::cout << "Node Counts" << hpx::endl;
-  hpx::cout << "===========" << hpx::endl;
-  printMetric<GetNodeCountAct>("Nodes", maxDepth, true);
-  hpx::cout << "===========" << hpx::endl;
+static auto printPrunes() {
+  printMetric<GetPrunesAct>("Prunes");
 }
 
-static auto printPrunes(const unsigned maxDepth) {
-  hpx::cout << "Prunes" << hpx::endl;
-  hpx::cout << "===========" << hpx::endl;
-  printMetric<GetPrunesAct>("Prunes", maxDepth, true);
-  hpx::cout << "===========" << hpx::endl;
+static auto printBacktracks() {
+  printMetric<GetBacktracksAct>("Backtracks");
 }
 
-static auto printBacktracks(const unsigned maxDepth) {
-  hpx::cout << "Backtracks" << hpx::endl;
-  hpx::cout << "===========" << hpx::endl;
-  printMetric<GetBacktracksAct>("Backtracks", maxDepth, true);
-  hpx::cout << "===========" << hpx::endl;
-}
-
-static auto printTimes(const unsigned maxDepth) {
+static auto printTimes() {
 
   auto timeBucketsAll = hpx::lcos::broadcast<GetTimeBucketsAct>(hpx::find_all_localities()).get();
 
-  std::vector<std::vector<std::uint64_t> > timeBuckets(maxDepth + 1, std::vector<std::uint64_t>(13));
   std::uint64_t depth = 0;
-
+  int bucketIdx = 0;
   for (std::vector<std::vector<std::uint64_t> > bucketsLocality : timeBucketsAll) {
-    for (int i = 0; i <= maxDepth; i++) {
-      for (const auto & bucket : bucketsLocality[i]) {
+    for (const auto & buckets : bucketsLocality) {
+      for (const auto & bucket : buckets) {
         if (bucket >= 1) {
-          hpx::cout << "Depth " << i << " Bucket " << depth++ << ": " << bucket << hpx::endl;
+          hpx::cout << "Depth " << depth << " Bucket " << bucketIdx++ << ":" << bucket << hpx::endl;
         }
-				depth = 0;
       }
+			bucketIdx = 0;
+      depth++;
     }
+    depth = 0;
   }
+  hpx::cout << hpx::endl;
 
 }
 
-template <typename Space, typename Node, typename Bound>
+template<typename Space, typename Node, typename Bound>
 static std::vector<std::uint64_t> totalNodeCounts(const unsigned maxDepth) {
-  auto res = countDepths<GetCountsAct<Space, Node, Bound> >(maxDepth);
+  auto cntList = hpx::lcos::broadcast<GetCountsAct<Space, Node, Bound> >(
+      hpx::find_all_localities()).get();
 
+  std::vector<std::uint64_t> res(maxDepth + 1);
+  for (auto i = 0; i <= maxDepth; ++i) {
+    for (const auto & cnt : cntList) {
+      res[i] += cnt[i];
+    }
+  }
   res[0] = 1; //Account for root node
   return res;
 }
-
 template <typename Generator>
 struct StackElem {
   unsigned seen;

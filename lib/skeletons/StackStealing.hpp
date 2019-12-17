@@ -503,10 +503,10 @@ struct StackStealing {
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2-t1);
       const double time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
-      printTimes(params.maxDepth);
-      printPrunes(params.maxDepth);
-      printNodeCounts(params.maxDepth);
-      printBacktracks(params.maxDepth);
+      printTimes();
+      printPrunes();
+      printNodeCounts();
+      printBacktracks();
 		}
 
     // Return the right thing

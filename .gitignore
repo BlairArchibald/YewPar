@@ -30,3 +30,4 @@
 
 build/
 newSIPbenchmarks/
+.vscode/

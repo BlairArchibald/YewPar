@@ -1,0 +1,67 @@
+1
+
+MaxClique Size = 26
+cpu = 357090
+
+MaxClique Size = 26
+cpu = 317407
+
+MaxClique Size = 26
+cpu = 368461
+
+MaxClique Size = 26
+cpu = 348012
+
+MaxClique Size = 26
+cpu = 386423
+
+2
+
+MaxClique Size = 26
+cpu = 326586
+
+MaxClique Size = 26
+cpu = 344125
+
+MaxClique Size = 26
+cpu = 322114
+
+MaxClique Size = 26
+cpu = 411138
+
+MaxClique Size = 26
+cpu = 314315
+
+4
+
+MaxClique Size = 26
+cpu = 523568
+
+MaxClique Size = 26
+cpu = 566941
+
+MaxClique Size = 26
+cpu = 587200
+
+MaxClique Size = 26
+cpu = 548223
+
+MaxClique Size = 26
+cpu = 605705
+
+8
+
+MaxClique Size = 26
+cpu = 1744324
+
+MaxClique Size = 26
+cpu = 1757212
+
+MaxClique Size = 26
+cpu = 1764565
+
+MaxClique Size = 26
+cpu = 1769139
+
+MaxClique Size = 26
+cpu = 1693061

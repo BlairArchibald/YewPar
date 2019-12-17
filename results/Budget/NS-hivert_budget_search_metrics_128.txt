@@ -14022,13 +14022,6 @@ Depth 46 Bucket 0:4
 Depth 47 Bucket 0:23
 Depth 47 Bucket 0:2
 
-Prunes
-===========
-===========
-
-Node Counts
-===========
-
 Metric Nodes Depth 1:10000051
 Metric Nodes Depth 3:45
 Metric Nodes Depth 4:403
@@ -16911,10 +16904,6 @@ Metric Nodes Depth 47:219
 Metric Nodes Depth 47:49
 Metric Nodes Depth 47:257
 Metric Nodes Depth 47:29
-===========
-
-Backtracks
-===========
 
 Metric Backtracks Depth 1:52
 Metric Backtracks Depth 3:46
@@ -19822,7 +19811,6 @@ Metric Backtracks Depth 47:273
 Metric Backtracks Depth 47:65
 Metric Backtracks Depth 47:343
 Metric Backtracks Depth 47:54
-===========
 
 cpu = 1118948
 
@@ -33571,13 +33559,6 @@ Depth 47 Bucket 0:9
 Depth 47 Bucket 0:1
 Depth 47 Bucket 0:1
 
-Prunes
-===========
-
-===========
-Node Counts
-===========
-
 Metric Nodes Depth 1:10000051
 Metric Nodes Depth 3:45
 Metric Nodes Depth 4:403
@@ -36526,10 +36507,6 @@ Metric Nodes Depth 47:94
 Metric Nodes Depth 47:1
 Metric Nodes Depth 47:3
 Metric Nodes Depth 47:11
-===========
-
-Backtracks
-===========
 
 Metric Backtracks Depth 1:52
 Metric Backtracks Depth 3:46
@@ -39500,14 +39477,6 @@ Metric Backtracks Depth 47:129
 Metric Backtracks Depth 47:3
 Metric Backtracks Depth 47:10
 Metric Backtracks Depth 47:22
-===========
-
-Prunes
-===========
-
-===========
-Node Counts
-===========
 
 Metric Nodes Depth 1:10000051
 Metric Nodes Depth 3:45
@@ -42390,9 +42359,7 @@ Metric Nodes Depth 47:64
 Metric Nodes Depth 47:48
 Metric Nodes Depth 47:177
 Metric Nodes Depth 47:10
-===========
-Backtracks
-===========
+
 Metric Backtracks Depth 1:52
 Metric Backtracks Depth 3:46
 Metric Backtracks Depth 4:405
@@ -45296,7 +45263,6 @@ Metric Backtracks Depth 47:86
 Metric Backtracks Depth 47:73
 Metric Backtracks Depth 47:241
 Metric Backtracks Depth 47:16
-===========
 
 cpu = 934956
 
@@ -59168,13 +59134,6 @@ Depth 47 Bucket 0:28
 Depth 47 Bucket 0:4
 Depth 47 Bucket 0:3
 
-Prunes
-===========
-
-===========
-Node Counts
-===========
-
 Metric Nodes Depth 1:10000051
 Metric Nodes Depth 3:45
 Metric Nodes Depth 4:403
@@ -62134,9 +62093,7 @@ Metric Nodes Depth 47:294
 Metric Nodes Depth 47:333
 Metric Nodes Depth 47:3
 Metric Nodes Depth 47:80
-===========
-Backtracks
-===========
+
 Metric Backtracks Depth 1:52
 Metric Backtracks Depth 3:46
 Metric Backtracks Depth 4:404
@@ -65122,6 +65079,5 @@ Metric Backtracks Depth 47:418
 Metric Backtracks Depth 47:464
 Metric Backtracks Depth 47:6
 Metric Backtracks Depth 47:115
-===========
 
 cpu = 1035130
