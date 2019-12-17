@@ -43,21 +43,20 @@ static auto countDepths(const unsigned maxDepth, const std::string && metric="",
   for (int i = 0; i <= maxDepth; i++) {
     for (const auto & vec : cntVecAll) {
         if (verbose) {
-          if(vec[i] >= 1) {
-            hpx::cout << "Metric " << metric << " Depth " << i << ": " << vec[i] << hpx::endl;
-          }
+            if(vec[i] >= 1) {
+                hpx::cout << "Metric " << metric << " Depth " << i << ": " << vec[i] << hpx::endl;
+            }
         }
+      	res[i] += vec[i];
       }
-      res[i] += vec[i];
-    }   
   }
 
   return res;
 }
 
 template <typename Act>
-static auto printMetric(const std::string && metric, const unsigned maxDepth) {
-  auto metricsVec = countDepths<Act>(maxDepth, std::move(metric));
+static auto printMetric(const std::string && metric, const unsigned maxDepth, const bool && verbose) {
+  auto metricsVec = countDepths<Act>(maxDepth, std::move(metric), std::move(verbose));
 }
 
 static auto printNodeCounts(const unsigned maxDepth) {

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 runEnumBudgetSearches() {
-	for i in {1..5}; do
+	for i in {1..2}; do
 		mpiexec -n $1 -f hostfile.txt ./build/install/bin/NS-hivert -g 48 --skel budget -b 10000000 >> results/NS-hivert_budget_search_metrics_$1.txt
 	done
 }
@@ -32,16 +32,16 @@ appendToHostFile() {
 }
 
 
-#rmHostFile
+rmHostFile
 
-#appendToHostFile 4 5
+appendToHostFile 4 5
 #runEnumBudgetSearches 32
-#appendToHostFile 6 7
+appendToHostFile 6 7
 #runEnumBudgetSearches 64
-#appendToHostFile 8 11
+appendToHostFile 8 11
 #runEnumBudgetSearches 128
-#appendToHostFile 12 19
-#runEnumBudgetSearches 250
+appendToHostFile 12 19
+runEnumBudgetSearches 250
 
 rmHostFile
 
