@@ -1,5 +1,4 @@
 CPU Time (Before collecting metrics) 694
-
 Depth 21 Bucket 0: 3
 Depth 21 Bucket 0: 1
 Depth 22 Bucket 0: 6
@@ -10512,7 +10511,6 @@ Metric Nodes Depth 47: 366
 Metric Nodes Depth 47: 50
 Metric Nodes Depth 47: 24
 ===========
-Backtracks
 ===========
 Metric Backtracks Depth 1: 52
 Metric Backtracks Depth 3: 46
@@ -12257,7 +12255,6 @@ Metric Backtracks Depth 47: 270
 Metric Backtracks Depth 47: 491
 Metric Backtracks Depth 47: 83
 Metric Backtracks Depth 47: 37
-
 cpu = 743317
 CPU Time (Before collecting metrics) 701
 Depth 1 Bucket 0: 1
@@ -22663,7 +22660,6 @@ Metric Nodes Depth 47: 1
 Metric Nodes Depth 47: 23
 Metric Nodes Depth 47: 33
 ===========
-Backtracks
 ===========
 Metric Backtracks Depth 1: 52
 Metric Backtracks Depth 3: 46
@@ -24322,11 +24318,8 @@ Metric Backtracks Depth 47: 95
 Metric Backtracks Depth 47: 4
 Metric Backtracks Depth 47: 34
 Metric Backtracks Depth 47: 48
-
 cpu = 747
-
 CPU Time (Before collecting metrics) 790
-
 Depth 1 Bucket 0: 1
 Depth 3 Bucket 0: 1
 Depth 4 Bucket 0: 1
@@ -34993,7 +34986,6 @@ Metric Nodes Depth 47: 36
 Metric Nodes Depth 47: 13
 Metric Nodes Depth 47: 47
 Metric Nodes Depth 47: 138
-
 Metric Backtracks Depth 1: 52
 Metric Backtracks Depth 3: 46
 Metric Backtracks Depth 4: 404
@@ -36714,11 +36706,8 @@ Metric Backtracks Depth 47: 50
 Metric Backtracks Depth 47: 21
 Metric Backtracks Depth 47: 68
 Metric Backtracks Depth 47: 169
-
 cpu = 837
-
 CPU Time (Before collecting metrics) 663
-
 Depth 1 Bucket 0: 1
 Depth 3 Bucket 0: 1
 Depth 4 Bucket 0: 1
@@ -47103,7 +47092,6 @@ Metric Nodes Depth 47: 50
 Metric Nodes Depth 47: 212
 Metric Nodes Depth 47: 135
 ===========
-Backtracks
 ===========
 Metric Backtracks Depth 1: 52
 Metric Backtracks Depth 3: 46
@@ -48722,8 +48710,6 @@ Metric Backtracks Depth 47: 212
 Metric Backtracks Depth 47: 75
 Metric Backtracks Depth 47: 277
 Metric Backtracks Depth 47: 189
-
 cpu = 706
-
 CPU Time (Before collecting metrics) 656
-cpu = 695036
+cpu = 695

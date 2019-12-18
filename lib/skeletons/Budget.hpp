@@ -236,11 +236,6 @@ struct Budget {
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
     
-    std::chrono::time_point<std::chrono::steady_clock> t1;
-    if constexpr(metrics) {
-        t1 = std::chrono::steady_clock::now();
-    }
-
     if constexpr (verbose) {
       printSkeletonDetails();
     }
@@ -265,6 +260,11 @@ struct Budget {
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
 
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    if constexpr(metrics) {
+        t1 = std::chrono::steady_clock::now();
+    }
+
     createTask(1, root).get();
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
@@ -276,9 +276,11 @@ struct Budget {
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
       printTimes();
-      printPrunes();
       printNodeCounts();
       printBacktracks();
+      if constexpr(isOptimisation) {
+        printPrunes();
+      }
     }
 
     // Return the right thing

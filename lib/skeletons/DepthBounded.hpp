@@ -176,7 +176,7 @@ struct DepthBounded {
       expandNoSpawns(space, c, params, counts, nodeCount, prunes, backtracks, childDepth + 1);
     }
   }
-  
+
   static void subtreeTask(const Node taskRoot,
                           const unsigned childDepth,
                           const hpx::naming::id_type donePromiseId) {
@@ -250,11 +250,6 @@ struct DepthBounded {
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
 
-    std::chrono::time_point<std::chrono::steady_clock> t1;
-    if constexpr(metrics) {
-        t1 = std::chrono::steady_clock::now();
-    }
-
     if constexpr(verbose) {
         printSkeletonDetails(params);
     }
@@ -278,6 +273,11 @@ struct DepthBounded {
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
 
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    if constexpr(metrics) {
+        t1 = std::chrono::steady_clock::now();
+    }
+
     // Issue is updateCounts by the looks of things. Something probably isn't initialised correctly.
     createTask(1, root).get();
 
@@ -290,9 +290,11 @@ struct DepthBounded {
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
       printTimes();
-      printPrunes();
       printNodeCounts();
       printBacktracks();
+      if constexpr(isOptimisation) {
+        printPrunes();
+      }
     }
     
     // Return the right thing

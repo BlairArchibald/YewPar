@@ -118,7 +118,6 @@ struct MetricStore {
 
 private:
 
-
   inline MetricsVec transformVec(
     const std::vector<std::atomic<std::uint64_t> > & vec,
     const unsigned newSize

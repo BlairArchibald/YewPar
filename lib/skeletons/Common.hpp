@@ -97,6 +97,7 @@ static std::vector<std::uint64_t> totalNodeCounts(const unsigned maxDepth) {
   res[0] = 1; //Account for root node
   return res;
 }
+
 template <typename Generator>
 struct StackElem {
   unsigned seen;
