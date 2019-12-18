@@ -1,32 +1,107 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from pprint import pprint
 import sys
 
-def read_results(filename, n_searches):
+NUM_SEARCHES = 5
+NUM_LOCALITIES_RUN = 5
+NUM_BUCKETS = 13
+
+timesMap = {
+  "1" : 0,
+  "2" : 1,
+  "4" : 2,
+  "8" : 3,
+  "16" : 4
+}
+
+def read_scaling_results(filename):
+  """
+  Read results from scaling file
+  """
+  times = np.zeros((NUM_LOCALITIES_RUN,), dtype=np.uint64)
+  with open(filename, "r") as f:
+    for line in f:
+      line = line.strip()
+      line = line.split(" ")
+      times[timesMap[line[-1]]] += int(line[-2])/1000
+  return times / NUM_SEARCHES
+
+def draw_scaling_graph(timesD, timesB, timesS, title, d, b, ylabel):
+  """
+  Draw speedup graph
+  """
+  fig1, ax1 = plt.subplots()
+  x_axes = np.array([2**i for i in range(5)])
+  ax1.plot(x_axes, timesD, marker="x", color="red", label="DepthBounded d = {}".format(d))
+  ax1.plot(x_axes, timesB, marker="x", color="blue", label="Budget b = {}".format(b))
+  ax1.plot(x_axes[0:-1], timesS, marker="x", color="purple", label="StackSteal with chunked")
+  ax1.plot
+  ax1.set_ylabel(ylabel) 
+  ax1.set_xlabel("Localities")
+  ax1.set_title(title)
+  ax1.set_facecolor("grey")
+  ax1.legend()
+  plt.grid()
+  plt.show() 
+
+def get_speedups(timesD, timesB, timesS):
+  """
+  Returns the speedups for the times recorded for scaling
+  """
+  return (timesD[0]/timesD, timesB[0]/timesB, timesS[0]/timesS)
+
+timesD = read_scaling_results("../results/Depthbounded/MaxClique_depthbounded_scaling.txt")
+timesB = read_scaling_results("../results/Budget/MaxClique_budget_scaling.txt")
+timesS = read_scaling_results("../results/StackSteal/MaxClique_stacksteal_scaling.txt")
+draw_scaling_graph(timesD, timesB, timesS[0:-1], "Maximum Clique scaling up to 250 workers on 16 localities brock800_4.clq", 2, 10**7, "Time (s)")
+speedUpsD, speedUpsB, speedUpsS = get_speedups(timesD, timesB, timesS)
+draw_scaling_graph(speedUpsD, speedUpsB, speedUpsS[0:-1], "Maximum Clique scaling up to 250 workers on 16 localities brock800_4.clq", 2, 10**7, "Relative Speedup (1 locality)")
+
+def read_search_metrics(filename):
   """
   Reads in the results from the file and returns all necessary data
   at each depth
   """
-  results = [[] for i in range(n_searches)]
-  afterMaxCliqueSize = False
-  size = -1
-  time = -1
-  nodes = -1
-  prunes = -1
-  backtracks = -1
-  lineCounter = 0
-  depthCounter = 0
+  results = np.array((NUM_BUCKETS,), dtype=np.uint64)
+  searchTimes = np.zeros((NUM_SEARCHES,), dtype=np.uint64)
+  nodeCounts = [0 for i in range(NUM_SEARCHES)]
+  backtracks = [0 for i in range(NUM_SEARCHES)]
+  prunes = [0 for i in range(NUM_SEARCHES)]
+  sIdx = 0
+  nIdx = 0
+  bIdx = 0
+  once = True
   with open(filename, "r") as f:
     for line in f:
       line = line.strip()
-
-      if "=====" in line:
+      if "CPU Time" in line:
+        line = line.split(" ")
+        searchTimes[sIdx] = int(line[-1])
+        sIdx += 1
         continue
-      
+    
+      line = line.split(":")
+      if "Bucket" in line[0]:
+        results[int(line[0][-1])] += int(line[1])
+      elif "Nodes" in line[0]:
+        if not once:
+          bIdx += 1
+        nodeCounts[nIdx] += int(line[1])
+        once = True
+      elif "Backtracks" in line[0]:
+        if once:
+          once = False
+          nIdx += 1
+        backtracks[bIdx] += int(line[1].replace(" ", ""))
 
+  for i in range(NUM_SEARCHES):
+    nodeCounts[i] /= searchTimes[i]
 
-  return (results, size, time, nodes//5, prunes, backtracks//5)
+  return results, nodeCounts, backtracks, searchTimes
 
+pprint(read_search_metrics("../results/Budget/NS-hivert_budget_search_metrics_32.txt"))
+pprint(read_search_metrics("../results/Budget/NS-hivert_budget_search_metrics_64.txt"))
 def output_results(data, clique_size, exec_time, num_nodes, prunes, backtracks):
   """
 #  Outputs all results collected from an experiment
@@ -43,7 +118,3 @@ def output_results(data, clique_size, exec_time, num_nodes, prunes, backtracks):
   ax1.set_title("Box Plots of Times recorded at each depth in Maximum Clique Search")
   ax1.boxplot(results)
   plt.show()
-
-results, size, time, nodes, prunes, backtracks = read_results("", 14)
-print(results)
-output_results(results, size, time, nodes, prunes, backtracks)
