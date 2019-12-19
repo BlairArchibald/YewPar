@@ -31,6 +31,12 @@ runSipDepthBoundedSearches() {
 	done
 }
 
+runSipStackStealSearches() {
+	for i in {1..5}; do
+		timeout 3600 mpiexec -n $1 -f hostfile.txt ./build/install/bin/sip --pattern test/newSIPbenchmarks/si/si2_rand_r01_600/si2_r01_m600.06/pattern --target test/newSIPbenchmarks/si/si2_rand_r01_600/si2_r01_m600.06/target --skel stacksteal --chunked --hpx:threads 8 >> results/SIP_stacksteal_search_metrics_$1.txt
+	done
+}
+
 appendToHostFile() {
 	for i in $(seq $1 $2); do
 		echo 130.209.255.$i >> hostfile.txt
@@ -41,12 +47,12 @@ rmHostFile
 
 appendToHostFile 4 5
 appendToHostFile 6 7
+runSipStackStealSearches 50
 appendToHostFile 8 11
+runSipStackStealSearches 100
 appendToHostFile 12 19
-runSipDepthBoundedSearches 50
-runSipDepthBoundedSearches 100
-runSipDepthBoundedSearches 150
-runSipDepthBoundedSearches 200
-runSipDepthBoundedSearches 250
+runSipStackStealSearches 150
+runSipStackStealSearches 200
+runSipStackStealSearches 250
 
 exit 0
