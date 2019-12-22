@@ -43,16 +43,31 @@ appendToHostFile() {
 	done
 }
 
+runMaxClique() {
+	
+	for i in {1..5}; do
+		timeout 4000 mpiexec -n $1 -f hostfile.txt ./build/install/bin/maxclique-16 -f test/brock800_1.clq --skel depthbounded -d 2 --hpx:threads 8 >> MaxClique_depthbounded_search_metrics_$1.txt
+	done
+
+	for i in {1..5}; do
+		timeout 4000 mpiexec -n $1 -f hostfile.txt ./build/install/bin/maxclique-16 -f test/brock800_1.clq --skel budget -b 10000000 --hpx:threads 8 >> MaxClique_budget_search_metrics_$1.txt
+	done
+	
+	for i in {1..5}; do
+		timeout 4000 mpiexec -n $1 -f hostfile.txt ./build/install/bin/maxclique-16 -f test/brock800_1.clq --skel stacksteal --chunked --hpx:threads 8 >> MaxClique_depthbounded_search_metrics_$1.txt
+	done
+
+}
+
 rmHostFile
 
-appendToHostFile 4 5
-appendToHostFile 6 7
-runSipStackStealSearches 50
-appendToHostFile 8 11
-runSipStackStealSearches 100
+appendToHostFile 4 11
+runMaxClique 100
 appendToHostFile 12 19
-runSipStackStealSearches 150
-runSipStackStealSearches 200
-runSipStackStealSearches 250
+runMaxClique 150
+runMaxClique 200
+runMaxClique 250
+
+
 
 exit 0
