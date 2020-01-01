@@ -62,7 +62,7 @@ static auto printBacktracks() {
 }
 
 static auto printTimes() {
-
+/*
   auto timeBucketsAll = hpx::lcos::broadcast<GetTimeBucketsAct>(hpx::find_all_localities()).get();
 
   std::uint64_t depth = 0;
@@ -80,7 +80,7 @@ static auto printTimes() {
     depth = 0;
   }
   hpx::cout << hpx::endl;
-
+*/
 }
 
 template<typename Space, typename Node, typename Bound>
