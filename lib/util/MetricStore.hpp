@@ -3,9 +3,12 @@
 
 #include <atomic>
 #include <algorithm>
+#include <ctime>
 #include <memory>
 #include <limits>
 #include <vector>
+
+#include <boost/random.hpp>
 
 #include <hpx/runtime/actions/basic_action.hpp>
 #include <hpx/traits/action_stacksize.hpp>
@@ -25,6 +28,10 @@ struct MetricStore {
 
   // Regularity Metrics
   TimesVecPtr taskTimes;
+  // Random number generator to determine if we collect a time (or not)
+  boost::random::mt19937 gen;
+  boost::random::bernoulli_distribution<> dist;
+  const int N = 0.7;
   // Keep track of the max depth reached for all metric vectors so we can resize later to avoid excessive amounts of print statements
   std::atomic<unsigned> maxDepthBuckets;
 
@@ -42,18 +49,30 @@ struct MetricStore {
 
   MetricStore() = default;
 
-  // Initialises the store
-  void init(const unsigned maxDepth) {
-    taskTimes = std::make_unique<TimesVec>();
-    nodesVisited = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
-    backtracks = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
-    prunes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
+  // Initialises the store for an analysis of runtime regulairty (and pruning for BnB)
+  void init(const unsigned maxDepth, const unsigned scaling, const unsigned parameterTune, const unsigned regularity) {
+    if (regularity) {
+      taskTimes = std::make_unique<TimesVec>();
+      prunes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
+    }
+    if (scaling) {
+      nodesVisited = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
+    }
+    if (parameterTune) {
+      backtracks = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
+    }
+    // Provide the random number generator with a seed
+    std::time_t now = std::time(NULL);
+    gen.seed(now);
   }
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
 		if (time >= 1 && taskTimes->size() < 100) {
-			taskTimes->push_back(time);
-  	  maxDepthBuckets = depth > maxDepthBuckets.load() ? depth : maxDepthBuckets.load();
+      // Generate random number and if below 0.7 then accept, else reject
+      if (dist(gen) < N) {
+        taskTimes->push_back(time);
+        maxDepthBuckets = depth > maxDepthBuckets.load() ? depth : maxDepthBuckets.load();
+      }
 		}
   }
 
@@ -115,8 +134,8 @@ private:
 
 MetricStore* MetricStore::store = new MetricStore;
 
-void initMetricStore(const unsigned maxDepth) {
-  MetricStore::store->init(maxDepth);
+void initMetricStore(const unsigned maxDepth, const unsigned scaling, const unsigned parameterTune, const unsigned regularity) {
+  MetricStore::store->init(maxDepth, scaling, parameterTune, regularity);
 }
 struct InitMetricStoreAct : hpx::actions::make_direct_action<
   decltype(&initMetricStore), &initMetricStore, InitMetricStoreAct>::type {};

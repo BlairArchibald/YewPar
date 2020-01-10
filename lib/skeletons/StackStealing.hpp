@@ -38,7 +38,7 @@ struct StackStealing {
   static constexpr bool isOptimisation = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthLimited_, std::integral_constant<bool, false> >::type::value;
-  static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, true> >::type::value;
   static constexpr unsigned maxStackDepth = parameter::value_type<args, API::tag::MaxStackDepth, std::integral_constant<unsigned, 5000> >::type::value;
 
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
@@ -46,6 +46,15 @@ struct StackStealing {
 
   typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 1> >::type Metrics;
   static constexpr unsigned metrics = Metrics::value;
+
+  typedef typename parameter::value_type<args, API::tag::Scaling_, std::integral_constant<unsigned, 1> >::type Scaling;
+  static constexpr unsigned scaling = Scaling::value;
+
+  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 1> >::type Regularity;
+  static constexpr unsigned regularity = Regularity::value;
+
+  typedef typename parameter::value_type<args, API::tag::ParameterTune_, std::integral_constant<unsigned, 1> >::type ParameterTune;
+  static constexpr unsigned parameterTune = ParameterTune::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
@@ -214,20 +223,20 @@ struct StackStealing {
         generatorStack[stackDepth].seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child);
-        if constexpr(metrics) {
+        if constexpr(scaling) {
 					++nodeCount;
 				}
         
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
-          if constexpr(metrics && isOptimisation) {
+          if constexpr(isOptimisation && pruneLevel && regularity) {
 						++prunes;
 					}
           continue;
         }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
-          if constexpr(metrics) {
+          if constexpr(parameterTune) {
 				  	backtracks++;
 					}
           depth--;
@@ -249,7 +258,7 @@ struct StackStealing {
             // This doesn't look quite right to me, we want the next element at this level not the previous?
             if (depth == reg->params.maxDepth) {
               stackDepth--;
-              if constexpr(metrics) {
+              if constexpr(parameterTune) {
 								backtracks++;
 							}
               depth--;
@@ -262,7 +271,7 @@ struct StackStealing {
       } else {
         stackDepth--;
         depth--;
-        if constexpr(metrics) {
+        if constexpr(parameterTune) {
 					backtracks++;
 				}
       }
@@ -288,23 +297,31 @@ struct StackStealing {
     std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
     std::chrono::time_point<std::chrono::steady_clock> t1;
 
-		if constexpr(metrics) {
+		if constexpr(regularity) {
     	t1 = std::chrono::steady_clock::now();
     }
 
 		runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, backtracks, stackDepth, depth);
     
-    if constexpr(metrics) {
+    if constexpr(regularity) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
-      const std::uint64_t time = (std::uint64_t) diff.count();
-      store->updateNodesVisited(startingDepth, nodeCount);
-      store->updateTimes(startingDepth, time);
-      store->updateBacktracks(startingDepth, backtracks);
-      if constexpr(isOptimisation) {
-        store->updatePrunes(startingDepth, prunes);
-      }
+     	const std::uint64_t time = (std::uint64_t) diff.count();
+      store->updateTimes(depth, time);
     }
+
+    if constexpr(scaling) {
+      store->updateNodesVisited(depth, nodeCount);
+    }
+
+    if constexpr(parameterTune) {
+      store->updateBacktracks(depth, backtracks);
+    }
+
+    if constexpr(isOptimisation && pruneLevel && regularity) {
+      store->updatePrunes(depth, prunes);
+    }
+
     // Atomically updates the (process) local counter
     if constexpr(isCountNodes) {
       reg->updateCounts(cntMap);
@@ -466,8 +483,8 @@ struct StackStealing {
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
-    if constexpr(metrics) {
-      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth));
+    if constexpr(regularity || scaling || parameterTune) {
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, parameterTune, regularity));
     }
 
     Policy::initPolicy();
@@ -480,7 +497,7 @@ struct StackStealing {
     }
 
     std::chrono::time_point<std::chrono::steady_clock> t1;
-    if constexpr(metrics) {
+    if constexpr(scaling) {
       t1 = std::chrono::steady_clock::now();
     }
 
@@ -498,18 +515,26 @@ struct StackStealing {
       }
     }
 
-		if constexpr(metrics) {
+    if constexpr(scaling) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2-t1);
-      const double time = diff.count();
+      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+      const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
-      printTimes();
       printNodeCounts();
+    }
+
+    if constexpr(regularity) {
+      MetricStore *store = MetricStore::store;
+      store->printTimes();
+    }
+
+    if constexpr(parameterTune) {
       printBacktracks();
-      if constexpr(isOptimisation) {
-        printPrunes();
-      }
-		}
+    }
+
+    if constexpr(isOptimisation && pruneLevel && regularity) {
+      printPrunes();
+    }
 
     // Return the right thing
     if constexpr(isCountNodes) {

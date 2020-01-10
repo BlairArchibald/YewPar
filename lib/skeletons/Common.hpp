@@ -139,7 +139,7 @@ struct ProcessNode {
           hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
           return ProcessNodeRet::Exit;
         }
-      }
+    }
 
     if constexpr(!std::is_same<boundFn, nullFn__>::value) {
         Objcmp cmp;
@@ -149,7 +149,7 @@ struct ProcessNode {
               if constexpr(pruneLevel) {
                   return ProcessNodeRet::Break;
                 } else {
-                return ProcessNodeRet::Prune;
+                  return ProcessNodeRet::Prune;
               }
             }
             // B&B Case

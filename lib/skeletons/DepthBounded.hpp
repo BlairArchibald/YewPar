@@ -49,13 +49,22 @@ struct DepthBounded {
   static constexpr bool isOptimisation = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthLimited = parameter::value_type<args, API::tag::DepthLimited_, std::integral_constant<bool, false> >::type::value;
-  static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, true> >::type::value;
 
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
   typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 1> >::type Metrics;
   static constexpr unsigned metrics = Metrics::value;
+
+  typedef typename parameter::value_type<args, API::tag::Scaling_, std::integral_constant<unsigned, 1> >::type Scaling;
+  static constexpr unsigned scaling = Scaling::value;
+
+  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 1> >::type Regularity;
+  static constexpr unsigned regularity = Regularity::value;
+
+  typedef typename parameter::value_type<args, API::tag::ParameterTune_, std::integral_constant<unsigned, 1> >::type ParameterTune;
+  static constexpr unsigned parameterTune = ParameterTune::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
@@ -108,13 +117,13 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      if constexpr(metrics) {
+      if constexpr(scaling) {
         ++nodeCount;
       }
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Break) { 
-        if constexpr(metrics) {
+        if constexpr(parameterTune) {
           ++backtracks;
         }
         break; 
@@ -155,19 +164,19 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      if constexpr(metrics) {
+      if constexpr(scaling) {
         ++nodeCount;
       }
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Prune) {
-        if constexpr(metrics && isOptimisation) {
+        if constexpr(isOptimisation && pruneLevel && regularity) {
           ++prunes;
         }
         continue;
       }
       else if (pn == ProcessNodeRet::Break) {
-        if constexpr(metrics) {
+        if constexpr(parameterTune) {
           ++backtracks; 
         }
         break;
@@ -193,7 +202,7 @@ struct DepthBounded {
     std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
 
     std::chrono::time_point<std::chrono::steady_clock> t1;
-    if constexpr(metrics) {
+    if constexpr(regularity) {
       t1 = std::chrono::steady_clock::now();
     }
 
@@ -203,16 +212,23 @@ struct DepthBounded {
       expandNoSpawns(reg->space, taskRoot, reg->params, countMap, nodeCount, prunes, backtracks, childDepth);
     }
 
-    if constexpr(metrics) {
+    if constexpr(regularity) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
      	const std::uint64_t time = (std::uint64_t) diff.count();
-      store->updateNodesVisited(childDepth, nodeCount);
       store->updateTimes(childDepth, time);
+    }
+
+    if constexpr(scaling) {
+      store->updateNodesVisited(childDepth, nodeCount);
+    }
+    
+    if constexpr(parameterTune) {
       store->updateBacktracks(childDepth, backtracks);
-      if constexpr(isOptimisation) {
-        store->updatePrunes(childDepth, prunes);
-      }
+    }
+
+    if constexpr(isOptimisation && pruneLevel && regularity) {
+      store->updatePrunes(childDepth, prunes);
     }
 
     // Atomically updates the (process) local counter
@@ -256,8 +272,9 @@ struct DepthBounded {
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
-    if constexpr(metrics) {
-      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth));
+    // If we are performing an analysis on any of the metrics
+    if constexpr(regularity || scaling || parameterTune) {
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, parameterTune, regularity));
     }
 
     Policy::initPolicy();
@@ -274,7 +291,7 @@ struct DepthBounded {
     }
 
     std::chrono::time_point<std::chrono::steady_clock> t1;
-    if constexpr(metrics) {
+    if constexpr(scaling) {
         t1 = std::chrono::steady_clock::now();
     }
 
@@ -284,19 +301,27 @@ struct DepthBounded {
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
-    if constexpr(metrics) {
+    if constexpr(scaling) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
-      printTimes();
       printNodeCounts();
-      printBacktracks();
-      if constexpr(isOptimisation) {
-        printPrunes();
-      }
     }
-    
+
+    if constexpr(regularity) {
+      MetricStore *store = MetricStore::store;
+      store->printTimes();
+    }
+
+    if constexpr(parameterTune) {
+      printBacktracks();
+    }
+
+    if constexpr(isOptimisation && pruneLevel && regularity) {
+      printPrunes();
+    }
+
     // Return the right thing
     if constexpr(isCountNodes) {
       auto vec = totalNodeCounts<Space, Node, Bound>(params.maxDepth);
