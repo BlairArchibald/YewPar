@@ -44,13 +44,13 @@ hpx-1.2.1/build/install : hpx-1.2.1 cmake-3.14.4-Linux-x86_64 boost_1_70_0/stage
 	 mkdir -p build	; \
 	 cd build ; \
 	 $(CMAKE) -DCMAKE_BUILD_TYPE=Release \
-       -DCMAKE_INSTALL_PREFIX=$$(pwd)/install \
+       -DCMAKE_INSTALL_PREFIX=$(pwd)/install \
        -DHPX_WITH_PARCELPORT_MPI=ON \
        -DHPX_WITH_EXAMPLES=OFF \
        -DHPX_WITH_TESTS=OFF  \
-       -DBOOST_ROOT=$(INSTALL_LOC)/boost_1_70_0/ \
-       -DBOOST_LIBRARYDIR=$(INSTALL_LOC)/boost_1_70_0/stage/lib \
-       -DTCMALLOC_LIBRARY=$(INSTALL_LOC)/gperftools-gperftools-2.7/install/lib/ \
+       -DBOOST_ROOT=${INSTALL_LOC}/boost_1_70_0/ \
+       -DBOOST_LIBRARYDIR=${INSTALL_LOC}/boost_1_70_0/stage/lib \
+       -DTCMALLOC_LIBRARY=${INSTALL_LOC}/gperftools-gperftools-2.7/install/lib/ \
        -DTCMALLOC_INCLUDE_DIR=$(INSTALL_LOC)/gperftools-gperftools-2.7/install/include \
        ../ ; \
 	  make -j$(N_JOBS) ; \

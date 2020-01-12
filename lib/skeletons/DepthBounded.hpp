@@ -310,8 +310,9 @@ struct DepthBounded {
     }
 
     if constexpr(regularity) {
-      MetricStore *store = MetricStore::store;
-      store->printTimes();
+      for (const auto & l : hpx::find_all_localities()) {
+        hpx::async<PrintTimesAct>(l).get();
+      }
     }
 
     if constexpr(parameterTune) {

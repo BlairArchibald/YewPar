@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import numpy as np
 from pprint import pprint
 import sys
@@ -14,6 +15,8 @@ timesMap = {
   "8" : 3,
   "16" : 4
 }
+
+workers = [i for i in range(100, 251, 50)]
 
 def read_scaling_results(filename):
   """
@@ -31,7 +34,6 @@ def read_scaling_results(filename):
     if len(times[i]) > 0:
       times[i] = sorted(times[i])
       medianTimes[i] = (times[i][1] + times[i][2])/2
-      print(medianTimes[i])
 
   return np.array(medianTimes)
 
@@ -69,8 +71,28 @@ def draw_metrics_graph(metric, label, d, title, ylabel):
   ax1.set_xlabel("Localities")
   ax1.set_title(title)
   ax1.set_facecolor("grey")
-  ax1.legend()
+  ax1.legend(["150 workers", "250 workers"])
   plt.grid()
+  plt.show()
+
+def draw_bucket_graph(times, times2, times3, title):
+  """
+  Draws a bar chart for the runtime regularity
+  """
+  fig1, ax1 = plt.subplots()
+  plt.rc('xtick', labelsize=8)
+  ax1.set_ylabel("Time (s)")
+  ax1.set_xlabel("Workers")
+  ax1.set_xticks([i for i in range(1,5)])
+  ax1.set_xticklabels(workers)
+  ax1.set_title(title)
+  ax1.set_facecolor("grey")
+  blue = mpatches.Patch(color='blue')
+  orange = mpatches.Patch(color='orange')
+  red = mpatches.Patch(color='red')
+  white = mpatches.Patch(color='white')
+  plt.grid()
+  parts = ax1.violinplot([times, times2, times3])
   plt.show()
 
 def read_search_metrics(filename, is_opt=False):
@@ -78,7 +100,7 @@ def read_search_metrics(filename, is_opt=False):
   Reads in the results from the file and returns all necessary data
   at each depth
   """
-  buckets = np.array((NUM_BUCKETS,), dtype=np.uint64)
+  times = []
   searchTimes = np.zeros((NUM_SEARCHES,), dtype=np.uint64)
   nodeCounts = [0 for i in range(NUM_SEARCHES)]
   backtracks = [0 for i in range(NUM_SEARCHES)]
@@ -100,11 +122,11 @@ def read_search_metrics(filename, is_opt=False):
         continue
 
       line = line.split(":")
-      if "Bucket" in line[0]:
+      if "Time" in line[0]:
         if not otherOnce:
           otherOnce = True
-        buckets[int(line[0][-1])] += int(line[1])
-
+        times.append(int(line[1]))
+      """
       elif "Nodes" in line[0]:
         if not once:
           bIdx += 1
@@ -126,32 +148,59 @@ def read_search_metrics(filename, is_opt=False):
 
   for i in range(NUM_SEARCHES):
     nodeCounts[i] /= searchTimes[i]
-
-  return buckets, nodeCounts, backtracks, searchTimes, prunes
-
-def output_results(data, clique_size, exec_time, num_nodes, prunes, backtracks):
   """
-  Outputs all results collected from an experiment
+  return times, nodeCounts, backtracks, searchTimes, prunes
+
+def draw_node_throughput(times, nodes, title, d, b):
   """
-  print("Number of nodes processed: {}".format(num_nodes))
-  print("CPU execution time {}ms".format(exec_time))
-  print("Node throughput {} per ms".format(int(num_nodes/exec_time)))
-  print("Number of Prunes {}".format(prunes))
-  print("Number of Backtracks {}".format(backtracks))
+  Draws the node throughput graphs
+  """
+  node_tput_b = [None for i in range(len(times))]
+  node_tput_d = [None for i in range(len(times))]
+  node_tput_s = [None for i in range(len(times))]
+
+  # Compute the throughputs first
+  for i in range(len(times)):
+    node_tput_b[i] = nodes[i] / times[i]
+    node_tput_d[i] = nodes[i] / times[i]
+    node_tput_s[i] = nodes[i] / times[i]
+
   fig1, ax1 = plt.subplots()
-  plt.xticks([i for i in range(1,15)], [2, 4, 6, 8, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
-  ax1.set_ylabel("Time (\u03BCs)")
-  ax1.set_xlabel("Depth Limit")
-  ax1.set_title("Box Plots of Times recorded at each depth in Maximum Clique Search")
-  ax1.boxplot(results)
+  ax1.set_ylabel("Node Throughput (Nodes/second)")
+  ax1.set_xlabel("Workers")
+  ax1.set_xticks([i for i in range(1,5)])
+  ax1.set_xticklabels(workers)
+  ax1.set_title(title)
+  ax1.set_facecolor("grey")
+  ax1.plot(workers, node_tput_b, marker="x", color="red", label="DepthBounded d = {}".format(d))
+  ax1.plot(workers, node_tput_d, marker="x", color="blue", label="Budget b = {}".format(b))
+  print(node_tput_b, node_tput_d, node_tput_s)
+  ax1.plot(workers, node_tput_s, marker="x", color="purple", label="StackSteal with chunked")
+  ax1.legend()
   plt.show()
 
-timesD = read_scaling_results("../results/Depthbounded/MaxClique_depthbounded_scaling.txt")
-timesB = read_scaling_results("../results/Budget/MaxClique_budget_scaling.txt")
-timesS = read_scaling_results("../results/StackSteal/MaxClique_stacksteal_scaling.txt")
-draw_scaling_graph(timesD, timesB, timesS[0:-1], "Maximum Clique scaling up to 250 workers on 16 localities brock800_4.clq", 2, 10**7, "Time (s)")
-speedUpsD, speedUpsB, speedUpsS = get_speedups(timesD, timesB, timesS)
-draw_scaling_graph(speedUpsD, speedUpsB, speedUpsS[0:-1], "Maximum Clique scaling up to 250 workers on 16 localities brock800_4.clq", 2, 10**7, "Relative Speedup (1 locality)")
+#timesD = read_scaling_results("../results/Depthbounded/MaxClique_depthbounded_scaling.txt")
+#timesB = read_scaling_results("../results/Budget/MaxClique_budget_scaling.txt")
+#timesS = read_scaling_results("../results/StackSteal/MaxClique_stacksteal_scaling.txt")
+#draw_scaling_graph(timesD, timesB, timesS[0:-1], "Maximum Clique scaling up to 250 workers on 16 localities brock800_4.clq", 2, 10**7, "Relative Speedup (1 locality)")
+#speedUpsD, speedUpsB, speedUpsS = get_speedups(timesD, timesB, timesS)
+#draw_scaling_graph(speedUpsD, speedUpsB, speedUpsS[0:-1], "Maximum Clique scaling up to 250 workers on 16 localities brock800_4.clq", 2, 10**7, "Relative Speedup (1 locality)")
 
-pprint(read_search_metrics("../results/Budget/NS-hivert_budget_search_metrics_32.txt"))
-buckets, nodes, backtracks, searchMetrics, prunes = read_search_metrics("../results/Budget/NS-hivert_budget_search_metrics_64.txt")
+times, nodes, backtracks, searchTimes, prunes = read_search_metrics("../MaxClique_budget_search_metrics_100.txt")
+times2, nodes2, backtracks, searchTimes2, prunes = read_search_metrics("../MaxClique_budget_search_metrics_175.txt")
+times3, nodes4, backtracks, searchTimes4, prunes = read_search_metrics("../MaxClique_budget_search_metrics_250.txt")
+draw_bucket_graph(times, times2, times3, "Runtime Regularity on MaxClique, g = 50, Budget = 10000, 150 workers and 250 workers")
+
+median_times = np.median(np.array([searchTimes, searchTimes2, searchTimes3, searchTimes4]), axis=1)
+avg_nodes = np.mean([nodes, nodes2, nodes3, nodes4], axis=1)
+#draw_node_throughput(median_times, avg_nodes, "Node throughput for NS-hivert, g = 50", 35, 10000)
+
+times, nodes, backtracks, searchTimes, prunes = read_search_metrics("../NS-hivert_depthbounded_search_metrics_100.txt")
+pprint(np.median(searchTimes))
+times2, nodes, backtracks, searchTimes, prunes = read_search_metrics("../NS-hivert_depthbounded_search_metrics_150.txt")
+pprint(np.median(searchTimes))
+times3, nodes, backtracks, searchTimes, prunes = read_search_metrics("../NS-hivert_depthbounded_search_metrics_200.txt")
+pprint(np.median(searchTimes))
+times4, nodes, backtracks, searchTimes, prunes = read_search_metrics("../NS-hivert_depthbounded_search_metrics_250.txt")
+pprint(np.median(searchTimes))
+draw_bucket_graph(times, times2, times3, times4, "Runtime Regularity on NS-hivert, g = 50, Depthbounded, d = 35, 150 & 250 workers")
