@@ -290,14 +290,10 @@ struct Budget {
       for (const auto & l : hpx::find_all_localities()) {
         hpx::async<PrintTimesAct>(l).get();
       }
-    }
-
-    if constexpr(regularity) {
       printBacktracks();
-    }
-
-    if constexpr(isOptimisation && regularity) {
-      printPrunes();
+      if constexpr(isOptimisation) {
+        printPrunes();
+      }
     }
 
     // Return the right thing

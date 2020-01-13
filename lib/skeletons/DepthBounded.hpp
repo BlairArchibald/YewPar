@@ -60,9 +60,6 @@ struct DepthBounded {
   typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 0> >::type Regularity;
   static constexpr unsigned regularity = Regularity::value;
 
-  typedef typename parameter::value_type<args, API::tag::ParameterTune_, std::integral_constant<unsigned, 0> >::type ParameterTune;
-  static constexpr unsigned parameterTune = ParameterTune::value;
-
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
@@ -208,24 +205,20 @@ struct DepthBounded {
     } else {
       expandNoSpawns(reg->space, taskRoot, reg->params, countMap, nodeCount, prunes, backtracks, childDepth);
     }
+    
+    if constexpr(scaling) {
+      store->updateNodesVisited(depth, nodeCount);
+    }
 
     if constexpr(regularity) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
      	const std::uint64_t time = (std::uint64_t) diff.count();
-      store->updateTimes(childDepth, time);
-    }
-
-    if constexpr(scaling) {
-      store->updateNodesVisited(childDepth, nodeCount);
-    }
-
-    if constexpr(parameterTune) {
-      store->updateBacktracks(childDepth, backtracks);
-    }
-
-    if constexpr(isOptimisation && regularity) {
-      store->updatePrunes(childDepth, prunes);
+      store->updateTimes(depth, time);
+      store->updateBacktracks(depth, backtracks);
+      if constexpr(isOptimisation) {
+        store->updatePrunes(depth, prunes);
+      }
     }
 
     // Atomically updates the (process) local counter
@@ -307,14 +300,10 @@ struct DepthBounded {
       for (const auto & l : hpx::find_all_localities()) {
         hpx::async<PrintTimesAct>(l).get();
       }
-    }
-
-    if constexpr(parameterTune) {
       printBacktracks();
-    }
-
-    if constexpr(isOptimisation && regularity) {
-      printPrunes();
+      if constexpr(isOptimisation) {
+        printPrunes();
+      }
     }
 
     // Return the right thing

@@ -514,14 +514,10 @@ struct StackStealing {
       for (const auto & l : hpx::find_all_localities()) {
         hpx::async<PrintTimesAct>(l).get();
       }
-    }
-
-    if constexpr(parameterTune) {
       printBacktracks();
-    }
-
-    if constexpr(isOptimisation && pruneLevel && regularity) {
-      printPrunes();
+      if constexpr(isOptimisation) {
+        printPrunes();
+      }
     }
 
     // Return the right thing
