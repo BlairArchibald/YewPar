@@ -30,18 +30,11 @@ struct Budget {
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
-  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 1> >::type Metrics;
-  static constexpr unsigned metrics = Metrics::value;
-
   typedef typename parameter::value_type<args, API::tag::Scaling_, std::integral_constant<unsigned, 1> >::type Scaling;
   static constexpr unsigned scaling = Scaling::value;
 
-  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 1> >::type Regularity;
+  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 0> >::type Regularity;
   static constexpr unsigned regularity = Regularity::value;
-
-  typedef typename parameter::value_type<args, API::tag::ParameterTune_, std::integral_constant<unsigned, 1> >::type ParameterTune;
-  static constexpr unsigned parameterTune = ParameterTune::value;
-
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
@@ -83,6 +76,7 @@ struct Budget {
 
     auto depth = childDepth;
     auto backtracks = 0;
+    auto reachedLimit = false;
 
     // Init the stack
     StackElem<Generator> initElem(space, n);
@@ -130,7 +124,7 @@ struct Budget {
 
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
-          if constexpr(isOptimisation && pruneLevel && regularity) {
+          if constexpr(isOptimisation && regularity) {
             ++prunes;
           }
           continue;
@@ -171,7 +165,7 @@ struct Budget {
       }
     }
 
-    if constexpr(parameterTune) {
+    if constexpr(regularity) {
       totalBacktracks = backtracks;
     }
   }
@@ -210,11 +204,11 @@ struct Budget {
       store->updateNodesVisited(childDepth, nodeCount);
     }
     
-    if constexpr(parameterTune) {
+    if constexpr(regularity) {
       store->updateBacktracks(childDepth, backtracks);
     }
 
-    if constexpr(isOptimisation && pruneLevel && regularity) {
+    if constexpr(isOptimisation && regularity) {
       store->updatePrunes(childDepth, prunes);
     }
 
@@ -260,8 +254,8 @@ struct Budget {
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
-    if constexpr(regularity || scaling || parameterTune) {
-      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, parameterTune, regularity));
+    if constexpr(regularity || scaling) {
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, regularity, regularity));
     }
 
     Policy::initPolicy();
@@ -277,18 +271,15 @@ struct Budget {
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
 
-    std::chrono::time_point<std::chrono::steady_clock> t1;
-    if constexpr(scaling) {
-        t1 = std::chrono::steady_clock::now();
-    }
+    auto t1 = std::chrono::steady_clock::now();
 
     createTask(1, root).get();
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
+    auto t2 = std::chrono::steady_clock::now();
     if constexpr(scaling) {
-      auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
@@ -301,11 +292,11 @@ struct Budget {
       }
     }
 
-    if constexpr(parameterTune) {
+    if constexpr(regularity) {
       printBacktracks();
     }
 
-    if constexpr(isOptimisation && pruneLevel && regularity) {
+    if constexpr(isOptimisation && regularity) {
       printPrunes();
     }
 

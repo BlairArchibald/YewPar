@@ -2,23 +2,29 @@
 
 cd ../
 
+HOSTFILE=hostfile.txt
+
 MaxClique() {
 
   INSTANCE=$1
-  D=$2
-  B=$3
   NPROCESSES=$4
 
   for i in {1..5}; do
-    mpiexec -n $NPROCESSES -f $HOSTFILE ./build/install/bin/maxclique-16 -f $INSTANCE --skel depthbounded -d $D --hpx:threads 8 >> max_clique_scaling_depthbounded.txt
+    for j in {1..3}; do
+      mpiexec -n $NPROCESSES -f $HOSTFILE ./build/install/bin/maxclique-16 -f p_hat1500-$i.clq --skel depthbounded -d 2 >> max_clique_scaling_depthbounded.txt
+    done
   done
 
   for i in {1..5}; do
-    mpiexec -n $NPROCESSES -f $HOSTFILE ./build/install/bin/maxclique-16 -f $INSTANCE --skel budget -b $B --hpx:threads 8 >> max_clique_scaling_budget.txt
+    for j in {1..3}; do
+      mpiexec -n $NPROCESSES -f $HOSTFILE ./build/install/bin/maxclique-16 -f p_hat1500-$i.clq --skel budget -b 1000000 >> max_clique_scaling_budget.txt
+    done
   done
 
   for i in {1..5}; do
-    mpiexec -n $NPROCESSES -f $HOSTFILE ./build/install/bin/maxclique-16 -f $INSTANCE --skel stacksteal --chunked --hpx:threads 8 >> max_clique_scaling_stacksteal.txt
+    for j in {1..3}; do
+      mpiexec -n $NPROCESSES -f $HOSTFILE ./build/install/bin/maxclique-16 -f p_hat1500-$i.clq --skel stacksteal --chunked >> max_clique_scaling_stacksteal.txt
+    done
   done
 
 }

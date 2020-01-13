@@ -54,16 +54,13 @@ struct DepthBounded {
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
-  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 1> >::type Metrics;
-  static constexpr unsigned metrics = Metrics::value;
-
   typedef typename parameter::value_type<args, API::tag::Scaling_, std::integral_constant<unsigned, 1> >::type Scaling;
   static constexpr unsigned scaling = Scaling::value;
 
-  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 1> >::type Regularity;
+  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 0> >::type Regularity;
   static constexpr unsigned regularity = Regularity::value;
 
-  typedef typename parameter::value_type<args, API::tag::ParameterTune_, std::integral_constant<unsigned, 1> >::type ParameterTune;
+  typedef typename parameter::value_type<args, API::tag::ParameterTune_, std::integral_constant<unsigned, 0> >::type ParameterTune;
   static constexpr unsigned parameterTune = ParameterTune::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
@@ -122,8 +119,8 @@ struct DepthBounded {
       }
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
-      else if (pn == ProcessNodeRet::Break) { 
-        if constexpr(parameterTune) {
+      else if (pn == ProcessNodeRet::Break) {
+        if constexpr(regularity) {
           ++backtracks;
         }
         break; 
@@ -170,13 +167,13 @@ struct DepthBounded {
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Prune) {
-        if constexpr(isOptimisation && pruneLevel && regularity) {
+        if constexpr(isOptimisation && regularity) {
           ++prunes;
         }
         continue;
       }
       else if (pn == ProcessNodeRet::Break) {
-        if constexpr(parameterTune) {
+        if constexpr(regularity) {
           ++backtracks; 
         }
         break;
@@ -222,12 +219,12 @@ struct DepthBounded {
     if constexpr(scaling) {
       store->updateNodesVisited(childDepth, nodeCount);
     }
-    
+
     if constexpr(parameterTune) {
       store->updateBacktracks(childDepth, backtracks);
     }
 
-    if constexpr(isOptimisation && pruneLevel && regularity) {
+    if constexpr(isOptimisation && regularity) {
       store->updatePrunes(childDepth, prunes);
     }
 
@@ -273,7 +270,7 @@ struct DepthBounded {
         hpx::find_all_localities(), space, root, params));
 
     // If we are performing an analysis on any of the metrics
-    if constexpr(regularity || scaling || parameterTune) {
+    if constexpr(regularity || scaling) {
       hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, parameterTune, regularity));
     }
 
@@ -290,10 +287,7 @@ struct DepthBounded {
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
 
-    std::chrono::time_point<std::chrono::steady_clock> t1;
-    if constexpr(scaling) {
-        t1 = std::chrono::steady_clock::now();
-    }
+    auto t1 = std::chrono::steady_clock::now();
 
     // Issue is updateCounts by the looks of things. Something probably isn't initialised correctly.
     createTask(1, root).get();
@@ -301,8 +295,8 @@ struct DepthBounded {
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
+    auto t2 = std::chrono::steady_clock::now();
     if constexpr(scaling) {
-      auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
@@ -319,7 +313,7 @@ struct DepthBounded {
       printBacktracks();
     }
 
-    if constexpr(isOptimisation && pruneLevel && regularity) {
+    if constexpr(isOptimisation && regularity) {
       printPrunes();
     }
 

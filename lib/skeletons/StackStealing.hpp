@@ -44,17 +44,11 @@ struct StackStealing {
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
-  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 1> >::type Metrics;
-  static constexpr unsigned metrics = Metrics::value;
-
   typedef typename parameter::value_type<args, API::tag::Scaling_, std::integral_constant<unsigned, 1> >::type Scaling;
   static constexpr unsigned scaling = Scaling::value;
 
-  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 1> >::type Regularity;
+  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 0> >::type Regularity;
   static constexpr unsigned regularity = Regularity::value;
-
-  typedef typename parameter::value_type<args, API::tag::ParameterTune_, std::integral_constant<unsigned, 1> >::type ParameterTune;
-  static constexpr unsigned parameterTune = ParameterTune::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
@@ -229,15 +223,15 @@ struct StackStealing {
         
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
-          if constexpr(isOptimisation && pruneLevel && regularity) {
+          if constexpr(isOptimisation && regularity) {
 						++prunes;
 					}
           continue;
         }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
-          if constexpr(parameterTune) {
-				  	backtracks++;
+          if constexpr(regularity) {
+				  	++backtracks;
 					}
           depth--;
           continue;
@@ -258,8 +252,8 @@ struct StackStealing {
             // This doesn't look quite right to me, we want the next element at this level not the previous?
             if (depth == reg->params.maxDepth) {
               stackDepth--;
-              if constexpr(parameterTune) {
-								backtracks++;
+              if constexpr(regularity) {
+								++backtracks;
 							}
               depth--;
               continue;
@@ -271,8 +265,8 @@ struct StackStealing {
       } else {
         stackDepth--;
         depth--;
-        if constexpr(parameterTune) {
-					backtracks++;
+        if constexpr(regularity) {
+					++backtracks;
 				}
       }
     }
@@ -302,24 +296,20 @@ struct StackStealing {
     }
 
 		runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, backtracks, stackDepth, depth);
-    
-    if constexpr(regularity) {
-      auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
-     	const std::uint64_t time = (std::uint64_t) diff.count();
-      store->updateTimes(depth, time);
-    }
 
     if constexpr(scaling) {
       store->updateNodesVisited(depth, nodeCount);
     }
 
-    if constexpr(parameterTune) {
+    if constexpr(regularity) {
+      auto t2 = std::chrono::steady_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+     	const std::uint64_t time = (std::uint64_t) diff.count();
+      store->updateTimes(depth, time);
       store->updateBacktracks(depth, backtracks);
-    }
-
-    if constexpr(isOptimisation && pruneLevel && regularity) {
-      store->updatePrunes(depth, prunes);
+      if constexpr(isOptimisation) {
+        store->updatePrunes(depth, prunes);
+      }
     }
 
     // Atomically updates the (process) local counter
@@ -483,7 +473,7 @@ struct StackStealing {
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
-    if constexpr(regularity || scaling || parameterTune) {
+    if constexpr(regularity || scaling) {
       hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, parameterTune, regularity));
     }
 
@@ -496,10 +486,7 @@ struct StackStealing {
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
 
-    std::chrono::time_point<std::chrono::steady_clock> t1;
-    if constexpr(scaling) {
-      t1 = std::chrono::steady_clock::now();
-    }
+    auto t1 = std::chrono::steady_clock::now();
 
     doSearch(space, root, params);
 
@@ -515,8 +502,8 @@ struct StackStealing {
       }
     }
 
+    auto t2 = std::chrono::steady_clock::now();
     if constexpr(scaling) {
-      auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
