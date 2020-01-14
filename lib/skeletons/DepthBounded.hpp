@@ -57,7 +57,7 @@ struct DepthBounded {
   typedef typename parameter::value_type<args, API::tag::Scaling_, std::integral_constant<unsigned, 0> >::type Scaling;
   static constexpr unsigned scaling = Scaling::value;
 
-  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 1> >::type Metrics_;
+  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics_;
   static constexpr unsigned metrics = Metrics_::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
