@@ -119,11 +119,11 @@ private:
     const std::vector<std::atomic<std::uint64_t> > & vec,
     const unsigned newSize
   ) const {
-    MetricsVec res;
-    std::transform(vec.begin(), vec.end(), std::back_inserter(res),
-    [](const auto & c) { return c.load(); });
-    res.resize(newSize + 1);
-    return res;
+//    MetricsVec res;
+//    std::transform(vec.begin(), vec.end(), std::back_inserter(res),
+//    [](const auto & c) { return c.load(); });
+//    res.resize(newSize + 1);
+//    return res;
   }
 
 };
