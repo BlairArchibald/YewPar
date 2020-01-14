@@ -47,8 +47,8 @@ struct StackStealing {
   typedef typename parameter::value_type<args, API::tag::Scaling_, std::integral_constant<unsigned, 1> >::type Scaling;
   static constexpr unsigned scaling = Scaling::value;
 
-  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 0> >::type Regularity;
-  static constexpr unsigned regularity = Regularity::value;
+  typedef typename parameter::value_type<args, API::tag::Metrics__, std::integral_constant<unsigned, 0> >::type Metrics_;
+  static constexpr unsigned metrics = Metrics_::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
@@ -223,14 +223,14 @@ struct StackStealing {
         
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
-          if constexpr(isOptimisation && regularity) {
+          if constexpr(isOptimisation && metrics) {
 						++prunes;
 					}
           continue;
         }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
-          if constexpr(regularity) {
+          if constexpr(metrics) {
 				  	++backtracks;
 					}
           depth--;
@@ -252,7 +252,7 @@ struct StackStealing {
             // This doesn't look quite right to me, we want the next element at this level not the previous?
             if (depth == reg->params.maxDepth) {
               stackDepth--;
-              if constexpr(regularity) {
+              if constexpr(metrics) {
 								++backtracks;
 							}
               depth--;
@@ -265,7 +265,7 @@ struct StackStealing {
       } else {
         stackDepth--;
         depth--;
-        if constexpr(regularity) {
+        if constexpr(metrics) {
 					++backtracks;
 				}
       }
@@ -291,7 +291,7 @@ struct StackStealing {
     std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
     std::chrono::time_point<std::chrono::steady_clock> t1;
 
-		if constexpr(regularity) {
+		if constexpr(metrics) {
     	t1 = std::chrono::steady_clock::now();
     }
 
@@ -301,7 +301,7 @@ struct StackStealing {
       store->updateNodesVisited(depth, nodeCount);
     }
 
-    if constexpr(regularity) {
+    if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
      	const std::uint64_t time = (std::uint64_t) diff.count();
@@ -473,8 +473,8 @@ struct StackStealing {
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
-    if constexpr(regularity || scaling) {
-      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, regularity));
+    if constexpr(metrics || scaling) {
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, metrics));
     }
 
     Policy::initPolicy();
@@ -510,7 +510,7 @@ struct StackStealing {
       printNodeCounts();
     }
 
-    if constexpr(regularity) {
+    if constexpr(metrics) {
       for (const auto & l : hpx::find_all_localities()) {
         hpx::async<PrintTimesAct>(l).get();
       }
