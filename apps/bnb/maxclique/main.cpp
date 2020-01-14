@@ -232,7 +232,6 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto sol = root;
   auto skeletonType = opts["skeleton"].as<std::string>();
-  auto scaling = opts["scaling"].as<std::string>();
 
   if (skeletonType == "seq") {
     if (decisionBound != 0) {
