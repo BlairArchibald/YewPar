@@ -474,7 +474,7 @@ struct StackStealing {
         hpx::find_all_localities(), space, root, params));
 
     if constexpr(regularity || scaling) {
-      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, parameterTune, regularity));
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, regularity));
     }
 
     Policy::initPolicy();

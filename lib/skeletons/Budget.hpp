@@ -106,6 +106,9 @@ struct Budget {
             }
           }
         }
+				if constexpr (regularity) {
+					totalBacktracks += backtracks;
+				}
         backtracks = 0;
       }
 
@@ -166,7 +169,7 @@ struct Budget {
     }
 
     if constexpr(regularity) {
-      totalBacktracks = backtracks;
+      totalBacktracks += backtracks;
     }
   }
 
@@ -192,24 +195,20 @@ struct Budget {
     }
     
     expand(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth, nodeCount, prunes, backtracks);
-   
+
+    if constexpr(scaling) {
+      store->updateNodesVisited(childDepth, nodeCount);
+    }
+
     if constexpr(regularity) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
      	const std::uint64_t time = (std::uint64_t) diff.count();
       store->updateTimes(childDepth, time);
-    }
-
-    if constexpr(scaling) {
-      store->updateNodesVisited(childDepth, nodeCount);
-    }
-    
-    if constexpr(regularity) {
       store->updateBacktracks(childDepth, backtracks);
-    }
-
-    if constexpr(isOptimisation && regularity) {
-      store->updatePrunes(childDepth, prunes);
+      if constexpr(isOptimisation) {
+        store->updatePrunes(childDepth, prunes);
+      }
     }
 
     // Atomically updates the (process) local counter
@@ -255,7 +254,7 @@ struct Budget {
         hpx::find_all_localities(), space, root, params));
 
     if constexpr(regularity || scaling) {
-      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, regularity, regularity));
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, regularity));
     }
 
     Policy::initPolicy();

@@ -49,20 +49,17 @@ struct MetricStore {
   MetricStore() = default;
 
   // Initialises the store for an analysis of runtime regulairty (and pruning for BnB)
-  void init(const unsigned maxDepth, const unsigned scaling, const unsigned parameterTune, const unsigned regularity) {
+  void init(const unsigned maxDepth, const unsigned scaling, const unsigned regularity) {
     if (regularity) {
       taskTimes = std::make_unique<TimesVec>();
       prunes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
+      backtracks = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
+			std::time_t now = std::time(NULL);
+    	gen.seed(now);
     }
     if (scaling) {
       nodesVisited = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
     }
-    if (parameterTune) {
-      backtracks = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
-    }
-    // Provide the random number generator with a seed
-    std::time_t now = std::time(NULL);
-    gen.seed(now);
   }
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
@@ -133,8 +130,8 @@ private:
 
 MetricStore* MetricStore::store = new MetricStore;
 
-void initMetricStore(const unsigned maxDepth, const unsigned scaling, const unsigned parameterTune, const unsigned regularity) {
-  MetricStore::store->init(maxDepth, scaling, parameterTune, regularity);
+void initMetricStore(const unsigned maxDepth, const unsigned scaling, const unsigned regularity) {
+  MetricStore::store->init(maxDepth, scaling, regularity);
 }
 struct InitMetricStoreAct : hpx::actions::make_direct_action<
   decltype(&initMetricStore), &initMetricStore, InitMetricStoreAct>::type {};

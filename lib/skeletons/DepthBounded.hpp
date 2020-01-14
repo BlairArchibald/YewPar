@@ -54,10 +54,10 @@ struct DepthBounded {
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
-  typedef typename parameter::value_type<args, API::tag::Scaling_, std::integral_constant<unsigned, 1> >::type Scaling;
+  typedef typename parameter::value_type<args, API::tag::Scaling_, std::integral_constant<unsigned, 0> >::type Scaling;
   static constexpr unsigned scaling = Scaling::value;
 
-  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 0> >::type Regularity;
+  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 1> >::type Regularity;
   static constexpr unsigned regularity = Regularity::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
@@ -207,17 +207,17 @@ struct DepthBounded {
     }
     
     if constexpr(scaling) {
-      store->updateNodesVisited(depth, nodeCount);
+      store->updateNodesVisited(childDepth, nodeCount);
     }
 
     if constexpr(regularity) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
      	const std::uint64_t time = (std::uint64_t) diff.count();
-      store->updateTimes(depth, time);
-      store->updateBacktracks(depth, backtracks);
+      store->updateTimes(childDepth, time);
+      store->updateBacktracks(childDepth, backtracks);
       if constexpr(isOptimisation) {
-        store->updatePrunes(depth, prunes);
+        store->updatePrunes(childDepth, prunes);
       }
     }
 
@@ -264,7 +264,7 @@ struct DepthBounded {
 
     // If we are performing an analysis on any of the metrics
     if constexpr(regularity || scaling) {
-      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, parameterTune, regularity));
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, regularity));
     }
 
     Policy::initPolicy();
