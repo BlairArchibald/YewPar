@@ -366,21 +366,20 @@ int hpx_main(boost::program_options::variables_map & opts) {
     } else {
       YewPar::Skeletons::API::Params<int> searchParameters;
       searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
-
       if (opts.count("scaling")) {
         sol = YewPar::Skeletons::Budget<GenNode,
-                                        YewPar::Skeletons::API::Optimsation,
+                                        YewPar::Skeletons::API::Optimisation,
                                         YewPar::Skeletons::API::Scaling,
                                         YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                         YewPar::Skeletons::API::PruneLevel>
-          ::search(graph, root, serachParameters);
+          ::search(graph, root, searchParameters);
       } else if (opts.count("metrics")) {
         sol = YewPar::Skeletons::Budget<GenNode,
-                                        YewPar::Skeletons::API::Optimsation,
+                                        YewPar::Skeletons::API::Optimisation,
                                         YewPar::Skeletons::API::Metrics,
                                         YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                         YewPar::Skeletons::API::PruneLevel>
-          ::search(graph, root, serachParameters);
+          ::search(graph, root, searchParameters);
       } else {
         sol = YewPar::Skeletons::Budget<GenNode,
                                         YewPar::Skeletons::API::Optimisation,

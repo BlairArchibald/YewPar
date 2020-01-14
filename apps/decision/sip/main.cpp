@@ -701,7 +701,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                                Workstealing::Policies::DepthPoolPolicy>,
                                              YewPar::Skeletons::API::Metrics,
                                              YewPar::Skeletons::API::MoreVerbose>
-          ::search(m, root, SearchParameters);
+          ::search(m, root, searchParameters);
       } else {
         sol = YewPar::Skeletons::DepthBounded<GenNode<NWORDS>,
                                              YewPar::Skeletons::API::Decision,
