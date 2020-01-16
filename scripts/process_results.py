@@ -126,7 +126,7 @@ def read_search_metrics(filename, is_opt=False):
         if not otherOnce:
           otherOnce = True
         times.append(int(line[1]))
-      """
+
       elif "Nodes" in line[0]:
         if not once:
           bIdx += 1
@@ -148,7 +148,7 @@ def read_search_metrics(filename, is_opt=False):
 
   for i in range(NUM_SEARCHES):
     nodeCounts[i] /= searchTimes[i]
-  """
+
   return times, nodeCounts, backtracks, searchTimes, prunes
 
 def draw_node_throughput(times, nodes, title, d, b):
@@ -179,13 +179,6 @@ def draw_node_throughput(times, nodes, title, d, b):
   ax1.legend()
   plt.show()
 
-#timesD = read_scaling_results("../results/Depthbounded/MaxClique_depthbounded_scaling.txt")
-#timesB = read_scaling_results("../results/Budget/MaxClique_budget_scaling.txt")
-#timesS = read_scaling_results("../results/StackSteal/MaxClique_stacksteal_scaling.txt")
-#draw_scaling_graph(timesD, timesB, timesS[0:-1], "Maximum Clique scaling up to 250 workers on 16 localities brock800_4.clq", 2, 10**7, "Relative Speedup (1 locality)")
-#speedUpsD, speedUpsB, speedUpsS = get_speedups(timesD, timesB, timesS)
-#draw_scaling_graph(speedUpsD, speedUpsB, speedUpsS[0:-1], "Maximum Clique scaling up to 250 workers on 16 localities brock800_4.clq", 2, 10**7, "Relative Speedup (1 locality)")
-
 times, nodes, backtracks, searchTimes, prunes = read_search_metrics("../MaxClique_budget_search_metrics_100.txt")
 times2, nodes2, backtracks, searchTimes2, prunes = read_search_metrics("../MaxClique_budget_search_metrics_175.txt")
 times3, nodes4, backtracks, searchTimes4, prunes = read_search_metrics("../MaxClique_budget_search_metrics_250.txt")
@@ -193,7 +186,6 @@ draw_bucket_graph(times, times2, times3, "Runtime Regularity on MaxClique, g = 5
 
 median_times = np.median(np.array([searchTimes, searchTimes2, searchTimes3, searchTimes4]), axis=1)
 avg_nodes = np.mean([nodes, nodes2, nodes3, nodes4], axis=1)
-#draw_node_throughput(median_times, avg_nodes, "Node throughput for NS-hivert, g = 50", 35, 10000)
 
 times, nodes, backtracks, searchTimes, prunes = read_search_metrics("../NS-hivert_depthbounded_search_metrics_100.txt")
 pprint(np.median(searchTimes))
