@@ -515,7 +515,7 @@ struct StackStealing {
         hpx::async<PrintTimesAct>(l).get();
       }
       printBacktracks();
-      if constexpr(isOptimisation) {
+      if constexpr(isOptimisation && !pruneLevel) {
         printPrunes();
       }
     }

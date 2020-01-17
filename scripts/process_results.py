@@ -60,21 +60,6 @@ def get_speedups(timesD, timesB, timesS):
   """
   return (timesD[0]/timesD, timesB[0]/timesB, timesS[0]/timesS)
 
-def draw_metrics_graph(metric, label, d, title, ylabel):
-  """
-  Draws a graph of a metric recorded during a search
-  """
-  fig1, ax1 = plt.subplots()
-  x_axes = [2**i for i in range(1,5)]
-  ax1.plot(x_axes, metric, marker="x", color="red", label="DepthBounded d = {}".format(d))
-  ax1.set_ylabel(ylabel)
-  ax1.set_xlabel("Localities")
-  ax1.set_title(title)
-  ax1.set_facecolor("grey")
-  ax1.legend(["150 workers", "250 workers"])
-  plt.grid()
-  plt.show()
-
 def draw_bucket_graph(times, times2, times3, title):
   """
   Draws a bar chart for the runtime regularity
@@ -84,7 +69,7 @@ def draw_bucket_graph(times, times2, times3, title):
   ax1.set_ylabel("Time (s)")
   ax1.set_xlabel("Workers")
   ax1.set_xticks([i for i in range(1,5)])
-  ax1.set_xticklabels(workers)
+  ax1.set_xticklabels([i for i in range(100,251,75)])
   ax1.set_title(title)
   ax1.set_facecolor("grey")
   blue = mpatches.Patch(color='blue')
@@ -102,8 +87,8 @@ def read_search_metrics(filename, is_opt=False):
   """
   times = []
   searchTimes = np.zeros((NUM_SEARCHES,), dtype=np.uint64)
-  nodeCounts = [0 for i in range(NUM_SEARCHES)]
-  backtracks = [0 for i in range(NUM_SEARCHES)]
+  nodeCounts = 0
+  backtracks = 0
   prunes = [0 for i in range(NUM_SEARCHES)]
   sIdx = 0
   nIdx = 0
@@ -122,22 +107,21 @@ def read_search_metrics(filename, is_opt=False):
         continue
 
       line = line.split(":")
-      if "Time" in line[0]:
+      if "Time" in line[0] and not "CPU" in line[0]:
         if not otherOnce:
           otherOnce = True
-        times.append(int(line[1]))
+        times.append(int(line[1])/1000.)
 
-      elif "Nodes" in line[0]:
-        if not once:
-          bIdx += 1
-        nodeCounts[nIdx] += int(line[1])
+      elif "CountNodes" not in line[0] and "Nodes" in line[0]:
+
+        nodeCounts += int(line[1])
         once = True
 
       elif "Backtracks" in line[0]:
         if once:
           once = False
           nIdx += 1
-        backtracks[bIdx] += int(line[1].replace(" ", ""))
+        backtracks += int(line[1].replace(" ", ""))
 
       if is_opt:
         if "Prunes" in line[0]:
@@ -146,14 +130,12 @@ def read_search_metrics(filename, is_opt=False):
             otherOnce = False
             prunes[pIdx] += int(line[1])
 
-  for i in range(NUM_SEARCHES):
-    nodeCounts[i] /= searchTimes[i]
-
-  return times, nodeCounts, backtracks, searchTimes, prunes
+  return times, nodeCounts/NUM_SEARCHES, backtracks, sorted(searchTimes), prunes
 
 def draw_node_throughput(times, nodes, title, d, b):
   """
   Draws the node throughput graphs
+  """
   """
   node_tput_b = [None for i in range(len(times))]
   node_tput_d = [None for i in range(len(times))]
@@ -164,35 +146,56 @@ def draw_node_throughput(times, nodes, title, d, b):
     node_tput_b[i] = nodes[i] / times[i]
     node_tput_d[i] = nodes[i] / times[i]
     node_tput_s[i] = nodes[i] / times[i]
-
+  """
   fig1, ax1 = plt.subplots()
   ax1.set_ylabel("Node Throughput (Nodes/second)")
   ax1.set_xlabel("Workers")
-  ax1.set_xticks([i for i in range(1,5)])
-  ax1.set_xticklabels(workers)
   ax1.set_title(title)
+  ax1.plot([50, 100, 200, 250], nodes, marker="x", color="red", label="DepthBounded d = {}".format(d))
+  ax1.plot([50, 100, 200, 250], times, marker="x", color="blue", label="Budget b = {}".format(b))
   ax1.set_facecolor("grey")
-  ax1.plot(workers, node_tput_b, marker="x", color="red", label="DepthBounded d = {}".format(d))
-  ax1.plot(workers, node_tput_d, marker="x", color="blue", label="Budget b = {}".format(b))
-  print(node_tput_b, node_tput_d, node_tput_s)
-  ax1.plot(workers, node_tput_s, marker="x", color="purple", label="StackSteal with chunked")
+  #ax1.plot(workers, node_tput_s, marker="x", color="purple", label="StackSteal with chunked")
   ax1.legend()
+  plt.grid()
   plt.show()
+"""
+times, nodes, backtracks, searchTimes, prunes = read_search_metrics("~/Documents/Misc/MaxClique_depthbounded_search_metrics_100.txt")
+times2, nodes2, backtracks, searchTimes2, prunes = read_search_metrics("~/Documents/Misc/MaxClique_depthbounded_search_metrics_175.txt")
+times3, nodes4, backtracks, searchTimes4, prunes = read_search_metrics("~/Documents/Misc/MaxClique_depthbounded_search_metrics_250.txt")
+#draw_bucket_graph(times, times2, times3, "Runtime Regularity on MaxClique, Depthbounded, d = 2, 100, 175 and 250 workers")
 
-times, nodes, backtracks, searchTimes, prunes = read_search_metrics("../MaxClique_budget_search_metrics_100.txt")
-times2, nodes2, backtracks, searchTimes2, prunes = read_search_metrics("../MaxClique_budget_search_metrics_175.txt")
+times, nodes, backtracks, searchTimes, prunes = read_search_metrics("~/Documents/Misc/MaxClique_budget_search_metrics_100.txt")
+times2, nodes2, backtracks, searchTimes2, prunes = read_search_metrics("~/Documents/Misc/MaxClique_budget_search_metrics_175.txt")
 times3, nodes4, backtracks, searchTimes4, prunes = read_search_metrics("../MaxClique_budget_search_metrics_250.txt")
-draw_bucket_graph(times, times2, times3, "Runtime Regularity on MaxClique, g = 50, Budget = 10000, 150 workers and 250 workers")
+#draw_bucket_graph(times, times2, times3, "Runtime Regularity on MaxClique, Budget, b = 1000000, 100, 175 and 250 workers")
 
-median_times = np.median(np.array([searchTimes, searchTimes2, searchTimes3, searchTimes4]), axis=1)
-avg_nodes = np.mean([nodes, nodes2, nodes3, nodes4], axis=1)
+times, nodes, backtracks, searchTimes, prunes = read_search_metrics("../NS-hivert_budget2_search_metrics_100.txt")
+times2, nodes2, backtracks, searchTimes2, prunes = read_search_metrics("../NS-hivert_budget2_search_metrics_150.txt")
+times3, nodes4, backtracks, searchTimes4, prunes = read_search_metrics("../NS-hivert_budget2_search_metrics_250.txt")
+#draw_bucket_graph(times, times2, times3, "Runtime Regularity on NS-hivert, Budget, b = 10000, 100, 175 and 250 workers")
 
-times, nodes, backtracks, searchTimes, prunes = read_search_metrics("../NS-hivert_depthbounded_search_metrics_100.txt")
-pprint(np.median(searchTimes))
-times2, nodes, backtracks, searchTimes, prunes = read_search_metrics("../NS-hivert_depthbounded_search_metrics_150.txt")
-pprint(np.median(searchTimes))
-times3, nodes, backtracks, searchTimes, prunes = read_search_metrics("../NS-hivert_depthbounded_search_metrics_200.txt")
-pprint(np.median(searchTimes))
-times4, nodes, backtracks, searchTimes, prunes = read_search_metrics("../NS-hivert_depthbounded_search_metrics_250.txt")
-pprint(np.median(searchTimes))
-draw_bucket_graph(times, times2, times3, times4, "Runtime Regularity on NS-hivert, g = 50, Depthbounded, d = 35, 150 & 250 workers")
+times, nodes, backtracks, searchTimes, prunes = read_search_metrics("../results/Depthbounded/SIP_depthbounded_search_metrics_32.txt")
+print(backtracks)
+times2, nodes2, backtracks, searchTimes2, prunes = read_search_metrics("../results/Depthbounded/SIP_depthbounded_search_metrics_64.txt")
+print(backtracks)
+times3, nodes4, backtracks, searchTimes4, prunes = read_search_metrics("../results/Depthbounded/SIP_depthbounded_search_metrics_128.txt")
+print(backtracks)
+times4, nodes5, backtracks, searchTimes4, prunes = read_search_metrics("../results/Depthbounded/SIP_depthbounded_search_metrics_128.txt")
+print(backtracks)
+"""
+
+t, n, b, s, p = read_search_metrics("../results/SIP_depthbounded_search_metrics_32.txt")
+print(s, n)
+t1, n1, b1, s1, p1 = read_search_metrics("../results/SIP_depthbounded_search_metrics_64.txt")
+print(s1, n)
+t2, n2, b2, s2, p2 = read_search_metrics("../results/SIP_depthbounded_search_metrics_128.txt")
+print(s2, n)
+t4, n4, b4, s4, p4 = read_search_metrics("../results/SIP_depthbounded_search_metrics_250.txt")
+print(s4, n)
+
+N = 2311090
+M = 21278925
+
+t_puts = [N/233, N/386, N/664, N/938]
+t_s = [M/1534, M/806, M/837, M/1017]
+draw_node_throughput(t_puts, t_s, "Node throughput for SIP", 0, 100000)

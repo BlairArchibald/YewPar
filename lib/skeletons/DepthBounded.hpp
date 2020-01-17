@@ -49,7 +49,7 @@ struct DepthBounded {
   static constexpr bool isOptimisation = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthLimited = parameter::value_type<args, API::tag::DepthLimited_, std::integral_constant<bool, false> >::type::value;
-  static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, true> >::type::value;
+  static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
 
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
@@ -143,7 +143,7 @@ struct DepthBounded {
         if (reg->stopSearch) {
           return;
         }
-      }
+    }
 
     if constexpr(isCountNodes) {
         counts[childDepth] += newCands.numChildren;
@@ -301,7 +301,7 @@ struct DepthBounded {
         hpx::async<PrintTimesAct>(l).get();
       }
       printBacktracks();
-      if constexpr(isOptimisation) {
+      if constexpr(isOptimisation && !pruneLevel) {
         printPrunes();
       }
     }

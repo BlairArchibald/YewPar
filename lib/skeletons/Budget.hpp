@@ -206,7 +206,7 @@ struct Budget {
      	const std::uint64_t time = (std::uint64_t) diff.count();
       store->updateTimes(childDepth, time);
       store->updateBacktracks(childDepth, backtracks);
-      if constexpr(isOptimisation) {
+      if constexpr(isOptimisation && !pruneLevel) {
         store->updatePrunes(childDepth, prunes);
       }
     }
@@ -290,7 +290,7 @@ struct Budget {
         hpx::async<PrintTimesAct>(l).get();
       }
       printBacktracks();
-      if constexpr(isOptimisation) {
+      if constexpr(isOptimisation && !pruneLevel) {
         printPrunes();
       }
     }

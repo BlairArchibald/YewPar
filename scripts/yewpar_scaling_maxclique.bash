@@ -14,7 +14,9 @@ source YewPar_env.sh
 export OMP_NUM_THREADS=1
 
 for i in {1..5}; do
-  mpiexec_mpt -ppn 36 -n 144 ./build/install/bin/maxclique-16 -f test/p_hat1500-1.clq --skel depthbounded -d 2 --scaling >> max_clique_scaling_results.txt
+  mpiexec_mpt -ppn 36 -n 144 ./build/install/bin/maxclique-16 -f test/p_hat1500-1.clq --skel depthbounded -d 2 --scaling >> max_clique_scaling_results_depthbounded.txt
+  mpiexec_mpt -ppn 36 -n 144 ./build/install/bin/maxclique-16 -f test/p_hat1500-1.clq --skel budget -b 10000000 --scaling >> max_clique_scaling_results_budget.txt
+  mpiexec_mpt -ppn 36 -n 144 ./build/install/bin/maxclique-16 -f test/p_hat1500-1.clq --skel stacksteal --chunked --scaling >> max_clique_scaling_results_stacksteal.txt
 done
 
 exit
