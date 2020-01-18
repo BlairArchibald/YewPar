@@ -1,0 +1,90 @@
+CPU Time (Before collecting metrics) 352
+Metric Nodes Depth 0:143249560
+Metric Nodes Depth 1:3274379
+Metric Nodes Depth 0:191812305
+Metric Nodes Depth 0:180298322
+Metric Nodes Depth 0:178294214
+Metric Nodes Depth 0:171893954
+Metric Nodes Depth 0:179680888
+Metric Nodes Depth 0:177112052
+Metric Nodes Depth 0:171202377
+Metric Nodes Depth 0:184527222
+Metric Nodes Depth 0:173619738
+Metric Nodes Depth 0:170953678
+Metric Nodes Depth 0:179497649
+Metric Nodes Depth 0:174935171
+Metric Nodes Depth 0:167975760
+Metric Nodes Depth 0:174666007
+Metric Nodes Depth 0:173077919
+Metric Nodes Depth 0:168858858
+Metric Nodes Depth 0:169155744
+Metric Nodes Depth 0:167667749
+Metric Nodes Depth 0:165239743
+Metric Nodes Depth 0:172466142
+Metric Nodes Depth 0:167957539
+Metric Nodes Depth 0:161953671
+Metric Nodes Depth 0:170915340
+Metric Nodes Depth 0:159282030
+Metric Nodes Depth 0:158836165
+Metric Nodes Depth 0:165328088
+Metric Nodes Depth 0:167902795
+Metric Nodes Depth 0:161469282
+Metric Nodes Depth 0:157384178
+Metric Nodes Depth 0:146797558
+Metric Nodes Depth 0:156910134
+
+MaxClique Size = 23
+cpu = 916274
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 18039 RUNNING AT 130.209.255.4
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+CPU Time (Before collecting metrics) 401
+Metric Nodes Depth 0:144969634
+Metric Nodes Depth 1:3137457
+Metric Nodes Depth 0:187536192
+Metric Nodes Depth 0:171085847
+Metric Nodes Depth 0:183524932
+Metric Nodes Depth 0:174357453
+Metric Nodes Depth 0:179179949
+Metric Nodes Depth 0:177443359
+Metric Nodes Depth 0:167760322
+Metric Nodes Depth 0:186497864
+Metric Nodes Depth 0:183036448
+Metric Nodes Depth 0:176693878
+Metric Nodes Depth 0:183744412
+Metric Nodes Depth 0:167761650
+Metric Nodes Depth 0:168285178
+Metric Nodes Depth 0:177519515
+Metric Nodes Depth 0:172929924
+Metric Nodes Depth 0:160160490
+Metric Nodes Depth 0:174718896
+Metric Nodes Depth 0:161347669
+Metric Nodes Depth 0:163313997
+Metric Nodes Depth 0:178235830
+Metric Nodes Depth 0:164418177
+Metric Nodes Depth 0:168181634
+Metric Nodes Depth 0:174451871
+Metric Nodes Depth 0:164747677
+Metric Nodes Depth 0:160745013
+Metric Nodes Depth 0:163226228
+Metric Nodes Depth 0:169535083
+Metric Nodes Depth 0:166337137
+Metric Nodes Depth 0:146242476
+Metric Nodes Depth 0:157656269
+Metric Nodes Depth 0:147999532
+
+MaxClique Size = 23
+cpu = 879723
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 19730 RUNNING AT 130.209.255.4
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
