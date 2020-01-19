@@ -1,0 +1,11 @@
+Time :12
+Time :12
+Time :11
+Time :12
+Metric Backtracks Depth 0:0
+Metric Backtracks Depth 1:1
+Metric Backtracks Depth 2:298
+Metric Backtracks Depth 3:35875093
+
+MaxClique Size = 33
+cpu = 5585

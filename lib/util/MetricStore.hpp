@@ -45,15 +45,17 @@ struct MetricStore {
   // Counting pruning
   MetricsVecPtr prunes;
   std::atomic<unsigned> maxDepthPrunes;
+	
+	static constexpr int DEF_SIZE	= 100;
 
   MetricStore() = default;
 
   // Initialises the store for an analysis of runtime regulairty (and pruning for BnB)
   void init(const unsigned maxDepth, const unsigned scaling, const unsigned metrics) {
     if (metrics) {
-      taskTimes = std::make_unique<TimesVec>();
-      prunes = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
-      backtracks = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
+      taskTimes = std::make_unique<TimesVec>(2000);
+      prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
+      backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
 			std::time_t now = std::time(NULL);
     	gen.seed(now);
     }
@@ -63,12 +65,12 @@ struct MetricStore {
   }
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
-		if (time >= 1 && taskTimes->size() < 100) {
+		if (time >= 1) {
       // Generate random number and if below 0.7 then accept, else reject
-      if (dist(gen) < 0.7) {
+      if (taskTimes->size() < 2000 && dist(gen) < 0.5) {
         taskTimes->push_back(time);
         maxDepthBuckets = depth > maxDepthBuckets.load() ? depth : maxDepthBuckets.load();
-      }
+   	 	}
 		}
   }
 
@@ -105,7 +107,6 @@ struct MetricStore {
   }
 
 	void printTimes() {
-		taskTimes->resize(maxDepthBuckets + 1);
 		for (const auto & time : *taskTimes) {
 			hpx::cout << "Time :" << time << hpx::endl;
 		}

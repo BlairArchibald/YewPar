@@ -212,7 +212,7 @@ struct DepthBounded {
 
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+      auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
      	const std::uint64_t time = (std::uint64_t) diff.count();
       store->updateTimes(childDepth, time);
       store->updateBacktracks(childDepth, backtracks);
