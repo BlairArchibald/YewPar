@@ -23,8 +23,8 @@ struct MetricStore {
   using MetricsVecPtr = std::unique_ptr<std::vector<std::atomic<std::uint64_t> > >;
   using MetricsVecAtomic = std::vector<std::atomic<std::uint64_t> >;
   using MetricsVec = std::vector<std::uint64_t>;
-  using TimesVecPtr = std::unique_ptr<std::vector<std::uint64_t> >;
-  using TimesVec = std::vector<std::uint64_t>;
+  using TimesVecPtr = std::unique_ptr<std::vector<std::vector<std::uint64_t> > >;
+  using TimesVec = std::vector<std::vector<std::uint64_t> >;
 
   // Regularity Metrics
   TimesVecPtr taskTimes;
@@ -53,7 +53,7 @@ struct MetricStore {
   // Initialises the store for an analysis of runtime regulairty (and pruning for BnB)
   void init(const unsigned maxDepth, const unsigned scaling, const unsigned metrics) {
     if (metrics) {
-      taskTimes = std::make_unique<TimesVec>(2000);
+      taskTimes = std::make_unique<TimesVec>(5);
       prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
       backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
 			std::time_t now = std::time(NULL);
@@ -67,9 +67,13 @@ struct MetricStore {
   void updateTimes(const unsigned depth, const std::uint64_t time) {
 		if (time >= 1) {
       // Generate random number and if below 0.7 then accept, else reject
-      if (taskTimes->size() < 2000 && dist(gen) < 0.5) {
-        taskTimes->push_back(time);
-        maxDepthBuckets = depth > maxDepthBuckets.load() ? depth : maxDepthBuckets.load();
+      if (dist(gen) < 0.5) {
+        depth = depth > 4 ? 4 : depth;
+        if ((*taskTimes[depth-1]).size() > 400) {
+          return;
+        }
+        (*taskTimes[depth-1]).push_back(time);
+        maxDepthBuckets = (depth-1) > maxDepthBuckets.load() ? depth : maxDepthBuckets.load();
    	 	}
 		}
   }
@@ -107,8 +111,12 @@ struct MetricStore {
   }
 
 	void printTimes() {
-		for (const auto & time : *taskTimes) {
-			hpx::cout << "Time :" << time << hpx::endl;
+    auto depth = 0;
+		for (const auto & timeDepths : *taskTimes) {
+      for (const auto & time : timeDepths) {
+			  hpx::cout << "Depth :" << depth << " Time :" << time << hpx::endl;
+      }
+      depth++;
 		}
 	}
 
