@@ -1,2227 +1,276 @@
-Time :1684
-Time :1796
-Time :2385
-Time :3376
-Time :931
-Time :1073
-Time :698
-Time :2597
-Time :956
-Time :651
-Time :603
-Time :7468
-Time :1214
-Time :831
-Time :784
-Time :1454
-Time :586
-Time :1667
-Time :534
-Time :1472
-Time :1347
-Time :728
-Time :512
-Time :3439
-Time :794
-Time :879
-Time :427
-Time :870
-Time :1077
-Time :735
-Time :1169
-Time :495
-Time :682
-Time :556
-Time :1361
-Time :910
-Time :436
-Time :311
-Time :459
-Time :589
-Time :576
-Time :732
-Time :558
-Time :371
-Time :495
-Time :918
-Time :692
-Time :589
-Time :424
-Time :639
-Time :315
-Time :720
-Time :287
-Time :784
-Time :435
-Time :143
-Time :1119
-Time :634
-Time :628
-Time :447
-Time :357
-Time :289
-Time :199
-Time :741
-Time :140
-Time :216
-Time :507
-Time :1081
-Time :206
-Time :391
-Time :542
-Time :548
-Time :384
-Time :488
-Time :252
-Time :159
-Time :201
-Time :161
-Time :231
-Time :335
-Time :152
-Time :656
-Time :234
-Time :149
-Time :73
-Time :123
-Time :114
-Time :223
-Time :287
-Time :289
-Time :47
-Time :133
-Time :195
-Time :58
-Time :53
-Time :123
-Time :142
-Time :67
-Time :238
-Time :120
-Time :65
-Time :140
-Time :100
-Time :56
-Time :51
-Time :178
-Time :93
-Time :40
-Time :76
-Time :35
-Time :86
-Time :75
-Time :113
-Time :144
-Time :96
-Time :44
-Time :86
-Time :36
-Time :48
-Time :57
-Time :17
-Time :74
-Time :60
-Time :27
-Time :56
-Time :26
-Time :64
-Time :20
-Time :26
-Time :48
-Time :51
-Time :37
-Time :41
-Time :24
-Time :18
-Time :33
-Time :27
-Time :33
-Time :34
-Time :41
-Time :69
-Time :24
-Time :83
-Time :20
-Time :89
-Time :20
-Time :31
-Time :16
-Time :20
-Time :30
-Time :41
-Time :23
-Time :30
-Time :32
-Time :18
-Time :533
-Time :634
-Time :695
-Time :1233
-Time :1552
-Time :870
-Time :698
-Time :1181
-Time :634
-Time :998
-Time :788
-Time :1588
-Time :585
-Time :7042
-Time :6900
-Time :1003
-Time :7312
-Time :976
-Time :7420
-Time :626
-Time :1065
-Time :1283
-Time :629
-Time :1214
-Time :976
-Time :8383
-Time :1278
-Time :528
-Time :459
-Time :773
-Time :1754
-Time :388
-Time :1351
-Time :884
-Time :1571
-Time :1069
-Time :564
-Time :548
-Time :654
-Time :698
-Time :992
-Time :338
-Time :887
-Time :603
-Time :650
-Time :526
-Time :317
-Time :536
-Time :438
-Time :1279
-Time :1411
-Time :1153
-Time :903
-Time :228
-Time :398
-Time :507
-Time :2556
-Time :393
-Time :739
-Time :175
-Time :398
-Time :328
-Time :933
-Time :330
-Time :327
-Time :580
-Time :883
-Time :302
-Time :1305
-Time :1504
-Time :1414
-Time :1036
-Time :2150
-Time :1323
-Time :1282
-Time :366
-Time :1181
-Time :1219
-Time :1644
-Time :489
-Time :643
-Time :753
-Time :516
-Time :784
-Time :407
-Time :1444
-Time :200
-Time :655
-Time :646
-Time :505
-Time :833
-Time :1086
-Time :463
-Time :703
-Time :604
-Time :176
-Time :391
-Time :112
-Time :1026
-Time :559
-Time :711
-Time :370
-Time :117
-Time :636
-Time :348
-Time :613
-Time :716
-Time :499
-Time :879
-Time :491
-Time :338
-Time :952
-Time :443
-Time :753
-Time :835
-Time :292
-Time :979
-Time :1344
-Time :557
-Time :211
-Time :259
-Time :143
-Time :549
-Time :247
-Time :756
-Time :764
-Time :242
-Time :1595
-Time :659
-Time :698
-Time :975
-Time :272
-Time :1132
-Time :378
-Time :335
-Time :403
-Time :344
-Time :141
-Time :725
-Time :326
-Time :1135
-Time :643
-Time :320
-Time :545
-Time :355
-Time :232
-Time :435
-Time :942
-Time :600
-Time :295
-Time :382
-Time :177
-Time :245
-Time :168
-Time :391
-Time :642
-Time :299
-Time :208
-Time :602
-Time :256
-Time :337
-Time :456
-Time :266
-Time :283
-Time :404
-Time :454
-Time :623
-Time :479
-Time :408
-Time :78
-Time :370
-Time :1144
-Time :673
-Time :907
-Time :280
-Time :441
-Time :173
-Time :241
-Time :376
-Time :278
-Time :233
-Time :191
-Time :85
-Time :504
-Time :304
-Time :312
-Time :190
-Time :374
-Time :295
-Time :166
-Time :66
-Time :293
-Time :124
-Time :212
-Time :119
-Time :98
-Time :143
-Time :339
-Time :278
-Time :153
-Time :34
-Time :285
-Time :143
-Time :223
-Time :107
-Time :379
-Time :266
-Time :170
-Time :281
-Time :455
-Time :135
-Time :173
-Time :331
-Time :262
-Time :306
-Time :105
-Time :128
-Time :95
-Time :70
-Time :236
-Time :232
-Time :148
-Time :71
-Time :308
-Time :159
-Time :186
-Time :76
-Time :289
-Time :31
-Time :173
-Time :260
-Time :133
-Time :96
-Time :67
-Time :268
-Time :49
-Time :115
-Time :177
-Time :42
-Time :268
-Time :26
-Time :139
-Time :246
-Time :134
-Time :103
-Time :245
-Time :83
-Time :102
-Time :88
-Time :102
-Time :28
-Time :58
-Time :35
-Time :68
-Time :40
-Time :34
-Time :357
-Time :99
-Time :27
-Time :81
-Time :157
-Time :18
-Time :107
-Time :69
-Time :192
-Time :18
-Time :107
-Time :74
-Time :68
-Time :71
-Time :36
-Time :18
-Time :119
-Time :33
-Time :43
-Time :89
-Time :38
-Time :8
-Time :75
-Time :53
-Time :39
-Time :32
-Time :58
-Time :41
-Time :30
-Time :29
-Time :95
-Time :52
-Time :50
-Time :53
-Time :47
-Time :40
-Time :71
-Time :52
-Time :28
-Time :54
-Time :35
-Time :41
-Time :64
-Time :68
-Time :56
-Time :47
-Time :33
-Time :28
-Time :23
-Time :46
-Time :35
-Time :38
-Time :30
-Time :30
-Time :9
-Time :52
-Time :16
-Time :27
-Time :24
-Time :18
-Time :51
-Time :18
-Time :47
-Time :39
-Time :31
-Time :18
-Time :17
-Time :18
-Time :21
-Time :57
-Time :14
-Time :21
-Time :19
-Time :27
-Time :51
-Time :15
-Time :47
-Time :22
-Time :29
-Time :25
-Time :12
-Time :115
-Time :30
-Time :17
-Time :15
-Time :42
-Time :46
-Time :10
-Time :29
-Time :35
-Time :48
-Time :35
-Time :45
-Time :27
-Time :31
-Time :18
-Time :94
-Time :8
-Time :16
-Time :8
-Time :21
-Time :19
-Time :24
-Time :12
-Time :18
-Time :28
-Time :19
-Time :17
-Time :20
-Time :28
-Time :24
-Time :27
-Time :29
-Time :13
-Time :422
-Time :466
-Time :605
-Time :237
-Time :720
-Time :955
-Time :533
-Time :631
-Time :683
-Time :1493
-Time :794
-Time :447
-Time :4780
-Time :406
-Time :1393
-Time :586
-Time :5458
-Time :5713
-Time :917
-Time :5871
-Time :573
-Time :5896
-Time :689
-Time :719
-Time :294
-Time :365
-Time :274
-Time :355
-Time :330
-Time :621
-Time :633
-Time :677
-Time :455
-Time :647
-Time :1243
-Time :648
-Time :324
-Time :571
-Time :362
-Time :243
-Time :532
-Time :359
-Time :100
-Time :334
-Time :474
-Time :605
-Time :306
-Time :722
-Time :219
-Time :1179
-Time :506
-Time :303
-Time :676
-Time :492
-Time :269
-Time :766
-Time :637
-Time :500
-Time :296
-Time :281
-Time :342
-Time :321
-Time :318
-Time :305
-Time :331
-Time :449
-Time :481
-Time :182
-Time :697
-Time :202
-Time :325
-Time :260
-Time :925
-Time :1029
-Time :211
-Time :97
-Time :245
-Time :253
-Time :910
-Time :392
-Time :253
-Time :327
-Time :301
-Time :280
-Time :191
-Time :437
-Time :282
-Time :196
-Time :98
-Time :160
-Time :440
-Time :242
-Time :178
-Time :376
-Time :356
-Time :640
-Time :187
-Time :123
-Time :194
-Time :115
-Time :221
-Time :422
-Time :107
-Time :281
-Time :813
-Time :226
-Time :213
-Time :130
-Time :104
-Time :228
-Time :155
-Time :170
-Time :148
-Time :127
-Time :198
-Time :130
-Time :173
-Time :254
-Time :145
-Time :172
-Time :578
-Time :227
-Time :134
-Time :213
-Time :333
-Time :165
-Time :142
-Time :264
-Time :80
-Time :173
-Time :108
-Time :90
-Time :183
-Time :187
-Time :81
-Time :194
-Time :241
-Time :65
-Time :96
-Time :194
-Time :245
-Time :155
-Time :60
-Time :102
-Time :114
-Time :82
-Time :287
-Time :137
-Time :56
-Time :99
-Time :53
-Time :149
-Time :86
-Time :140
-Time :82
-Time :107
-Time :213
-Time :55
-Time :118
-Time :31
-Time :156
-Time :140
-Time :34
-Time :91
-Time :28
-Time :284
-Time :66
-Time :101
-Time :89
-Time :144
-Time :96
-Time :84
-Time :66
-Time :22
-Time :56
-Time :34
-Time :232
-Time :124
-Time :77
-Time :131
-Time :35
-Time :90
-Time :73
-Time :61
-Time :67
-Time :41
-Time :32
-Time :68
-Time :163
-Time :46
-Time :145
-Time :57
-Time :39
-Time :83
-Time :26
-Time :79
-Time :68
-Time :32
-Time :95
-Time :15
-Time :96
-Time :35
-Time :36
-Time :46
-Time :99
-Time :16
-Time :63
-Time :49
-Time :47
-Time :65
-Time :8
-Time :108
-Time :60
-Time :107
-Time :14
-Time :63
-Time :50
-Time :8
-Time :205
-Time :33
-Time :34
-Time :25
-Time :27
-Time :43
-Time :27
-Time :24
-Time :14
-Time :81
-Time :30
-Time :30
-Time :29
-Time :59
-Time :84
-Time :26
-Time :9
-Time :29
-Time :24
-Time :17
-Time :36
-Time :33
-Time :61
-Time :7
-Time :28
-Time :35
-Time :18
-Time :15
-Time :37
-Time :80
-Time :18
-Time :7
-Time :10
-Time :17
-Time :14
-Time :63
-Time :34
-Time :16
-Time :15
-Time :50
-Time :23
-Time :10
-Time :32
-Time :18
-Time :13
-Time :23
-Time :21
-Time :9
-Time :32
-Time :9
-Time :34
-Time :12
-Time :16
-Time :25
-Time :10
-Time :6
-Time :43
-Time :7
-Time :24
-Time :13
-Time :14
-Time :8
-Time :16
-Time :7
-Time :13
-Time :205
-Time :405
-Time :380
-Time :360
-Time :499
-Time :273
-Time :349
-Time :187
-Time :431
-Time :456
-Time :742
-Time :687
-Time :241
-Time :150
-Time :429
-Time :108
-Time :270
-Time :564
-Time :5965
-Time :5893
-Time :245
-Time :391
-Time :6354
-Time :368
-Time :6479
-Time :77
-Time :6827
-Time :226
-Time :176
-Time :361
-Time :505
-Time :6916
-Time :436
-Time :132
-Time :568
-Time :336
-Time :158
-Time :600
-Time :410
-Time :575
-Time :179
-Time :367
-Time :192
-Time :324
-Time :621
-Time :294
-Time :176
-Time :460
-Time :233
-Time :292
-Time :494
-Time :158
-Time :320
-Time :119
-Time :519
-Time :641
-Time :314
-Time :278
-Time :248
-Time :262
-Time :230
-Time :271
-Time :533
-Time :320
-Time :134
-Time :164
-Time :211
-Time :304
-Time :163
-Time :669
-Time :486
-Time :144
-Time :172
-Time :154
-Time :155
-Time :299
-Time :263
-Time :373
-Time :108
-Time :189
-Time :63
-Time :258
-Time :269
-Time :99
-Time :142
-Time :169
-Time :351
-Time :415
-Time :96
-Time :158
-Time :187
-Time :357
-Time :192
-Time :640
-Time :380
-Time :185
-Time :415
-Time :107
-Time :214
-Time :134
-Time :263
-Time :137
-Time :450
-Time :94
-Time :542
-Time :109
-Time :266
-Time :716
-Time :127
-Time :167
-Time :258
-Time :61
-Time :129
-Time :220
-Time :235
-Time :160
-Time :259
-Time :160
-Time :137
-Time :213
-Time :63
-Time :203
-Time :111
-Time :64
-Time :55
-Time :245
-Time :263
-Time :75
-Time :103
-Time :173
-Time :103
-Time :69
-Time :240
-Time :86
-Time :118
-Time :88
-Time :94
-Time :95
-Time :87
-Time :81
-Time :116
-Time :77
-Time :60
-Time :187
-Time :55
-Time :50
-Time :35
-Time :175
-Time :254
-Time :157
-Time :92
-Time :126
-Time :69
-Time :94
-Time :47
-Time :161
-Time :30
-Time :76
-Time :64
-Time :87
-Time :168
-Time :195
-Time :31
-Time :82
-Time :80
-Time :127
-Time :94
-Time :77
-Time :69
-Time :148
-Time :10
-Time :44
-Time :18
-Time :170
-Time :103
-Time :135
-Time :23
-Time :52
-Time :16
-Time :59
-Time :21
-Time :83
-Time :41
-Time :65
-Time :83
-Time :80
-Time :23
-Time :83
-Time :36
-Time :45
-Time :66
-Time :147
-Time :47
-Time :40
-Time :21
-Time :22
-Time :66
-Time :51
-Time :78
-Time :46
-Time :28
-Time :65
-Time :48
-Time :40
-Time :55
-Time :37
-Time :16
-Time :23
-Time :143
-Time :46
-Time :17
-Time :41
-Time :25
-Time :65
-Time :38
-Time :23
-Time :15
-Time :57
-Time :27
-Time :160
-Time :17
-Time :73
-Time :57
-Time :43
-Time :12
-Time :46
-Time :37
-Time :61
-Time :37
-Time :20
-Time :13
-Time :45
-Time :41
-Time :33
-Time :46
-Time :34
-Time :27
-Time :30
-Time :29
-Time :16
-Time :14
-Time :43
-Time :46
-Time :20
-Time :29
-Time :16
-Time :32
-Time :39
-Time :25
-Time :18
-Time :16
-Time :45
-Time :17
-Time :26
-Time :15
-Time :11
-Time :33
-Time :42
-Time :36
-Time :20
-Time :21
-Time :39
-Time :17
-Time :18
-Time :19
-Time :19
-Time :9
-Time :9
-Time :20
-Time :12
-Time :11
-Time :41
-Time :20
-Time :17
-Time :21
-Time :16
-Time :36
-Time :15
-Time :22
-Time :20
-Time :25
-Time :20
-Time :18
-Time :7
-Time :20
-Time :25
-Time :18
-Time :19
-Time :19
-Time :19
-Time :19
-Time :16
-Time :20
-Time :17
-Time :304
-Time :261
-Time :158
-Time :107
-Time :202
-Time :288
-Time :107
-Time :167
-Time :832
-Time :227
-Time :145
-Time :725
-Time :496
-Time :134
-Time :193
-Time :571
-Time :204
-Time :112
-Time :137
-Time :235
-Time :250
-Time :210
-Time :147
-Time :75
-Time :349
-Time :194
-Time :356
-Time :5262
-Time :120
-Time :545
-Time :5544
-Time :146
-Time :190
-Time :485
-Time :5816
-Time :5935
-Time :135
-Time :6157
-Time :177
-Time :326
-Time :297
-Time :73
-Time :689
-Time :300
-Time :274
-Time :145
-Time :178
-Time :265
-Time :6658
-Time :317
-Time :223
-Time :404
-Time :432
-Time :220
-Time :268
-Time :7001
-Time :227
-Time :366
-Time :225
-Time :60
-Time :224
-Time :201
-Time :88
-Time :145
-Time :346
-Time :93
-Time :57
-Time :194
-Time :297
-Time :226
-Time :286
-Time :126
-Time :210
-Time :534
-Time :341
-Time :331
-Time :202
-Time :96
-Time :166
-Time :118
-Time :219
-Time :77
-Time :153
-Time :251
-Time :224
-Time :66
-Time :188
-Time :117
-Time :195
-Time :177
-Time :113
-Time :166
-Time :166
-Time :55
-Time :85
-Time :173
-Time :250
-Time :108
-Time :80
-Time :277
-Time :61
-Time :129
-Time :55
-Time :51
-Time :111
-Time :160
-Time :100
-Time :148
-Time :39
-Time :79
-Time :145
-Time :68
-Time :100
-Time :110
-Time :100
-Time :34
-Time :237
-Time :166
-Time :159
-Time :160
-Time :159
-Time :86
-Time :177
-Time :62
-Time :97
-Time :273
-Time :208
-Time :51
-Time :212
-Time :79
-Time :180
-Time :70
-Time :184
-Time :45
-Time :62
-Time :84
-Time :42
-Time :122
-Time :99
-Time :58
-Time :47
-Time :17
-Time :28
-Time :31
-Time :66
-Time :28
-Time :72
-Time :25
-Time :36
-Time :49
-Time :14
-Time :90
-Time :60
-Time :27
-Time :73
-Time :58
-Time :30
-Time :31
-Time :118
-Time :42
-Time :94
-Time :94
-Time :42
-Time :48
-Time :22
-Time :28
-Time :38
-Time :43
-Time :51
-Time :43
-Time :101
-Time :77
-Time :63
-Time :93
-Time :57
-Time :35
-Time :87
-Time :19
-Time :35
-Time :44
-Time :63
-Time :28
-Time :30
-Time :35
-Time :49
-Time :20
-Time :56
-Time :26
-Time :41
-Time :33
-Time :35
-Time :32
-Time :25
-Time :19
-Time :41
-Time :26
-Time :20
-Time :21
-Time :26
-Time :21
-Time :32
-Time :43
-Time :12
-Time :15
-Time :38
-Time :15
-Time :15
-Time :15
-Time :30
-Time :9
-Time :26
-Time :13
-Time :14
-Time :14
-Time :17
-Time :13
-Time :7
-Time :10
-Time :16
-Time :12
-Time :305
-Time :269
-Time :152
-Time :252
-Time :63
-Time :159
-Time :104
-Time :94
-Time :296
-Time :37
-Time :103
-Time :108
-Time :257
-Time :202
-Time :296
-Time :120
-Time :156
-Time :282
-Time :147
-Time :151
-Time :279
-Time :4924
-Time :5137
-Time :326
-Time :151
-Time :85
-Time :113
-Time :5395
-Time :175
-Time :325
-Time :220
-Time :90
-Time :82
-Time :114
-Time :84
-Time :6056
-Time :6151
-Time :199
-Time :306
-Time :102
-Time :83
-Time :186
-Time :114
-Time :312
-Time :51
-Time :158
-Time :157
-Time :199
-Time :109
-Time :321
-Time :79
-Time :6704
-Time :152
-Time :92
-Time :205
-Time :205
-Time :509
-Time :287
-Time :121
-Time :178
-Time :155
-Time :94
-Time :62
-Time :102
-Time :108
-Time :362
-Time :118
-Time :152
-Time :284
-Time :217
-Time :361
-Time :144
-Time :253
-Time :128
-Time :141
-Time :96
-Time :309
-Time :92
-Time :150
-Time :140
-Time :151
-Time :22
-Time :519
-Time :73
-Time :59
-Time :161
-Time :311
-Time :164
-Time :185
-Time :162
-Time :132
-Time :203
-Time :104
-Time :132
-Time :114
-Time :68
-Time :108
-Time :169
-Time :120
-Time :101
-Time :57
-Time :50
-Time :137
-Time :61
-Time :153
-Time :31
-Time :56
-Time :164
-Time :117
-Time :131
-Time :124
-Time :75
-Time :34
-Time :169
-Time :79
-Time :91
-Time :220
-Time :80
-Time :57
-Time :134
-Time :144
-Time :92
-Time :98
-Time :60
-Time :63
-Time :149
-Time :105
-Time :132
-Time :83
-Time :45
-Time :67
-Time :33
-Time :42
-Time :37
-Time :77
-Time :97
-Time :74
-Time :88
-Time :56
-Time :66
-Time :53
-Time :72
-Time :65
-Time :53
-Time :25
-Time :68
-Time :76
-Time :31
-Time :75
-Time :83
-Time :58
-Time :71
-Time :38
-Time :72
-Time :60
-Time :40
-Time :59
-Time :48
-Time :24
-Time :34
-Time :78
-Time :29
-Time :101
-Time :63
-Time :37
-Time :90
-Time :58
-Time :47
-Time :34
-Time :26
-Time :50
-Time :33
-Time :33
-Time :39
-Time :14
-Time :30
-Time :39
-Time :58
-Time :40
-Time :90
-Time :44
-Time :33
-Time :22
-Time :25
-Time :32
-Time :56
-Time :28
-Time :24
-Time :45
-Time :19
-Time :40
-Time :85
-Time :32
-Time :21
-Time :120
-Time :8
-Time :46
-Time :20
-Time :15
-Time :56
-Time :23
-Time :43
-Time :18
-Time :49
-Time :35
-Time :21
-Time :35
-Time :17
-Time :15
-Time :9
-Time :28
-Time :11
-Time :8
-Time :46
-Time :12
-Time :36
-Time :31
-Time :18
-Time :18
-Time :30
-Time :13
-Time :33
-Time :21
-Time :35
-Time :25
-Time :17
-Time :12
-Time :19
-Time :11
-Time :31
-Time :24
-Time :25
-Time :29
-Time :9
-Time :24
-Time :21
-Time :14
-Time :28
-Time :12
-Time :20
-Time :27
-Time :29
-Time :49
-Time :15
-Time :13
-Time :24
-Time :24
-Time :17
-Time :20
-Time :30
-Time :25
-Time :31
-Time :12
-Time :8
-Time :12
-Time :19
-Time :13
-Time :7
-Time :16
-Time :16
-Time :26
-Time :17
-Time :18
-Time :8
-Time :8
-Time :28
-Time :11
-Time :10
-Time :14
-Time :9
-Time :17
-Time :47
-Time :123
-Time :112
-Time :115
-Time :73
-Time :30
-Time :66
-Time :124
-Time :27
-Time :48
-Time :59
-Time :176
-Time :68
-Time :117
-Time :148
-Time :142
-Time :88
-Time :72
-Time :77
-Time :39
-Time :124
-Time :35
-Time :119
-Time :222
-Time :94
-Time :57
-Time :97
-Time :110
-Time :210
-Time :98
-Time :109
-Time :59
-Time :170
-Time :78
-Time :174
-Time :66
-Time :43
-Time :58
-Time :130
-Time :95
-Time :69
-Time :4768
-Time :122
-Time :100
-Time :34
-Time :40
-Time :37
-Time :72
-Time :54
-Time :40
-Time :5745
-Time :48
-Time :141
-Time :127
-Time :62
-Time :39
-Time :151
-Time :95
-Time :38
-Time :78
-Time :50
-Time :73
-Time :159
-Time :144
-Time :77
-Time :74
-Time :77
-Time :94
-Time :27
-Time :74
-Time :31
-Time :85
-Time :98
-Time :75
-Time :53
-Time :39
-Time :6959
-Time :51
-Time :100
-Time :39
-Time :32
-Time :44
-Time :46
-Time :93
-Time :37
-Time :17
-Time :137
-Time :7425
-Time :31
-Time :55
-Time :162
-Time :75
-Time :59
-Time :38
-Time :44
-Time :87
-Time :71
-Time :53
-Time :52
-Time :81
-Time :37
-Time :84
-Time :24
-Time :40
-Time :46
-Time :55
-Time :46
-Time :34
-Time :20
-Time :21
-Time :55
-Time :20
-Time :8504
-Time :44
-Time :32
-Time :59
-Time :49
-Time :26
-Time :9
-Time :33
-Time :20
-Time :59
-Time :42
-Time :13
-Time :16
-Time :34
-Time :29
-Time :26
-Time :70
-Time :44
-Time :55
-Time :29
-Time :22
-Time :18
-Time :33
-Time :33
-Time :16
-Time :20
-Time :16
-Time :34
-Time :14
-Time :13
-Time :26
-Time :17
-Time :68
-Time :27
-Time :19
-Time :29
-Time :29
-Time :40
-Time :22
-Time :13
-Time :8
-Time :28
-Time :20
-Time :20
-Time :17
-Time :45
-Time :17
-Time :15
-Time :14
-Time :25
-Time :45
-Time :37
-Time :12
-Time :19
-Time :13
-Time :31
-Time :16
-Time :23
-Time :74
-Time :16
-Time :17
-Time :7
-Time :32
-Time :12
-Time :14
-Time :8
-Time :20
-Time :18
-Time :24
-Time :20
-Time :15
-Time :21
-Time :48
-Time :9
-Time :24
-Time :7
-Time :18
-Time :89
-Time :25
-Time :39
-Time :20
-Time :55
-Time :61
-Time :61
-Time :62
-Time :111
-Time :34
-Time :131
-Time :119
-Time :64
-Time :56
-Time :42
-Time :17
-Time :18
-Time :106
-Time :39
-Time :44
-Time :15
-Time :34
-Time :67
-Time :89
-Time :82
-Time :34
-Time :59
-Time :29
-Time :62
-Time :42
-Time :55
-Time :25
-Time :32
-Time :13
-Time :103
-Time :38
-Time :44
-Time :113
-Time :30
-Time :60
-Time :23
-Time :144
-Time :27
-Time :47
-Time :38
-Time :37
-Time :4296
-Time :4273
-Time :4305
-Time :88
-Time :109
-Time :19
-Time :74
-Time :74
-Time :4776
-Time :96
-Time :43
-Time :11
-Time :28
-Time :63
-Time :20
-Time :37
-Time :6
-Time :60
-Time :17
-Time :27
-Time :49
-Time :82
-Time :18
-Time :15
-Time :21
-Time :17
-Time :23
-Time :84
-Time :60
-Time :6094
-Time :25
-Time :14
-Time :34
-Time :8
-Time :26
-Time :34
-Time :21
-Time :7
-Time :12
-Time :36
-Time :73
-Time :15
-Time :6
-Time :19
-Time :25
-Time :25
-Time :11
-Time :6
-Time :36
-Time :53
-Time :7161
-Time :48
-Time :18
-Time :7
-Time :16
-Time :37
-Time :19
-Time :42
-Time :26
-Time :49
-Time :27
-Time :65
-Time :23
-Time :10
-Time :24
-Time :17
-Time :23
-Time :26
-Time :22
-Time :26
-Time :17
-Time :6
-Time :30
-Time :30
-Time :22
-Time :31
-Time :10
-Time :47
-Time :27
-Time :9
-Time :22
-Time :31
-Time :15
-Time :25
-Time :8
-Time :26
-Time :14
-Time :21
-Time :45
-Time :15
-Time :16
-Time :31
-Time :17
-Time :19
-Time :24
-Time :19
-Time :15
-Time :20
-Time :7
-Time :14
-Time :12
-Time :23
-Time :26
-Time :13
-Time :11
-Time :53
-Time :23
-Time :18
-Time :14
-Time :8
-Time :9
-Time :46
-Time :13
-Time :8
-Time :56
-Time :22
-Time :15
-Time :8
-Time :12
-Time :19
-Time :18
-Time :59
-Time :14
-Time :21
-Time :20
-Time :8
-Time :20
-Time :27
-Time :29
-Time :27
-Time :2643
-Time :8
-Time :25
-Time :12
-Time :17
-Time :24
-Time :33
-Time :26
-Time :23
-Time :18
-Time :16
-Time :31
-Time :19
-Time :20
-Time :16
-Time :3843
-Time :26
-Time :16
-Time :6
-Time :8
-Time :18
-Time :22
-Time :27
-Time :4098
-Time :29
-Time :26
-Time :22
-Time :15
-Time :20
-Time :26
-Time :11
-Time :22
-Time :7
-Time :10
-Time :8
-Time :12
-Time :20
-Time :7
-Time :6
-Time :33
-Time :10
-Time :19
-Time :5206
-Time :18
-Time :7
-Time :32
-Time :8
-Time :5311
-Time :8
-Time :16
-Time :16
-Time :41
-Time :22
-Time :19
-Time :41
-Time :5850
-Time :10
-Time :14
-Time :8
-Time :14
-Time :11
-Time :10
-Time :22
-Time :8
-Time :9
-Time :15
-Time :11
-Time :11
-Time :8
-Time :20
-Time :7
-Time :34
-Time :805
-Time :34
-Time :35
-Time :18
-Time :33
-Time :13
-Time :15
-Time :32
-Time :14
-Time :55
-Time :19
-Time :7
-Time :10
-Time :25
-Time :21
-Time :24
-Time :16
-Time :15
-Time :14
-Time :2555
-Time :2518
-Time :14
-Time :42
-Time :17
-Time :14
-Time :14
-Time :6
-Time :21
-Time :20
-Time :8
-Time :25
-Time :173
-Time :18
-Time :142
-Time :8
-Time :48
-Time :35
-Time :31
-Time :16
-Time :7
-Time :39
-Time :29
-Time :59
-Time :26
-Time :14
-Time :8
-Time :14
-Time :8
-Time :45
-Time :17
-Time :8
-Time :57
-Time :26
-Time :20
-Time :7
-Time :126
-Time :37
-Time :52
-Time :8
-Time :25
-Time :16
-Time :27
-Time :24
-Time :11
-Time :18
-Time :7
-Time :18
-Time :10
-Time :32
-Time :47
-Time :33
-Time :18
-Time :49
-Time :18
-Time :17
-Time :16
-Time :26
-Time :29
-Time :12
-Time :18
-Time :53
-Time :12
-Time :16
-Time :10
-Time :23
-Time :151
-Time :110
-Time :96
-Time :8
-Time :23
-Time :13
-Time :15
-Time :18
-Time :32
-Time :17
-Time :13
-Time :7819
-Time :81
-Time :68
-Time :19
-Time :34
-Time :27
-Time :23
-Time :8
-Time :8
-Time :43
-Time :34
-Time :28
-Time :30
-Time :26
-Time :15
-Time :41
-Time :23
-Time :14
-Time :48
-Time :24
-Time :14
-Time :27
-Time :8
-Time :24
-Time :56
-Time :40
-Time :30
-Time :22
-Time :21
-Time :30
-Time :15
-Time :28
-Time :16
-Time :16
-Time :16
-Time :31
-Time :36
-Time :19
-Time :34
-Time :15
-Time :13
-Time :17
-Time :4516
-Time :19
-Time :17
-Time :17
-Time :22
-Time :26
-Time :22
-Time :9
-Time :16
-Time :13
-Time :7
-Time :7
-Time :13
-Time :7
-Time :20
-Time :669
-Time :16
-Time :17
-Time :7
-Time :38
-Time :10
-Time :7
-Time :16
-Time :30
-Time :7
-Time :6
-Time :10
-Time :7
-Time :15
-Time :7
-Time :10
-Time :28
-Time :9
-Time :59
-Time :10
-Time :9
-Time :7
-Time :15
-Time :28
-Time :14
-Time :28
-Time :8
-Time :8
-Time :2336
-Time :13
-Time :7290
-Time :9
-Time :254
-Time :9
-Time :13
-Time :330
-Time :17
+Depth :0 Time :7046
+Depth :1 Time :5260
+Depth :1 Time :5678
+Depth :1 Time :5634
+Depth :1 Time :7035
+Depth :1 Time :7587
+Depth :1 Time :7587
+Depth :1 Time :7243
+Depth :1 Time :7470
+Depth :1 Time :7298
+Depth :1 Time :7658
+Depth :1 Time :8041
+Depth :1 Time :6092
+Depth :1 Time :6166
+Depth :1 Time :6473
+Depth :1 Time :6258
+Depth :1 Time :6560
+Depth :1 Time :6597
+Depth :1 Time :6890
+Depth :1 Time :6860
+Depth :1 Time :7258
+Depth :1 Time :5851
+Depth :1 Time :7897
+Depth :1 Time :5229
+Depth :1 Time :5235
+Depth :1 Time :5573
+Depth :1 Time :5786
+Depth :1 Time :5967
+Depth :1 Time :6932
+Depth :1 Time :7244
+Depth :1 Time :4888
+Depth :1 Time :5739
+Depth :1 Time :5736
+Depth :1 Time :6707
+Depth :1 Time :7215
+Depth :1 Time :7662
+Depth :1 Time :3883
+Depth :1 Time :5226
+Depth :1 Time :5172
+Depth :1 Time :5397
+Depth :1 Time :6304
+Depth :1 Time :1820
+Depth :1 Time :2123
+Depth :1 Time :2650
+Depth :1 Time :3435
+Depth :1 Time :4712
+Depth :1 Time :5216
+Depth :1 Time :5362
+Depth :1 Time :5104
+Depth :1 Time :5931
+Depth :1 Time :2110
+Depth :1 Time :2393
+Depth :1 Time :2361
+Depth :1 Time :2580
+Depth :1 Time :5371
+Depth :1 Time :783
+Depth :1 Time :9
+Depth :1 Time :551
+Depth :1 Time :793
+Depth :1 Time :8
+Depth :1 Time :2355
+Depth :1 Time :7
+Depth :1 Time :10
+Depth :1 Time :8
+Depth :1 Time :11
+Depth :1 Time :311
+Depth :1 Time :3286
+Depth :1 Time :3384
+Depth :2 Time :1613
+Depth :2 Time :2182
+Depth :2 Time :2358
+Depth :2 Time :2401
+Depth :2 Time :1917
+Depth :2 Time :2202
+Depth :2 Time :462
+Depth :2 Time :1538
+Depth :2 Time :3193
+Depth :2 Time :2359
+Depth :2 Time :1716
+Depth :2 Time :2814
+Depth :2 Time :2211
+Depth :2 Time :1048
+Depth :2 Time :718
+Depth :2 Time :1147
+Depth :2 Time :3946
+Depth :2 Time :2413
+Depth :2 Time :725
+Depth :2 Time :1179
+Depth :2 Time :4465
+Depth :2 Time :910
+Depth :2 Time :1175
+Depth :2 Time :1471
+Depth :2 Time :803
+Depth :2 Time :1576
+Depth :2 Time :1458
+Depth :2 Time :2137
+Depth :2 Time :912
+Depth :2 Time :3536
+Depth :2 Time :1580
+Depth :2 Time :1308
+Depth :2 Time :954
+Depth :2 Time :1131
+Depth :2 Time :1537
+Depth :2 Time :766
+Depth :2 Time :575
+Depth :2 Time :985
+Depth :2 Time :1755
+Depth :2 Time :989
+Depth :2 Time :672
+Depth :2 Time :1779
+Depth :2 Time :1468
+Depth :2 Time :1354
+Depth :2 Time :1131
+Depth :2 Time :834
+Depth :2 Time :445
+Depth :2 Time :2031
+Depth :2 Time :1155
+Depth :2 Time :727
+Depth :2 Time :1650
+Depth :2 Time :281
+Depth :2 Time :584
+Depth :2 Time :1021
+Depth :2 Time :1139
+Depth :2 Time :1062
+Depth :2 Time :535
+Depth :2 Time :543
+Depth :2 Time :520
+Depth :2 Time :231
+Depth :2 Time :973
+Depth :2 Time :634
+Depth :2 Time :625
+Depth :2 Time :470
+Depth :2 Time :456
+Depth :2 Time :1038
+Depth :2 Time :341
+Depth :2 Time :368
+Depth :2 Time :273
+Depth :2 Time :275
+Depth :2 Time :207
+Depth :2 Time :569
+Depth :2 Time :139
+Depth :2 Time :219
+Depth :2 Time :256
+Depth :2 Time :168
+Depth :2 Time :415
+Depth :2 Time :153
+Depth :2 Time :39
+Depth :2 Time :242
+Depth :2 Time :155
+Depth :2 Time :143
+Depth :2 Time :346
+Depth :2 Time :68
+Depth :2 Time :216
+Depth :2 Time :113
+Depth :2 Time :260
+Depth :2 Time :278
+Depth :2 Time :222
+Depth :2 Time :217
+Depth :2 Time :159
+Depth :2 Time :211
+Depth :2 Time :162
+Depth :2 Time :56
+Depth :2 Time :231
+Depth :2 Time :59
+Depth :2 Time :251
+Depth :2 Time :113
+Depth :2 Time :87
+Depth :2 Time :69
+Depth :2 Time :47
+Depth :2 Time :26
+Depth :2 Time :37
+Depth :2 Time :89
+Depth :2 Time :63
+Depth :2 Time :53
+Depth :2 Time :143
+Depth :2 Time :82
+Depth :2 Time :75
+Depth :2 Time :46
+Depth :2 Time :67
+Depth :2 Time :55
+Depth :2 Time :33
+Depth :2 Time :34
+Depth :2 Time :56
+Depth :2 Time :24
+Depth :2 Time :70
+Depth :2 Time :28
+Depth :2 Time :27
+Depth :2 Time :25
+Depth :2 Time :58
+Depth :2 Time :43
+Depth :2 Time :65
+Depth :2 Time :25
+Depth :2 Time :103
+Depth :2 Time :8
+Depth :2 Time :31
+Depth :2 Time :47
+Depth :2 Time :70
+Depth :2 Time :47
+Depth :2 Time :126
+Depth :2 Time :28
+Depth :2 Time :8
+Depth :2 Time :19
+Depth :2 Time :23
+Depth :2 Time :19
+Depth :2 Time :29
+Depth :2 Time :29
+Depth :2 Time :17
+Depth :2 Time :8
+Depth :2 Time :16
+Depth :2 Time :16
+Depth :2 Time :27
+Depth :2 Time :11
+Depth :2 Time :16
+Depth :2 Time :9
+Depth :2 Time :17
+Depth :2 Time :663
+Depth :2 Time :880
+Depth :2 Time :731
+Depth :2 Time :564
+Depth :2 Time :862
+Depth :2 Time :1532
+Depth :2 Time :1189
+Depth :2 Time :330
+Depth :2 Time :824
+Depth :2 Time :1633
+Depth :2 Time :380
+Depth :2 Time :1229
+Depth :2 Time :787
+Depth :2 Time :1610
+Depth :2 Time :910
+Depth :2 Time :1069
+Depth :2 Time :1207
+Depth :2 Time :1208
+Depth :2 Time :1592
+Depth :2 Time :738
+Depth :2 Time :1239
+Depth :2 Time :761
+Depth :2 Time :987
+Depth :2 Time :321
+Depth :2 Time :674
+Depth :2 Time :600
+Depth :2 Time :1440
+Depth :2 Time :1557
+Depth :2 Time :848
+Depth :2 Time :310
+Depth :2 Time :538
+Depth :2 Time :988
+Depth :2 Time :250
+Depth :2 Time :1441
+Depth :2 Time :548
+Depth :2 Time :1275
+Depth :2 Time :1410
+Depth :2 Time :1102
+Depth :2 Time :1341
+Depth :2 Time :559
+Depth :2 Time :1657
+Depth :2 Time :950
+Depth :2 Time :731
+Depth :2 Time :1433
+Depth :2 Time :377
+Depth :2 Time :555
+Depth :2 Time :760
+Depth :2 Time :405
+Depth :2 Time :772
+Depth :2 Time :624
+Depth :2 Time :792
+Depth :2 Time :884
+Depth :2 Time :2163
+Depth :2 Time :513
 Metric Backtracks Depth 0:0
 Metric Backtracks Depth 1:1
-Metric Backtracks Depth 2:124
-Metric Backtracks Depth 3:448009
+Metric Backtracks Depth 2:128
+Metric Backtracks Depth 3:494527
 
 MaxClique Size = 21
-cpu = 184
+cpu = 183
