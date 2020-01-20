@@ -23,7 +23,7 @@ struct MetricStore {
   using MetricsVecPtr = std::unique_ptr<std::vector<std::atomic<std::uint64_t> > >;
   using MetricsVecAtomic = std::vector<std::atomic<std::uint64_t> >;
   using MetricsVec = std::vector<std::uint64_t>;
-  using TimesVecPtr = std::unique_ptr<std::vector<std::vector<std::uint64_t> > >;
+  using TimesVecPtr = std::unique_ptr<std::vector<std::unique_ptr<std::vector<std::uint64_t> > > >;
   using TimesVec = std::vector<std::vector<std::uint64_t> >;
 
   // Regularity Metrics
@@ -54,10 +54,12 @@ struct MetricStore {
   void init(const unsigned maxDepth, const unsigned scaling, const unsigned metrics) {
     if (metrics) {
       taskTimes = std::make_unique<TimesVec>(TIME_DEPTHS);
+      for (const auto & times : *taskTimes) {
+        times = std::make_unique<std::vector<std::uint64_t> >();
+      }
       prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
       backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
-			std::time_t now = std::time(NULL);
-    	gen.seed(now);
+    	gen.seed(std::time(NULL));
     }
     if (scaling) {
       nodesVisited = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
@@ -66,15 +68,15 @@ struct MetricStore {
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
 		if (time >= 1) {
-      // Generate random number and if below 0.7 then accept, else reject
+      // Generate random number and if below 0.75 then accept, else reject
       if (dist(gen) <= 75) {
 				unsigned size = 0;
 				for (const auto & times : *taskTimes) {
 					size += times.size();
 				}
-				// Only take 100 samples
+				// Only take 500 samples
 				if (size >= 500) { return; }
-        const auto depthIdx = (depth > 4) ? 4 : depth > 0 ? (depth-1) : 0;
+        const auto depthIdx = (depth >= TIME_DEPTHS) ? (TIME_DEPTHS-1) : (depth > 0) ? (depth-1) : 0;
         (*taskTimes)[depthIdx].push_back(time);
    	 	}
 		}
@@ -105,10 +107,6 @@ struct MetricStore {
 
   MetricsVec getPrunes() const {
     return transformVec(*prunes, maxDepthPrunes);
-  }
-
-  TimesVec getTimeBuckets() {
-    return *taskTimes;
   }
 
 	void printTimes() {
