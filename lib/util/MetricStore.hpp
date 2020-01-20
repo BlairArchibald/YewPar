@@ -24,7 +24,7 @@ struct MetricStore {
   using MetricsVecAtomic = std::vector<std::atomic<std::uint64_t> >;
   using MetricsVec = std::vector<std::uint64_t>;
   using TimesVecPtr = std::unique_ptr<std::vector<std::unique_ptr<std::vector<std::uint64_t> > > >;
-  using TimesVec = std::vector<std::vector<std::uint64_t> >;
+  using TimesVec = std::vector<std::unique_ptr<std::vector<std::uint64_t> > >;
 
   // Regularity Metrics
   TimesVecPtr taskTimes;
@@ -54,9 +54,9 @@ struct MetricStore {
   void init(const unsigned maxDepth, const unsigned scaling, const unsigned metrics) {
     if (metrics) {
       taskTimes = std::make_unique<TimesVec>(TIME_DEPTHS);
-      for (const auto & times : *taskTimes) {
-        times = std::make_unique<std::vector<std::uint64_t> >();
-      }
+      for (unsigned i = 0; i < TIME_DEPTHS; i++) {
+				(*taskTimes)[i] = std::make_unique<MetricsVec>();
+			}
       prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
       backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
     	gen.seed(std::time(NULL));
@@ -72,12 +72,12 @@ struct MetricStore {
       if (dist(gen) <= 75) {
 				unsigned size = 0;
 				for (const auto & times : *taskTimes) {
-					size += times.size();
+					size += times->size();
 				}
-				// Only take 500 samples
-				if (size >= 500) { return; }
+				// Only take 250 samples
+				if (size >= 250) { return; }
         const auto depthIdx = (depth >= TIME_DEPTHS) ? (TIME_DEPTHS-1) : (depth > 0) ? (depth-1) : 0;
-        (*taskTimes)[depthIdx].push_back(time);
+        (*taskTimes)[depthIdx]->push_back(time);
    	 	}
 		}
   }
@@ -112,7 +112,7 @@ struct MetricStore {
 	void printTimes() {
     auto depth = 0;
 		for (const auto & timeDepths : *taskTimes) {
-      for (const auto & time : timeDepths) {
+      for (const auto & time : *timeDepths) {
 			  hpx::cout << "Depth :" << depth << " Time :" << time << hpx::endl;
       }
       depth++;
