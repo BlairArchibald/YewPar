@@ -60,7 +60,7 @@ def get_speedups():
   """
   return (timesD[0]/timesD, timesB[0]/timesB, timesS[0]/timesS)
 
-def draw_bucket_graph(times, times2, times3, title):
+def draw_bucket_graph(times, title):
   """
   Draws a bar chart for the runtime regularity
   """
@@ -80,14 +80,11 @@ def draw_bucket_graph(times, times2, times3, title):
       ax.set_xlim(0.25, len(labels) + 0.75)
       ax.set_xlabel('Depth')
       ax.set_ylabel('Time (s)')
-  times = [4 for i in range(100)]
-  data1 = np.array(times, dtype=np.float64)
-  data2 = np.array(times2, dtype=np.float64)
-  data3 = np.array(times3, dtype=np.float64)
-  """data4 = np.array(times4, dtype=np.float64)
-  data5 = np.array(times5, dtype=np.float64)"""
-  data = [data1, data2, data3]#, data4, data5]
-  print(data[2])
+
+  data = []
+  for time in times:
+    data.append(np.array(time, dtype=np.float64))
+
   fig, ax2 = plt.subplots(sharey=True)
   ax2.set_title(title)
   parts = ax2.violinplot(data, showmeans=False, showmedians=False, showextrema=False)
@@ -97,28 +94,29 @@ def draw_bucket_graph(times, times2, times3, title):
       pc.set_edgecolor('black')
       pc.set_alpha(1)
 
-  quartile1, medians1, quartile4 = np.percentile(data1, [25, 50, 75])
-  quartile2, medians2, quartile5 = np.percentile(data2, [25, 50, 75])
-  quartile3, medians3, quartile6 = np.percentile(data3, [25, 50, 75])
-  #quartile7, medians4, quartile8 = np.percentile(data4, [25, 50, 75])
-  #quartile9, medians5, quartile10 = np.percentile(data4, [25, 50, 75])
+  lower_quartiles = []
+  medians = []
+  upper_quartiles = []
 
-  quartile1 = [quartile1, quartile2, quartile3]#""", quartile7, quartile9"""]
-  medians = [medians1, medians2, medians3]#""", medians4, medians5"""]
-  quartile3 = [quartile4, quartile5, quartile6]#""", quartile9, quartile10"""]
+  for dat in data:
+    l, m, u = np.percentile(dat, [25, 50, 75])
+    lower_quartiles.append(l)
+    medians.append(m)
+    upper_quartiles.append(u)
 
   whiskers = np.array([
       adjacent_values(sorted_array, q1, q3)
-      for sorted_array, q1, q3 in zip(data, quartile1, quartile3)])
+      for sorted_array, q1, q3 in zip(data, lower_quartiles, upper_quartiles)])
+
   whiskersMin, whiskersMax = whiskers[:, 0], whiskers[:, 1]
   inds = np.arange(1, len(medians) + 1)
   ax2.scatter(inds, medians, marker='x', color='black', s=10, zorder=3)
   ax2.grid(color='grey', linestyle='-', linewidth=0.25, alpha=0.5)
-  ax2.vlines(inds, quartile1, quartile3, color='k', linestyle='-', lw=5)
+  ax2.vlines(inds, lower_quartiles, upper_quartiles, color='k', linestyle='-', lw=5)
   ax2.vlines(inds, whiskersMin, whiskersMax, color='k', linestyle='-', lw=1)
 
   # set style for the axes
-  labels = [0, 1, 2]#, 3, 4]
+  labels = [0, 1, 2, 3, 4, 5, 6]
   for ax in [ax2]:
       set_axis_style(ax, labels)
 
@@ -131,7 +129,7 @@ def read_search_metrics(filename, is_opt=False):
   Reads in the results from the file and returns all necessary data
   at each depth
   """
-  times = [[] for i in range(5)]
+  times = [[] for i in range(8)]
   searchTimes = np.zeros((NUM_SEARCHES,), dtype=np.uint64)
   nodeCounts = 0
   backtracks = 0
@@ -196,9 +194,9 @@ def draw_node_throughput(times, nodes, title, d, b):
   plt.show()
 
 times, nodes, backtracks, searchTimes, prunes = read_search_metrics("../rs_mc.txt")
-times2, nodes, backtracks, searchTimes, prunes = read_search_metrics("../rs_mc2.txt")
+times2, nodes, backtracks, searchTimes, prunes = read_search_metrics("../rs_mc_1.txt")
 
-draw_bucket_graph(times2[0], times2[1], times2[2], "Runtime Regularity on MaxClique, Depthbounded, d = 2, brock200_1.clq")
+draw_bucket_graph(times2[:-1], "Runtime Regularity on MaxClique, Budget, b = 1000000, brock400_4.clq")
 
 times3, nodes, backtracks, searchTimes, prunes = read_search_metrics("../rs_mc3.txt")
 times4, nodes, backtracks, searchTimes, prunes = read_search_metrics("../rs_mc4.txt")
