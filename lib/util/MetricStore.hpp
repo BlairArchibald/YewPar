@@ -28,7 +28,7 @@ struct MetricStore {
 
   // Regularity Metrics
   TimesVecPtr taskTimes;
-	std::unique_ptr<std::vector<int> > sizes; // keep track of the number of each item in the buckets for quick look ups
+
   // Random number generator to determine if we collect a time (or not)
   boost::random::mt19937 gen;
   boost::random::uniform_int_distribution<> dist{1, 100};
@@ -45,14 +45,15 @@ struct MetricStore {
   MetricsVecPtr prunes;
   std::atomic<unsigned> maxDepthPrunes;
 	
-	static constexpr int DEF_SIZE	= 100;
+	static constexpr unsigned DEF_SIZE	= 100;
+	static constexpr unsigned TIME_DEPTHS = 8;
 
   MetricStore() = default;
 
   // Initialises the store for an analysis of runtime regulairty (and pruning for BnB)
   void init(const unsigned maxDepth, const unsigned scaling, const unsigned metrics) {
     if (metrics) {
-      taskTimes = std::make_unique<TimesVec>(5);
+      taskTimes = std::make_unique<TimesVec>(TIME_DEPTHS);
       prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
       backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
 			std::time_t now = std::time(NULL);
@@ -72,9 +73,8 @@ struct MetricStore {
 					size += times.size();
 				}
 				// Only take 100 samples
-				if (size >= 1500) { return; }
+				if (size >= 500) { return; }
         const auto depthIdx = (depth > 4) ? 4 : depth > 0 ? (depth-1) : 0;
-				(*sizes)[depthIdx]++;
         (*taskTimes)[depthIdx].push_back(time);
    	 	}
 		}
