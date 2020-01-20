@@ -32,6 +32,8 @@ struct MetricStore {
   // Random number generator to determine if we collect a time (or not)
   boost::random::mt19937 gen;
   boost::random::uniform_int_distribution<> dist{1, 100};
+  // Keep track of the max depth reached for all metric vectors so we can resize later to avoid excessive amounts of print statements
+  std::atomic<unsigned> maxDepthBuckets;
 
   // For node throughput
   MetricsVecPtr nodesVisited;
@@ -67,16 +69,17 @@ struct MetricStore {
   void updateTimes(const unsigned depth, const std::uint64_t time) {
 		if (time >= 1) {
       // Generate random number and if below 0.7 then accept, else reject
-      if (dist(gen) <= 75) {
+      if (dist(gen) < 75) {
 				unsigned sum = 0;
 				for (const auto & size : *sizes) {
 					sum += size;
 				}
-				// Only take 100 samples
-				if (sum >= 100) { return; }
-        const auto depthIdx = (depth > 4) ? 4 : depth >= 1 ? (depth-1) : 0;
+				// Only take 2000 samples
+				if (sum >= 1500) { return; }
+        const auto depthIdx = (depth > 4) ? 4 : (depth-1);
 				(*sizes)[depthIdx]++;
         (*taskTimes)[depthIdx].push_back(time);
+        maxDepthBuckets = (depthIdx) > maxDepthBuckets.load() ? depth : maxDepthBuckets.load();
    	 	}
 		}
   }
@@ -109,6 +112,7 @@ struct MetricStore {
   }
 
   TimesVec getTimeBuckets() {
+    taskTimes->resize(maxDepthBuckets + 1);
     return *taskTimes;
   }
 

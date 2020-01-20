@@ -1,11 +1,7 @@
-Time :1727
-Time :2055
-Time :2148
-Time :2559
 Metric Backtracks Depth 0:0
 Metric Backtracks Depth 1:1
 Metric Backtracks Depth 2:128
-Metric Backtracks Depth 3:480101
+Metric Backtracks Depth 3:462593
 
 MaxClique Size = 21
-cpu = 177
+cpu = 174
