@@ -53,7 +53,6 @@ struct MetricStore {
   void init(const unsigned maxDepth, const unsigned scaling, const unsigned metrics) {
     if (metrics) {
       taskTimes = std::make_unique<TimesVec>(5);
-			sizes = std::make_unique<std::vector<int> >(5);
       prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
       backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
 			std::time_t now = std::time(NULL);
@@ -68,13 +67,13 @@ struct MetricStore {
 		if (time >= 1) {
       // Generate random number and if below 0.7 then accept, else reject
       if (dist(gen) <= 75) {
-				unsigned sum = 0;
-				for (const auto & size : *sizes) {
-					sum += size;
+				unsigned size = 0;
+				for (const auto & times : *taskTimes) {
+					size += times.size();
 				}
 				// Only take 100 samples
-				if (sum >= 100) { return; }
-        const auto depthIdx = (depth > 4) ? 4 : depth >= 1 ? (depth-1) : 0;
+				if (size >= 1500) { return; }
+        const auto depthIdx = (depth > 4) ? 4 : depth > 0 ? (depth-1) : 0;
 				(*sizes)[depthIdx]++;
         (*taskTimes)[depthIdx].push_back(time);
    	 	}
