@@ -168,5 +168,11 @@ void printTimes() {
 struct PrintTimesAct : hpx::actions::make_direct_action<
 	decltype(&printTimes), &printTimes, PrintTimesAct>::type {};
 
+void updateTimes(const unsigned depth, const std::uint64_t time) {
+  MetricStore::store->updateTimes(depth, time);
+}
+struct UpdateTimesAct : hpx::actions::make_direct_action<
+  decltype(&updateTimes), &updateTimes, UpdateTimesAct>::type {};
+
 }
 

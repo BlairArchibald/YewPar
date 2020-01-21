@@ -260,6 +260,6 @@ for i in range(6):
   for j in range(3):
     speedUps[j,i] = medians[j,0] / medians[j,i]
 
-draw_scaling_graph(speedUps, "Scaling on MaxClique on brock800_1.clq", 2, 10000000, "Relative SpeedUp (1 locality)")
-draw_scaling_graph(medians, "Runtimes on MaxClique on brock800_1.clq", 2, 10000000, "Runtime (s)")
-draw_scaling_graph(throughPut, "Node Throughput for Maximum Clique on brock800_1.clq", 2, 10000000, "Node Throughput (Nodes/Second)")
+#draw_scaling_graph(speedUps, "Scaling on MaxClique on brock800_1.clq", 2, 10000000, "Relative SpeedUp (1 locality)")
+#draw_scaling_graph(medians, "Runtimes on MaxClique on brock800_1.clq", 2, 10000000, "Runtime (s)")
+#draw_scaling_graph(throughPut, "Node Throughput for Maximum Clique on brock800_1.clq", 2, 10000000, "Node Throughput (Nodes/Second)")
