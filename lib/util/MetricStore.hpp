@@ -74,8 +74,8 @@ struct MetricStore {
 				for (const auto & times : *taskTimes) {
 					size += times->size();
 				}
-				// Only take 250 samples
-				if (size >= 250) { return; }
+				// Only take 1000 samples
+				if (size >= 5000) { return; }
         const auto depthIdx = (depth >= TIME_DEPTHS) ? (TIME_DEPTHS-1) : (depth > 0) ? (depth-1) : 0;
         (*taskTimes)[depthIdx]->push_back(time);
    	 	}

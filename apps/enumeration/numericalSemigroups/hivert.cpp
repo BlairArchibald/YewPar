@@ -84,7 +84,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     if (opts.count("scaling")) {
       counts = YewPar::Skeletons::StackStealing<NodeGen,
                                                 YewPar::Skeletons::API::CountNodes,
-                                                YewPar::Skeletons::API::Metrics,
+                                                YewPar::Skeletons::API::Scaling,
                                                 YewPar::Skeletons::API::DepthLimited>
                ::search(Empty(), root, searchParameters);
     } else if (opts.count("metrics")) {
