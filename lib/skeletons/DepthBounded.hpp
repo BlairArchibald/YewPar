@@ -214,7 +214,9 @@ struct DepthBounded {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);      
      	const std::uint64_t time = (std::uint64_t) diff.count();
-      hpx::apply<UpdateTimesAct>(hpx::find_here(), time);
+      hpx::apply(hpx::util::bind[&](const unsigned depth, const std::uint64_t time) {
+				store->updateTimes(depth, time);
+			}, depth, time);
       store->updateBacktracks(childDepth, backtracks);
       if constexpr(isOptimisation) {
         store->updatePrunes(childDepth, prunes);
