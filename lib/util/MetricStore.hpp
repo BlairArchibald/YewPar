@@ -45,7 +45,6 @@ struct MetricStore {
     prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
     backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
 		nodesVisited = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
-    gen.seed(std::time(NULL));
   }
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
