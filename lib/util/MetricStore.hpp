@@ -34,6 +34,8 @@ struct MetricStore {
   boost::random::mt19937 gen;
   boost::random::uniform_int_distribution<> dist{1, 100};
 
+  bool stopTakingTimes{false};
+
   // For node throughput
   MetricsVecPtr nodesVisited;
 
@@ -45,7 +47,7 @@ struct MetricStore {
   // Counting pruning
   MetricsVecPtr prunes;
 	
-	static const unsigned DEF_SIZE	= 50;
+	static const unsigned DEF_SIZE = 50;
 	static const unsigned TIME_DEPTHS = 8;
 
   MetricStore() = default;
@@ -60,35 +62,39 @@ struct MetricStore {
   }
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
+    if (stopTakingTimes) return;
 		std::unique_lock<std::mutex> lock(m);
 		if (time >= 1) {
       // Generate random number and if below 75 then accept, else reject
       if (dist(gen) <= 75) {
-				unsigned size = 0;
+				auto size = 0UL;
 				for (const auto & times : *taskTimes) {
 					size += times.size();
 				}
 				// Only take 1000 samples
-				if (size >= 1000) { return; }
-        const auto depthIdx = (depth >= TIME_DEPTHS) ? (TIME_DEPTHS-1) : (depth > 0) ? (depth-1) : 0;
+				if (size >= 1000) {
+          stopTakingTimes = true;
+          return;
+        }
+        const auto depthIdx = getDepthIndex(depth, TIME_DEPTHS);
         (*taskTimes)[depthIdx].push_front(time);
    	 	}
 		}
   }
 
   void updatePrunes(const unsigned depth, std::uint64_t p) {
-    if (depth >= prunes->size()) prunes->resize(depth + 1);
-    (*prunes)[depth] += p;
+    const auto depthIdx = getDepthIndex(depth, DEF_SIZE);
+    (*prunes)[depthIdx] += p;
   }
 
   void updateNodesVisited(const unsigned depth, std::uint64_t nodes) {
-    if (depth >= nodesVisited->size()) nodesVisited->resize(depth + 1);
-    (*nodesVisited)[depth] += nodes;
+    const auto depthIdx = getDepthIndex(depth, DEF_SIZE);
+    (*nodesVisited)[depthIdx] += nodes;
   }
 
   void updateBacktracks(const unsigned depth, std::uint64_t b) {
-    if (depth >= backtracks->size()) backtracks->resize(depth + 1);
-    (*backtracks)[depth] += b;
+    const auto depthIdx = getDepthIndex(depth, DEF_SIZE);
+    (*backtracks)[depthIdx] += b;
   }
 
   MetricsVec getNodeCount() const {
@@ -117,7 +123,11 @@ struct MetricStore {
 
 private:
 
-  inline MetricsVec transformVec(const std::vector<std::atomic<std::uint64_t> > & vec) const {
+  inline auto getDepthIndex(const unsigned depth, const unsigned size) const {
+    return (depth >= size) ? (size-1) : depth;
+  }
+
+  inline auto transformVec(const std::vector<std::atomic<std::uint64_t> > & vec) const {
     MetricsVec res;
     std::transform(vec.begin(), vec.end(), std::back_inserter(res),
     [](const auto & c) { return c.load(); });
