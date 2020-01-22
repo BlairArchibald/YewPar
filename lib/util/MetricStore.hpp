@@ -6,6 +6,7 @@
 #include <ctime>
 #include <memory>
 #include <limits>
+#include <forward_list>
 #include <vector>
 #include <mutex>
 #include <boost/random.hpp>
@@ -23,8 +24,8 @@ struct MetricStore {
   using MetricsVecPtr = std::unique_ptr<std::vector<std::atomic<std::uint64_t> > >;
   using MetricsVecAtomic = std::vector<std::atomic<std::uint64_t> >;
   using MetricsVec = std::vector<std::uint64_t>;
-  using TimesVecPtr = std::unique_ptr<std::vector<std::unique_ptr<std::vector<std::uint64_t> > > >;
-  using TimesVec = std::vector<std::unique_ptr<std::vector<std::uint64_t> > >;
+  using TimesVecPtr = std::unique_ptr<std::vector<std::list<std::uint64_t> > >;
+  using TimesVec = std::vector<std::list<std::uint64_t> >;
 
   // Regularity Metrics
   TimesVecPtr taskTimes;
@@ -56,9 +57,6 @@ struct MetricStore {
   void init(const unsigned maxDepth, const unsigned scaling, const unsigned metrics) {
     if (metrics) {
       taskTimes = std::make_unique<TimesVec>(TIME_DEPTHS);
-      for (unsigned i = 0; i < TIME_DEPTHS; i++) {
-				(*taskTimes)[i] = std::make_unique<MetricsVec>();
-			}
       prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
       backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
     	gen.seed(std::time(NULL));
@@ -80,7 +78,7 @@ struct MetricStore {
 				// Only take 1000 samples
 				if (size >= 1000) { return; }
         const auto depthIdx = (depth >= TIME_DEPTHS) ? (TIME_DEPTHS-1) : (depth > 0) ? (depth-1) : 0;
-        (*taskTimes)[depthIdx]->push_back(time);
+        (*taskTimes)[depthIdx]->push_front(time);
    	 	}
 		}
   }

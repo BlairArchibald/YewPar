@@ -484,8 +484,10 @@ struct StackStealing {
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
 
-    // Record time here for node throughput
-    auto t1 = std::chrono::steady_clock::now();
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    if constexpr(metrics) {
+      t1 = std::chrono::steady_clock::now();
+    }
 
     doSearch(space, root, params);
 

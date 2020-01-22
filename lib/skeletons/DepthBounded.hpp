@@ -210,6 +210,7 @@ struct DepthBounded {
       hpx::apply(hpx::util::bind([&]() {
         store->updatePrunes(depth, prunes);
         store->updateTimes(depth, time);
+        store->updateNodesVisited(depth, time);
         store->updateBacktracks(depth, backtracks);
       });
     }
@@ -273,7 +274,10 @@ struct DepthBounded {
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
 
-    auto t1 = std::chrono::steady_clock::now();
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    if constexpr(metrics) {
+      t1 = std::chrono::steady_clock::now();
+    }
 
     // Issue is updateCounts by the looks of things. Something probably isn't initialised correctly.
     createTask(1, root).get();

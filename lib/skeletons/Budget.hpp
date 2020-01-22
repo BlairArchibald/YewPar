@@ -196,10 +196,6 @@ struct Budget {
     
     expand(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth, nodeCount, prunes, backtracks);
 
-    if constexpr(scaling) {
-      store->updateNodesVisited(childDepth, nodeCount);
-    }
-
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
@@ -207,6 +203,7 @@ struct Budget {
       hpx::apply(hpx::util::bind([&]() {
         store->updatePrunes(depth, prunes);
         store->updateTimes(depth, time);
+        store->updateNodesVisited(childDepth, nodeCount);
         store->updateBacktracks(depth, backtracks);
       });
     }
@@ -245,7 +242,7 @@ struct Budget {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
-    
+
     if constexpr (verbose) {
       printSkeletonDetails();
     }
@@ -269,8 +266,11 @@ struct Budget {
           hpx::find_all_localities(), inc));
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
-
-    auto t1 = std::chrono::steady_clock::now();
+  
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    if constexpr(metrics) {
+      t1 = std::chrono::steady_clock::now();
+    }
 
     createTask(1, root).get();
 
