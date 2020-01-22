@@ -63,6 +63,29 @@ static auto printBacktracks() {
   printMetric<GetBacktracksAct>("Backtracks");
 }
 
+<<<<<<< HEAD
+=======
+static auto printTimes() {
+
+  auto timeBucketsAll = hpx::lcos::broadcast<GetTimeBucketsAct>(hpx::find_all_localities()).get();
+
+  std::uint64_t depth = 0;
+  int bucketIdx = 0;
+  for (const auto & bucketsLocality : timeBucketsAll) {
+    for (const auto & buckets : bucketsLocality) {
+      for (const auto & bucket : buckets) {
+        hpx::cout << "Depth " << depth << " Bucket " << bucketIdx++ << ":" << bucket << hpx::endl;
+      }
+			bucketIdx = 0;
+      depth++;
+    }
+    depth = 0;
+  }
+  hpx::cout << hpx::endl;
+
+}
+
+>>>>>>> cfcd49cc6bf7448ac95ff2a7bcee1d82dc8af8ce
 template<typename Space, typename Node, typename Bound>
 static std::vector<std::uint64_t> totalNodeCounts(const unsigned maxDepth) {
   auto cntList = hpx::lcos::broadcast<GetCountsAct<Space, Node, Bound> >(

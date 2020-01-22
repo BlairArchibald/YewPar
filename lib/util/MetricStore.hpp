@@ -55,6 +55,7 @@ struct MetricStore {
   }
 
   void updatePrunes(const unsigned depth, std::uint64_t p) {
+<<<<<<< HEAD
     const auto depthIdx = getDepthIndex(depth, prunes->size());
     (*prunes)[depthIdx] += p;
   }
@@ -67,6 +68,17 @@ struct MetricStore {
   void updateBacktracks(const unsigned depth, std::uint64_t b) {
     const auto depthIdx = getDepthIndex(depth, backtracks->size());
     (*backtracks)[depthIdx] += b;
+=======
+    updateMetric(prunes, std::move(depth), std::move(p));
+  }
+
+  void updateNodesVisited(const unsigned depth, std::uint64_t nodes) {
+    updateMetric(nodesVisited, std::move(depth), std::move(nodes));
+  }
+
+  void updateBacktracks(const unsigned depth, std::uint64_t b) {
+    updateMetric(backtracks, std::move(depth), std::move(b));
+>>>>>>> cfcd49cc6bf7448ac95ff2a7bcee1d82dc8af8ce
   }
 
   MetricsVec getNodeCount() const {
@@ -81,6 +93,7 @@ struct MetricStore {
     return transformVec(*prunes);
   }
 
+<<<<<<< HEAD
 	void printTimes() {
     auto depth = 0;
 		for (const auto & timeDepths : *taskTimes) {
@@ -90,18 +103,39 @@ struct MetricStore {
       depth++;
 		}
 	}
+=======
+  TimesVec getTimeBuckets() const {
+    TimesVec bucketsCopy;
+    std::copy(timeBuckets->begin(), timeBuckets->begin()+maxDepthBuckets+1, std::back_inserter(bucketsCopy));
+    return bucketsCopy;
+  }
+>>>>>>> cfcd49cc6bf7448ac95ff2a7bcee1d82dc8af8ce
 
   ~MetricStore() = default;
 
 private:
 
+<<<<<<< HEAD
   inline unsigned getDepthIndex(const unsigned depth, const unsigned size) const {
     return (depth >= size) ? (size-1) : depth;
   }
 
   inline MetricsVec transformVec(const std::vector<std::atomic<std::uint64_t> > & vec) const {
+=======
+  inline void updateMetric(
+    MetricsVecAtomic & vec,
+    const unsigned && depth,
+    const std::uint64_t && newVal,
+    std::atomic<std::uint64_t> & maxDepth
+  ) {
+    vec[depth] += newVal;
+    maxDepth = depth > maxDepth.load() ? depth : maxDepth.load();
+  }
+
+  inline MetricsVec transformVec(const MetricsVecAtomic & vec, const unsigned newSize) const {
+>>>>>>> cfcd49cc6bf7448ac95ff2a7bcee1d82dc8af8ce
     MetricsVec res;
-    std::transform(vec.begin(), vec.end(), std::back_inserter(res),
+    std::transform(vec.begin(), vec.begin()+newSize+1, std::back_inserter(res),
     [](const auto & c) { return c.load(); });
     return res;
   }
@@ -137,8 +171,40 @@ struct GetPrunesAct : hpx::actions::make_direct_action<
 void printTimes() {
 	MetricStore::store->printTimes();
 }
+<<<<<<< HEAD
 struct PrintTimesAct : hpx::actions::make_direct_action<
 	decltype(&printTimes), &printTimes, PrintTimesAct>::type {};
 
 }
 
+=======
+
+namespace hpx { namespace traits {
+
+template <>
+struct action_stacksize<YewPar::InitMetricStoreAct> {
+  enum { value = threads::thread_stacksize_huge };
+};
+
+template <>
+struct action_stacksize<YewPar::GetNodeCountAct> {
+  enum { value = threads::thread_stacksize_huge };
+};
+
+template <>
+struct action_stacksize<YewPar::GetBacktracksAct> {
+  enum { value = threads::thread_stacksize_huge };
+};
+
+template <>
+struct action_stacksize<YewPar::GetPrunesAct> {
+  enum { value = threads::thread_stacksize_huge };
+};
+
+template <>
+struct action_stacksize<YewPar::GetTimeBucketsAct> {
+  enum { value = threads::thread_stacksize_huge };
+};
+
+}}
+>>>>>>> cfcd49cc6bf7448ac95ff2a7bcee1d82dc8af8ce
