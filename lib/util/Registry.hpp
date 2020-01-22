@@ -62,7 +62,7 @@ struct Registry {
     std::transform(counts->begin(), counts->end(), std::back_inserter(res), [](const auto & c) { return c.load(); });
     return res;
   }
-
+  
   // BNB
   template <typename Cmp>
   void updateRegistryBound(Bound bnd) {

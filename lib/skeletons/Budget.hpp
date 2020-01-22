@@ -30,6 +30,9 @@ struct Budget {
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
+  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics_;
+  static constexpr unsigned metrics = Metrics_::value;
+
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
@@ -46,13 +49,13 @@ struct Budget {
     if constexpr(!std::is_same<boundFn, nullFn__>::value) {
         hpx::cout << "Using Bounding: true\n";
         hpx::cout << "PruneLevel Optimisation: " << std::boolalpha << pruneLevel << "\n";
-      } else {
-      hpx::cout << "Using Bounding: false\n";
+    } else {
+        hpx::cout << "Using Bounding: false\n";
     }
     if constexpr (std::is_same<Policy, Workstealing::Policies::Workpool>::value) {
         hpx::cout << "Workpool: Deque\n";
-      } else {
-      hpx::cout << "Workpool: DepthPool\n";
+    } else {
+        hpx::cout << "Workpool: DepthPool\n";
     }
     hpx::cout << hpx::flush;
   }
@@ -62,11 +65,15 @@ struct Budget {
                      const API::Params<Bound> & params,
                      std::vector<uint64_t> & counts,
                      std::vector<hpx::future<void> > & childFutures,
-                     const unsigned childDepth) {
+                     const unsigned childDepth,
+                     std::uint64_t & nodeCount,
+                     std::uint64_t & prunes,
+                     std::uint64_t & totalBacktracks) {
     auto reg = Registry<Space, Node, Bound>::gReg;
 
     auto depth = childDepth;
     auto backtracks = 0;
+    auto reachedLimit = false;
 
     // Init the stack
     StackElem<Generator> initElem(space, n);
@@ -96,6 +103,9 @@ struct Budget {
             }
           }
         }
+				if constexpr (metrics) {
+					totalBacktracks += backtracks;
+				}
         backtracks = 0;
       }
 
@@ -107,8 +117,18 @@ struct Budget {
         genStack[stackDepth].seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, child);
+        
+        if constexpr(metrics) {
+          ++nodeCount;
+        }
+
         if (pn == ProcessNodeRet::Exit) { return; }
-        else if (pn == ProcessNodeRet::Prune) { continue; }
+        else if (pn == ProcessNodeRet::Prune) {
+          if constexpr(isOptimisation && metrics) {
+            ++prunes;
+          }
+          continue;
+        }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
           depth--;
@@ -144,6 +164,10 @@ struct Budget {
         backtracks++;
       }
     }
+
+    if constexpr(metrics) {
+      totalBacktracks += backtracks;
+    }
   }
 
   static void subtreeTask(const Node taskRoot,
@@ -151,23 +175,45 @@ struct Budget {
                           const hpx::naming::id_type donePromiseId) {
     auto reg = Registry<Space, Node, Bound>::gReg;
 
+    auto store = MetricStore::store;
+
     std::vector<std::uint64_t> countMap;
     if constexpr(isCountNodes) {
         countMap.resize(reg->params.maxDepth + 1);
     }
 
     std::vector<hpx::future<void> > childFutures;
-    expand(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth);
+    std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
+
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    
+    if constexpr(metrics) {
+      t1 = std::chrono::steady_clock::now();
+    }
+    
+    expand(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth, nodeCount, prunes, backtracks);
+
+    if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
+     	const std::uint64_t time = (const std::uint64_t) diff.count();
+      hpx::apply(hpx::util::bind([=]() {
+        store->updatePrunes(childDepth, prunes);
+        store->updateTimes(childDepth, time);
+        store->updateNodesVisited(childDepth, nodeCount);
+        store->updateBacktracks(childDepth, backtracks);
+      }));
+    }
 
     // Atomically updates the (process) local counter
     if constexpr (isCountNodes) {
       reg->updateCounts(countMap);
     }
-
+    
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
-          hpx::wait_all(futs);
-          hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
-        }, std::move(childFutures)));
+      hpx::wait_all(futs);
+      hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
+    }, std::move(childFutures)));
   }
 
   static hpx::future<void> createTask(const unsigned childDepth,
@@ -193,12 +239,17 @@ struct Budget {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
+
     if constexpr (verbose) {
       printSkeletonDetails();
     }
 
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
+
+    if constexpr(metrics) {
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities()));
+    }
 
     Policy::initPolicy();
 
@@ -212,12 +263,32 @@ struct Budget {
           hpx::find_all_localities(), inc));
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
+  
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    if constexpr(metrics) {
+      t1 = std::chrono::steady_clock::now();
+    }
 
     createTask(1, root).get();
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
+    if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+      const std::uint64_t time = diff.count();
+      hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
+
+      // Prints regularity metrics
+      for (const auto & l : hpx::find_all_localities()) {
+        hpx::async<PrintTimesAct>(l).get();
+      }
+      printPrunes();
+      printBacktracks();
+      printNodeCounts();
+    }
+    
     // Return the right thing
     if constexpr(isCountNodes) {
       return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
