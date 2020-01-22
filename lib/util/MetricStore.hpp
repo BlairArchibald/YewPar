@@ -62,38 +62,37 @@ struct MetricStore {
   }
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
-    if (stopTakingTimes) return;
-		std::unique_lock<std::mutex> lock(m);
+   // if (stopTakingTimes) return;
 		if (time >= 1) {
       // Generate random number and if below 75 then accept, else reject
-      if (dist(gen) <= 75) {
+//      if (dist(gen) <= 75) {
 				auto size = 0UL;
 				for (const auto & times : *taskTimes) {
 					size += times.size();
 				}
 				// Only take 1000 samples
-				if (size >= 1000) {
-          stopTakingTimes = true;
-          return;
-        }
+				//if (size >= 5000) {
+ //         stopTakingTimes = true;
+//          return;
+   //     }
         const auto depthIdx = getDepthIndex(depth, TIME_DEPTHS);
         (*taskTimes)[depthIdx].push_front(time);
    	 	}
-		}
+//		}
   }
 
   void updatePrunes(const unsigned depth, std::uint64_t p) {
-    const auto depthIdx = getDepthIndex(depth, DEF_SIZE);
+    const auto depthIdx = getDepthIndex(depth, prunes->size());
     (*prunes)[depthIdx] += p;
   }
 
   void updateNodesVisited(const unsigned depth, std::uint64_t nodes) {
-    const auto depthIdx = getDepthIndex(depth, DEF_SIZE);
+    const auto depthIdx = getDepthIndex(depth, nodesVisited->size());
     (*nodesVisited)[depthIdx] += nodes;
   }
 
   void updateBacktracks(const unsigned depth, std::uint64_t b) {
-    const auto depthIdx = getDepthIndex(depth, DEF_SIZE);
+    const auto depthIdx = getDepthIndex(depth, backtracks->size());
     (*backtracks)[depthIdx] += b;
   }
 

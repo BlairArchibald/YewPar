@@ -42,7 +42,9 @@ static auto printMetric(const std::string && metric) {
   std::uint64_t depth = 0;
   for (const auto & metricVec : metricVecAll) {
     for (const auto & item : metricVec) {
-      hpx::cout << "Metric " << metric << " Depth " << depth++ << ":" << item << hpx::endl;;
+      if (item >= 1) {
+				hpx::cout << "Metric " << metric << " Depth " << depth++ << ":" << item << hpx::endl;
+			}
     }
     depth = 0;
   }

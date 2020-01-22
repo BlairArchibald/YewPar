@@ -204,7 +204,7 @@ struct DepthBounded {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
      	const std::uint64_t time = (const std::uint64_t) diff.count();
-      hpx::async(hpx::util::bind([&]() {
+      hpx::apply(hpx::util::bind([=]() {
         store->updatePrunes(childDepth, prunes);
         store->updateTimes(childDepth, time);
         store->updateNodesVisited(childDepth, time);
@@ -282,10 +282,9 @@ struct DepthBounded {
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
-
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
 
