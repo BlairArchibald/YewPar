@@ -3,13 +3,9 @@
 
 #include <atomic>
 #include <algorithm>
-#include <ctime>
 #include <memory>
-#include <limits>
 #include <forward_list>
 #include <vector>
-#include <mutex>
-#include <boost/random.hpp>
 
 #include <hpx/runtime/actions/basic_action.hpp>
 #include <hpx/traits/action_stacksize.hpp>
@@ -30,20 +26,12 @@ struct MetricStore {
   // Regularity Metrics
   TimesVecPtr taskTimes;
 
-  // Random number generator to determine if we collect a time (or not)
-  boost::random::mt19937 gen;
-  boost::random::uniform_int_distribution<> dist{1, 100};
-
-  bool stopTakingTimes{false};
-
   // For node throughput
   MetricsVecPtr nodesVisited;
 
   // For Backtracking budget
   MetricsVecPtr backtracks;
 	
-	std::mutex m;
-
   // Counting pruning
   MetricsVecPtr prunes;
 	
@@ -52,7 +40,6 @@ struct MetricStore {
 
   MetricStore() = default;
 
-  // Initialises the store for an analysis of runtime regulairty (and pruning for BnB)
   void init() {
     taskTimes = std::make_unique<TimesVec>(TIME_DEPTHS);
     prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
@@ -62,23 +49,10 @@ struct MetricStore {
   }
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
-   // if (stopTakingTimes) return;
 		if (time >= 1) {
-      // Generate random number and if below 75 then accept, else reject
-//      if (dist(gen) <= 75) {
-				auto size = 0UL;
-				for (const auto & times : *taskTimes) {
-					size += times.size();
-				}
-				// Only take 1000 samples
-				//if (size >= 5000) {
- //         stopTakingTimes = true;
-//          return;
-   //     }
         const auto depthIdx = getDepthIndex(depth, TIME_DEPTHS);
         (*taskTimes)[depthIdx].push_front(time);
    	 	}
-//		}
   }
 
   void updatePrunes(const unsigned depth, std::uint64_t p) {
