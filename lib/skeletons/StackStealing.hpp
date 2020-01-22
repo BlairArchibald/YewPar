@@ -220,7 +220,7 @@ struct StackStealing {
         
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
-          if constexpr(isOptimisation && metrics) {
+          if constexpr(metrics) {
 						++prunes;
 					}
           continue;

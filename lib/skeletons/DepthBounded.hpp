@@ -158,7 +158,7 @@ struct DepthBounded {
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Prune) {
-        if constexpr(isOptimisation && metrics) {
+        if constexpr(metrics) {
           ++prunes;
         }
         continue;

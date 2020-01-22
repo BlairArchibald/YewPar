@@ -28,6 +28,7 @@
 *.out
 *.app
 
-build/
 newSIPbenchmarks/
 .vscode/
+build/
+build
