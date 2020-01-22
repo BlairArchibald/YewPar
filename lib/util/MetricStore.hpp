@@ -36,20 +36,17 @@ struct MetricStore {
 
   // For node throughput
   MetricsVecPtr nodesVisited;
-  std::atomic<unsigned> maxDepthNodesVisited;
 
   // For Backtracking budget
   MetricsVecPtr backtracks;
-  std::atomic<unsigned> maxDepthBacktracks;
 	
 	std::mutex m;
 
   // Counting pruning
   MetricsVecPtr prunes;
-  std::atomic<unsigned> maxDepthPrunes;
 	
-	static constexpr unsigned DEF_SIZE	= 100;
-	static constexpr unsigned TIME_DEPTHS = 8;
+	static const unsigned DEF_SIZE	= 50;
+	static const unsigned TIME_DEPTHS = 8;
 
   MetricStore() = default;
 
@@ -80,18 +77,18 @@ struct MetricStore {
   }
 
   void updatePrunes(const unsigned depth, std::uint64_t p) {
+    if (depth >= prunes->size()) prunes->resize(depth + 1);
     (*prunes)[depth] += p;
-    maxDepthPrunes = depth > maxDepthPrunes.load() ? depth : maxDepthPrunes.load();
   }
 
   void updateNodesVisited(const unsigned depth, std::uint64_t nodes) {
+    if (depth >= nodesVisited->size()) nodesVisited->resize(depth + 1);
     (*nodesVisited)[depth] += nodes;
-    maxDepthNodesVisited = depth > maxDepthNodesVisited.load() ? depth : maxDepthNodesVisited.load();
   }
 
   void updateBacktracks(const unsigned depth, std::uint64_t b) {
+    if (depth >= backtracks->size()) backtracks->resize(depth + 1);
     (*backtracks)[depth] += b;
-    maxDepthBacktracks = depth > maxDepthBacktracks.load() ? depth : maxDepthBacktracks.load();
   }
 
   MetricsVec getNodeCount() const {
@@ -120,14 +117,10 @@ struct MetricStore {
 
 private:
 
-  inline MetricsVec transformVec(
-    const std::vector<std::atomic<std::uint64_t> > & vec,
-    const unsigned newSize
-  ) const {
+  inline MetricsVec transformVec(const std::vector<std::atomic<std::uint64_t> > & vec) const {
     MetricsVec res;
     std::transform(vec.begin(), vec.end(), std::back_inserter(res),
     [](const auto & c) { return c.load(); });
-    res.resize(newSize + 1);
     return res;
   }
 
