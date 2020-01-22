@@ -123,11 +123,11 @@ struct MetricStore {
 
 private:
 
-  inline auto getDepthIndex(const unsigned depth, const unsigned size) const {
+  inline unsigned getDepthIndex(const unsigned depth, const unsigned size) const {
     return (depth >= size) ? (size-1) : depth;
   }
 
-  inline auto transformVec(const std::vector<std::atomic<std::uint64_t> > & vec) const {
+  inline MetricsVec transformVec(const std::vector<std::atomic<std::uint64_t> > & vec) const {
     MetricsVec res;
     std::transform(vec.begin(), vec.end(), std::back_inserter(res),
     [](const auto & c) { return c.load(); });
