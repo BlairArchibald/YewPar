@@ -51,7 +51,7 @@ struct MetricStore {
 		if (time >= 1) {
         const auto depthIdx = getDepthIndex(depth, TIME_DEPTHS);
         (*taskTimes)[depthIdx].push_front(time);
-   	 	}
+   	}
   }
 
   void updatePrunes(const unsigned depth, std::uint64_t p) {
