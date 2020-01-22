@@ -71,7 +71,7 @@ struct MetricStore {
   void updateTimes(const unsigned depth, const std::uint64_t time) {
 		std::unique_lock<std::mutex> lock(m);
 		if (time >= 1) {
-      // Generate random number and if below 0.75 then accept, else reject
+      // Generate random number and if below 75 then accept, else reject
       if (dist(gen) <= 75) {
 				unsigned size = 0;
 				for (const auto & times : *taskTimes) {
@@ -170,12 +170,6 @@ void printTimes() {
 }
 struct PrintTimesAct : hpx::actions::make_direct_action<
 	decltype(&printTimes), &printTimes, PrintTimesAct>::type {};
-
-void updateTimes(const unsigned depth, const std::uint64_t time) {
-  MetricStore::store->updateTimes(depth, time);
-}
-struct UpdateTimesAct : hpx::actions::make_direct_action<
-  decltype(&updateTimes), &updateTimes, UpdateTimesAct>::type {};
 
 }
 

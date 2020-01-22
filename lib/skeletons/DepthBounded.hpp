@@ -209,12 +209,13 @@ struct DepthBounded {
 
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);      
-     	const std::uint64_t time = (std::uint64_t) diff.count();
-			UpdateTimesAct act;
-			hpx::apply(act, hpx::find_here(), childDepth, time);
-			store->updateBacktracks(childDepth, backtracks);
-			store->updatePrunes(childDepth, prunes);
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
+     	const std::uint64_t time = (const std::uint64_t) diff.count();
+      hpx::apply(hpx::util::bind([&]() {
+        store->updatePrunes(depth, prunes);
+        store->updateTimes(depth, time);
+        store->updateBacktracks(depth, backtracks);
+      });
     }
 
     // Atomically updates the (process) local counter
