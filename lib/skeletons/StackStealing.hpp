@@ -38,11 +38,14 @@ struct StackStealing {
   static constexpr bool isOptimisation = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthLimited_, std::integral_constant<bool, false> >::type::value;
-  static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, true> >::type::value;
   static constexpr unsigned maxStackDepth = parameter::value_type<args, API::tag::MaxStackDepth, std::integral_constant<unsigned, 5000> >::type::value;
 
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
+
+  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics_;
+  static constexpr unsigned metrics = Metrics_::value;
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
@@ -77,7 +80,7 @@ struct StackStealing {
     GeneratorStack<Generator> generatorStack(maxStackDepth, rootElem);
     if constexpr (isCountNodes) {
         cntMap.resize(reg->params.maxDepth + 1);
-      }
+    }
 
     if constexpr (isCountNodes) {
       cntMap[depth] += rootElem.gen.numChildren;
@@ -89,6 +92,7 @@ struct StackStealing {
     std::tie(stealReq, threadId) = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->registerThread();
 
     runTaskFromStack(depth, reg->space, generatorStack, stealReq, cntMap, donePromise, threadId);
+
   }
 
   using SubTreeTask = func<
@@ -130,6 +134,9 @@ struct StackStealing {
                            std::shared_ptr<SharedState> stealRequest,
                            std::vector<std::uint64_t> & cntMap,
                            std::vector<hpx::future<void> > & futures,
+                           std::uint64_t & nodeCount,
+                           std::uint64_t & prunes,
+                           std::uint64_t & backtracks,
                            int stackDepth = 0,
                            int depth = -1) {
     auto reg = Registry<Space, Node, Bound>::gReg;
@@ -207,10 +214,22 @@ struct StackStealing {
         generatorStack[stackDepth].seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child);
+        if constexpr(metrics) {
+					++nodeCount;
+				}
+        
         if (pn == ProcessNodeRet::Exit) { return; }
-        else if (pn == ProcessNodeRet::Prune) { continue; }
+        else if (pn == ProcessNodeRet::Prune) {
+          if constexpr(isOptimisation && metrics) {
+						++prunes;
+					}
+          continue;
+        }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
+          if constexpr(metrics) {
+				  	++backtracks;
+					}
           depth--;
           continue;
         }
@@ -230,6 +249,9 @@ struct StackStealing {
             // This doesn't look quite right to me, we want the next element at this level not the previous?
             if (depth == reg->params.maxDepth) {
               stackDepth--;
+              if constexpr(metrics) {
+								++backtracks;
+							}
               depth--;
               continue;
           }
@@ -240,6 +262,9 @@ struct StackStealing {
       } else {
         stackDepth--;
         depth--;
+        if constexpr(metrics) {
+					++backtracks;
+				}
       }
     }
   }
@@ -255,21 +280,43 @@ struct StackStealing {
                                 const int stackDepth = 0,
                                 const int depth = -1) {
     auto reg = Registry<Space, Node, Bound>::gReg;
+
+    auto store = MetricStore::store;
+
     std::vector<hpx::future<void> > futures;
 
-    runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, stackDepth, depth);
+    std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+
+		if constexpr(metrics) {
+    	t1 = std::chrono::steady_clock::now();
+    }
+
+		runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, backtracks, stackDepth, depth);
+
+    if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
+     	const std::uint64_t time = (const std::uint64_t) diff.count();
+      const auto childDepth = depth > 0 ? depth : 0;
+      hpx::apply(hpx::util::bind([=]() {
+        store->updateNodesVisited(childDepth, nodeCount);
+        store->updatePrunes(childDepth, prunes);
+        store->updateTimes(childDepth, time);
+        store->updateBacktracks(childDepth, backtracks);
+      }));
+    }
 
     // Atomically updates the (process) local counter
     if constexpr(isCountNodes) {
-        reg->updateCounts(cntMap);
+      reg->updateCounts(cntMap);
     }
-
     std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
-          hpx::wait_all(futs);
-          hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromise, true);
-        }, std::move(futures)));
+      hpx::wait_all(futs);
+      hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromise, true);
+      }, std::move(futures)));
   }
 
 
@@ -413,12 +460,17 @@ struct StackStealing {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
+
     if constexpr(verbose) {
       printSkeletonDetails(params);
     }
 
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
+
+    if constexpr(metrics) {
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities()));
+    }
 
     Policy::initPolicy();
 
@@ -427,6 +479,11 @@ struct StackStealing {
       hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
           hpx::find_all_localities(), inc));
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
+    }
+
+    std::chrono::time_point<std::chrono::steady_clock> t1;
+    if constexpr(metrics) {
+      t1 = std::chrono::steady_clock::now();
     }
 
     doSearch(space, root, params);
@@ -441,6 +498,21 @@ struct StackStealing {
         // We don't broadcast here to avoid racy output.
         hpx::async<Workstealing::Policies::SearchManagerPerf::printChunkSizeList_act>(l).get();
       }
+    }
+
+    if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+      const std::uint64_t time = diff.count();
+      hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
+
+      // Prints regularity metrics
+      for (const auto & l : hpx::find_all_localities()) {
+        hpx::async<PrintTimesAct>(l).get();
+      }
+      printPrunes();
+      printBacktracks();
+      printNodeCounts();
     }
 
     // Return the right thing

@@ -3,6 +3,12 @@
 
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
+#include "util/MetricStore.hpp"
+#include <algorithm>
+#include <cstdarg>
+#include <functional>
+#include <numeric>
+#include <vector>
 
 namespace YewPar { namespace Skeletons {
 
@@ -27,6 +33,34 @@ static void updateIncumbent(const Node & node, const Bound & bnd) {
 
   typedef typename Incumbent::UpdateIncumbentAct<Node, Bound, Cmp, Verbose> act;
   hpx::async<act>(reg->globalIncumbent, node).get();
+}
+
+template <typename Act>
+static auto printMetric(const std::string && metric) {
+  auto metricVecAll = hpx::lcos::broadcast<Act>(hpx::find_all_localities()).get();
+
+  std::uint64_t depth = 0;
+  for (const auto & metricVec : metricVecAll) {
+    for (const auto & item : metricVec) {
+      if (item >= 1) {
+				hpx::cout << "Metric " << metric << " Depth " << depth++ << ":" << item << hpx::endl;
+			}
+    }
+    depth = 0;
+  }
+  hpx::cout << hpx::endl;
+}
+
+static auto printNodeCounts() {
+  printMetric<GetNodeCountAct>("Nodes");
+}
+
+static auto printPrunes() {
+  printMetric<GetPrunesAct>("Prunes");
+}
+
+static auto printBacktracks() {
+  printMetric<GetBacktracksAct>("Backtracks");
 }
 
 template<typename Space, typename Node, typename Bound>
@@ -85,7 +119,7 @@ struct ProcessNode {
           hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
           return ProcessNodeRet::Exit;
         }
-      }
+    }
 
     if constexpr(!std::is_same<boundFn, nullFn__>::value) {
         Objcmp cmp;
@@ -95,7 +129,7 @@ struct ProcessNode {
               if constexpr(pruneLevel) {
                   return ProcessNodeRet::Break;
                 } else {
-                return ProcessNodeRet::Prune;
+                  return ProcessNodeRet::Prune;
               }
             }
             // B&B Case
