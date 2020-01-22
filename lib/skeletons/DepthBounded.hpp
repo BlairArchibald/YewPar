@@ -207,7 +207,7 @@ struct DepthBounded {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
      	const std::uint64_t time = (const std::uint64_t) diff.count();
-      hpx::apply(hpx::util::bind([&]() {
+      hpx::async(hpx::util::bind([&]() {
         store->updatePrunes(childDepth, prunes);
         store->updateTimes(childDepth, time);
         store->updateNodesVisited(childDepth, time);
@@ -257,8 +257,8 @@ struct DepthBounded {
         hpx::find_all_localities(), space, root, params));
 
     // If we are performing an analysis on any of the metrics
-    if constexpr(metrics || scaling) {
-      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities(), params.maxDepth, scaling, metrics));
+    if constexpr(metrics) {
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities());
     }
 
     Policy::initPolicy();

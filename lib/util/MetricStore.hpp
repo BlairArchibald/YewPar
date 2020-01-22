@@ -54,7 +54,7 @@ struct MetricStore {
   MetricStore() = default;
 
   // Initialises the store for an analysis of runtime regulairty (and pruning for BnB)
-  void init(const unsigned maxDepth, const unsigned scaling, const unsigned metrics) {
+  void init() {
     taskTimes = std::make_unique<TimesVec>(TIME_DEPTHS);
     prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
     backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
@@ -135,7 +135,7 @@ private:
 
 MetricStore* MetricStore::store = new MetricStore;
 
-void initMetricStore(const unsigned maxDepth, const unsigned scaling, const unsigned metrics) {
+void initMetricStore() {
   MetricStore::store->init(maxDepth, scaling, metrics);
 }
 struct InitMetricStoreAct : hpx::actions::make_direct_action<
