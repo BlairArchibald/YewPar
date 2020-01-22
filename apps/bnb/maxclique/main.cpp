@@ -263,25 +263,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
       YewPar::Skeletons::API::Params<int> searchParameters;
       searchParameters.spawnDepth = spawnDepth;
       auto poolType = opts["poolType"].as<std::string>();
-      if (poolType == "deque") {
-        sol = YewPar::Skeletons::DepthBounded<GenNode,
-                                             YewPar::Skeletons::API::Optimisation,
-                                             YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                             YewPar::Skeletons::API::PruneLevel,
-                                             YewPar::Skeletons::API::DepthBoundedPoolPolicy<
-                                               Workstealing::Policies::Workpool> >
-            ::search(graph, root, searchParameters);
-      } else {
-        if (opts.count("scaling")) {
-          sol = YewPar::Skeletons::DepthBounded<GenNode,
-                                               YewPar::Skeletons::API::Optimisation,
-                                               YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                               YewPar::Skeletons::API::PruneLevel,
-                                               YewPar::Skeletons::API::Scaling,
-                                               YewPar::Skeletons::API::DepthBoundedPoolPolicy<
-                                                 Workstealing::Policies::DepthPoolPolicy> >
-              ::search(graph, root, searchParameters);
-        } else if (opts.count("metrics")) {
+      if (opts.count("metrics")) {
           sol = YewPar::Skeletons::DepthBounded<GenNode,
                                                YewPar::Skeletons::API::Optimisation,
                                                YewPar::Skeletons::API::BoundFunction<upperBound_func>,
@@ -314,14 +296,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     } else {
       YewPar::Skeletons::API::Params<int> searchParameters;
       searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
-      if (opts.count("scaling")) {
-        sol = YewPar::Skeletons::StackStealing<GenNode,
-                                              YewPar::Skeletons::API::Optimisation,
-                                              YewPar::Skeletons::API::Scaling,
-                                              YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                              YewPar::Skeletons::API::PruneLevel>
-            ::search(graph, root, searchParameters);
-      } else if (opts.count("metrics")) {
+      if (opts.count("metrics")) {
         sol = YewPar::Skeletons::StackStealing<GenNode,
                                               YewPar::Skeletons::API::Optimisation,
                                               YewPar::Skeletons::API::Metrics,
@@ -366,14 +341,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     } else {
       YewPar::Skeletons::API::Params<int> searchParameters;
       searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
-      if (opts.count("scaling")) {
-        sol = YewPar::Skeletons::Budget<GenNode,
-                                        YewPar::Skeletons::API::Optimisation,
-                                        YewPar::Skeletons::API::Scaling,
-                                        YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                        YewPar::Skeletons::API::PruneLevel>
-          ::search(graph, root, searchParameters);
-      } else if (opts.count("metrics")) {
+      if (opts.count("metrics")) {
         sol = YewPar::Skeletons::Budget<GenNode,
                                         YewPar::Skeletons::API::Optimisation,
                                         YewPar::Skeletons::API::Metrics,
@@ -433,7 +401,6 @@ int main (int argc, char* argv[]) {
     boost::program_options::value<int>()->default_value(0),
     "For Decision Skeletons. Size of the clique to search for"
     )
-    ("scaling", "Perform sclaing and node throughput metrics")
     ("metrics", "Collect the regularity, pruning and backtracks");
 
   YewPar::registerPerformanceCounters();

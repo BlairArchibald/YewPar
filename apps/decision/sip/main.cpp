@@ -686,15 +686,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                            YewPar::Skeletons::API::MoreVerbose>
           ::search(m, root, searchParameters);
     } else {
-      if (opts.count("scaling")) {
-        sol = YewPar::Skeletons::DepthBounded<GenNode<NWORDS>,
-                                             YewPar::Skeletons::API::Decision,
-                                             YewPar::Skeletons::API::DepthBoundedPoolPolicy<
-                                               Workstealing::Policies::DepthPoolPolicy>,
-                                             YewPar::Skeletons::API::Scaling,
-                                             YewPar::Skeletons::API::MoreVerbose>
-            ::search(m, root, searchParameters);
-      } else if (opts.count("metrics")) {
+      if (opts.count("metrics")) {
         sol = YewPar::Skeletons::DepthBounded<GenNode<NWORDS>,
                                              YewPar::Skeletons::API::Decision,
                                              YewPar::Skeletons::API::DepthBoundedPoolPolicy<
@@ -713,13 +705,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     }
   } else if (skeleton ==  "stacksteal") {
     searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
-    if (opts.count("scaling")) {
-      sol = YewPar::Skeletons::StackStealing<GenNode<NWORDS>,
-                                         YewPar::Skeletons::API::Decision,
-                                         YewPar::Skeletons::API::MoreVerbose,
-                                         YewPar::Skeletons::API::Scaling>
-        ::search(m, root, searchParameters);
-    } else if (opts.count("metrics")) {
+    if (opts.count("metrics")) {
       sol = YewPar::Skeletons::StackStealing<GenNode<NWORDS>,
                                          YewPar::Skeletons::API::Decision,
                                          YewPar::Skeletons::API::MoreVerbose,
@@ -733,13 +719,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     }
   } else if (skeleton ==  "budget") {
     searchParameters.backtrackBudget = opts["backtrack-budget"].as<std::uint64_t>();
-    if (opts.count("scaling")) {
-      sol = YewPar::Skeletons::Budget<GenNode<NWORDS>,
-                                    YewPar::Skeletons::API::Decision,
-                                    YewPar::Skeletons::API::Scaling,
-                                    YewPar::Skeletons::API::MoreVerbose>
-        ::search(m, root, searchParameters);
-    } else if (opts.count("metrics")) {
+    if (opts.count("metrics")) {
       sol = YewPar::Skeletons::Budget<GenNode<NWORDS>,
                                     YewPar::Skeletons::API::Decision,
                                     YewPar::Skeletons::API::Metrics,
@@ -823,7 +803,6 @@ int main (int argc, char* argv[]) {
       boost::program_options::value<std::string>()->required(),
       "Specify the target file (LAD format)"
       )
-      ("scaling", "Collect scaling and node throughput")
       ("metrics", "Collect the regularity, backtracks");
 
   YewPar::registerPerformanceCounters();

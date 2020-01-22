@@ -44,9 +44,6 @@ struct StackStealing {
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
-  typedef typename parameter::value_type<args, API::tag::Scaling_, std::integral_constant<unsigned, 0> >::type Scaling;
-  static constexpr unsigned scaling = Scaling::value;
-
   typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics_;
   static constexpr unsigned metrics = Metrics_::value;
 
@@ -217,7 +214,7 @@ struct StackStealing {
         generatorStack[stackDepth].seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child);
-        if constexpr(scaling) {
+        if constexpr(metrics) {
 					++nodeCount;
 				}
         

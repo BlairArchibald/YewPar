@@ -58,13 +58,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.maxDepth   = maxDepth;
     searchParameters.spawnDepth = spawnDepth;
-    if (opts.count("scaling")) {
-      counts = YewPar::Skeletons::DepthBounded<NodeGen,
-                                              YewPar::Skeletons::API::CountNodes,
-                                              YewPar::Skeletons::API::Scaling,
-                                              YewPar::Skeletons::API::DepthLimited>
-              ::search(Empty(), root, searchParameters);
-    } else if (opts.count("metrics")) {
+    if (opts.count("metrics")) {
       counts = YewPar::Skeletons::DepthBounded<NodeGen,
                                               YewPar::Skeletons::API::CountNodes,
                                               YewPar::Skeletons::API::Metrics,
@@ -81,13 +75,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.maxDepth = maxDepth;
     searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
     
-    if (opts.count("scaling")) {
-      counts = YewPar::Skeletons::StackStealing<NodeGen,
-                                                YewPar::Skeletons::API::CountNodes,
-                                                YewPar::Skeletons::API::Scaling,
-                                                YewPar::Skeletons::API::DepthLimited>
-               ::search(Empty(), root, searchParameters);
-    } else if (opts.count("metrics")) {
+    if (opts.count("metrics")) {
       counts = YewPar::Skeletons::StackStealing<NodeGen,
                                               YewPar::Skeletons::API::CountNodes,
                                               YewPar::Skeletons::API::Metrics,
@@ -103,13 +91,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
     searchParameters.maxDepth   = maxDepth;
-    if (opts.count("scaling")) {
-      counts = YewPar::Skeletons::Budget<NodeGen,
-                                       YewPar::Skeletons::API::CountNodes,
-                                       YewPar::Skeletons::API::Scaling,
-                                       YewPar::Skeletons::API::DepthLimited>
-        ::search(Empty(), root, searchParameters);
-    } else if (opts.count("metrics")) {
+    if (opts.count("metrics")) {
       counts = YewPar::Skeletons::Budget<NodeGen,
                                        YewPar::Skeletons::API::CountNodes,
                                        YewPar::Skeletons::API::Metrics,
