@@ -26,9 +26,9 @@ def read_scaling_results(filename):
   nodes = 0
   with open(filename, "r") as f:
     for line in f:
-      if "CPU Time" in line:
-        line = line.strip().split(" ")
-        times.append(int(line[-1]))
+      if "cpu = " in line:
+        line = line.strip().split(" = ")
+        times.append(int(line[-1])/1000.)
       elif "Nodes Depth" in line:
         line = line.strip().split(":")
         nodes += int(line[-1])
@@ -192,14 +192,14 @@ def draw_node_throughput(times, nodes, title, d, b):
   ax1.grid(color='grey', linestyle='-', linewidth=0.25, alpha=0.5)
   ax1.legend()
   plt.show()
-
+"""
 times, nodes, backtracks, searchTimes, prunes = read_search_metrics("../rs_mc.txt")
 times2, nodes, backtracks, searchTimes, prunes = read_search_metrics("../rs_mc_1.txt")
 
 draw_bucket_graph(times2[:-1], "Runtime Regularity on MaxClique, Budget, b = 1000000, brock400_4.clq")
 
 times3, nodes, backtracks, searchTimes, prunes = read_search_metrics("../rs_mc3.txt")
-times4, nodes, backtracks, searchTimes, prunes = read_search_metrics("../rs_mc4.txt")
+times4, nodes, backtracks, searchTimes, prunes = read_search_metrics("../rs_mc4.txt")"""
 """times2, nodes2, backtracks, searchTimes2, prunes = read_search_metrics("../../../../Misc/MaxClique_depthbounded_search_metrics_175.txt")
 times3, nodes4, backtracks, searchTimes4, prunes = read_search_metrics("../../../../Misc/MaxClique_depthbounded_search_metrics_250.txt")"""
 
@@ -241,7 +241,7 @@ t_s = [M/1534, 18650461/806, 17925657/837, 14784145/1017]
 
 medians = np.zeros((3,6), dtype=np.float64)
 nodes = np.zeros((3,6), dtype=np.float64)
-ranges = [16, 32, 64, 128, 256, 274]
+ranges = [1, 2, 4, 8, 16, 17]
 j, o = 0, 0
 skels = ["stacksteal", "budget", "depthbounded"]
 for i in ranges:
@@ -260,6 +260,5 @@ for i in range(6):
   for j in range(3):
     speedUps[j,i] = medians[j,0] / medians[j,i]
 
-#draw_scaling_graph(speedUps, "Scaling on MaxClique on brock800_1.clq", 2, 10000000, "Relative SpeedUp (1 locality)")
-#draw_scaling_graph(medians, "Runtimes on MaxClique on brock800_1.clq", 2, 10000000, "Runtime (s)")
-#draw_scaling_graph(throughPut, "Node Throughput for Maximum Clique on brock800_1.clq", 2, 10000000, "Node Throughput (Nodes/Second)")
+draw_scaling_graph(medians, "Runtimes on MaxClique on brock800_1.clq", 2, 10000000, "Runtime (s)")
+draw_scaling_graph(speedUps, "Scaling on MaxClique on brock800_1.clq", 2, 10000000, "Relative SpeedUp (1 locality)")

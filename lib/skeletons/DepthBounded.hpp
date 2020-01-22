@@ -203,10 +203,6 @@ struct DepthBounded {
       expandNoSpawns(reg->space, taskRoot, reg->params, countMap, nodeCount, prunes, backtracks, childDepth);
     }
     
-    if constexpr(scaling) {
-      store->updateNodesVisited(childDepth, nodeCount);
-    }
-
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
@@ -285,22 +281,20 @@ struct DepthBounded {
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
-    auto t2 = std::chrono::steady_clock::now();
-    if constexpr(scaling) {
+
+    if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
-      printNodeCounts();
-    }
 
-    if constexpr(metrics) {
+      // Prints regularity metrics
       for (const auto & l : hpx::find_all_localities()) {
         hpx::async<PrintTimesAct>(l).get();
       }
+      printPrunes();
       printBacktracks();
-      if constexpr(isOptimisation && !pruneLevel) {
-        printPrunes();
-      }
+      printNodeCounts();
     }
 
     // Return the right thing

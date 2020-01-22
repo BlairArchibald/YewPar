@@ -297,16 +297,13 @@ struct StackStealing {
 
 		runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, backtracks, stackDepth, depth);
 
-    if constexpr(scaling) {
-      store->updateNodesVisited(depth >= 0 ? depth : 0, nodeCount);
-    }
-
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
      	const std::uint64_t time = (const std::uint64_t) diff.count();
       depth = depth > 0 ? depth : 0;
       hpx::apply(hpx::util::bind([&]() {
+        store->updateNodesVisited(depth >= 0 ? depth : 0, nodeCount);
         store->updatePrunes(depth, prunes);
         store->updateTimes(depth, time);
         store->updateBacktracks(depth, backtracks);
@@ -487,6 +484,7 @@ struct StackStealing {
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
 
+    // Record time here for node throughput
     auto t1 = std::chrono::steady_clock::now();
 
     doSearch(space, root, params);
@@ -503,22 +501,19 @@ struct StackStealing {
       }
     }
 
-    auto t2 = std::chrono::steady_clock::now();
-    if constexpr(scaling) {
+    if constexpr(metrics) {
+      auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
-      printNodeCounts();
-    }
 
-    if constexpr(metrics) {
+      // Prints regularity metrics
       for (const auto & l : hpx::find_all_localities()) {
         hpx::async<PrintTimesAct>(l).get();
       }
+      printPrunes();
       printBacktracks();
-      if constexpr(isOptimisation && !pruneLevel) {
-        printPrunes();
-      }
+      printNodeCounts();
     }
 
     // Return the right thing
