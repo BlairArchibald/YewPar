@@ -98,15 +98,15 @@ struct MetricStore {
   }
 
   MetricsVec getNodeCount() const {
-    return transformVec(*nodesVisited, maxDepthNodesVisited);
+    return transformVec(*nodesVisited);
   }
 
   MetricsVec getBacktracks() const {
-    return transformVec(*backtracks, maxDepthBacktracks);
+    return transformVec(*backtracks);
 	}
 
   MetricsVec getPrunes() const {
-    return transformVec(*prunes, maxDepthPrunes);
+    return transformVec(*prunes);
   }
 
 	void printTimes() {
