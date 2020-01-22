@@ -1,0 +1,847 @@
+CPU Time (Before collecting metrics) 479
+Metric Nodes Depth 0:0
+Metric Nodes Depth 1:10000058
+Metric Nodes Depth 2:0
+Metric Nodes Depth 3:0
+Metric Nodes Depth 4:0
+Metric Nodes Depth 5:0
+Metric Nodes Depth 6:0
+Metric Nodes Depth 7:0
+Metric Nodes Depth 8:0
+Metric Nodes Depth 9:0
+Metric Nodes Depth 10:0
+Metric Nodes Depth 11:0
+Metric Nodes Depth 12:0
+Metric Nodes Depth 13:0
+Metric Nodes Depth 14:0
+Metric Nodes Depth 15:0
+Metric Nodes Depth 16:0
+Metric Nodes Depth 17:0
+Metric Nodes Depth 18:0
+Metric Nodes Depth 19:0
+Metric Nodes Depth 20:0
+Metric Nodes Depth 21:0
+Metric Nodes Depth 22:0
+Metric Nodes Depth 23:0
+Metric Nodes Depth 24:0
+Metric Nodes Depth 25:0
+Metric Nodes Depth 26:0
+Metric Nodes Depth 27:0
+Metric Nodes Depth 28:0
+Metric Nodes Depth 29:0
+Metric Nodes Depth 30:0
+Metric Nodes Depth 31:0
+Metric Nodes Depth 32:8018802
+Metric Nodes Depth 33:87197953
+Metric Nodes Depth 34:106839777
+Metric Nodes Depth 35:638888698
+Metric Nodes Depth 36:1812722442
+Metric Nodes Depth 37:4157895279
+Metric Nodes Depth 38:8260122250
+Metric Nodes Depth 39:14426099952
+Metric Nodes Depth 40:22500849050
+Metric Nodes Depth 41:29018108383
+Metric Nodes Depth 42:27635731010
+Metric Nodes Depth 43:18225705126
+Metric Nodes Depth 44:5917887779
+Metric Nodes Depth 45:1007383232
+Metric Nodes Depth 46:139476793
+Metric Nodes Depth 47:19485526
+Metric Nodes Depth 48:2571602
+Metric Nodes Depth 49:323474
+Metric Nodes Depth 50:29261
+Metric Nodes Depth 0:0
+Metric Nodes Depth 1:0
+Metric Nodes Depth 2:0
+Metric Nodes Depth 3:48
+Metric Nodes Depth 4:454
+Metric Nodes Depth 5:4191
+Metric Nodes Depth 6:16339
+Metric Nodes Depth 7:91180
+Metric Nodes Depth 8:245320
+Metric Nodes Depth 9:930608
+Metric Nodes Depth 10:2178337
+Metric Nodes Depth 11:6057400
+Metric Nodes Depth 12:10007460
+Metric Nodes Depth 13:10033703
+Metric Nodes Depth 14:10155285
+Metric Nodes Depth 15:10431917
+Metric Nodes Depth 16:11407984
+Metric Nodes Depth 17:12585879
+Metric Nodes Depth 18:18707394
+Metric Nodes Depth 19:24544007
+Metric Nodes Depth 20:47543070
+Metric Nodes Depth 21:63434810
+Metric Nodes Depth 22:81447188
+Metric Nodes Depth 23:104875309
+Metric Nodes Depth 24:142139038
+Metric Nodes Depth 25:201666924
+Metric Nodes Depth 26:286198439
+Metric Nodes Depth 27:426777959
+Metric Nodes Depth 28:589233969
+Metric Nodes Depth 29:880338284
+Metric Nodes Depth 30:1234250380
+Metric Nodes Depth 31:1805642387
+Metric Nodes Depth 32:2656729923
+Metric Nodes Depth 33:3796285673
+Metric Nodes Depth 34:5666957724
+Metric Nodes Depth 35:7851541391
+Metric Nodes Depth 36:10557280786
+Metric Nodes Depth 37:13716826886
+Metric Nodes Depth 38:16964365643
+Metric Nodes Depth 39:19028891981
+Metric Nodes Depth 40:18344995931
+Metric Nodes Depth 41:14049280585
+Metric Nodes Depth 42:7196206740
+Metric Nodes Depth 43:2144086933
+Metric Nodes Depth 44:498344770
+Metric Nodes Depth 45:107464986
+Metric Nodes Depth 46:22470844
+Metric Nodes Depth 47:4331677
+Metric Nodes Depth 48:754583
+Metric Nodes Depth 49:111063
+Metric Nodes Depth 50:10891
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+48: 38260496374
+49: 62200036752
+50: 101090300128
+51: 164253200784
+=====
+cpu = 479022
+CPU Time (Before collecting metrics) 476
+Metric Nodes Depth 0:0
+Metric Nodes Depth 1:10000058
+Metric Nodes Depth 2:0
+Metric Nodes Depth 3:0
+Metric Nodes Depth 4:0
+Metric Nodes Depth 5:0
+Metric Nodes Depth 6:0
+Metric Nodes Depth 7:0
+Metric Nodes Depth 8:0
+Metric Nodes Depth 9:0
+Metric Nodes Depth 10:0
+Metric Nodes Depth 11:0
+Metric Nodes Depth 12:0
+Metric Nodes Depth 13:0
+Metric Nodes Depth 14:0
+Metric Nodes Depth 15:0
+Metric Nodes Depth 16:0
+Metric Nodes Depth 17:0
+Metric Nodes Depth 18:0
+Metric Nodes Depth 19:0
+Metric Nodes Depth 20:0
+Metric Nodes Depth 21:0
+Metric Nodes Depth 22:0
+Metric Nodes Depth 23:0
+Metric Nodes Depth 24:0
+Metric Nodes Depth 25:0
+Metric Nodes Depth 26:0
+Metric Nodes Depth 27:0
+Metric Nodes Depth 28:0
+Metric Nodes Depth 29:0
+Metric Nodes Depth 30:0
+Metric Nodes Depth 31:0
+Metric Nodes Depth 32:0
+Metric Nodes Depth 33:82977650
+Metric Nodes Depth 34:96839761
+Metric Nodes Depth 35:533147270
+Metric Nodes Depth 36:1715231531
+Metric Nodes Depth 37:3889549927
+Metric Nodes Depth 38:8190611417
+Metric Nodes Depth 39:14407410609
+Metric Nodes Depth 40:22524921085
+Metric Nodes Depth 41:29059051795
+Metric Nodes Depth 42:27645676830
+Metric Nodes Depth 43:18229716725
+Metric Nodes Depth 44:5919159400
+Metric Nodes Depth 45:1007791617
+Metric Nodes Depth 46:139477627
+Metric Nodes Depth 47:19489623
+Metric Nodes Depth 48:2572548
+Metric Nodes Depth 49:323771
+Metric Nodes Depth 50:29305
+Metric Nodes Depth 0:0
+Metric Nodes Depth 1:0
+Metric Nodes Depth 2:0
+Metric Nodes Depth 3:48
+Metric Nodes Depth 4:454
+Metric Nodes Depth 5:4191
+Metric Nodes Depth 6:16339
+Metric Nodes Depth 7:91180
+Metric Nodes Depth 8:245320
+Metric Nodes Depth 9:930608
+Metric Nodes Depth 10:2178337
+Metric Nodes Depth 11:6057400
+Metric Nodes Depth 12:10007460
+Metric Nodes Depth 13:10033703
+Metric Nodes Depth 14:10155285
+Metric Nodes Depth 15:10431917
+Metric Nodes Depth 16:11407984
+Metric Nodes Depth 17:12585879
+Metric Nodes Depth 18:18707394
+Metric Nodes Depth 19:24544007
+Metric Nodes Depth 20:47543070
+Metric Nodes Depth 21:63434810
+Metric Nodes Depth 22:81447188
+Metric Nodes Depth 23:104875309
+Metric Nodes Depth 24:142139038
+Metric Nodes Depth 25:201666924
+Metric Nodes Depth 26:286198439
+Metric Nodes Depth 27:426777959
+Metric Nodes Depth 28:589233969
+Metric Nodes Depth 29:880338284
+Metric Nodes Depth 30:1234250380
+Metric Nodes Depth 31:1805642387
+Metric Nodes Depth 32:2664748725
+Metric Nodes Depth 33:3800505976
+Metric Nodes Depth 34:5676957740
+Metric Nodes Depth 35:7957282819
+Metric Nodes Depth 36:10654771697
+Metric Nodes Depth 37:13985172238
+Metric Nodes Depth 38:17033876476
+Metric Nodes Depth 39:19047581324
+Metric Nodes Depth 40:18320923896
+Metric Nodes Depth 41:14008337173
+Metric Nodes Depth 42:7186260920
+Metric Nodes Depth 43:2140075334
+Metric Nodes Depth 44:497073149
+Metric Nodes Depth 45:107056601
+Metric Nodes Depth 46:22470010
+Metric Nodes Depth 47:4327580
+Metric Nodes Depth 48:753637
+Metric Nodes Depth 49:110766
+Metric Nodes Depth 50:10847
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+48: 38260496374
+49: 62200036752
+50: 101090300128
+51: 164253200784
+=====
+cpu = 476331
+CPU Time (Before collecting metrics) 475
+Metric Nodes Depth 0:0
+Metric Nodes Depth 1:0
+Metric Nodes Depth 2:0
+Metric Nodes Depth 3:48
+Metric Nodes Depth 4:454
+Metric Nodes Depth 5:4191
+Metric Nodes Depth 6:16339
+Metric Nodes Depth 7:91180
+Metric Nodes Depth 8:245320
+Metric Nodes Depth 9:930608
+Metric Nodes Depth 10:2178337
+Metric Nodes Depth 11:6057400
+Metric Nodes Depth 12:10007460
+Metric Nodes Depth 13:10033703
+Metric Nodes Depth 14:10155285
+Metric Nodes Depth 15:10431917
+Metric Nodes Depth 16:11407984
+Metric Nodes Depth 17:12585879
+Metric Nodes Depth 18:18707394
+Metric Nodes Depth 19:24544007
+Metric Nodes Depth 20:47543070
+Metric Nodes Depth 21:63434810
+Metric Nodes Depth 22:81447188
+Metric Nodes Depth 23:104875309
+Metric Nodes Depth 24:142139038
+Metric Nodes Depth 25:201666924
+Metric Nodes Depth 26:286198439
+Metric Nodes Depth 27:426777959
+Metric Nodes Depth 28:589233969
+Metric Nodes Depth 29:880338284
+Metric Nodes Depth 30:1234250380
+Metric Nodes Depth 31:1805642387
+Metric Nodes Depth 32:2664748725
+Metric Nodes Depth 33:3797335745
+Metric Nodes Depth 34:5676957740
+Metric Nodes Depth 35:7955445871
+Metric Nodes Depth 36:10698402707
+Metric Nodes Depth 37:13873419926
+Metric Nodes Depth 38:17071844086
+Metric Nodes Depth 39:18971281874
+Metric Nodes Depth 40:18275844381
+Metric Nodes Depth 41:14000510544
+Metric Nodes Depth 42:7183658944
+Metric Nodes Depth 43:2139232132
+Metric Nodes Depth 44:496651713
+Metric Nodes Depth 45:107044147
+Metric Nodes Depth 46:22463702
+Metric Nodes Depth 47:4326037
+Metric Nodes Depth 48:752969
+Metric Nodes Depth 49:110656
+Metric Nodes Depth 50:10832
+Metric Nodes Depth 0:0
+Metric Nodes Depth 1:10000058
+Metric Nodes Depth 2:0
+Metric Nodes Depth 3:0
+Metric Nodes Depth 4:0
+Metric Nodes Depth 5:0
+Metric Nodes Depth 6:0
+Metric Nodes Depth 7:0
+Metric Nodes Depth 8:0
+Metric Nodes Depth 9:0
+Metric Nodes Depth 10:0
+Metric Nodes Depth 11:0
+Metric Nodes Depth 12:0
+Metric Nodes Depth 13:0
+Metric Nodes Depth 14:0
+Metric Nodes Depth 15:0
+Metric Nodes Depth 16:0
+Metric Nodes Depth 17:0
+Metric Nodes Depth 18:0
+Metric Nodes Depth 19:0
+Metric Nodes Depth 20:0
+Metric Nodes Depth 21:0
+Metric Nodes Depth 22:0
+Metric Nodes Depth 23:0
+Metric Nodes Depth 24:0
+Metric Nodes Depth 25:0
+Metric Nodes Depth 26:0
+Metric Nodes Depth 27:0
+Metric Nodes Depth 28:0
+Metric Nodes Depth 29:0
+Metric Nodes Depth 30:0
+Metric Nodes Depth 31:0
+Metric Nodes Depth 32:0
+Metric Nodes Depth 33:86147881
+Metric Nodes Depth 34:96839761
+Metric Nodes Depth 35:534984218
+Metric Nodes Depth 36:1671600521
+Metric Nodes Depth 37:4001302239
+Metric Nodes Depth 38:8152643807
+Metric Nodes Depth 39:14483710059
+Metric Nodes Depth 40:22570000600
+Metric Nodes Depth 41:29066878424
+Metric Nodes Depth 42:27648278806
+Metric Nodes Depth 43:18230559927
+Metric Nodes Depth 44:5919580836
+Metric Nodes Depth 45:1007804071
+Metric Nodes Depth 46:139483935
+Metric Nodes Depth 47:19491166
+Metric Nodes Depth 48:2573216
+Metric Nodes Depth 49:323881
+Metric Nodes Depth 50:29320
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+48: 38260496374
+49: 62200036752
+50: 101090300128
+51: 164253200784
+=====
+cpu = 475126
+CPU Time (Before collecting metrics) 476
+Metric Nodes Depth 0:0
+Metric Nodes Depth 1:0
+Metric Nodes Depth 2:0
+Metric Nodes Depth 3:48
+Metric Nodes Depth 4:454
+Metric Nodes Depth 5:4191
+Metric Nodes Depth 6:16339
+Metric Nodes Depth 7:91180
+Metric Nodes Depth 8:245320
+Metric Nodes Depth 9:930608
+Metric Nodes Depth 10:2178337
+Metric Nodes Depth 11:6057400
+Metric Nodes Depth 12:10007460
+Metric Nodes Depth 13:10033703
+Metric Nodes Depth 14:10155285
+Metric Nodes Depth 15:10431917
+Metric Nodes Depth 16:11407984
+Metric Nodes Depth 17:12585879
+Metric Nodes Depth 18:18707394
+Metric Nodes Depth 19:24544007
+Metric Nodes Depth 20:47543070
+Metric Nodes Depth 21:63434810
+Metric Nodes Depth 22:81447188
+Metric Nodes Depth 23:104875309
+Metric Nodes Depth 24:142139038
+Metric Nodes Depth 25:201666924
+Metric Nodes Depth 26:286198439
+Metric Nodes Depth 27:426777959
+Metric Nodes Depth 28:589233969
+Metric Nodes Depth 29:880338284
+Metric Nodes Depth 30:1234250380
+Metric Nodes Depth 31:1805642387
+Metric Nodes Depth 32:2664748725
+Metric Nodes Depth 33:3833483535
+Metric Nodes Depth 34:5676957740
+Metric Nodes Depth 35:7979387035
+Metric Nodes Depth 36:10564541242
+Metric Nodes Depth 37:13850550066
+Metric Nodes Depth 38:17008422190
+Metric Nodes Depth 39:19079121711
+Metric Nodes Depth 40:18343880805
+Metric Nodes Depth 41:14053167489
+Metric Nodes Depth 42:7199138234
+Metric Nodes Depth 43:2145084447
+Metric Nodes Depth 44:498651008
+Metric Nodes Depth 45:107514123
+Metric Nodes Depth 46:22465490
+Metric Nodes Depth 47:4327395
+Metric Nodes Depth 48:754782
+Metric Nodes Depth 49:111160
+Metric Nodes Depth 50:10897
+Metric Nodes Depth 0:0
+Metric Nodes Depth 1:10000058
+Metric Nodes Depth 2:0
+Metric Nodes Depth 3:0
+Metric Nodes Depth 4:0
+Metric Nodes Depth 5:0
+Metric Nodes Depth 6:0
+Metric Nodes Depth 7:0
+Metric Nodes Depth 8:0
+Metric Nodes Depth 9:0
+Metric Nodes Depth 10:0
+Metric Nodes Depth 11:0
+Metric Nodes Depth 12:0
+Metric Nodes Depth 13:0
+Metric Nodes Depth 14:0
+Metric Nodes Depth 15:0
+Metric Nodes Depth 16:0
+Metric Nodes Depth 17:0
+Metric Nodes Depth 18:0
+Metric Nodes Depth 19:0
+Metric Nodes Depth 20:0
+Metric Nodes Depth 21:0
+Metric Nodes Depth 22:0
+Metric Nodes Depth 23:0
+Metric Nodes Depth 24:0
+Metric Nodes Depth 25:0
+Metric Nodes Depth 26:0
+Metric Nodes Depth 27:0
+Metric Nodes Depth 28:0
+Metric Nodes Depth 29:0
+Metric Nodes Depth 30:0
+Metric Nodes Depth 31:0
+Metric Nodes Depth 32:0
+Metric Nodes Depth 33:50000091
+Metric Nodes Depth 34:96839761
+Metric Nodes Depth 35:511043054
+Metric Nodes Depth 36:1805461986
+Metric Nodes Depth 37:4024172099
+Metric Nodes Depth 38:8216065703
+Metric Nodes Depth 39:14375870222
+Metric Nodes Depth 40:22501964176
+Metric Nodes Depth 41:29014221479
+Metric Nodes Depth 42:27632799516
+Metric Nodes Depth 43:18224707612
+Metric Nodes Depth 44:5917581541
+Metric Nodes Depth 45:1007334095
+Metric Nodes Depth 46:139482147
+Metric Nodes Depth 47:19489808
+Metric Nodes Depth 48:2571403
+Metric Nodes Depth 49:323377
+Metric Nodes Depth 50:29255
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+48: 38260496374
+49: 62200036752
+50: 101090300128
+51: 164253200784
+=====
+cpu = 476545
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 3694 RUNNING AT 130.209.255.4
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+YOUR APPLICATION TERMINATED WITH THE EXIT STRING: Aborted (signal 6)
+This typically refers to a problem with your application.
+Please see the FAQ page for debugging suggestions
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 3725 RUNNING AT 130.209.255.4
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 3752 RUNNING AT 130.209.255.4
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 3778 RUNNING AT 130.209.255.4
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 3805 RUNNING AT 130.209.255.4
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+YOUR APPLICATION TERMINATED WITH THE EXIT STRING: Aborted (signal 6)
+This typically refers to a problem with your application.
+Please see the FAQ page for debugging suggestions
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+48: 38260496374
+49: 62200036752
+50: 101090300128
+51: 164253200784
+=====
+cpu = 474628
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+48: 38260496374
+49: 62200036752
+50: 101090300128
+51: 164253200784
+=====
+cpu = 472429
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+48: 38260496374
+49: 62200036752
+50: 101090300128
+51: 164253200784
+=====
+cpu = 471422

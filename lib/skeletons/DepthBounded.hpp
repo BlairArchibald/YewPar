@@ -32,9 +32,6 @@ namespace DepthBounded_ {
 template <typename Generator, typename ...Args>
 struct SubtreeTask;
 
-template <typename Generator, typename ...Args>
-struct TestAct;
-
 }
 
 // This skeleton allows spawning all tasks into a workqueue based policy based on some depth limit
@@ -214,13 +211,10 @@ struct DepthBounded {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);      
      	const std::uint64_t time = (std::uint64_t) diff.count();
-      hpx::apply(hpx::util::bind[&](const unsigned depth, const std::uint64_t time) {
-				store->updateTimes(depth, time);
-			}, depth, time);
-      store->updateBacktracks(childDepth, backtracks);
-      if constexpr(isOptimisation) {
-        store->updatePrunes(childDepth, prunes);
-      }
+			UpdateTimesAct act;
+			hpx::apply(act, hpx::find_here(), childDepth, time);
+			store->updateBacktracks(childDepth, backtracks);
+			store->updatePrunes(childDepth, prunes);
     }
 
     // Atomically updates the (process) local counter

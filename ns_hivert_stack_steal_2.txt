@@ -1,27 +1,14 @@
+CPU Time (Before collecting metrics) 725
+Metric Nodes Depth 0:73465453863
+Metric Nodes Depth 1:0
+Metric Nodes Depth 2:0
+Metric Nodes Depth 3:0
+Metric Nodes Depth 4:0
+Metric Nodes Depth 5:0
+Metric Nodes Depth 6:0
+Metric Nodes Depth 7:569
+Metric Nodes Depth 0:189098904441
 
-===================================================================================
-=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
-=   PID 23775 RUNNING AT 130.209.255.4
-=   EXIT CODE: 134
-=   CLEANING UP REMAINING PROCESSES
-=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
-===================================================================================
-
-===================================================================================
-=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
-=   PID 24032 RUNNING AT 130.209.255.4
-=   EXIT CODE: 134
-=   CLEANING UP REMAINING PROCESSES
-=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
-===================================================================================
-
-===================================================================================
-=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
-=   PID 24285 RUNNING AT 130.209.255.4
-=   EXIT CODE: 134
-=   CLEANING UP REMAINING PROCESSES
-=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
-===================================================================================
 Results Table: 
 0: 1
 1: 1
@@ -76,7 +63,8 @@ Results Table:
 50: 101090300128
 51: 164253200784
 =====
-cpu = 1143915
+cpu = 725987
+
 Results Table: 
 0: 1
 1: 1
@@ -131,4 +119,15 @@ Results Table:
 50: 101090300128
 51: 164253200784
 =====
-cpu = 1210963
+cpu = 751136
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 10561 RUNNING AT 130.209.255.4
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+YOUR APPLICATION TERMINATED WITH THE EXIT STRING: Aborted (signal 6)
+This typically refers to a problem with your application.
+Please see the FAQ page for debugging suggestions

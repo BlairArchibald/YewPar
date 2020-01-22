@@ -7,7 +7,7 @@
 #include <memory>
 #include <limits>
 #include <vector>
-
+#include <mutex>
 #include <boost/random.hpp>
 
 #include <hpx/runtime/actions/basic_action.hpp>
@@ -40,6 +40,8 @@ struct MetricStore {
   // For Backtracking budget
   MetricsVecPtr backtracks;
   std::atomic<unsigned> maxDepthBacktracks;
+	
+	std::mutex m;
 
   // Counting pruning
   MetricsVecPtr prunes;
@@ -67,6 +69,7 @@ struct MetricStore {
   }
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
+		std::unique_lock<std::mutex> lock(m);
 		if (time >= 1) {
       // Generate random number and if below 0.75 then accept, else reject
       if (dist(gen) <= 75) {
@@ -75,7 +78,7 @@ struct MetricStore {
 					size += times->size();
 				}
 				// Only take 1000 samples
-				if (size >= 5000) { return; }
+				if (size >= 1000) { return; }
         const auto depthIdx = (depth >= TIME_DEPTHS) ? (TIME_DEPTHS-1) : (depth > 0) ? (depth-1) : 0;
         (*taskTimes)[depthIdx]->push_back(time);
    	 	}
