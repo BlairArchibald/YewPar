@@ -7,3 +7,4 @@
 subdirs("numericalSemigroups")
 subdirs("fib")
 subdirs("uts")
+subdirs("nqueens")

@@ -101,7 +101,7 @@ private:
 
   inline MetricsVec transformVec(const std::vector<std::atomic<std::uint64_t> > & vec) const {
     MetricsVec res;
-    std::transform(vec.begin(), vec.begin()+newSize+1, std::back_inserter(res),
+    std::transform(vec.begin(), vec.end(), std::back_inserter(res),
     [](const auto & c) { return c.load(); });
     return res;
   }

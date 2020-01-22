@@ -13,4 +13,5 @@
 /users/level4/2250079m/sandbox/YewParInstall/YewPar/build/install/bin/NS-hivert
 /users/level4/2250079m/sandbox/YewParInstall/YewPar/build/install/bin/enum-fib
 /users/level4/2250079m/sandbox/YewParInstall/YewPar/build/install/bin/uts
+/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/install/bin/nqueens
 /users/level4/2250079m/sandbox/YewParInstall/YewPar/build/install/bin/sip

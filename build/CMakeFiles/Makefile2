@@ -699,7 +699,7 @@ apps/bnb/tsp/CMakeFiles/tsp_exe.dir/all: lib/util/CMakeFiles/DistSetOnceFlag_com
 apps/bnb/tsp/CMakeFiles/tsp_exe.dir/all: lib/util/CMakeFiles/Incumbent_component.dir/all
 	$(MAKE) -f apps/bnb/tsp/CMakeFiles/tsp_exe.dir/build.make apps/bnb/tsp/CMakeFiles/tsp_exe.dir/depend
 	$(MAKE) -f apps/bnb/tsp/CMakeFiles/tsp_exe.dir/build.make apps/bnb/tsp/CMakeFiles/tsp_exe.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/CMakeFiles --progress-num=41,42,43 "Built target tsp_exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/CMakeFiles --progress-num=43,44,45 "Built target tsp_exe"
 .PHONY : apps/bnb/tsp/CMakeFiles/tsp_exe.dir/all
 
 # Include target in all.
@@ -736,6 +736,7 @@ clean: apps/bnb/tsp/CMakeFiles/tsp_exe.dir/clean
 apps/enumeration/all: apps/enumeration/numericalSemigroups/all
 apps/enumeration/all: apps/enumeration/fib/all
 apps/enumeration/all: apps/enumeration/uts/all
+apps/enumeration/all: apps/enumeration/nqueens/all
 
 .PHONY : apps/enumeration/all
 
@@ -743,6 +744,7 @@ apps/enumeration/all: apps/enumeration/uts/all
 apps/enumeration/clean: apps/enumeration/numericalSemigroups/clean
 apps/enumeration/clean: apps/enumeration/fib/clean
 apps/enumeration/clean: apps/enumeration/uts/clean
+apps/enumeration/clean: apps/enumeration/nqueens/clean
 
 .PHONY : apps/enumeration/clean
 
@@ -750,6 +752,7 @@ apps/enumeration/clean: apps/enumeration/uts/clean
 apps/enumeration/preinstall: apps/enumeration/numericalSemigroups/preinstall
 apps/enumeration/preinstall: apps/enumeration/fib/preinstall
 apps/enumeration/preinstall: apps/enumeration/uts/preinstall
+apps/enumeration/preinstall: apps/enumeration/nqueens/preinstall
 
 .PHONY : apps/enumeration/preinstall
 
@@ -951,7 +954,7 @@ apps/enumeration/uts/CMakeFiles/uts_exe.dir/all: lib/util/CMakeFiles/DistSetOnce
 apps/enumeration/uts/CMakeFiles/uts_exe.dir/all: lib/util/CMakeFiles/Incumbent_component.dir/all
 	$(MAKE) -f apps/enumeration/uts/CMakeFiles/uts_exe.dir/build.make apps/enumeration/uts/CMakeFiles/uts_exe.dir/depend
 	$(MAKE) -f apps/enumeration/uts/CMakeFiles/uts_exe.dir/build.make apps/enumeration/uts/CMakeFiles/uts_exe.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/CMakeFiles --progress-num=44,45,46 "Built target uts_exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/CMakeFiles --progress-num=46,47,48 "Built target uts_exe"
 .PHONY : apps/enumeration/uts/CMakeFiles/uts_exe.dir/all
 
 # Include target in all.
@@ -978,6 +981,67 @@ apps/enumeration/uts/CMakeFiles/uts_exe.dir/clean:
 
 # clean rule for target.
 clean: apps/enumeration/uts/CMakeFiles/uts_exe.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
+# Directory level rules for directory apps/enumeration/nqueens
+
+# Convenience name for "all" pass in the directory.
+apps/enumeration/nqueens/all: apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/all
+
+.PHONY : apps/enumeration/nqueens/all
+
+# Convenience name for "clean" pass in the directory.
+apps/enumeration/nqueens/clean: apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/clean
+
+.PHONY : apps/enumeration/nqueens/clean
+
+# Convenience name for "preinstall" pass in the directory.
+apps/enumeration/nqueens/preinstall:
+
+.PHONY : apps/enumeration/nqueens/preinstall
+
+#=============================================================================
+# Target rules for target apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir
+
+# All Build rule for target.
+apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/all: lib/CMakeFiles/YewPar_lib.dir/all
+apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/all: lib/workstealing/CMakeFiles/DepthPool_component.dir/all
+apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/all: lib/workstealing/CMakeFiles/Workqueue_component.dir/all
+apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/all: lib/workstealing/CMakeFiles/PriorityWorkqueue_component.dir/all
+apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/all: lib/workstealing/policies/CMakeFiles/SearchManager_component.dir/all
+apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/all: lib/util/CMakeFiles/DistSetOnceFlag_component.dir/all
+apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/all: lib/util/CMakeFiles/Incumbent_component.dir/all
+	$(MAKE) -f apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/build.make apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/depend
+	$(MAKE) -f apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/build.make apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/CMakeFiles --progress-num=35,36 "Built target nqueens_exe"
+.PHONY : apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/all
+
+# Include target in all.
+all: apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /users/level4/2250079m/sandbox/YewParInstall/YewPar/build/CMakeFiles 21
+	$(MAKE) -f CMakeFiles/Makefile2 apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /users/level4/2250079m/sandbox/YewParInstall/YewPar/build/CMakeFiles 0
+.PHONY : apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/rule
+
+# Convenience name for target.
+nqueens_exe: apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/rule
+
+.PHONY : nqueens_exe
+
+# clean rule for target.
+apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/clean:
+	$(MAKE) -f apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/build.make apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/clean
+.PHONY : apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/clean
+
+# clean rule for target.
+clean: apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/clean
 
 .PHONY : clean
 
@@ -1030,7 +1094,7 @@ apps/decision/sip/CMakeFiles/sip_exe.dir/all: lib/util/CMakeFiles/DistSetOnceFla
 apps/decision/sip/CMakeFiles/sip_exe.dir/all: lib/util/CMakeFiles/Incumbent_component.dir/all
 	$(MAKE) -f apps/decision/sip/CMakeFiles/sip_exe.dir/build.make apps/decision/sip/CMakeFiles/sip_exe.dir/depend
 	$(MAKE) -f apps/decision/sip/CMakeFiles/sip_exe.dir/build.make apps/decision/sip/CMakeFiles/sip_exe.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/CMakeFiles --progress-num=35,36,37,38,39,40 "Built target sip_exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/CMakeFiles --progress-num=37,38,39,40,41,42 "Built target sip_exe"
 .PHONY : apps/decision/sip/CMakeFiles/sip_exe.dir/all
 
 # Include target in all.

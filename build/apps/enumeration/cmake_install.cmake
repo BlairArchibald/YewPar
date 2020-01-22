@@ -42,6 +42,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/numericalSemigroups/cmake_install.cmake")
   include("/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/fib/cmake_install.cmake")
   include("/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/uts/cmake_install.cmake")
+  include("/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/nqueens/cmake_install.cmake")
 
 endif()
 

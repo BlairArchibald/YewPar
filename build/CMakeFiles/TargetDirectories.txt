@@ -125,6 +125,14 @@
 /users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/uts/CMakeFiles/rebuild_cache.dir
 /users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/uts/CMakeFiles/uts_exe.dir
 /users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/uts/CMakeFiles/install.dir
+/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/nqueens/CMakeFiles/install/strip.dir
+/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/nqueens/CMakeFiles/install/local.dir
+/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/nqueens/CMakeFiles/test.dir
+/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/nqueens/CMakeFiles/list_install_components.dir
+/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/nqueens/CMakeFiles/edit_cache.dir
+/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir
+/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/nqueens/CMakeFiles/rebuild_cache.dir
+/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/enumeration/nqueens/CMakeFiles/install.dir
 /users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/decision/CMakeFiles/install/strip.dir
 /users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/decision/CMakeFiles/edit_cache.dir
 /users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/decision/CMakeFiles/list_install_components.dir

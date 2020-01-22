@@ -18,6 +18,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "../apps/decision/sip/CMakeLists.txt"
   "../apps/enumeration/CMakeLists.txt"
   "../apps/enumeration/fib/CMakeLists.txt"
+  "../apps/enumeration/nqueens/CMakeLists.txt"
   "../apps/enumeration/numericalSemigroups/CMakeLists.txt"
   "../apps/enumeration/uts/CMakeLists.txt"
   "CMakeFiles/3.14.4/CMakeCCompiler.cmake"
@@ -110,6 +111,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "apps/enumeration/numericalSemigroups/CMakeFiles/CMakeDirectoryInformation.cmake"
   "apps/enumeration/fib/CMakeFiles/CMakeDirectoryInformation.cmake"
   "apps/enumeration/uts/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "apps/enumeration/nqueens/CMakeFiles/CMakeDirectoryInformation.cmake"
   "apps/decision/CMakeFiles/CMakeDirectoryInformation.cmake"
   "apps/decision/sip/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
@@ -131,5 +133,6 @@ set(CMAKE_DEPEND_INFO_FILES
   "apps/enumeration/numericalSemigroups/CMakeFiles/NS-basic_exe.dir/DependInfo.cmake"
   "apps/enumeration/fib/CMakeFiles/enum-fib_exe.dir/DependInfo.cmake"
   "apps/enumeration/uts/CMakeFiles/uts_exe.dir/DependInfo.cmake"
+  "apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/DependInfo.cmake"
   "apps/decision/sip/CMakeFiles/sip_exe.dir/DependInfo.cmake"
   )

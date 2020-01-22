@@ -363,6 +363,19 @@ uts_exe/fast:
 .PHONY : uts_exe/fast
 
 #=============================================================================
+# Target rules for targets named nqueens_exe
+
+# Build rule for target.
+nqueens_exe: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 nqueens_exe
+.PHONY : nqueens_exe
+
+# fast build rule for target.
+nqueens_exe/fast:
+	$(MAKE) -f apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/build.make apps/enumeration/nqueens/CMakeFiles/nqueens_exe.dir/build
+.PHONY : nqueens_exe/fast
+
+#=============================================================================
 # Target rules for targets named sip_exe
 
 # Build rule for target.
@@ -403,6 +416,7 @@ help:
 	@echo "... NS-basic_exe"
 	@echo "... enum-fib_exe"
 	@echo "... uts_exe"
+	@echo "... nqueens_exe"
 	@echo "... sip_exe"
 .PHONY : help
 

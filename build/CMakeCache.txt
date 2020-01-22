@@ -342,6 +342,9 @@ YEWPAR_BUILD_ENUMERATION_APPS:BOOL=ON
 //Build Fib Enumeration - for testing mainly
 YEWPAR_BUILD_ENUMERATION_APPS_FIB:BOOL=ON
 
+//Build NQueens Enumeration
+YEWPAR_BUILD_ENUMERATION_APPS_NQUEENS:BOOL=ON
+
 //Build Basic Numerical Semigroups Enumeration
 YEWPAR_BUILD_ENUMERATION_APPS_NS_BASIC:BOOL=ON
 
@@ -507,7 +510,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=18
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=19
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -577,6 +580,8 @@ knapsack_executable_SOURCES:INTERNAL=/users/level4/2250079m/sandbox/YewParInstal
 maxclique-16_executable_SOURCES:INTERNAL=/users/level4/2250079m/sandbox/YewParInstall/YewPar/apps/bnb/maxclique/main.cpp;/users/level4/2250079m/sandbox/YewParInstall/YewPar/apps/bnb/maxclique/DimacsParser.cpp
 //Sources for libmcs-8_executable.
 mcs-8_executable_SOURCES:INTERNAL=/users/level4/2250079m/sandbox/YewParInstall/YewPar/apps/bnb/mcs/main.cpp;/users/level4/2250079m/sandbox/YewParInstall/YewPar/apps/bnb/mcs/VFParser.cpp
+//Sources for libnqueens_executable.
+nqueens_executable_SOURCES:INTERNAL=/users/level4/2250079m/sandbox/YewParInstall/YewPar/apps/enumeration/nqueens/main.cpp
 //Sources for libsip_executable.
 sip_executable_SOURCES:INTERNAL=/users/level4/2250079m/sandbox/YewParInstall/YewPar/apps/decision/sip/main.cpp;/users/level4/2250079m/sandbox/YewParInstall/YewPar/apps/decision/sip/lad.cc;/users/level4/2250079m/sandbox/YewParInstall/YewPar/apps/decision/sip/graph.cc;/users/level4/2250079m/sandbox/YewParInstall/YewPar/apps/decision/sip/graph_file_error.cc;/users/level4/2250079m/sandbox/YewParInstall/YewPar/apps/decision/sip/fixed_bit_set.cc
 //Sources for libtsp_executable.
