@@ -139,7 +139,7 @@ private:
 MetricStore* MetricStore::store = new MetricStore;
 
 void initMetricStore() {
-  MetricStore::store->init(maxDepth, scaling, metrics);
+  MetricStore::store->init();
 }
 struct InitMetricStoreAct : hpx::actions::make_direct_action<
   decltype(&initMetricStore), &initMetricStore, InitMetricStoreAct>::type {};
