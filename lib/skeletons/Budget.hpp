@@ -248,7 +248,7 @@ struct Budget {
         hpx::find_all_localities(), space, root, params));
 
     if constexpr(metrics) {
-      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities());
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities()));
     }
 
     Policy::initPolicy();

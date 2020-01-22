@@ -255,7 +255,7 @@ struct DepthBounded {
 
     // If we are performing an analysis on any of the metrics
     if constexpr(metrics) {
-      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities());
+      hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities()));
     }
 
     Policy::initPolicy();

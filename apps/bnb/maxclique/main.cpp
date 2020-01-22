@@ -281,7 +281,6 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                                  Workstealing::Policies::DepthPoolPolicy> >
               ::search(graph, root, searchParameters);
         }
-      }
     }
   } else if (skeletonType == "stacksteal") {
     if (decisionBound != 0) {
