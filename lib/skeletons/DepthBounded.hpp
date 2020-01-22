@@ -208,11 +208,11 @@ struct DepthBounded {
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
      	const std::uint64_t time = (const std::uint64_t) diff.count();
       hpx::apply(hpx::util::bind([&]() {
-        store->updatePrunes(depth, prunes);
-        store->updateTimes(depth, time);
-        store->updateNodesVisited(depth, time);
-        store->updateBacktracks(depth, backtracks);
-      });
+        store->updatePrunes(childDepth, prunes);
+        store->updateTimes(childDepth, time);
+        store->updateNodesVisited(childDepth, time);
+        store->updateBacktracks(childDepth, backtracks);
+      }));
     }
 
     // Atomically updates the (process) local counter

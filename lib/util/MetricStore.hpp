@@ -55,15 +55,11 @@ struct MetricStore {
 
   // Initialises the store for an analysis of runtime regulairty (and pruning for BnB)
   void init(const unsigned maxDepth, const unsigned scaling, const unsigned metrics) {
-    if (metrics) {
-      taskTimes = std::make_unique<TimesVec>(TIME_DEPTHS);
-      prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
-      backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
-    	gen.seed(std::time(NULL));
-    }
-    if (scaling) {
-      nodesVisited = std::make_unique<MetricsVecAtomic>(maxDepth + 1);
-    }
+    taskTimes = std::make_unique<TimesVec>(TIME_DEPTHS);
+    prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
+    backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
+		nodesVisited = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
+    gen.seed(std::time(NULL));
   }
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
@@ -73,12 +69,12 @@ struct MetricStore {
       if (dist(gen) <= 75) {
 				unsigned size = 0;
 				for (const auto & times : *taskTimes) {
-					size += times->size();
+					size += times.size();
 				}
 				// Only take 1000 samples
 				if (size >= 1000) { return; }
         const auto depthIdx = (depth >= TIME_DEPTHS) ? (TIME_DEPTHS-1) : (depth > 0) ? (depth-1) : 0;
-        (*taskTimes)[depthIdx]->push_front(time);
+        (*taskTimes)[depthIdx].push_front(time);
    	 	}
 		}
   }
@@ -113,7 +109,7 @@ struct MetricStore {
 	void printTimes() {
     auto depth = 0;
 		for (const auto & timeDepths : *taskTimes) {
-      for (const auto & time : *timeDepths) {
+      for (const auto & time : timeDepths) {
 			  hpx::cout << "Depth :" << depth << " Time :" << time << hpx::endl;
       }
       depth++;

@@ -20,6 +20,18 @@ NSHivert() {
 	done
 }
 
+SIP() {
+	for i in {1..5}; do
+		timeout 3600 ./build/install/bin/sip --pattern test/si/si2_bvg_b03m_800/si2_b03m_m800.03/pattern --target test/si/si2_bvg_b03m_800/si2_b03m_m800.03/target --skel depthbounded -d 2 --hpx:threads 16 >> sip_scaling_depthbounded_$1.txt
+
+		timeout 3600 ./build/install/bin/sip --pattern test/si/si2_bvg_b03m_800/si2_b03m_m800.03/pattern --target test/si/si2_bvg_b03m_800/si2_b03m_m800.03/target --skel budget -b 100000 --hpx:threads 16 >> sip_scaling_budget_$1.txt
+		
+		timeout 3600 ./build/install/bin/sip --pattern test/si/si2_bvg_b03m_800/si2_b03m_m800.03/pattern --target test/si/si2_bvg_b03m_800/si2_b03m_m800.03/target --skel stacksteal --hpx:threads 16 >> sip_scaling_stacksteal_$1.txt
+	
+	done
+
+}
+
 appendToHostFile() {
   for i in $(seq $1 $2); do
     echo 130.209.255.$i >> hostfile.txt
@@ -27,7 +39,9 @@ appendToHostFile() {
 }
 
 echo '130.209.255.3' > hostfile.txt 
-MaxClique 1
+SIP 1
+appendToHostFile 2 2
+SIP 2
 
 exit 0
 
