@@ -7,27 +7,21 @@
 #include <forward_list>
 #include <vector>
 
-#include <boost/atomic/atomic.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-
 #include <hpx/runtime/actions/basic_action.hpp>
 #include <hpx/traits/action_stacksize.hpp>
 
 #include "skeletons/API.hpp"
-
-using namespace boost::multiprecision;
-using namespace boost::atomics;
 
 namespace YewPar {
 
 struct MetricStore {
   static MetricStore* store;
 
-  using MetricsVecPtr = std::unique_ptr<std::vector<atomic<uint128_t> > >;
-  using MetricsVecAtomic = std::vector<atomic<uint128_t> >;
-  using MetricsVec = std::vector<uint128_t>;
+  using MetricsVecPtr = std::unique_ptr<std::vector<std::atomic<std::uint64_t> > >;
+  using MetricsVecAtomic = std::vector<std::atomic<std::uint64_t> >;
+  using MetricsVec = std::vector<std::uint64_t>;
   using TimesVecPtr = std::unique_ptr<std::vector<std::forward_list<std::uint64_t> > >;
-  using TimesVec = std::vector<std::forward_list<std::uint64_t> >;
+  using TimesVec = std::vector<std::list<std::uint64_t> >;
 
   // Regularity Metrics
   TimesVecPtr taskTimes;
@@ -98,7 +92,7 @@ struct MetricStore {
 
 private:
 
-  inline void updateMetric(std::vector<atomic<uint128_t> > & ms, const std::uint64_t m, const unsigned d) {
+  inline void updateMetric(std::vector<std::atomic<std::uint64_t> > & ms, const std::uint64_t m, const unsigned d) {
     const auto depthIdx = getDepthIndex(d, ms.size());
     ms[depthIdx].store(m + ms[depthIdx].load());
   }
@@ -107,7 +101,7 @@ private:
     return (depth >= size) ? (size-1) : depth;
   }
 
-  inline MetricsVec transformVec(const std::vector<atomic<uint128_t> > & vec) const {
+  inline MetricsVec transformVec(const std::vector<std::atomic<std::uint64_t> > & vec) const {
     MetricsVec res;
     std::transform(vec.begin(), vec.end(), std::back_inserter(res),
     [](const auto & c) { return c.load(); });
@@ -124,19 +118,19 @@ void initMetricStore() {
 struct InitMetricStoreAct : hpx::actions::make_direct_action<
   decltype(&initMetricStore), &initMetricStore, InitMetricStoreAct>::type {};
 
-std::vector<uint128_t> getNodeCount() {
+std::vector<std::uint64_t> getNodeCount() {
   return MetricStore::store->getNodeCount();
 }
 struct GetNodeCountAct : hpx::actions::make_direct_action<
   decltype(&getNodeCount), &getNodeCount, GetNodeCountAct>::type {};
 
-std::vector<uint128_t> getBacktracks() {
+std::vector<std::uint64_t> getBacktracks() {
   return MetricStore::store->getBacktracks();
 }
 struct GetBacktracksAct : hpx::actions::make_direct_action<
   decltype(&getBacktracks), &getBacktracks, GetBacktracksAct>::type {};
 
-std::vector<uint128_t> getPrunes() {
+std::vector<std::uint64_t> getPrunes() {
   return MetricStore::store->getPrunes();
 }
 struct GetPrunesAct : hpx::actions::make_direct_action<
