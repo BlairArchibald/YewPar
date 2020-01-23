@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/NS-basic_exe.dir/basic.cpp.o"
-  "NS-basic.pdb"
   "NS-basic"
+  "NS-basic.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

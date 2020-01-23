@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/tsp_exe.dir/main.cpp.o"
   "CMakeFiles/tsp_exe.dir/parser.cpp.o"
-  "tsp.pdb"
   "tsp"
+  "tsp.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

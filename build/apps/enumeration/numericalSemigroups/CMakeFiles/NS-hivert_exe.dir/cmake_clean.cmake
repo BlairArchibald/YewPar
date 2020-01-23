@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/NS-hivert_exe.dir/hivert.cpp.o"
   "CMakeFiles/NS-hivert_exe.dir/monoid.cpp.o"
-  "NS-hivert.pdb"
   "NS-hivert"
+  "NS-hivert.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/knapsack_exe.dir/main.cpp.o"
-  "knapsack.pdb"
   "knapsack"
+  "knapsack.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

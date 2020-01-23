@@ -1,8 +1,8 @@
-# Install script for directory: /users/level4/2250079m/sandbox/YewParInstall/YewPar/apps/bnb
+# Install script for directory: /home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/apps/bnb
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/install")
+  set(CMAKE_INSTALL_PREFIX "/home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -29,7 +29,7 @@ endif()
 
 # Install shared libraries without execute permission?
 if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
-  set(CMAKE_INSTALL_SO_NO_EXE "1")
+  set(CMAKE_INSTALL_SO_NO_EXE "0")
 endif()
 
 # Is this installation the result of a crosscompile?
@@ -39,10 +39,10 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/bnb/knapsack/cmake_install.cmake")
-  include("/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/bnb/maxclique/cmake_install.cmake")
-  include("/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/bnb/mcs/cmake_install.cmake")
-  include("/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/bnb/tsp/cmake_install.cmake")
+  include("/home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/apps/bnb/knapsack/cmake_install.cmake")
+  include("/home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/apps/bnb/maxclique/cmake_install.cmake")
+  include("/home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/apps/bnb/mcs/cmake_install.cmake")
+  include("/home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/apps/bnb/tsp/cmake_install.cmake")
 
 endif()
 

@@ -111,7 +111,7 @@ def draw_bucket_graph(times, title):
 
   whiskersMin, whiskersMax = whiskers[:, 0], whiskers[:, 1]
   inds = np.arange(1, len(medians) + 1)
-  ax2.scatter(inds, medians, marker='x', color='black', s=10, zorder=3)
+  ax2.scatter(inds, medians, marker='x', color='white', s=10, zorder=3)
   ax2.grid(color='grey', linestyle='-', linewidth=0.25, alpha=0.5)
   ax2.vlines(inds, lower_quartiles, upper_quartiles, color='k', linestyle='-', lw=5)
   ax2.vlines(inds, whiskersMin, whiskersMax, color='k', linestyle='-', lw=1)
@@ -155,7 +155,7 @@ def read_search_metrics(filename, is_opt=False):
       if len(line) > 2:
         if "Time" in line[1].split(" ")[1]:
           depth = int(line[1].split(" ")[0])
-          times[depth].append(int(line[-1]))        
+          times[depth].append(int(line[-1])/1000.)        
 
       elif "Time" in line[0]:
         times.append(int(line[-1]))
@@ -242,12 +242,12 @@ t_s = [M/1534, 18650461/806, 17925657/837, 14784145/1017]
 
 medians = np.zeros((3,6), dtype=np.float64)
 nodes = np.zeros((3,6), dtype=np.float64)
-ranges = [1, 2, 4, 8, 16, 17]
+ranges = [1, 2, 4, 8]#, 16, 17]
 j, o = 0, 0
-skels = ["stacksteal", "budget", "depthbounded"]
+skels = ["stack_steal", "budget"]
 for i in ranges:
   for k in skels:
-    median, node = read_scaling_results("../max_clique_scaling_{}_{}.txt".format(k, i))
+    median, node = read_scaling_results("../ns_hivert_{}_{}_52.txt".format(k, i))
     medians[j,o] = np.float64(median)
     nodes[j,o] = node
     j += 1

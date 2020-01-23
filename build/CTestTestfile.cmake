@@ -1,6 +1,6 @@
 # CMake generated Testfile for 
-# Source directory: /users/level4/2250079m/sandbox/YewParInstall/YewPar
-# Build directory: /users/level4/2250079m/sandbox/YewParInstall/YewPar/build
+# Source directory: /home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar
+# Build directory: /home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.

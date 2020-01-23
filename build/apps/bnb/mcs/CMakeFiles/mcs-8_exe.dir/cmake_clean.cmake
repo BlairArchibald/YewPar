@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/mcs-8_exe.dir/main.cpp.o"
   "CMakeFiles/mcs-8_exe.dir/VFParser.cpp.o"
-  "mcs-8.pdb"
+  "CMakeFiles/mcs-8_exe.dir/main.cpp.o"
   "mcs-8"
+  "mcs-8.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

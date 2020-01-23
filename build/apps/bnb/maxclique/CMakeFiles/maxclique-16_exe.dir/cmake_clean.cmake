@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/maxclique-16_exe.dir/main.cpp.o"
   "CMakeFiles/maxclique-16_exe.dir/DimacsParser.cpp.o"
-  "maxclique-16.pdb"
+  "CMakeFiles/maxclique-16_exe.dir/main.cpp.o"
   "maxclique-16"
+  "maxclique-16.pdb"
 )
 
 # Per-language clean rules from dependency scanning.
