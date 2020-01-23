@@ -94,7 +94,7 @@ private:
 
   inline void updateMetric(std::vector<std::atomic<std::uint64_t> > & ms, const std::uint64_t m, const unsigned d) {
     const auto depthIdx = getDepthIndex(d, ms.size());
-    ms[depthIdx].store(m + ms[depthIdx].load());
+    ms[depthIdx] += m;
   }
 
   inline unsigned getDepthIndex(const unsigned depth, const unsigned size) const {
