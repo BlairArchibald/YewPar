@@ -115,3 +115,15 @@ Using Bounding: false
 Workpool: DepthPool
 Solution found: false
 cpu = 169492
+Using pattern file: test/meshes-CVIU11/patterns/pattern3
+Using target file: test/meshes-CVIU11/targets/target401
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Solution found: false
+cpu = 171429
