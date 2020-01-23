@@ -1,0 +1,24 @@
+Using pattern file: test/images-CVIU11/patterns/pattern10
+Using target file: test/images-CVIU11/targets/target11
+Skeleton Type: DepthBounded
+d_cutoff: 2
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Solution found: false
+cpu = 56
+Using pattern file: test/images-CVIU11/patterns/pattern10
+Using target file: test/images-CVIU11/targets/target11
+Skeleton Type: DepthBounded
+d_cutoff: 2
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Solution found: false
+cpu = 176
