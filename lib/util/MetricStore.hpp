@@ -55,8 +55,8 @@ struct MetricStore {
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
 		if (time >= 1) {
-        const auto depthIdx = getDepthIndex(depth, TIME_DEPTHS);
-        (*taskTimes)[depthIdx].push_front(time);
+      const auto depthIdx = getDepthIndex(depth, TIME_DEPTHS);
+      (*taskTimes)[depthIdx].push_front(time);
    	}
   }
 
