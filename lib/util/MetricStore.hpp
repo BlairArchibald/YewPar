@@ -26,8 +26,8 @@ struct MetricStore {
   using MetricsVecPtr = std::unique_ptr<std::vector<atomic<uint128_t> > >;
   using MetricsVecAtomic = std::vector<atomic<uint128_t> >;
   using MetricsVec = std::vector<uint128_t>;
-  using TimesVecPtr = std::unique_ptr<std::vector<std::list<std::uint64_t> > >;
-  using TimesVec = std::vector<std::list<std::uint64_t> >;
+  using TimesVecPtr = std::unique_ptr<std::vector<std::forward_list<std::uint64_t> > >;
+  using TimesVec = std::vector<std::forward_list<std::uint64_t> >;
 
   // Regularity Metrics
   TimesVecPtr taskTimes;
