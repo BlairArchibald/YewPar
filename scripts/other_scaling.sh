@@ -2,7 +2,7 @@
 
 cd ../
 
-HOSTFILE=hostfile.txt
+HOSTFILE=otherHostFile.txt
 
 MaxClique() {
   for i in {1..5}; do
@@ -22,11 +22,11 @@ NSHivert() {
 
 SIP() {
 	for i in {1..5}; do
-		timeout 3600 mpiexec -n $1 ./build/install/bin/sip --pattern test/images-CVIU11/patterns/pattern10 --target test/images-CVIU11/targets/target11 --skel depthbounded -d 2 --hpx:threads 16  >> sip_scaling_depthbounded_$1_2000.txt
+		timeout 3600 mpiexec -n $1 ./build/install/bin/sip  --pattern test/meshes-CVIU11/patterns/pattern3 --target test/meshes-CVIU11/targets/target401 --skel depthbounded -d 8 --hpx:threads 16  >> sip_scaling_depthbounded_$1_2000.txt
 
-		timeout 3600 mpiexec -n $1 ./build/install/bin/sip --pattern test/si/si4_m4D_m4Dr2_1296/si4_m4Dr2_m1296.06/pattern --target test/si/si4_m4D_m4Dr2_1296/si4_m4Dr2_m1296.06/target --skel budget -b 100000 --hpx:threads 16 >> sip_scaling_budget_$1_2000.txt
+		timeout 3600 mpiexec -n $1 ./build/install/bin/sip /sip  --pattern test/meshes-CVIU11/patterns/pattern3 --target test/meshes-CVIU11/targets/target401 --skel budget -b 100000 --hpx:threads 16 >> sip_scaling_budget_$1_2000.txt
 		
-		timeout 3600 mpiexec -n $1 ./build/install/bin/sip --pattern test/si/si4_m4D_m4Dr2_1296/si4_m4Dr2_m1296.06/pattern --target test/si/si4_m4D_m4Dr2_1296/si4_m4Dr2_m1296.06/target --skel stacksteal --hpx:threads 16 >> sip_scaling_stacksteal_$1_2000.txt
+		timeout 3600 mpiexec -n $1 ./build/install/bin/sip --pattern test/meshes-CVIU11/patterns/pattern3 --target test/meshes-CVIU11/targets/target401 --skel stacksteal --hpx:threads 16 >> sip_scaling_stacksteal_$1_2000.txt
 	
 	done
 
@@ -34,11 +34,11 @@ SIP() {
 
 appendToHostFile() {
   for i in $(seq $1 $2); do
-    echo 130.209.255.$i >> hostfile.txt
+    echo 130.209.255.$i >> otherHostFile.txt
   done
 }
 
-echo '130.209.255.3' > hostfile.txt 
+echo '130.209.255.3' > otherHostFile.txt 
 SIP 1
 appendToHostFile 2 2
 SIP 2

@@ -14,9 +14,9 @@ MaxClique() {
 
 NSHivert() {
 	for i in {1..5}; do
-		timeout 3600 mpiexec -n $1 -f $HOSTFILE ./build/install/bin/NS-hivert -g 52 --skel budget -b 10000000 --hpx:threads 16  >> ns_hivert_budget_$1_52.txt
+		timeout 3600 mpiexec -n $1 -f $HOSTFILE ./build/install/bin/NS-hivert -g 50 --skel budget -b 10000000 --hpx:threads 16  >> ns_hivert_budget_$1_50.txt
 
-		timeout 3600 mpiexec -n $1 -f $HOSTFILE ./build/install/bin/NS-hivert -g 52 --skel stacksteal --hpx:threads 16  >> ns_hivert_stack_steal_$1_52.txt
+		timeout 3600 mpiexec -n $1 -f $HOSTFILE ./build/install/bin/NS-hivert -g 50 --skel stacksteal --hpx:threads 16  >> ns_hivert_stack_steal_$1_50.txt
 	done
 }
 

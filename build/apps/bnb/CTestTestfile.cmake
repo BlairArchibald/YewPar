@@ -1,6 +1,6 @@
 # CMake generated Testfile for 
-# Source directory: /home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/apps/bnb
-# Build directory: /home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/apps/bnb
+# Source directory: /users/level4/2250079m/sandbox/YewParInstall/YewPar/apps/bnb
+# Build directory: /users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/bnb
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.

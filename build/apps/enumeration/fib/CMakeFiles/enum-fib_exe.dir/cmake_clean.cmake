@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/enum-fib_exe.dir/main.cpp.o"
-  "enum-fib"
   "enum-fib.pdb"
+  "enum-fib"
 )
 
 # Per-language clean rules from dependency scanning.

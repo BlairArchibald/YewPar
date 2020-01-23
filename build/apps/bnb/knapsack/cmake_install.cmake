@@ -1,8 +1,8 @@
-# Install script for directory: /home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/apps/bnb/knapsack
+# Install script for directory: /users/level4/2250079m/sandbox/YewParInstall/YewPar/apps/bnb/knapsack
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/install")
+  set(CMAKE_INSTALL_PREFIX "/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -29,7 +29,7 @@ endif()
 
 # Install shared libraries without execute permission?
 if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
-  set(CMAKE_INSTALL_SO_NO_EXE "0")
+  set(CMAKE_INSTALL_SO_NO_EXE "1")
 endif()
 
 # Is this installation the result of a crosscompile?
@@ -42,15 +42,15 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/knapsack")
     file(RPATH_CHECK
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/knapsack"
-         RPATH "/home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/install/lib")
+         RPATH "/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/install/lib")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/apps/bnb/knapsack/knapsack")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/apps/bnb/knapsack/knapsack")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/knapsack" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/knapsack")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/knapsack"
-         OLD_RPATH "/home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/lib:/home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/lib/workstealing:/home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/lib/util:/home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/lib/workstealing/policies:/usr/local/lib:"
-         NEW_RPATH "/home/ruairidh/Documents/University/Evaluating-Parallel-Search-On-HPC-Cloud/YewPar/build/install/lib")
+         OLD_RPATH "/users/level4/2250079m/sandbox/YewParInstall/boost_1_70_0/stage/lib:/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/lib:/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/lib/workstealing:/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/lib/util:/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/lib/workstealing/policies:/users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib:"
+         NEW_RPATH "/users/level4/2250079m/sandbox/YewParInstall/YewPar/build/install/lib")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/knapsack")
     endif()
