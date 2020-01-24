@@ -183,3 +183,5 @@ Decision: true
 DepthLimited: false
 Using Bounding: false
 Workpool: DepthPool
+Solution found: false
+cpu = 504706
