@@ -14,9 +14,7 @@ MaxClique() {
 
 NSHivert() {
 	for i in {1..5}; do
-		timeout 3600 mpiexec -n $1 -f $HOSTFILE ./build/install/bin/NS-hivert -g 50 --skel budget -b 10000000 --hpx:threads 16  >> ns_hivert_budget_$1_50.txt
-
-		timeout 3600 mpiexec -n $1 -f $HOSTFILE ./build/install/bin/NS-hivert -g 50 --skel stacksteal --hpx:threads 16  >> ns_hivert_stack_steal_$1_50.txt
+		timeout 3600 mpiexec -n $1 -f $HOSTFILE ./build/install/bin/NS-hivert -g 52 --skel budget -b 10000000 --hpx:threads 16  >> ns_hivert_budget_$1_52.txt
 	done
 }
 
@@ -27,13 +25,13 @@ appendToHostFile() {
 }
 
 echo '130.209.255.4' > hostfile.txt 
-NSHivert 1
+#NSHivert 1
 appendToHostFile 5 5
-NSHivert 2
+#NSHivert 2
 appendToHostFile 6 7
-NSHivert 4
+#NSHivert 4
 appendToHostFile 8 11
-NSHivert 8
+#NSHivert 8
 appendToHostFile 12 19
 NSHivert 16
 appendToHostFile 20 20
