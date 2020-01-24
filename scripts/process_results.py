@@ -193,10 +193,10 @@ def draw_node_throughput(times, nodes, title, d, b):
   ax1.grid(color='grey', linestyle='-', linewidth=0.25, alpha=0.5)
   ax1.legend()
   plt.show()
-
+"""
 medians = np.zeros((3,6), dtype=np.float64)
 nodes = np.zeros((3,6), dtype=np.float64)
-ranges = [1, 2, 4, 8]#, 16, 17]
+ranges = [1, 2, 4, 8, 16, 17]
 j, o = 0, 0
 skels = ["stack_steal", "budget"]#, "depthbounded"]
 for i in ranges:
@@ -220,6 +220,7 @@ for i in range(6):
     speedUps[j,i] = medians[j,0] / medians[j,i]
 
 draw_scaling_graph(medians, "Runtimes on NS-hivert, g = 52", 2, 100000, "Runtime (s)", incDep=False)
+pprint(medians)
 draw_scaling_graph(speedUps, "Scaling on NS-hivert, g = 52", 2, 100000, "Relative SpeedUp (1 locality)", incDep=False)
 
 
@@ -288,3 +289,6 @@ draw_bucket_graph(times, "Runtime regularity on Subgraph Isomporhism g34-g79, St
 
 times, nodes, backtracks, sTimes, p = read_search_metrics("../rs_sip_budg.txt")
 draw_bucket_graph(times, "Runtime regularity on Subgraph Isomporhism g34-g79, Budget b = 10000000, 1 Locality", [i for i in range(7)])
+"""
+times, nodes, backtracks, sTimes, p = read_search_metrics("../ns_hivert_budget__52_metrics.txt")
+draw_bucket_graph(times, "Runtime regularity on Numerical Semigroups g = 52, Budget b = 10000000, 1 Locality", [i for i in range(8)])
