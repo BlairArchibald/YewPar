@@ -502,18 +502,17 @@ struct StackStealing {
 
     if constexpr(metrics) {
       auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
-
+      printPrunes();
+      printBacktracks();
+      printNodeCounts();
       // Prints regularity metrics
       for (const auto & l : hpx::find_all_localities()) {
         hpx::async<PrintTimesAct>(l).get();
       }
-      printPrunes();
-      printBacktracks();
-      printNodeCounts();
-    }
+    } 
 
     // Return the right thing
     if constexpr(isCountNodes) {

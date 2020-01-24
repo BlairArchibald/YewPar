@@ -36,7 +36,7 @@ struct MetricStore {
   MetricsVecPtr prunes;
 	
 	static const unsigned DEF_SIZE = 50;
-	static const unsigned TIME_DEPTHS = 8;
+	static const unsigned TIME_DEPTHS = 55;
 
   MetricStore() = default;
 
