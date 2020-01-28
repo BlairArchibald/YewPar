@@ -15,6 +15,7 @@
 #include "util/NodeGenerator.hpp"
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
+#include "util/Enumerator.hpp"
 #include "util/func.hpp"
 #include "util/DistSetOnceFlag.hpp"
 
@@ -36,7 +37,7 @@ struct Ordered {
 
   typedef typename API::skeleton_signature::bind<Args...>::type args;
 
-  static constexpr bool isCountNodes = parameter::value_type<args, API::tag::CountNodes_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool isEnumeration = parameter::value_type<args, API::tag::Enumeration_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isOptimisation = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthLimited_, std::integral_constant<bool, false> >::type::value;
@@ -49,10 +50,11 @@ struct Ordered {
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
+  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Node>>::type Enum;
 
   static void printSkeletonDetails() {
     hpx::cout << "Skeleton Type: Ordered\n";
-    hpx::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
+    hpx::cout << "Enumeration : " << std::boolalpha << isEnumeration << "\n";
     hpx::cout << "Optimisation: " << std::boolalpha << isOptimisation << "\n";
     hpx::cout << "Decision: " << std::boolalpha << isDecision << "\n";
     hpx::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
@@ -128,9 +130,9 @@ struct Ordered {
   static void expandNoSpawns(const Space & space,
                              const Node & n,
                              const API::Params<Bound> & params,
-                             std::vector<uint64_t> & counts,
+                             Enum & acc,
                              const unsigned childDepth) {
-    auto reg = Registry<Space, Node, Bound>::gReg;
+    auto reg = Registry<Space, Node, Bound, Enum>::gReg;
     Generator newCands = Generator(space, n);
 
     if constexpr(isDecision) {
@@ -138,10 +140,6 @@ struct Ordered {
           return;
         }
       }
-
-    if constexpr(isCountNodes) {
-        counts[childDepth] += newCands.numChildren;
-    }
 
     if constexpr(isDepthBounded) {
         if (childDepth == params.maxDepth) {
@@ -152,12 +150,12 @@ struct Ordered {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
+      auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c, acc);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Prune) { continue; }
       else if (pn == ProcessNodeRet::Break) { break; }
 
-      expandNoSpawns(space, c, params, counts, childDepth + 1);
+      expandNoSpawns(space, c, params, acc, childDepth + 1);
     }
   }
 
@@ -168,14 +166,14 @@ struct Ordered {
       printSkeletonDetails();
     }
 
-    hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
+    hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound, Enum> >(
         hpx::find_all_localities(), space, root, params));
 
     if constexpr(isOptimisation || isDecision) {
       auto inc = hpx::new_<Incumbent>(hpx::find_here()).get();
-      hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
+      hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound, Enum> >(
           hpx::find_all_localities(), inc));
-      initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
+      initIncumbent<Space, Node, Bound, Enum, Objcmp, Verbose>(root, params.initialBound);
     }
 
     Workstealing::Policies::PriorityOrderedPolicy::initPolicy();
@@ -211,7 +209,7 @@ struct Ordered {
     Workstealing::Scheduler::startSchedulers(threadCountLocal);
 
     // Make this thread the sequential thread of execution.
-    auto reg = Registry<Space, Node, Bound>::gReg;
+    auto reg = Registry<Space, Node, Bound, Enum>::gReg;
     for (auto & t : tasks) {
       // Allow early termination of sequential thread
       if constexpr(isDecision) {
@@ -232,12 +230,8 @@ struct Ordered {
 
       auto weStarted = hpx::async<YewPar::util::DistSetOnceFlag::set_value_action>(t.startedFlag).get();
       if (weStarted) {
-        std::vector<std::uint64_t> countMap;
-        if constexpr(isCountNodes) {
-          countMap.resize(reg->params.maxDepth + 1);
-        }
-
-        expandNoSpawns(space, t.node, params, countMap, params.spawnDepth);
+        Enum acc;
+        expandNoSpawns(space, t.node, params, acc, params.spawnDepth);
       }
     }
 
@@ -246,21 +240,21 @@ struct Ordered {
         hpx::find_all_localities()));
 
     // Return the right thing
-    if constexpr(isCountNodes) {
-      return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
+    if constexpr(isEnumeration) {
+      return combineEnumerators<Space, Node, Bound, Enum>();
     } else if constexpr(isOptimisation || isDecision) {
-      auto reg = Registry<Space, Node, Bound>::gReg;
+      auto reg = Registry<Space, Node, Bound, Enum>::gReg;
       typedef typename Incumbent::GetIncumbentAct<Node, Bound, Objcmp, Verbose> getInc;
       return hpx::async<getInc>(reg->globalIncumbent).get();
     } else {
-      static_assert(isCountNodes || isOptimisation || isDecision, "Please provide a supported search type: CountNodes, Optimisation, Decision");
+      static_assert(isEnumeration || isOptimisation || isDecision, "Please provide a supported search type: Enumeration, Optimisation, Decision");
     }
   }
 
   static void subtreeTask(const Node taskRoot,
                           const hpx::naming::id_type started) {
     // Don't bother checking if the sequential thread has done this task since we are stopping anyway
-    auto reg = Registry<Space, Node, Bound>::gReg;
+    auto reg = Registry<Space, Node, Bound, Enum>::gReg;
     if constexpr (isDecision) {
       if (reg->stopSearch) {
         return;
@@ -280,12 +274,8 @@ struct Ordered {
     auto weStarted = hpx::async<YewPar::util::DistSetOnceFlag::set_value_action>(started).get();
     // Sequential thread has beaten us to this task. Don't bother executing it again.
     if (weStarted) {
-      std::vector<std::uint64_t> countMap;
-      if constexpr(isCountNodes) {
-        countMap.resize(reg->params.maxDepth + 1);
-      }
-
-      expandNoSpawns(reg->space, taskRoot, reg->params, countMap, reg->params.spawnDepth);
+      Enum acc;
+      expandNoSpawns(reg->space, taskRoot, reg->params, acc, reg->params.spawnDepth);
     }
   }
 };

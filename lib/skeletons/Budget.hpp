@@ -200,7 +200,7 @@ struct Budget {
       auto inc = hpx::new_<Incumbent>(hpx::find_here()).get();
       hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound, Enum> >(
           hpx::find_all_localities(), inc));
-      initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
+      initIncumbent<Space, Node, Bound, Enum, Objcmp, Verbose>(root, params.initialBound);
     }
 
     createTask(1, root).get();

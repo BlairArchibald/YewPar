@@ -89,7 +89,7 @@ struct ProcessNode {
 
     if constexpr(isDecision) {
         if (c.getObj() == params.expectedObjective) {
-          updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(c, c.getObj());
+          updateIncumbent<Space, Node, Bound, Enumerator, Objcmp, Verbose>(c, c.getObj());
           hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound, Enumerator> >(hpx::find_all_localities());
           return ProcessNodeRet::Exit;
         }
@@ -126,7 +126,7 @@ struct ProcessNode {
 
         Objcmp cmp;
         if (cmp(c.getObj(),best)) {
-          updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(c, c.getObj());
+          updateIncumbent<Space, Node, Bound, Enumerator, Objcmp, Verbose>(c, c.getObj());
         }
     }
     return ProcessNodeRet::Continue;
