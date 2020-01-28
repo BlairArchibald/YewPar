@@ -36,7 +36,7 @@ static typename Enum::ResT combineEnumerators() {
     hpx::find_all_localities()).get();
 
   Enum res;
-  for (auto v : vals) {
+  for (const auto v : vals) {
     res.combine(v);
   }
   return res.get();

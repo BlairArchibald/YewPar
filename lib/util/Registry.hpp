@@ -99,7 +99,7 @@ struct InitRegistryAct : hpx::actions::make_direct_action<
   decltype(&initialiseRegistry<Space, Node, Bound, Enumerator>), &initialiseRegistry<Space, Node, Bound, Enumerator>, InitRegistryAct<Space, Node, Bound, Enumerator> >::type {};
 
 template <typename Space, typename Node, typename Bound, typename Enumerator>
-std::vector<std::uint64_t> getEnumeratorVal() {
+typename Enumerator::ResT getEnumeratorVal() {
   return Registry<Space, Node, Bound, Enumerator>::gReg->getEnumeratorVal();
 }
 template <typename Space, typename Node, typename Bound, typename Enumerator>
