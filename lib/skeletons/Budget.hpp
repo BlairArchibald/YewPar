@@ -20,7 +20,7 @@ struct Budget {
 
   typedef typename API::skeleton_signature::bind<Args...>::type args;
 
-  static constexpr bool isCountNodes = parameter::value_type<args, API::tag::CountNodes_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool isEnumeration = parameter::value_type<args, API::tag::Enumeration_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isOptimisation = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthLimited_, std::integral_constant<bool, false> >::type::value;
@@ -33,12 +33,13 @@ struct Budget {
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
+  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Node>>::type Enum;
 
   typedef typename parameter::value_type<args, API::tag::DepthBoundedPoolPolicy, Workstealing::Policies::DepthPoolPolicy>::type Policy;
 
   static void printSkeletonDetails() {
     hpx::cout << "Skeleton Type: Budget\n";
-    hpx::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
+    hpx::cout << "Enumeration : " << std::boolalpha << isEnumeration << "\n";
     hpx::cout << "Optimisation: " << std::boolalpha << isOptimisation << "\n";
     hpx::cout << "Decision: " << std::boolalpha << isDecision << "\n";
     hpx::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
@@ -60,10 +61,10 @@ struct Budget {
   static void expand(const Space & space,
                      const Node & n,
                      const API::Params<Bound> & params,
-                     std::vector<uint64_t> & counts,
+                     Enum & acc,
                      std::vector<hpx::future<void> > & childFutures,
                      const unsigned childDepth) {
-    auto reg = Registry<Space, Node, Bound>::gReg;
+    auto reg = Registry<Space, Node, Bound, Enum>::gReg;
 
     auto depth = childDepth;
     auto backtracks = 0;
@@ -71,10 +72,6 @@ struct Budget {
     // Init the stack
     StackElem<Generator> initElem(space, n);
     GeneratorStack<Generator> genStack(maxStackDepth, initElem);
-
-    if constexpr (isCountNodes) {
-      counts[depth] += initElem.gen.numChildren;
-    }
 
     auto stackDepth = 0;
     while (stackDepth >= 0) {
@@ -106,7 +103,7 @@ struct Budget {
 
         genStack[stackDepth].seen++;
 
-        auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, child);
+        auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, child, acc);
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) { continue; }
         else if (pn == ProcessNodeRet::Break) {
@@ -120,10 +117,6 @@ struct Budget {
         const auto childGen = Generator(space, child);
         stackDepth++;
         depth++;
-
-        if constexpr(isCountNodes) {
-            counts[depth] += childGen.numChildren;
-        }
 
         // TODO: This only works correctly for countNodes where we can count without going into a node
         // It wouldn't work for a depthBounded optimisation problem for example.
@@ -149,19 +142,16 @@ struct Budget {
   static void subtreeTask(const Node taskRoot,
                           const unsigned childDepth,
                           const hpx::naming::id_type donePromiseId) {
-    auto reg = Registry<Space, Node, Bound>::gReg;
+    auto reg = Registry<Space, Node, Bound, Enum>::gReg;
 
-    std::vector<std::uint64_t> countMap;
-    if constexpr(isCountNodes) {
-        countMap.resize(reg->params.maxDepth + 1);
-    }
+    Enum acc;
 
     std::vector<hpx::future<void> > childFutures;
-    expand(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth);
+    expand(reg->space, taskRoot, reg->params, acc, childFutures, childDepth);
 
     // Atomically updates the (process) local counter
-    if constexpr (isCountNodes) {
-      reg->updateCounts(countMap);
+    if constexpr (isEnumeration) {
+      reg->updateEnumerator(acc);
     }
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
@@ -197,7 +187,7 @@ struct Budget {
       printSkeletonDetails();
     }
 
-    hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
+    hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound, Enum> >(
         hpx::find_all_localities(), space, root, params));
 
     Policy::initPolicy();
@@ -208,7 +198,7 @@ struct Budget {
 
     if constexpr(isOptimisation || isDecision) {
       auto inc = hpx::new_<Incumbent>(hpx::find_here()).get();
-      hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
+      hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound, Enum> >(
           hpx::find_all_localities(), inc));
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
@@ -219,15 +209,15 @@ struct Budget {
         hpx::find_all_localities()));
 
     // Return the right thing
-    if constexpr(isCountNodes) {
-      return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
+    if constexpr(isEnumeration) {
+      return combineEnumerators<Space, Node, Bound, Enum>();
     } else if constexpr(isOptimisation || isDecision) {
-      auto reg = Registry<Space, Node, Bound>::gReg;
+      auto reg = Registry<Space, Node, Bound, Enum>::gReg;
 
       typedef typename Incumbent::GetIncumbentAct<Node, Bound, Objcmp, Verbose> getInc;
       return hpx::async<getInc>(reg->globalIncumbent).get();
     } else {
-      static_assert(isCountNodes || isOptimisation || isDecision, "Please provide a supported search type: CountNodes, Optimisation, Decision");
+      static_assert(isEnumeration || isOptimisation || isDecision, "Please provide a supported search type: Enumeration, Optimisation, Decision");
     }
   }
 };

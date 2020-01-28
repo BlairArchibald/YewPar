@@ -35,6 +35,28 @@ struct NodeGen : YewPar::NodeGenerator<Monoid, Empty> {
   }
 };
 
+// Enumerator
+struct CountDepths : YewPar::Enumerator<Monoid, std::vector<uint64_t>> {
+  std::vector<uint64_t> counts;
+  CountDepths() {
+    counts.resize(50);
+  }
+
+  void accumulate(const Monoid & m) override {
+    counts[m.genus] += 1;
+  }
+
+  void combine(const std::vector<uint64_t> & other) override {
+    for(auto i = 0; i < counts.size(); i++) {
+      counts[i] += other[i];
+    }
+  }
+
+  std::vector<uint64_t> get() override { return counts; }
+
+};
+
+
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto maxDepth   = opts["genus"].as<unsigned>();
@@ -51,7 +73,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.maxDepth = maxDepth;
     counts = YewPar::Skeletons::Seq<NodeGen,
-                                    YewPar::Skeletons::API::CountNodes,
+                                    YewPar::Skeletons::API::Enumeration,
+                                    YewPar::Skeletons::API::Enumerator<CountDepths>,
                                     YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), root, searchParameters);
   } else if (skeleton == "depthbounded") {
@@ -59,7 +82,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.maxDepth   = maxDepth;
     searchParameters.spawnDepth = spawnDepth;
     counts = YewPar::Skeletons::DepthBounded<NodeGen,
-                                            YewPar::Skeletons::API::CountNodes,
+                                            YewPar::Skeletons::API::Enumeration,
+                                            YewPar::Skeletons::API::Enumerator<CountDepths>,
                                             YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), root, searchParameters);
   } else if (skeleton == "stacksteal"){
@@ -67,7 +91,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.maxDepth = maxDepth;
     searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
     counts = YewPar::Skeletons::StackStealing<NodeGen,
-                                              YewPar::Skeletons::API::CountNodes,
+                                              YewPar::Skeletons::API::Enumeration,
+                                              YewPar::Skeletons::API::Enumerator<CountDepths>,
                                               YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), root, searchParameters);
   } else if (skeleton == "budget"){
@@ -75,7 +100,8 @@ int hpx_main(boost::program_options::variables_map & opts) {
     searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
     searchParameters.maxDepth   = maxDepth;
     counts = YewPar::Skeletons::Budget<NodeGen,
-                                       YewPar::Skeletons::API::CountNodes,
+                                       YewPar::Skeletons::API::Enumeration,
+                                       YewPar::Skeletons::API::Enumerator<CountDepths>,
                                        YewPar::Skeletons::API::DepthLimited>
         ::search(Empty(), root, searchParameters);
   } else {

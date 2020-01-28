@@ -34,7 +34,7 @@ struct StackStealing {
 
   typedef typename API::skeleton_signature::bind<Args...>::type args;
 
-  static constexpr bool isCountNodes = parameter::value_type<args, API::tag::CountNodes_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool isEnumeration = parameter::value_type<args, API::tag::Enumeration_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isOptimisation = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthLimited_, std::integral_constant<bool, false> >::type::value;
@@ -47,10 +47,11 @@ struct StackStealing {
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
+  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Node>>::type Enum;
 
   static void printSkeletonDetails(const API::Params<Bound> & params) {
     hpx::cout << "Skeleton Type: StackStealing\n";
-    hpx::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
+    hpx::cout << "Enumeration : " << std::boolalpha << isEnumeration << "\n";
     hpx::cout << "Optimisation: " << std::boolalpha << isOptimisation << "\n";
     hpx::cout << "Decision: " << std::boolalpha << isDecision << "\n";
     hpx::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
@@ -68,27 +69,20 @@ struct StackStealing {
   static void subTreeTask(const Node initNode,
                           const unsigned depth,
                           const hpx::naming::id_type donePromise) {
-    auto reg = Registry<Space, Node, Bound>::gReg;
-    std::vector<std::uint64_t> cntMap;
+    auto reg = Registry<Space, Node, Bound, Enum>::gReg;
+    Enum acc;
 
     // Setup the stack with root node
     StackElem<Generator> rootElem(reg->space, initNode);
 
     GeneratorStack<Generator> generatorStack(maxStackDepth, rootElem);
-    if constexpr (isCountNodes) {
-        cntMap.resize(reg->params.maxDepth + 1);
-      }
-
-    if constexpr (isCountNodes) {
-      cntMap[depth] += rootElem.gen.numChildren;
-    }
 
     // Register with the Policy to allow stealing from this stack
     std::shared_ptr<SharedState> stealReq;
     unsigned threadId;
     std::tie(stealReq, threadId) = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->registerThread();
 
-    runTaskFromStack(depth, reg->space, generatorStack, stealReq, cntMap, donePromise, threadId);
+    runTaskFromStack(depth, reg->space, generatorStack, stealReq, acc, donePromise, threadId);
   }
 
   using SubTreeTask = func<
@@ -110,7 +104,7 @@ struct StackStealing {
       auto localParams = params;
       localParams.maxDepth = depthRequired;
       auto numNodes = YewPar::Skeletons::Seq<Generator,
-                                             YewPar::Skeletons::API::CountNodes,
+                                             YewPar::Skeletons::API::Enumeration,
                                              YewPar::Skeletons::API::BoundFunction<boundFn>,
                                              YewPar::Skeletons::API::ObjectiveComparison<Objcmp>,
                                              YewPar::Skeletons::API::DepthLimited>
@@ -128,11 +122,11 @@ struct StackStealing {
                            const Space & space,
                            GeneratorStack<Generator> & generatorStack,
                            std::shared_ptr<SharedState> stealRequest,
-                           std::vector<std::uint64_t> & cntMap,
+                           Enum & acc,
                            std::vector<hpx::future<void> > & futures,
                            int stackDepth = 0,
                            int depth = -1) {
-    auto reg = Registry<Space, Node, Bound>::gReg;
+    auto reg = Registry<Space, Node, Bound, Enum>::gReg;
     std::vector<hpx::promise<void> > promises;
 
     // We do this because arguments can't default initialise to themselves
@@ -206,7 +200,7 @@ struct StackStealing {
 
         generatorStack[stackDepth].seen++;
 
-        auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child);
+        auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child, acc);
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) { continue; }
         else if (pn == ProcessNodeRet::Break) {
@@ -221,10 +215,6 @@ struct StackStealing {
         // Going down
         stackDepth++;
         depth++;
-
-        if constexpr(isCountNodes) {
-            cntMap[depth] += childGen.numChildren;
-        }
 
         if constexpr(isDepthBounded) {
             // This doesn't look quite right to me, we want the next element at this level not the previous?
@@ -249,19 +239,19 @@ struct StackStealing {
                                 const Space & space,
                                 GeneratorStack<Generator> & generatorStack,
                                 const std::shared_ptr<SharedState> stealRequest,
-                                std::vector<std::uint64_t> & cntMap,
+                                Enum & acc,
                                 const hpx::naming::id_type donePromise,
                                 const unsigned searchManagerId,
                                 const int stackDepth = 0,
                                 const int depth = -1) {
-    auto reg = Registry<Space, Node, Bound>::gReg;
+    auto reg = Registry<Space, Node, Bound, Enum>::gReg;
     std::vector<hpx::future<void> > futures;
 
-    runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, stackDepth, depth);
+    runWithStack(startingDepth, space, generatorStack, stealRequest, acc, futures, stackDepth, depth);
 
     // Atomically updates the (process) local counter
-    if constexpr(isCountNodes) {
-        reg->updateCounts(cntMap);
+    if constexpr(isEnumeration) {
+        reg->updateEnumerator(acc);
     }
 
     std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
@@ -295,7 +285,7 @@ struct StackStealing {
                                int & depth,
                                const Space & space,
                                GeneratorStack<Generator> & generatorStack,
-                               std::vector<std::uint64_t> & countMap,
+                               Enum & acc,
                                std::vector<hpx::future<void> > & futures){
     auto localities = util::findOtherLocalities();
     localities.push_back(hpx::find_here());
@@ -337,10 +327,6 @@ struct StackStealing {
         } else {
           // Get the child's generator
           const auto childGen = Generator(space, child);
-          if constexpr(isCountNodes) {
-              countMap[depth] += childGen.numChildren;
-          }
-
           generatorStack[stackDepth].seen = 0;
           generatorStack[stackDepth].gen = childGen;
         }
@@ -365,17 +351,10 @@ struct StackStealing {
 
     // Master stack
     StackElem<Generator> rootElem(space, root);
-    // rootElem.seen = 0;
-    // rootElem.node = root;
-    // rootElem.gen = Generator(space, rootElem.node);
 
     GeneratorStack<Generator> genStack(maxStackDepth, rootElem);
 
-    std::vector<std::uint64_t> countMap;
-    if constexpr (isCountNodes) {
-        countMap.resize(params.maxDepth + 1);
-        countMap[1] += rootElem.gen.numChildren;
-    }
+    Enum acc;
 
     auto stackDepth = 0;
     auto depth = 1;
@@ -383,7 +362,7 @@ struct StackStealing {
     std::vector<hpx::future<void> > futures;
     if (totalThreads > 1) {
       auto depthRequired = getRequiredSpawnDepth(space, root, params, totalThreads);
-      spawnInitialWork(depthRequired, totalThreads - 1, stackDepth, depth, space, genStack, countMap, futures);
+      spawnInitialWork(depthRequired, totalThreads - 1, stackDepth, depth, space, genStack, acc, futures);
     }
 
     // Register the rest of the work from the main thread with the search manager
@@ -397,11 +376,11 @@ struct StackStealing {
 
     // Launch initialising thread as a new Scheduler
     if (totalThreads == 1) {
-      runTaskFromStack(1, space, genStack, stealRequest, countMap, pid, std::get<1>(searchMgrInfo), stackDepth, depth);
+      runTaskFromStack(1, space, genStack, stealRequest, acc, pid, std::get<1>(searchMgrInfo), stackDepth, depth);
     } else {
       hpx::threads::executors::default_executor exe(hpx::threads::thread_priority_critical,
                                                     hpx::threads::thread_stacksize_huge);
-      hpx::util::function<void(), false> fn = hpx::util::bind(&runTaskFromStack, 1, space, genStack, stealRequest, countMap, pid, std::get<1>(searchMgrInfo), stackDepth, depth);
+      hpx::util::function<void(), false> fn = hpx::util::bind(&runTaskFromStack, 1, space, genStack, stealRequest, acc, pid, std::get<1>(searchMgrInfo), stackDepth, depth);
       auto f = hpx::util::bind(&Workstealing::Scheduler::scheduler, fn);
       exe.add(f);
     }
@@ -417,14 +396,14 @@ struct StackStealing {
       printSkeletonDetails(params);
     }
 
-    hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
+    hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound, Enum> >(
         hpx::find_all_localities(), space, root, params));
 
     Policy::initPolicy();
 
     if constexpr(isOptimisation || isDecision) {
       auto inc = hpx::new_<Incumbent>(hpx::find_here()).get();
-      hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
+      hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound, Enum> >(
           hpx::find_all_localities(), inc));
       initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
     }
@@ -444,15 +423,15 @@ struct StackStealing {
     }
 
     // Return the right thing
-    if constexpr(isCountNodes) {
-      return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
+    if constexpr(isEnumeration) {
+      return combineEnumerators<Space, Node, Bound, Enum>();
     } else if constexpr(isOptimisation || isDecision) {
-      auto reg = Registry<Space, Node, Bound>::gReg;
+      auto reg = Registry<Space, Node, Bound, Enum>::gReg;
 
       typedef typename Incumbent::GetIncumbentAct<Node, Bound, Objcmp, Verbose> getInc;
       return hpx::async<getInc>(reg->globalIncumbent).get();
     } else {
-      static_assert(isCountNodes || isOptimisation || isDecision, "Please provide a supported search type: CountNodes, Optimisation, Decision");
+      static_assert(isEnumeration || isOptimisation || isDecision, "Please provide a supported search type: Enumeration, Optimisation, Decision");
     }
   }
 };

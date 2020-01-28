@@ -18,7 +18,7 @@ namespace API {
   struct name : param<std::integral_constant<bool, true> > {};
 
 // Tree Search Types
-DEF_PRESENT_PARAMETER(CountNodes, CountNodes_)
+DEF_PRESENT_PARAMETER(Enumeration, Enumeration_)
 DEF_PRESENT_PARAMETER(Optimisation, Optimisation_)
 DEF_PRESENT_PARAMETER(Decision, Decision_)
 
@@ -29,6 +29,7 @@ DEF_PRESENT_PARAMETER(DepthLimited, DepthLimited_)
 BOOST_PARAMETER_TEMPLATE_KEYWORD(BoundFunction)
 BOOST_PARAMETER_TEMPLATE_KEYWORD(ObjectiveComparison)
 BOOST_PARAMETER_TEMPLATE_KEYWORD(MaxStackDepth)
+BOOST_PARAMETER_TEMPLATE_KEYWORD(Enumerator)
 
 // Optimisations
 DEF_PRESENT_PARAMETER(PruneLevel, PruneLevel_)

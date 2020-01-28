@@ -9,6 +9,7 @@
 
 #include "API.hpp"
 #include "util/NodeGenerator.hpp"
+#include "util/Enumerator.hpp"
 #include "util/func.hpp"
 
 namespace YewPar { namespace Skeletons {
@@ -20,7 +21,7 @@ struct Seq {
 
   typedef typename API::skeleton_signature::bind<Args...>::type args;
 
-  static constexpr bool isCountNodes = parameter::value_type<args, API::tag::CountNodes_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool isEnumeration = parameter::value_type<args, API::tag::Enumeration_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isBnB = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthBounded = parameter::value_type<args, API::tag::DepthLimited_, std::integral_constant<bool, false> >::type::value;
@@ -29,10 +30,11 @@ struct Seq {
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
+  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Node>>::type Enumerator;
 
   static void printSkeletonDetails() {
     hpx::cout << "Skeleton Type: Seq\n";
-    hpx::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
+    hpx::cout << "Enumeration: " << std::boolalpha << isEnumeration << "\n";
     hpx::cout << "Optimisation: " << std::boolalpha << isBnB << "\n";
     hpx::cout << "Decision: " << std::boolalpha << isDecision << "\n";
     hpx::cout << "DepthBounded: " << std::boolalpha << isDepthBounded << "\n";
@@ -50,11 +52,11 @@ struct Seq {
                      const API::Params<Bound> & params,
                      std::pair<Node, Bound> & incumbent,
                      const unsigned childDepth,
-                     std::vector<uint64_t> & counts) {
+                     Enumerator & acc) {
     Generator newCands = Generator(space, n);
 
-    if constexpr(isCountNodes) {
-        counts[childDepth] += newCands.numChildren;
+    if constexpr(isEnumeration) {
+        acc.accumulate(n);
     }
 
     if constexpr(isDepthBounded) {
@@ -115,7 +117,7 @@ struct Seq {
         }
       }
 
-      auto found = expand(space, c, params, incumbent, childDepth + 1, counts);
+      auto found = expand(space, c, params, incumbent, childDepth + 1, acc);
       if constexpr(isDecision) {
         // Propagate early exit
         if (found) {
@@ -129,28 +131,21 @@ struct Seq {
   static auto search (const Space & space,
                       const Node & root,
                       const API::Params<Bound> params = API::Params<Bound>()) {
-    static_assert(isCountNodes || isBnB || isDecision, "Please provide a supported search type: CountNodes, BnB, Decision");
+    static_assert(isEnumeration || isBnB || isDecision, "Please provide a supported search type: Enumeration, BnB, Decision");
 
     if constexpr (verbose) {
       printSkeletonDetails();
     }
 
-    std::vector<std::uint64_t> counts;
-
-    if constexpr(isCountNodes) {
-      counts.resize(params.maxDepth + 1);
-      counts[0] = 1;
-    }
+    Enumerator acc;
 
     std::pair<Node, Bound> incumbent = std::make_pair(root, params.initialBound);
-    expand(space, root, params, incumbent, 1, counts);
+    expand(space, root, params, incumbent, 1, acc);
 
-    if constexpr(isCountNodes && (isBnB || isDecision)) {
-        return std::make_pair(std::get<0>(incumbent), counts);
-    } else if constexpr(isCountNodes) {
-      return counts;
-    } else {
+    if constexpr(isBnB || isDecision) {
       return std::get<0>(incumbent);
+    } else if constexpr(isEnumeration) {
+      return acc.get();
     }
   }
 };
