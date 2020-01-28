@@ -77,6 +77,10 @@ struct StackStealing {
 
     GeneratorStack<Generator> generatorStack(maxStackDepth, rootElem);
 
+    if constexpr(isEnumeration) {
+        acc.accumulate(initNode);
+    }
+
     // Register with the Policy to allow stealing from this stack
     std::shared_ptr<SharedState> stealReq;
     unsigned threadId;
@@ -355,6 +359,7 @@ struct StackStealing {
     GeneratorStack<Generator> genStack(maxStackDepth, rootElem);
 
     Enum acc;
+    acc.accumulate(root);
 
     auto stackDepth = 0;
     auto depth = 1;

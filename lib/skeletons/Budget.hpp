@@ -73,6 +73,11 @@ struct Budget {
     StackElem<Generator> initElem(space, n);
     GeneratorStack<Generator> genStack(maxStackDepth, initElem);
 
+    // Count the initial element
+    if (isEnumeration) {
+      acc.accumulate(n);
+    }
+
     auto stackDepth = 0;
     while (stackDepth >= 0) {
 

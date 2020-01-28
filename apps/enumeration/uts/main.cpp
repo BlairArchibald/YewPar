@@ -163,7 +163,7 @@ struct NodeGen<TreeType::GEOMETRIC> : YewPar::NodeGenerator<UTSNode, UTSState> {
 
 struct CountNodes : YewPar::Enumerator<UTSNode, std::uint64_t> {
   std::uint64_t count;
-  CountNodes() = default;
+  CountNodes() : count(0) {};
 
   void accumulate(const UTSNode & n) override {
     count++;

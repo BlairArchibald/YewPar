@@ -35,7 +35,7 @@ NodeGen generateChildren(const Empty & space, const std::uint64_t & n) {
 
 struct CountNodes : YewPar::Enumerator<std::uint64_t, std::uint64_t> {
   std::uint64_t count;
-  CountNodes() = default;
+  CountNodes() : count(0) {}
 
   void accumulate(const std::uint64_t & n) override {
     count++;
@@ -67,7 +67,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                     YewPar::Skeletons::API::Enumerator<CountNodes>,
                                     YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), maxDepth - 1, searchParameters);
-  } else if (skeleton == "dist"){
+  } else if (skeleton == "depthbounded"){
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.maxDepth   = maxDepth;
     searchParameters.spawnDepth = spawnDepth;
@@ -76,7 +76,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                     YewPar::Skeletons::API::Enumerator<CountNodes>,
                                     YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), maxDepth - 1, searchParameters);
-  } else if (skeleton == "genstack"){
+  } else if (skeleton == "stacksteal"){
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.maxDepth = maxDepth;
     count = YewPar::Skeletons::StackStealing<NodeGen,

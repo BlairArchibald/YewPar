@@ -204,6 +204,13 @@ struct DepthBounded {
       initIncumbent<Space, Node, Bound, Enum, Objcmp, Verbose>(root, params.initialBound);
     }
 
+    // Ensure the root node is accumulated if required
+    if constexpr(isEnumeration) {
+        Enum acc;
+        acc.accumulate(root);
+        Registry<Space, Node, Bound, Enum>::gReg->updateEnumerator(acc);
+    }
+
     createTask(1, root).get();
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(

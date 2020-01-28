@@ -71,7 +71,7 @@ struct NodeGen : YewPar::NodeGenerator<Node, Empty> {
 
 struct CountSols : YewPar::Enumerator<Node, std::uint64_t> {
   std::uint64_t count;
-  CountSols() = default;
+  CountSols() : count(0) {};
 
   void accumulate(const Node & n) override {
     if (n.cols == n.all) { count++; }

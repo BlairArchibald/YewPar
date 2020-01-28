@@ -240,14 +240,13 @@ struct Ordered {
         hpx::find_all_localities()));
 
     // Return the right thing
-    if constexpr(isEnumeration) {
-      return combineEnumerators<Space, Node, Bound, Enum>();
-    } else if constexpr(isOptimisation || isDecision) {
+    if constexpr(isOptimisation || isDecision) {
       auto reg = Registry<Space, Node, Bound, Enum>::gReg;
       typedef typename Incumbent::GetIncumbentAct<Node, Bound, Objcmp, Verbose> getInc;
       return hpx::async<getInc>(reg->globalIncumbent).get();
     } else {
-      static_assert(isEnumeration || isOptimisation || isDecision, "Please provide a supported search type: Enumeration, Optimisation, Decision");
+      static_assert(isEnumeration, "Please provide a supported search type: Enumeration, Optimisation, Decision");
+      static_assert(isOptimisation || isDecision, "Please provide a supported search type: Enumeration, Optimisation, Decision");
     }
   }
 
