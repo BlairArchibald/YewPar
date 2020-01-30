@@ -35,13 +35,12 @@ struct MetricStore {
   // Counting pruning
   MetricsVecPtr prunes;
 	
-	static const unsigned DEF_SIZE = 50;
-	static const unsigned TIME_DEPTHS = 55;
+	static const unsigned DEF_SIZE = 100;
 
   MetricStore() = default;
 
   void init() {
-    taskTimes = std::make_unique<TimesVec>(TIME_DEPTHS);
+    taskTimes = std::make_unique<TimesVec>(DEF_SIZE);
     prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
     backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
 		nodesVisited = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
@@ -49,21 +48,20 @@ struct MetricStore {
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
 		if (time >= 1) {
-      const auto depthIdx = getDepthIndex(depth, TIME_DEPTHS);
       (*taskTimes)[depthIdx].push_front(time);
    	}
   }
 
-  void updatePrunes(const unsigned depth, std::vector<std::uint64_t> & p) {
-    updateMetric(*prunes, p, depth);
+  void updatePrunes(MetricsVec & p) {
+    updateMetric(*prunes, p);
   }
 
-  void updateNodesVisited(const unsigned depth, std::vector<std::uint64_t> & nodes) {
-    updateMetric(*nodesVisited, nodes, depth);
+  void updateNodesVisited(MetricsVec & n) {
+    updateMetric(*nodesVisited, n, depth);
   }
 
-  void updateBacktracks(const unsigned depth, std::vector<std::uint64_t> & b) {
-    updateMetric(*backtracks, b, depth);
+  void updateBacktracks(MetricsVec & b) {
+    updateMetric(*backtracks, b);
   }
 
   MetricsVec getNodeCount() const {
@@ -92,7 +90,7 @@ struct MetricStore {
 
 private:
 
-  inline void updateMetric(MetricsVecAtomic & ms, const MetricsVec & m) {
+  inline void updateMetric( & ms, const std::vector<std::uint64_t> & m) {
     for (int i = 0; i < m.size(); i++) {
       ms[i] += m[i];
     }
