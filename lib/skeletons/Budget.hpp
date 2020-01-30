@@ -201,10 +201,10 @@ struct Budget {
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
      	const std::uint64_t time = (const std::uint64_t) diff.count();
       hpx::apply(hpx::util::bind([=]() {
-        store->updatePrunes(childDepth, std::move(prunes));
+        store->updatePrunes(childDepth, prunes);
         store->updateTimes(childDepth, time);
-        store->updateNodesVisited(childDepth, std::move(nodeCount));
-        store->updateBacktracks(childDepth, std::move(backtracks));
+        store->updateNodesVisited(childDepth, nodeCount);
+        store->updateBacktracks(childDepth, backtracks);
       }));
     }
 

@@ -54,15 +54,15 @@ struct MetricStore {
    	}
   }
 
-  void updatePrunes(const unsigned depth, MetricsVec && p) {
+  void updatePrunes(const unsigned depth, MetricsVec & p) {
     updateMetric(*prunes, p, depth);
   }
 
-  void updateNodesVisited(const unsigned depth, MetricsVec && nodes) {
+  void updateNodesVisited(const unsigned depth, MetricsVec & nodes) {
     updateMetric(*nodesVisited, nodes, depth);
   }
 
-  void updateBacktracks(const unsigned depth, MetricsVec && b) {
+  void updateBacktracks(const unsigned depth, MetricsVec & b) {
     updateMetric(*backtracks, b, depth);
   }
 
