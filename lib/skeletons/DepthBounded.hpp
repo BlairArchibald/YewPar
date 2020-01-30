@@ -86,8 +86,8 @@ struct DepthBounded {
                                const API::Params<Bound> & params,
                                std::vector<uint64_t> & counts,
                                std::vector<hpx::future<void> > & childFutures,
-                               std::uint64_t & nodeCount,
-                               std::uint64_t & backtracks,
+                               std::vector<std::uint64_t> & nodeCount,
+                               std::vector<std::uint64_t> & backtracks,
                                const unsigned childDepth) {
     Generator newCands = Generator(space, n);
     auto reg = Registry<Space, Node, Bound>::gReg;
@@ -106,13 +106,13 @@ struct DepthBounded {
       auto c = newCands.next();
 
       if constexpr(metrics) {
-        ++nodeCount;
+        nodeCount[childDepth]++;
       }
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Break) {
         if constexpr(metrics) {
-          ++backtracks;
+          backtracks[childDepth]++;
         }
         break; 
       }
@@ -165,7 +165,7 @@ struct DepthBounded {
       }
       else if (pn == ProcessNodeRet::Break) {
         if constexpr(metrics) {
-          backtracks[childDepth]++; 
+          backtracks[childDepth]++;
         }
         break;
       }
