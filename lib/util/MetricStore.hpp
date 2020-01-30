@@ -92,7 +92,7 @@ struct MetricStore {
 
 private:
 
-  inline void updateMetric(MetricsVecAtomic & ms, const MetricsVec & m) {
+  inline void updateMetric(std::vector<std::atomic<std::uint64_t>> & ms, const std::vector<std::uint64_t> & m) {
     for (int i = 0; i < m.size(); i++) {
       ms[i] += m[i];
     }

@@ -215,7 +215,7 @@ struct StackStealing {
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child);
         if constexpr(metrics) {
-					++nodeCount;
+					nodeCount[depth]++;
 				}
         
         if (pn == ProcessNodeRet::Exit) { return; }
