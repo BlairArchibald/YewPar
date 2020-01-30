@@ -52,15 +52,15 @@ struct MetricStore {
    	}
   }
 
-  void updatePrunes(MetricsVec & p) {
+  void updatePrunes(MetricsVec p) {
     updateMetric(*prunes, p);
   }
 
-  void updateNodesVisited(MetricsVec & n) {
+  void updateNodesVisited(MetricsVec n) {
     updateMetric(*nodesVisited, n);
   }
 
-  void updateBacktracks(MetricsVec & b) {
+  void updateBacktracks(MetricsVec b) {
     updateMetric(*backtracks, b);
   }
 
