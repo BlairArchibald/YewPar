@@ -301,7 +301,7 @@ struct StackStealing {
       hpx::apply(hpx::util::bind([=]() {
         store->updatePrunes(childDepth, std::move(prunes));
         store->updateTimes(childDepth, time);
-        store->updateNodesVisited(childDepth, std::move(nodes));
+        store->updateNodesVisited(childDepth, std::move(nodeCount));
         store->updateBacktracks(childDepth, std::move(backtracks));
       }));
     }
