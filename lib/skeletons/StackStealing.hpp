@@ -298,11 +298,12 @@ struct StackStealing {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
      	const std::uint64_t time = (const std::uint64_t) diff.count();
+      const d = depth >= 0 ? depth : 0;
       hpx::apply(hpx::util::bind([=]() {
-        store->updatePrunes(childDepth, std::move(prunes));
-        store->updateTimes(childDepth, time);
-        store->updateNodesVisited(childDepth, std::move(nodeCount));
-        store->updateBacktracks(childDepth, std::move(backtracks));
+        store->updatePrunes(d, std::move(prunes));
+        store->updateTimes(d, time);
+        store->updateNodesVisited(d, std::move(nodes));
+        store->updateBacktracks(d, std::move(backtracks));
       }));
     }
 
