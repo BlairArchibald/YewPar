@@ -187,7 +187,7 @@ struct DepthBounded {
     }
 
     std::vector<hpx::future<void> > childFutures;
-    std::vector<std::uint64_t> nodeCount(MetricStore::DEF_SIZE), prunes(MetricStore::DEF_SIZE), backtracks(MetricStore::DEF_SIZE);
+    MetricStore::MetricsVec nodeCount(MetricStore::DEF_SIZE), prunes(MetricStore::DEF_SIZE), backtracks(MetricStore::DEF_SIZE);
 
     std::chrono::time_point<std::chrono::steady_clock> t1;
     if constexpr(metrics) {

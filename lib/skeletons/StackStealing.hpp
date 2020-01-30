@@ -300,8 +300,8 @@ struct StackStealing {
      	const std::uint64_t time = (const std::uint64_t) diff.count();
       hpx::apply(hpx::util::bind([=]() {
         store->updatePrunes(prunes);
-        store->updateTimes(depth >= 0 : depth : 0, time);
-        store->updateNodesVisited(nodes);
+        store->updateTimes(depth >= 0 ? depth : 0, time);
+        store->updateNodesVisited(nodeCount);
         store->updateBacktracks(backtracks);
       }));
     }
