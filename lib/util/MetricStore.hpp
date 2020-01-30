@@ -48,7 +48,7 @@ struct MetricStore {
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
 		if (time >= 1) {
-      (*taskTimes)[depthIdx].push_front(time);
+      (*taskTimes)[depth].push_front(time);
    	}
   }
 
@@ -57,7 +57,7 @@ struct MetricStore {
   }
 
   void updateNodesVisited(MetricsVec & n) {
-    updateMetric(*nodesVisited, n, depth);
+    updateMetric(*nodesVisited, n);
   }
 
   void updateBacktracks(MetricsVec & b) {
