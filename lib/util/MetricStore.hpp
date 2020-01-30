@@ -54,15 +54,15 @@ struct MetricStore {
    	}
   }
 
-  void updatePrunes(const unsigned depth, MetricsVec & p) {
+  void updatePrunes(const unsigned depth, std::vector<std::uint64_t> & p) {
     updateMetric(*prunes, p, depth);
   }
 
-  void updateNodesVisited(const unsigned depth, MetricsVec & nodes) {
+  void updateNodesVisited(const unsigned depth, std::vector<std::uint64_t> & nodes) {
     updateMetric(*nodesVisited, nodes, depth);
   }
 
-  void updateBacktracks(const unsigned depth, MetricsVec & b) {
+  void updateBacktracks(const unsigned depth, std::vector<std::uint64_t> & b) {
     updateMetric(*backtracks, b, depth);
   }
 
@@ -92,14 +92,10 @@ struct MetricStore {
 
 private:
 
-  inline void updateMetric(std::vector<std::atomic<std::uint64_t>> & ms, const std::vector<std::uint64_t> & m) {
+  inline void updateMetric(MetricsVecAtomic & ms, const MetricsVec & m) {
     for (int i = 0; i < m.size(); i++) {
       ms[i] += m[i];
     }
-  }
-
-  inline unsigned getDepthIndex(const unsigned depth, const unsigned size) const {
-    return (depth >= size) ? (size-1) : depth;
   }
 
   inline MetricsVec transformVec(const MetricsVecAtomic & vec) const {
