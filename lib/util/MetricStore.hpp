@@ -54,15 +54,15 @@ struct MetricStore {
    	}
   }
 
-  void updatePrunes(const unsigned depth, std::uint64_t p) {
+  void updatePrunes(const unsigned depth, MetricsVec && p) {
     updateMetric(*prunes, p, depth);
   }
 
-  void updateNodesVisited(const unsigned depth, std::uint64_t nodes) {
+  void updateNodesVisited(const unsigned depth, MetricsVec && nodes) {
     updateMetric(*nodesVisited, nodes, depth);
   }
 
-  void updateBacktracks(const unsigned depth, std::uint64_t b) {
+  void updateBacktracks(const unsigned depth, MetricsVec && b) {
     updateMetric(*backtracks, b, depth);
   }
 
@@ -92,16 +92,17 @@ struct MetricStore {
 
 private:
 
-  inline void updateMetric(std::vector<std::atomic<std::uint64_t> > & ms, const std::uint64_t m, const unsigned d) {
-    const auto depthIdx = getDepthIndex(d, ms.size());
-    ms[depthIdx] += m;
+  inline void updateMetric(MetricsVecAtomic & ms, const MetricsVec && m) {
+    for (int i = 0; i < m.size(); i++) {
+      ms[i] += m[i];
+    }
   }
 
   inline unsigned getDepthIndex(const unsigned depth, const unsigned size) const {
     return (depth >= size) ? (size-1) : depth;
   }
 
-  inline MetricsVec transformVec(const std::vector<std::atomic<std::uint64_t> > & vec) const {
+  inline MetricsVec transformVec(const MetricsVecAtomic & vec) const {
     MetricsVec res;
     std::transform(vec.begin(), vec.end(), std::back_inserter(res),
     [](const auto & c) { return c.load(); });

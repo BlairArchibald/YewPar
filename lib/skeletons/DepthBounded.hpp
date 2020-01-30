@@ -127,9 +127,9 @@ struct DepthBounded {
                              const Node & n,
                              const API::Params<Bound> & params,
                              std::vector<uint64_t> & counts,
-                             std::uint64_t & nodeCount,
-                             std::uint64_t & prunes,
-                             std::uint64_t & backtracks,
+                             std::vector<std::uint64_t> & nodeCount,
+                             std::vector<std::uint64_t> & prunes,
+                             std::vector<std::uint64_t> & backtracks,
                              const unsigned childDepth) {
     auto reg = Registry<Space, Node, Bound>::gReg;
     Generator newCands = Generator(space, n);
@@ -153,19 +153,19 @@ struct DepthBounded {
       auto c = newCands.next();
 
       if constexpr(metrics) {
-        ++nodeCount;
+        nodeCount[childDepth]++;
       }
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Prune) {
         if constexpr(metrics) {
-          ++prunes;
+          prunes[childDepth]++;
         }
         continue;
       }
       else if (pn == ProcessNodeRet::Break) {
         if constexpr(metrics) {
-          ++backtracks; 
+          backtracks[childDepth]++; 
         }
         break;
       }
@@ -187,7 +187,7 @@ struct DepthBounded {
     }
 
     std::vector<hpx::future<void> > childFutures;
-    std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
+    std::vector<std::uint64_t> nodeCount(MetricStore::DEF_SIZE), prunes(MetricStore::DEF_SIZE), backtracks(MetricStore::DEF_SIZE);
 
     std::chrono::time_point<std::chrono::steady_clock> t1;
     if constexpr(metrics) {
@@ -205,10 +205,10 @@ struct DepthBounded {
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
      	const std::uint64_t time = (const std::uint64_t) diff.count();
       hpx::apply(hpx::util::bind([=]() {
-        store->updatePrunes(childDepth, prunes);
+        store->updatePrunes(childDepth, std::move(prunes));
         store->updateTimes(childDepth, time);
-        store->updateNodesVisited(childDepth, time);
-        store->updateBacktracks(childDepth, backtracks);
+        store->updateNodesVisited(childDepth, std::move(nodes));
+        store->updateBacktracks(childDepth, std::move(backtracks));
       }));
     }
 

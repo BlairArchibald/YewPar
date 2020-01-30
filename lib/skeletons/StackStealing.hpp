@@ -134,9 +134,9 @@ struct StackStealing {
                            std::shared_ptr<SharedState> stealRequest,
                            std::vector<std::uint64_t> & cntMap,
                            std::vector<hpx::future<void> > & futures,
-                           std::uint64_t & nodeCount,
-                           std::uint64_t & prunes,
-                           std::uint64_t & backtracks,
+                           std::vector<std::uint64_t> & nodeCount,
+                           std::vector<std::uint64_t> & prunes,
+                           std::vector<std::uint64_t> & backtracks,
                            int stackDepth = 0,
                            int depth = -1) {
     auto reg = Registry<Space, Node, Bound>::gReg;
@@ -221,14 +221,14 @@ struct StackStealing {
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
           if constexpr(metrics) {
-						++prunes;
+						prunes[depth]++;
 					}
           continue;
         }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
           if constexpr(metrics) {
-				  	++backtracks;
+				  	backtracks[depth]++;
 					}
           depth--;
           continue;
@@ -250,7 +250,7 @@ struct StackStealing {
             if (depth == reg->params.maxDepth) {
               stackDepth--;
               if constexpr(metrics) {
-								++backtracks;
+								backtracks[depth]++;
 							}
               depth--;
               continue;
@@ -263,7 +263,7 @@ struct StackStealing {
         stackDepth--;
         depth--;
         if constexpr(metrics) {
-					++backtracks;
+					backtracks[depth]++;
 				}
       }
     }
@@ -285,7 +285,7 @@ struct StackStealing {
 
     std::vector<hpx::future<void> > futures;
 
-    std::uint64_t nodeCount = 0, prunes = 0, backtracks = 0;
+    std::vector<std::uint64_t> nodeCount(MetricStore::DEF_SIZE), prunes(MetricStore::DEF_SIZE), backtracks(MetricStore::DEF_SIZE);
     std::chrono::time_point<std::chrono::steady_clock> t1;
 
 		if constexpr(metrics) {
@@ -298,12 +298,11 @@ struct StackStealing {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
      	const std::uint64_t time = (const std::uint64_t) diff.count();
-      const auto childDepth = depth > 0 ? depth : 0;
       hpx::apply(hpx::util::bind([=]() {
-        store->updateNodesVisited(childDepth, nodeCount);
-        store->updatePrunes(childDepth, prunes);
+        store->updatePrunes(childDepth, std::move(prunes));
         store->updateTimes(childDepth, time);
-        store->updateBacktracks(childDepth, backtracks);
+        store->updateNodesVisited(childDepth, std::move(nodes));
+        store->updateBacktracks(childDepth, std::move(backtracks));
       }));
     }
 
