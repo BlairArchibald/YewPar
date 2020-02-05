@@ -1,21 +1,21 @@
 #!/bin/bash --login
 
-#PBS -N max_clique_2_loc
-#PBS -l select=2:ncpus=36
+# PBS job options (name, compute nodes, job time)
+#PBS -N YewPar_Scaling_NS
+# Select 2 full nodes
+#PBS -l select=2:ncpus=32
+# Parallel jobs should always specify exclusive node access
 #PBS -l place=scatter:excl
-#PBS -l walltime=03:00:00
+#PBS -l walltime=1:0:0
 
+# Replace [budget code] below with your project code (e.g. t01)
 #PBS -A sc038
 
+# Change to the directory that the job was submitted from
 cd $PBS_O_WORKDIR
 
+# Load any required modules
 source YewPar_env.sh
 
-
-for i in {1..5}; do
-  mpiexec_mpt  ./build/install/bin/maxclique-16 -f test/p_hat1500-1.clq --skel depthbounded -d 2 --scaling >> max_clique_scaling_results_depthbounded.txt
-  mpiexec_mpt  ./build/install/bin/maxclique-16 -f test/p_hat1500-1.clq --skel budget -b 10000000 --scaling >> max_clique_scaling_results_budget.txt
-  mpiexec_mpt  ./build/install/bin/maxclique-16 -f test/p_hat1500-1.clq --skel stacksteal --chunked --scaling >> max_clique_scaling_results_stacksteal.txt
-done
-
-exit 0
+# Launch the parallel job
+mpiexec_mpt -ppn 1 -n 2 ./build/install/bin/NS-hivert -g 52 --skel budget -b 10000000 --hpx:threads 64 > ns_cirrus_2.txt 2> my_stderr.txt
