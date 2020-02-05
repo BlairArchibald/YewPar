@@ -52,16 +52,16 @@ struct MetricStore {
    	}
   }
 
-  void updatePrunes(MetricsVec p) {
-    updateMetric(*prunes, p);
+  void updatePrunes(const unsigned depth, std::uint64_t p) {
+    updateMetric(*prunes, p, depth);
   }
 
-  void updateNodesVisited(MetricsVec n) {
-    updateMetric(*nodesVisited, n);
+  void updateNodesVisited(const unsigned depth, std::uint64_t n) {
+    updateMetric(*nodesVisited, n, depth);
   }
 
-  void updateBacktracks(MetricsVec b) {
-    updateMetric(*backtracks, b);
+  void updateBacktracks(const unsigned depth, std::uint64_t n) {
+    updateMetric(*backtracks, b, depth);
   }
 
   MetricsVec getNodeCount() const {
@@ -74,6 +74,11 @@ struct MetricStore {
 
   MetricsVec getPrunes() const {
     return transformVec(*prunes);
+  }
+
+  std::uint64_t getTotalTasks const () {
+    return std::accumulate(taskTimes->begin(), taskTimes->end(), 0,
+      [&](const auto & vec) { return vec.size()});
   }
 
 	void printTimes() {
@@ -90,10 +95,11 @@ struct MetricStore {
 
 private:
 
-  inline void updateMetric(MetricsVecAtomic & ms, const std::vector<std::uint64_t> & m) {
-    for (int i = 0; i < m.size(); i++) {
-      ms[i] += m[i];
+  inline void updateMetric(MetricsVecAtomic & ms, const std::uint64_t & m, const unsigned depth) {
+    if (depth >= m.size()) {
+      m.resize(depth+1);
     }
+    ms[depth] += m;
   }
 
   inline MetricsVec transformVec(const MetricsVecAtomic & vec) const {
@@ -137,6 +143,12 @@ void printTimes() {
 struct PrintTimesAct : hpx::actions::make_direct_action<
 	decltype(&printTimes), &printTimes, PrintTimesAct>::type {};
 
+std::uint64_t getTotalTasks() {
+  return MetricStore::getTotalTasks();
+}
+struct GetTotalTasksAct : hpx::actions::make_direct_action<
+  decltype(&getTotalTasks), &getTotalTasks, GetTotalTasks>::type {};
+
 }
 
 
@@ -166,5 +178,10 @@ template <>
 struct action_stacksize<YewPar::PrintTimesAct> {
   enum { value = threads::thread_stacksize_huge };
 };
+
+template <>
+struct action_stacksize<YewPar::GetTotalTasksAct> {
+  enum { value = threads::thread_stacksize_huge };
+}
 
 }}

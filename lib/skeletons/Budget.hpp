@@ -66,9 +66,9 @@ struct Budget {
                      std::vector<uint64_t> & counts,
                      std::vector<hpx::future<void> > & childFutures,
                      const unsigned childDepth,
-                     std::vector<std::uint64_t> & nodeCount,
-                     std::vector<std::uint64_t> & prunes,
-                     std::vector<std::uint64_t> & totalBacktracks) {
+                     std::uint64_t & nodeCount,
+                     std::uint64_t & prunes,
+                     std::uint64_t & backtracks) {
     auto reg = Registry<Space, Node, Bound>::gReg;
 
     auto depth = childDepth;
@@ -103,6 +103,7 @@ struct Budget {
             }
           }
         }
+        totalBacktracks += backtracks;
         backtracks = 0;
       }
 
@@ -116,13 +117,13 @@ struct Budget {
         auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, child);
         
         if constexpr(metrics) {
-          nodeCount[depth]++;
+          nodeCount++;
         }
 
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
           if constexpr(metrics) {
-            prunes[depth]++;
+            prunes++;
           }
           continue;
         }
@@ -130,9 +131,6 @@ struct Budget {
           stackDepth--;
           depth--;
           backtracks++;
-          if constexpr(metrics) {
-            totalBacktracks[depth]++;
-          }
           continue;
         }
 
@@ -151,9 +149,6 @@ struct Budget {
           if (depth == reg->params.maxDepth) {
             stackDepth--;
             depth--;
-            if constexpr(metrics) {
-              totalBacktracks[depth]++;
-            }
             backtracks++;
             continue;
           }
@@ -164,11 +159,12 @@ struct Budget {
       } else {
         stackDepth--;
         depth--;
-        if constexpr(metrics) {
-          totalBacktracks[depth]++;
-        }
         backtracks++;
       }
+    }
+
+    if constexpr(metrics) {
+      totalBacktracks += backtracks;
     }
 
   }
@@ -186,7 +182,7 @@ struct Budget {
     }
 
     std::vector<hpx::future<void> > childFutures;
-    std::vector<std::uint64_t> nodeCount(MetricStore::DEF_SIZE), prunes(MetricStore::DEF_SIZE), backtracks(MetricStore::DEF_SIZE);
+    std::uint64_t nodeCount, prunes, backtracks;
 
     std::chrono::time_point<std::chrono::steady_clock> t1;
     
@@ -201,10 +197,10 @@ struct Budget {
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
      	const std::uint64_t time = (const std::uint64_t) diff.count();
       hpx::apply(hpx::util::bind([=]() {
-        store->updatePrunes(prunes);
+        store->updatePrunes(childDepth, prunes);
         store->updateTimes(childDepth, time);
-        store->updateNodesVisited(nodeCount);
-        store->updateBacktracks(backtracks);
+        store->updateNodesVisited(childDepth, nodeCount);
+        store->updateBacktracks(childDepth, backtracks);
       }));
     }
 
@@ -282,6 +278,7 @@ struct Budget {
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
+      printTotalTask();
       printPrunes();
       printBacktracks();
       printNodeCounts();

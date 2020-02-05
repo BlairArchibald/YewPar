@@ -86,8 +86,8 @@ struct DepthBounded {
                                const API::Params<Bound> & params,
                                std::vector<uint64_t> & counts,
                                std::vector<hpx::future<void> > & childFutures,
-                               std::vector<std::uint64_t> & nodeCount,
-                               std::vector<std::uint64_t> & backtracks,
+                               std::uint64_t & nodeCount,
+                               std::uint64_t & backtracks,
                                const unsigned childDepth) {
     Generator newCands = Generator(space, n);
     auto reg = Registry<Space, Node, Bound>::gReg;
@@ -106,13 +106,13 @@ struct DepthBounded {
       auto c = newCands.next();
 
       if constexpr(metrics) {
-        nodeCount[childDepth]++;
+        nodeCount++;
       }
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Break) {
         if constexpr(metrics) {
-          backtracks[childDepth]++;
+          backtracks++;
         }
         break; 
       }
@@ -127,9 +127,9 @@ struct DepthBounded {
                              const Node & n,
                              const API::Params<Bound> & params,
                              std::vector<uint64_t> & counts,
-                             std::vector<std::uint64_t> & nodeCount,
-                             std::vector<std::uint64_t> & prunes,
-                             std::vector<std::uint64_t> & backtracks,
+                             std::uint64_t & nodeCount,
+                             std::uint64_t & prunes,
+                             std::uint64_t & backtracks,
                              const unsigned childDepth) {
     auto reg = Registry<Space, Node, Bound>::gReg;
     Generator newCands = Generator(space, n);
@@ -153,19 +153,19 @@ struct DepthBounded {
       auto c = newCands.next();
 
       if constexpr(metrics) {
-        nodeCount[childDepth]++;
+        nodeCount++;
       }
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Prune) {
         if constexpr(metrics) {
-          prunes[childDepth]++;
+          prunes++;
         }
         continue;
       }
       else if (pn == ProcessNodeRet::Break) {
         if constexpr(metrics) {
-          backtracks[childDepth]++;
+          backtracks++;
         }
         break;
       }
@@ -187,7 +187,7 @@ struct DepthBounded {
     }
 
     std::vector<hpx::future<void> > childFutures;
-    MetricStore::MetricsVec nodeCount(MetricStore::DEF_SIZE), prunes(MetricStore::DEF_SIZE), backtracks(MetricStore::DEF_SIZE);
+    std::uint64_t nodeCount, prunes, backtracks;
 
     std::chrono::time_point<std::chrono::steady_clock> t1;
     if constexpr(metrics) {
@@ -205,10 +205,10 @@ struct DepthBounded {
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
      	const std::uint64_t time = (const std::uint64_t) diff.count();
       hpx::apply(hpx::util::bind([=]() {
-        store->updatePrunes(prunes);
+        store->updatePrunes(childDepth, prunes);
         store->updateTimes(childDepth, time);
-        store->updateNodesVisited(nodeCount);
-        store->updateBacktracks(backtracks);
+        store->updateNodesVisited(childDepth, nodeCount);
+        store->updateBacktracks(childDepth, backtracks);
       }));
     }
 
@@ -287,6 +287,7 @@ struct DepthBounded {
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
+      printTotalTask();
       printPrunes();
       printBacktracks();
       printNodeCounts();

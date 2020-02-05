@@ -63,6 +63,11 @@ static auto printBacktracks() {
   printMetric<GetBacktracksAct>("Backtracks");
 }
 
+static auto printTotalTasks() {
+  auto counts = hpx::lcos::broadcast<GetTotalTasksAct>(hpx::find_all_localities()).get();
+  hpx::cout << "Total number of tasks: " << std::accumulate(counts.begin(), counts.end(), 0) << hpx::endl;
+}
+
 template<typename Space, typename Node, typename Bound>
 static std::vector<std::uint64_t> totalNodeCounts(const unsigned maxDepth) {
   auto cntList = hpx::lcos::broadcast<GetCountsAct<Space, Node, Bound> >(
