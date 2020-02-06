@@ -49,22 +49,32 @@ struct MetricStore {
 		tasks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
   }
 
-  void updateTimes(const unsigned depth, const std::uint64_t time) {
+  /* For conveniance */
+  void updateMetrics(const unsignned depth, const std::uint64_t t,
+                     const std::uint64_t s, const std::uint64_t p,
+                     const std::uint64_t n, const std::uint64_t b) {
+    updateTimes(depth, t);
+    updatePrunes(depth, p);
+    updateNodesVisited(depth, n);
+    updateBacktracks(depth, b);
+  }
+
+  void updateTimes(const unsigned & depth, const std::uint64_t & time) {
 		if (time >= 1) {
       (*taskTimes)[depth].push_front(time);
 			(*tasks)[depth]++;
    	}
   }
 
-  void updatePrunes(const unsigned depth, std::uint64_t p) {
+  void updatePrunes(const unsigned & depth, const std::uint64_t & p) {
     updateMetric(*prunes, p, depth);
   }
 
-  void updateNodesVisited(const unsigned depth, std::uint64_t n) {
+  void updateNodesVisited(const unsigned & depth, const std::uint64_t & n) {
     updateMetric(*nodesVisited, n, depth);
   }
 
-  void updateBacktracks(const unsigned depth, std::uint64_t b) {
+  void updateBacktracks(const unsigned & depth, const std::uint64_t & b) {
     updateMetric(*backtracks, b, depth);
   }
 
