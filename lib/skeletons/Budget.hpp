@@ -68,7 +68,7 @@ struct Budget {
                      const unsigned childDepth,
                      std::uint64_t & nodeCount,
                      std::uint64_t & prunes,
-                     std::uint64_t & backtracks) {
+                     std::uint64_t & totalBacktracks) {
     auto reg = Registry<Space, Node, Bound>::gReg;
 
     auto depth = childDepth;
@@ -278,7 +278,7 @@ struct Budget {
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
-      printTotalTask();
+      printTotalTasks();
       printPrunes();
       printBacktracks();
       printNodeCounts();

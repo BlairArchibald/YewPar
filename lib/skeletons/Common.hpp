@@ -64,8 +64,7 @@ static auto printBacktracks() {
 }
 
 static auto printTotalTasks() {
-  auto counts = hpx::lcos::broadcast<GetTotalTasksAct>(hpx::find_all_localities()).get();
-  hpx::cout << "Total number of tasks: " << std::accumulate(counts.begin(), counts.end(), 0) << hpx::endl;
+	printMetric<GetTotalTasksAct>("Total tasks"); 
 }
 
 template<typename Space, typename Node, typename Bound>

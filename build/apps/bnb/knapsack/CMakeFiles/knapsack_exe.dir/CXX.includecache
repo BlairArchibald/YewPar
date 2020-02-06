@@ -179,6 +179,8 @@ algorithm
 -
 memory
 -
+numeric
+-
 forward_list
 -
 vector

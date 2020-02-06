@@ -505,7 +505,7 @@ struct StackStealing {
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
-      printTotalTask();
+      printTotalTasks();
       printPrunes();
       printBacktracks();
       printNodeCounts();

@@ -26,7 +26,7 @@ struct MetricStore {
 
   // Regularity Metrics
   TimesVecPtr taskTimes;
-	MetricsVecPtr tasks;	
+	std::uint64_t totalTasks;
 
   // For node throughput
   MetricsVecPtr nodesVisited;
@@ -46,13 +46,13 @@ struct MetricStore {
     prunes = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
     backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
 		nodesVisited = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
-		tasks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
+		totalTasks = 0;
   }
 
   void updateTimes(const unsigned depth, const std::uint64_t time) {
 		if (time >= 1) {
       (*taskTimes)[depth].push_front(time);
-			(*tasks)[depth]++;
+			totalTasks++;
    	}
   }
 
@@ -80,8 +80,8 @@ struct MetricStore {
     return transformVec(*prunes);
   }
 
-  MetricsVec getTotalTasks () const {
-		return transformVec(*tasks);
+  std::uint64_t getTotalTasks () const {
+		return totalTasks();
   }
 
 	void printTimes() {
@@ -99,8 +99,10 @@ struct MetricStore {
 private:
 
   inline void updateMetric(MetricsVecAtomic & ms, const std::uint64_t & m, const unsigned depth) {
-		auto depthIdx = depth < ms.size() ? depth : ms.size()-1;
-    ms[depthIdx] += m;
+    if (depth >= ms.size()) {
+      ms.resize(depth+1);
+    }
+    ms[depth] += m;
   }
 
   inline MetricsVec transformVec(const MetricsVecAtomic & vec) const {
@@ -144,7 +146,7 @@ void printTimes() {
 struct PrintTimesAct : hpx::actions::make_direct_action<
 	decltype(&printTimes), &printTimes, PrintTimesAct>::type {};
 
-std::vector<std::uint64_t> getTotalTasks() {
+std::uint64_t getTotalTasks() {
   return MetricStore::store->getTotalTasks();
 }
 struct GetTotalTasksAct : hpx::actions::make_direct_action<
