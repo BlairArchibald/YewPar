@@ -1,0 +1,169 @@
+Script started on 2020-02-07 10:59:06+0000
+2250079m@gpgnode-03:~/sandbox/YewParInstall/YewPar/lib/util$ ssh gpgnode-04for i in {1..5}; do echo "Metric TIme"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --metrics --sskel budget -b 10000000; echo "Normal Time"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --skel budget -b 10000000; done[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cssh gpgnode-04[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cfor i in {1..5}; do echo "Metric TIme"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --metrics --sskel budget -b 10000000; echo "Normal Time"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --skel budget -b 10000000; done[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cssh gpgnode-04[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kclear
+[3J[H[2J2250079m@gpgnode-03:~/sandbox/YewParInstall/YewPar/lib/util$ clearssh gpgnode-04for i in {1..5}; do echo "Metric TIme"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --metrics --sskel budget -b 10000000; echo "Normal Time"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --skel budget -b 10000000; done[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[17Pmpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --metrics --skel budget -b 10000000
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C > out[K[K[Kns[K[Koutput.txt[K[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cfor i in {1..5}; do echo "Metric TIme"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --metrics --sskel budget -b 10000000; echo "Normal Time"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --skel budget -b 10000000; done[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cssh gpgnode-04[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[9Pclear[Kcd ../../
+2250079m@gpgnode-03:~/sandbox/YewParInstall/YewPar$ cd ../../[4Plearssh gpgnode-04for i in {1..5}; do echo "Metric TIme"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --metrics --skel budgeet -b 10000000; echo "Normal Time"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --skel budget -b 10000000; done[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[14Pmpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --metrics --skel budget -b 10000000 > output.tx
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ct[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cfor i in {1..5}; do echo "Metric TIme"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --metrics --skel budgeet -b 10000000; echo "Normal Time"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --skel budget -b 10000000; done[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[23Pmpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --metrics --skel budget -b 10000000 > 
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls[K[K[Kls
+apps   cmake_build.sh  default.nix  LICENSE		max_metrics_clq.txt  README.md	sip_budget_metrics.txt	YewPar_env.sh
+build  CMakeLists.txt  lib	    max_clq_merics.txt	ns_metrics_45.txt    scripts	test
+2250079m@gpgnode-03:~/sandbox/YewParInstall/YewPar$ rm max_*[Kmetrics_clq.txt 
+2250079m@gpgnode-03:~/sandbox/YewParInstall/YewPar$ rm max_clq_merics.txt 
+2250079m@gpgnode-03:~/sandbox/YewParInstall/YewPar$ rm sip_budget_metrics.txt 
+2250079m@gpgnode-03:~/sandbox/YewParInstall/YewPar$ rm max[K[K[K[K[K[Kls
+apps  build  cmake_build.sh  CMakeLists.txt  default.nix  lib  LICENSE	ns_metrics_45.txt  README.md  scripts  test  YewPar_env.sh
+2250079m@gpgnode-03:~/sandbox/YewParInstall/YewPar$ rm ns_metrics_45.txt 
+2250079m@gpgnode-03:~/sandbox/YewParInstall/YewPar$ rm ns_metrics_45.txt ls[Krm sip_budget_metrics.txt [4Pmax_clq_me[C[C[C[C[C[C[C[C[C[1@metrics_clq[C[C[C[C[Cls[Kcd ../../[4Plearssh gpgnode-04for i in {1..5}; do echo "Metric TIme"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --metrics --skel budgeet -b 10000000; echo "Normal Time"; mpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --skel budget -b 10000000; done[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[23Pmpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --metrics --skel budget -b 10000000 > 
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls[Kcd sandbox/YewParInstall/YewPar/ls[Kmpiexec -n 1 ./build/install/bin/NS-hivert -g 47 --hpx:threads 16 --metrics --skel budget -b 10000000 > ns_metrics+46/[K.txt[C[C[1P[1@6[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P46.txt_46.txt[C[C[C[C[C[C
+./build/install/bin/NS-hivert: error while loading shared libraries: libhpx_iostreams.so.1: cannot open shared object file: No such file or directory
+2250079m@gpgnode-03:~/sandbox/YewParInstall/YewPar$ source YewPar_env.sh 
+2250079m@gpgnode-03:~/sandbox/YewParInstall/YewPar$ source YewPar_env.sh mpiexec -n 1 ./build/install/bin/NS-hivert -g 46 --hpx:threads 16 --metrics --skel budget -b 10000000 > ns_metrics_46.txt
+2250079m@gpgnode-03:~/sandbox/YewParInstall/YewPar$ vim ns_metrics_46.txt 
+[?2004h[?1049h[22;0;0t[?1h=[?2004h[1;48r[?12h[?12l[27m[23m[29m[m[H[2J[?25l[48;1H"ns_metrics_46.txt" 24009L, 449525C[2;1H▽[6n[2;1H  [1;1H[>c]10;?]11;?[1;1H[38;5;130m    1 [mCPU Time (Before collecting metrics) 100807
+[38;5;130m    2 [mMetric Total tasks Depth 0:0
+[38;5;130m    3 [mMetric Total tasks Depth 1:1
+[38;5;130m    4 [mMetric Total tasks Depth 2:0
+[38;5;130m    5 [mMetric Total tasks Depth 3:0
+[38;5;130m    6 [mMetric Total tasks Depth 4:0
+[38;5;130m    7 [mMetric Total tasks Depth 5:0
+[38;5;130m    8 [mMetric Total tasks Depth 6:0
+[38;5;130m    9 [mMetric Total tasks Depth 7:1
+[38;5;130m   10 [mMetric Total tasks Depth 8:1
+[38;5;130m   11 [mMetric Total tasks Depth 9:1
+[38;5;130m   12 [mMetric Total tasks Depth 10:1
+[38;5;130m   13 [mMetric Total tasks Depth 11:1
+[38;5;130m   14 [mMetric Total tasks Depth 12:1
+[38;5;130m   15 [mMetric Total tasks Depth 13:2
+[38;5;130m   16 [mMetric Total tasks Depth 14:3
+[38;5;130m   17 [mMetric Total tasks Depth 15:4
+[38;5;130m   18 [mMetric Total tasks Depth 16:6
+[38;5;130m   19 [mMetric Total tasks Depth 17:7
+[38;5;130m   20 [mMetric Total tasks Depth 18:10
+[38;5;130m   21 [mMetric Total tasks Depth 19:16
+[38;5;130m   22 [mMetric Total tasks Depth 20:17
+[38;5;130m   23 [mMetric Total tasks Depth 21:23
+[38;5;130m   24 [mMetric Total tasks Depth 22:31
+[38;5;130m   25 [mMetric Total tasks Depth 23:44
+[38;5;130m   26 [mMetric Total tasks Depth 24:65
+[38;5;130m   27 [mMetric Total tasks Depth 25:99
+[38;5;130m   28 [mMetric Total tasks Depth 26:139
+[38;5;130m   29 [mMetric Total tasks Depth 27:200
+[38;5;130m   30 [mMetric Total tasks Depth 28:280
+[38;5;130m   31 [mMetric Total tasks Depth 29:395
+[38;5;130m   32 [mMetric Total tasks Depth 30:581
+[38;5;130m   33 [mMetric Total tasks Depth 31:804
+[38;5;130m   34 [mMetric Total tasks Depth 32:1130
+[38;5;130m   35 [mMetric Total tasks Depth 33:1565
+[38;5;130m   36 [mMetric Total tasks Depth 34:2148
+[38;5;130m   37 [mMetric Total tasks Depth 35:2736
+[38;5;130m   38 [mMetric Total tasks Depth 36:3344
+[38;5;130m   39 [mMetric Total tasks Depth 37:3628
+[38;5;130m   40 [mMetric Total tasks Depth 38:2935
+[38;5;130m   41 [mMetric Total tasks Depth 39:2059
+[38;5;130m   42 [mMetric Total tasks Depth 40:784
+[38;5;130m   43 [mMetric Total tasks Depth 41:248
+[38;5;130m   44 [mMetric Total tasks Depth 42:57
+[38;5;130m   45 [mMetric Total tasks Depth 43:66
+[38;5;130m   46 [mMetric Total tasks Depth 44:69
+[38;5;130m   47 [mMetric Total tasks Depth 45:56[48;162H1,1[11CTop[1;7H[?25h[27m[23m[29m[m[H[2J[?25l[1;1H[93m    1 [mCPU Time (Before collecting metrics) 100807
+[93m    2 [mMetric Total tasks Depth 0:0
+[93m    3 [mMetric Total tasks Depth 1:1
+[93m    4 [mMetric Total tasks Depth 2:0
+[93m    5 [mMetric Total tasks Depth 3:0
+[93m    6 [mMetric Total tasks Depth 4:0
+[93m    7 [mMetric Total tasks Depth 5:0
+[93m    8 [mMetric Total tasks Depth 6:0
+[93m    9 [mMetric Total tasks Depth 7:1
+[93m   10 [mMetric Total tasks Depth 8:1
+[93m   11 [mMetric Total tasks Depth 9:1
+[93m   12 [mMetric Total tasks Depth 10:1
+[93m   13 [mMetric Total tasks Depth 11:1
+[93m   14 [mMetric Total tasks Depth 12:1
+[93m   15 [mMetric Total tasks Depth 13:2
+[93m   16 [mMetric Total tasks Depth 14:3
+[93m   17 [mMetric Total tasks Depth 15:4
+[93m   18 [mMetric Total tasks Depth 16:6
+[93m   19 [mMetric Total tasks Depth 17:7
+[93m   20 [mMetric Total tasks Depth 18:10
+[93m   21 [mMetric Total tasks Depth 19:16
+[93m   22 [mMetric Total tasks Depth 20:17
+[93m   23 [mMetric Total tasks Depth 21:23
+[93m   24 [mMetric Total tasks Depth 22:31
+[93m   25 [mMetric Total tasks Depth 23:44
+[93m   26 [mMetric Total tasks Depth 24:65
+[93m   27 [mMetric Total tasks Depth 25:99
+[93m   28 [mMetric Total tasks Depth 26:139
+[93m   29 [mMetric Total tasks Depth 27:200
+[93m   30 [mMetric Total tasks Depth 28:280
+[93m   31 [mMetric Total tasks Depth 29:395
+[93m   32 [mMetric Total tasks Depth 30:581
+[93m   33 [mMetric Total tasks Depth 31:804
+[93m   34 [mMetric Total tasks Depth 32:1130
+[93m   35 [mMetric Total tasks Depth 33:1565
+[93m   36 [mMetric Total tasks Depth 34:2148
+[93m   37 [mMetric Total tasks Depth 35:2736
+[93m   38 [mMetric Total tasks Depth 36:3344
+[93m   39 [mMetric Total tasks Depth 37:3628
+[93m   40 [mMetric Total tasks Depth 38:2935
+[93m   41 [mMetric Total tasks Depth 39:2059
+[93m   42 [mMetric Total tasks Depth 40:784
+[93m   43 [mMetric Total tasks Depth 41:248
+[93m   44 [mMetric Total tasks Depth 42:57
+[93m   45 [mMetric Total tasks Depth 43:66
+[93m   46 [mMetric Total tasks Depth 44:69
+[93m   47 [mMetric Total tasks Depth 45:56[48;162H1,1[11CTop"ns_metrics_46.txt" 24009L, 449525C[1;7H[?25h[?25l[27m[23m[29m[m[H[2J[1;1H[93m23963 [m2: 2
+[93m23964 [m3: 4
+[93m23965 [m4: 7
+[93m23966 [m5: 12
+[93m23967 [m6: 23
+[93m23968 [m7: 39
+[93m23969 [m8: 67
+[93m23970 [m9: 118
+[93m23971 [m10: 204
+[93m23972 [m11: 343
+[93m23973 [m12: 592
+[93m23974 [m13: 1001
+[93m23975 [m14: 1693
+[93m23976 [m15: 2857
+[93m23977 [m16: 4806
+[93m23978 [m17: 8045
+[93m23979 [m18: 13467
+[93m23980 [m19: 22464
+[93m23981 [m20: 37396
+[93m23982 [m21: 62194
+[93m23983 [m22: 103246
+[93m23984 [m23: 170963
+[93m23985 [m24: 282828
+[93m23986 [m25: 467224
+[93m23987 [m26: 770832
+[93m23988 [m27: 1270267
+[93m23989 [m28: 2091030
+[93m23990 [m29: 3437839
+[93m23991 [m30: 5646773
+[93m23992 [m31: 9266788
+[93m23993 [m32: 15195070
+[93m23994 [m33: 24896206
+[93m23995 [m34: 40761087
+[93m23996 [m35: 66687201
+[93m23997 [m36: 109032500
+[93m23998 [m37: 178158289
+[93m23999 [m38: 290939807
+[93m24000 [m39: 474851445
+[93m24001 [m40: 774614284
+[93m24002 [m41: 1262992840
+[93m24003 [m42: 2058356522
+[93m24004 [m43: 3353191846
+[93m24005 [m44: 5460401576
+[93m24006 [m45: 8888486816
+[93m24007 [m46: 14463633648
+[93m24008 [m=====
+[93m24009 [mcpu = 101521[48;162H24009,1[7CBot[47;7H[?25h[?25l[48;162H[K[48;1H:[?2004h[?25hq[?25l[?25h![?25l[?25h[?25l[?2004l[48;1H[K[48;1H[?2004l[?1l>[?25h[?1049l[23;0;0t2250079m@gpgnode-03:~/sandbox/YewParInstall/YewPar$ flush
+
+Command 'flush' not found, did you mean:
+
+  command 'clush' from deb clustershell
+
+Try: apt inst
