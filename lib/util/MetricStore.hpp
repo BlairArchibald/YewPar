@@ -50,7 +50,7 @@ struct MetricStore {
   }
 
   /* For conveniance */
-  void updateMetrics(const unsignned depth, const std::uint64_t t, 
+  void updateMetrics(const unsigned depth, const std::uint64_t t, 
                      const std::uint64_t p, const std::uint64_t n,
                      const std::uint64_t b) {
     updateTimes(depth, t);

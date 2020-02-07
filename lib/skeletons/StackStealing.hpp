@@ -300,7 +300,7 @@ struct StackStealing {
      	const std::uint64_t time = (const std::uint64_t) diff.count();
       hpx::apply(hpx::util::bind([=]() {
         const unsigned depthIdx = (depth >= 0) ? (depth) : (0);
-        store->updateMetrics(depthIdx, time, prunes, nodesVisited, backtracks); 
+        store->updateMetrics(depthIdx, time, prunes, nodeCount, backtracks); 
       }));
     }
 
@@ -507,9 +507,9 @@ struct StackStealing {
       printBacktracks();
       printNodeCounts();
       // Prints regularity metrics
-      for (const auto & l : hpx::find_all_localities()) {
-        hpx::async<PrintTimesAct>(l).get();
-      }
+     // for (const auto & l : hpx::find_all_localities()) {
+     //   hpx::async<PrintTimesAct>(l).get();
+    //  }
     } 
 
     // Return the right thing

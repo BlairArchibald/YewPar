@@ -205,7 +205,7 @@ struct DepthBounded {
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
      	const std::uint64_t time = (const std::uint64_t) diff.count();
       hpx::apply(hpx::util::bind([=]() {
-        store->updateMetrics(childDepth, time, prunes, nodesVisited, backtracks);
+        store->updateMetrics(childDepth, time, prunes, nodeCount, backtracks);
       }));
     }
 
@@ -289,9 +289,9 @@ struct DepthBounded {
       printBacktracks();
       printNodeCounts();
       // Prints regularity metrics
-      for (const auto & l : hpx::find_all_localities()) {
-        hpx::async<PrintTimesAct>(l).get();
-      }
+//      for (const auto & l : hpx::find_all_localities()) {
+//        hpx::async<PrintTimesAct>(l).get();
+//      }
     }
 
     // Return the right thing
