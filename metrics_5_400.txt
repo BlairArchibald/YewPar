@@ -1,0 +1,2570 @@
+CPU Time (Before collecting metrics) 107396
+Metric Total tasks Depth 0:0
+Metric Total tasks Depth 1:0
+Metric Total tasks Depth 2:84
+Metric Total tasks Depth 3:0
+Metric Total tasks Depth 4:0
+Metric Total tasks Depth 5:0
+Metric Total tasks Depth 6:0
+Metric Total tasks Depth 7:0
+Metric Total tasks Depth 8:0
+Metric Total tasks Depth 9:0
+Metric Total tasks Depth 10:0
+Metric Total tasks Depth 11:0
+Metric Total tasks Depth 12:0
+Metric Total tasks Depth 13:0
+Metric Total tasks Depth 14:0
+Metric Total tasks Depth 15:0
+Metric Total tasks Depth 16:0
+Metric Total tasks Depth 17:0
+Metric Total tasks Depth 18:0
+Metric Total tasks Depth 19:0
+Metric Total tasks Depth 20:0
+Metric Total tasks Depth 21:0
+Metric Total tasks Depth 22:0
+Metric Total tasks Depth 23:0
+Metric Total tasks Depth 24:0
+Metric Total tasks Depth 25:0
+Metric Total tasks Depth 26:0
+Metric Total tasks Depth 27:0
+Metric Total tasks Depth 28:0
+Metric Total tasks Depth 29:0
+Metric Total tasks Depth 30:0
+Metric Total tasks Depth 31:0
+Metric Total tasks Depth 32:0
+Metric Total tasks Depth 33:0
+Metric Total tasks Depth 34:0
+Metric Total tasks Depth 35:0
+Metric Total tasks Depth 36:0
+Metric Total tasks Depth 37:0
+Metric Total tasks Depth 38:0
+Metric Total tasks Depth 39:0
+Metric Total tasks Depth 40:0
+Metric Total tasks Depth 41:0
+Metric Total tasks Depth 42:0
+Metric Total tasks Depth 43:0
+Metric Total tasks Depth 44:0
+Metric Total tasks Depth 45:0
+Metric Total tasks Depth 46:0
+Metric Total tasks Depth 47:0
+Metric Total tasks Depth 48:0
+Metric Total tasks Depth 49:0
+Metric Total tasks Depth 50:0
+Metric Total tasks Depth 51:0
+Metric Total tasks Depth 52:0
+Metric Total tasks Depth 53:0
+Metric Total tasks Depth 54:0
+Metric Total tasks Depth 55:0
+Metric Total tasks Depth 56:0
+Metric Total tasks Depth 57:0
+Metric Total tasks Depth 58:0
+Metric Total tasks Depth 59:0
+Metric Total tasks Depth 60:0
+Metric Total tasks Depth 61:0
+Metric Total tasks Depth 62:0
+Metric Total tasks Depth 63:0
+Metric Total tasks Depth 64:0
+Metric Total tasks Depth 65:0
+Metric Total tasks Depth 66:0
+Metric Total tasks Depth 67:0
+Metric Total tasks Depth 68:0
+Metric Total tasks Depth 69:0
+Metric Total tasks Depth 70:0
+Metric Total tasks Depth 71:0
+Metric Total tasks Depth 72:0
+Metric Total tasks Depth 73:0
+Metric Total tasks Depth 74:0
+Metric Total tasks Depth 75:0
+Metric Total tasks Depth 76:0
+Metric Total tasks Depth 77:0
+Metric Total tasks Depth 78:0
+Metric Total tasks Depth 79:0
+Metric Total tasks Depth 80:0
+Metric Total tasks Depth 81:0
+Metric Total tasks Depth 82:0
+Metric Total tasks Depth 83:0
+Metric Total tasks Depth 84:0
+Metric Total tasks Depth 85:0
+Metric Total tasks Depth 86:0
+Metric Total tasks Depth 87:0
+Metric Total tasks Depth 88:0
+Metric Total tasks Depth 89:0
+Metric Total tasks Depth 90:0
+Metric Total tasks Depth 91:0
+Metric Total tasks Depth 92:0
+Metric Total tasks Depth 93:0
+Metric Total tasks Depth 94:0
+Metric Total tasks Depth 95:0
+Metric Total tasks Depth 96:0
+Metric Total tasks Depth 97:0
+Metric Total tasks Depth 98:0
+Metric Total tasks Depth 99:0
+Metric Total tasks Depth 0:0
+Metric Total tasks Depth 1:0
+Metric Total tasks Depth 2:92
+Metric Total tasks Depth 3:0
+Metric Total tasks Depth 4:0
+Metric Total tasks Depth 5:0
+Metric Total tasks Depth 6:0
+Metric Total tasks Depth 7:0
+Metric Total tasks Depth 8:0
+Metric Total tasks Depth 9:0
+Metric Total tasks Depth 10:0
+Metric Total tasks Depth 11:0
+Metric Total tasks Depth 12:0
+Metric Total tasks Depth 13:0
+Metric Total tasks Depth 14:0
+Metric Total tasks Depth 15:0
+Metric Total tasks Depth 16:0
+Metric Total tasks Depth 17:0
+Metric Total tasks Depth 18:0
+Metric Total tasks Depth 19:0
+Metric Total tasks Depth 20:0
+Metric Total tasks Depth 21:0
+Metric Total tasks Depth 22:0
+Metric Total tasks Depth 23:0
+Metric Total tasks Depth 24:0
+Metric Total tasks Depth 25:0
+Metric Total tasks Depth 26:0
+Metric Total tasks Depth 27:0
+Metric Total tasks Depth 28:0
+Metric Total tasks Depth 29:0
+Metric Total tasks Depth 30:0
+Metric Total tasks Depth 31:0
+Metric Total tasks Depth 32:0
+Metric Total tasks Depth 33:0
+Metric Total tasks Depth 34:0
+Metric Total tasks Depth 35:0
+Metric Total tasks Depth 36:0
+Metric Total tasks Depth 37:0
+Metric Total tasks Depth 38:0
+Metric Total tasks Depth 39:0
+Metric Total tasks Depth 40:0
+Metric Total tasks Depth 41:0
+Metric Total tasks Depth 42:0
+Metric Total tasks Depth 43:0
+Metric Total tasks Depth 44:0
+Metric Total tasks Depth 45:0
+Metric Total tasks Depth 46:0
+Metric Total tasks Depth 47:0
+Metric Total tasks Depth 48:0
+Metric Total tasks Depth 49:0
+Metric Total tasks Depth 50:0
+Metric Total tasks Depth 51:0
+Metric Total tasks Depth 52:0
+Metric Total tasks Depth 53:0
+Metric Total tasks Depth 54:0
+Metric Total tasks Depth 55:0
+Metric Total tasks Depth 56:0
+Metric Total tasks Depth 57:0
+Metric Total tasks Depth 58:0
+Metric Total tasks Depth 59:0
+Metric Total tasks Depth 60:0
+Metric Total tasks Depth 61:0
+Metric Total tasks Depth 62:0
+Metric Total tasks Depth 63:0
+Metric Total tasks Depth 64:0
+Metric Total tasks Depth 65:0
+Metric Total tasks Depth 66:0
+Metric Total tasks Depth 67:0
+Metric Total tasks Depth 68:0
+Metric Total tasks Depth 69:0
+Metric Total tasks Depth 70:0
+Metric Total tasks Depth 71:0
+Metric Total tasks Depth 72:0
+Metric Total tasks Depth 73:0
+Metric Total tasks Depth 74:0
+Metric Total tasks Depth 75:0
+Metric Total tasks Depth 76:0
+Metric Total tasks Depth 77:0
+Metric Total tasks Depth 78:0
+Metric Total tasks Depth 79:0
+Metric Total tasks Depth 80:0
+Metric Total tasks Depth 81:0
+Metric Total tasks Depth 82:0
+Metric Total tasks Depth 83:0
+Metric Total tasks Depth 84:0
+Metric Total tasks Depth 85:0
+Metric Total tasks Depth 86:0
+Metric Total tasks Depth 87:0
+Metric Total tasks Depth 88:0
+Metric Total tasks Depth 89:0
+Metric Total tasks Depth 90:0
+Metric Total tasks Depth 91:0
+Metric Total tasks Depth 92:0
+Metric Total tasks Depth 93:0
+Metric Total tasks Depth 94:0
+Metric Total tasks Depth 95:0
+Metric Total tasks Depth 96:0
+Metric Total tasks Depth 97:0
+Metric Total tasks Depth 98:0
+Metric Total tasks Depth 99:0
+Metric Total tasks Depth 0:0
+Metric Total tasks Depth 1:1
+Metric Total tasks Depth 2:153
+Metric Total tasks Depth 3:222
+Metric Total tasks Depth 4:157
+Metric Total tasks Depth 5:106
+Metric Total tasks Depth 6:78
+Metric Total tasks Depth 7:0
+Metric Total tasks Depth 8:0
+Metric Total tasks Depth 9:0
+Metric Total tasks Depth 10:0
+Metric Total tasks Depth 11:0
+Metric Total tasks Depth 12:0
+Metric Total tasks Depth 13:0
+Metric Total tasks Depth 14:0
+Metric Total tasks Depth 15:0
+Metric Total tasks Depth 16:0
+Metric Total tasks Depth 17:0
+Metric Total tasks Depth 18:0
+Metric Total tasks Depth 19:0
+Metric Total tasks Depth 20:0
+Metric Total tasks Depth 21:0
+Metric Total tasks Depth 22:0
+Metric Total tasks Depth 23:0
+Metric Total tasks Depth 24:0
+Metric Total tasks Depth 25:0
+Metric Total tasks Depth 26:0
+Metric Total tasks Depth 27:0
+Metric Total tasks Depth 28:0
+Metric Total tasks Depth 29:0
+Metric Total tasks Depth 30:0
+Metric Total tasks Depth 31:0
+Metric Total tasks Depth 32:0
+Metric Total tasks Depth 33:0
+Metric Total tasks Depth 34:0
+Metric Total tasks Depth 35:0
+Metric Total tasks Depth 36:0
+Metric Total tasks Depth 37:0
+Metric Total tasks Depth 38:0
+Metric Total tasks Depth 39:0
+Metric Total tasks Depth 40:0
+Metric Total tasks Depth 41:0
+Metric Total tasks Depth 42:0
+Metric Total tasks Depth 43:0
+Metric Total tasks Depth 44:0
+Metric Total tasks Depth 45:0
+Metric Total tasks Depth 46:0
+Metric Total tasks Depth 47:0
+Metric Total tasks Depth 48:0
+Metric Total tasks Depth 49:0
+Metric Total tasks Depth 50:0
+Metric Total tasks Depth 51:0
+Metric Total tasks Depth 52:0
+Metric Total tasks Depth 53:0
+Metric Total tasks Depth 54:0
+Metric Total tasks Depth 55:0
+Metric Total tasks Depth 56:0
+Metric Total tasks Depth 57:0
+Metric Total tasks Depth 58:0
+Metric Total tasks Depth 59:0
+Metric Total tasks Depth 60:0
+Metric Total tasks Depth 61:0
+Metric Total tasks Depth 62:0
+Metric Total tasks Depth 63:0
+Metric Total tasks Depth 64:0
+Metric Total tasks Depth 65:0
+Metric Total tasks Depth 66:0
+Metric Total tasks Depth 67:0
+Metric Total tasks Depth 68:0
+Metric Total tasks Depth 69:0
+Metric Total tasks Depth 70:0
+Metric Total tasks Depth 71:0
+Metric Total tasks Depth 72:0
+Metric Total tasks Depth 73:0
+Metric Total tasks Depth 74:0
+Metric Total tasks Depth 75:0
+Metric Total tasks Depth 76:0
+Metric Total tasks Depth 77:0
+Metric Total tasks Depth 78:0
+Metric Total tasks Depth 79:0
+Metric Total tasks Depth 80:0
+Metric Total tasks Depth 81:0
+Metric Total tasks Depth 82:0
+Metric Total tasks Depth 83:0
+Metric Total tasks Depth 84:0
+Metric Total tasks Depth 85:0
+Metric Total tasks Depth 86:0
+Metric Total tasks Depth 87:0
+Metric Total tasks Depth 88:0
+Metric Total tasks Depth 89:0
+Metric Total tasks Depth 90:0
+Metric Total tasks Depth 91:0
+Metric Total tasks Depth 92:0
+Metric Total tasks Depth 93:0
+Metric Total tasks Depth 94:0
+Metric Total tasks Depth 95:0
+Metric Total tasks Depth 96:0
+Metric Total tasks Depth 97:0
+Metric Total tasks Depth 98:0
+Metric Total tasks Depth 99:0
+Metric Total tasks Depth 0:0
+Metric Total tasks Depth 1:0
+Metric Total tasks Depth 2:70
+Metric Total tasks Depth 3:0
+Metric Total tasks Depth 4:0
+Metric Total tasks Depth 5:0
+Metric Total tasks Depth 6:0
+Metric Total tasks Depth 7:0
+Metric Total tasks Depth 8:0
+Metric Total tasks Depth 9:0
+Metric Total tasks Depth 10:0
+Metric Total tasks Depth 11:0
+Metric Total tasks Depth 12:0
+Metric Total tasks Depth 13:0
+Metric Total tasks Depth 14:0
+Metric Total tasks Depth 15:0
+Metric Total tasks Depth 16:0
+Metric Total tasks Depth 17:0
+Metric Total tasks Depth 18:0
+Metric Total tasks Depth 19:0
+Metric Total tasks Depth 20:0
+Metric Total tasks Depth 21:0
+Metric Total tasks Depth 22:0
+Metric Total tasks Depth 23:0
+Metric Total tasks Depth 24:0
+Metric Total tasks Depth 25:0
+Metric Total tasks Depth 26:0
+Metric Total tasks Depth 27:0
+Metric Total tasks Depth 28:0
+Metric Total tasks Depth 29:0
+Metric Total tasks Depth 30:0
+Metric Total tasks Depth 31:0
+Metric Total tasks Depth 32:0
+Metric Total tasks Depth 33:0
+Metric Total tasks Depth 34:0
+Metric Total tasks Depth 35:0
+Metric Total tasks Depth 36:0
+Metric Total tasks Depth 37:0
+Metric Total tasks Depth 38:0
+Metric Total tasks Depth 39:0
+Metric Total tasks Depth 40:0
+Metric Total tasks Depth 41:0
+Metric Total tasks Depth 42:0
+Metric Total tasks Depth 43:0
+Metric Total tasks Depth 44:0
+Metric Total tasks Depth 45:0
+Metric Total tasks Depth 46:0
+Metric Total tasks Depth 47:0
+Metric Total tasks Depth 48:0
+Metric Total tasks Depth 49:0
+Metric Total tasks Depth 50:0
+Metric Total tasks Depth 51:0
+Metric Total tasks Depth 52:0
+Metric Total tasks Depth 53:0
+Metric Total tasks Depth 54:0
+Metric Total tasks Depth 55:0
+Metric Total tasks Depth 56:0
+Metric Total tasks Depth 57:0
+Metric Total tasks Depth 58:0
+Metric Total tasks Depth 59:0
+Metric Total tasks Depth 60:0
+Metric Total tasks Depth 61:0
+Metric Total tasks Depth 62:0
+Metric Total tasks Depth 63:0
+Metric Total tasks Depth 64:0
+Metric Total tasks Depth 65:0
+Metric Total tasks Depth 66:0
+Metric Total tasks Depth 67:0
+Metric Total tasks Depth 68:0
+Metric Total tasks Depth 69:0
+Metric Total tasks Depth 70:0
+Metric Total tasks Depth 71:0
+Metric Total tasks Depth 72:0
+Metric Total tasks Depth 73:0
+Metric Total tasks Depth 74:0
+Metric Total tasks Depth 75:0
+Metric Total tasks Depth 76:0
+Metric Total tasks Depth 77:0
+Metric Total tasks Depth 78:0
+Metric Total tasks Depth 79:0
+Metric Total tasks Depth 80:0
+Metric Total tasks Depth 81:0
+Metric Total tasks Depth 82:0
+Metric Total tasks Depth 83:0
+Metric Total tasks Depth 84:0
+Metric Total tasks Depth 85:0
+Metric Total tasks Depth 86:0
+Metric Total tasks Depth 87:0
+Metric Total tasks Depth 88:0
+Metric Total tasks Depth 89:0
+Metric Total tasks Depth 90:0
+Metric Total tasks Depth 91:0
+Metric Total tasks Depth 92:0
+Metric Total tasks Depth 93:0
+Metric Total tasks Depth 94:0
+Metric Total tasks Depth 95:0
+Metric Total tasks Depth 96:0
+Metric Total tasks Depth 97:0
+Metric Total tasks Depth 98:0
+Metric Total tasks Depth 99:0
+
+Metric Prunes Depth 0:0
+Metric Prunes Depth 1:0
+Metric Prunes Depth 2:5479878953
+Metric Prunes Depth 3:0
+Metric Prunes Depth 4:0
+Metric Prunes Depth 5:0
+Metric Prunes Depth 6:0
+Metric Prunes Depth 7:0
+Metric Prunes Depth 8:0
+Metric Prunes Depth 9:0
+Metric Prunes Depth 10:0
+Metric Prunes Depth 11:0
+Metric Prunes Depth 12:0
+Metric Prunes Depth 13:0
+Metric Prunes Depth 14:0
+Metric Prunes Depth 15:0
+Metric Prunes Depth 16:0
+Metric Prunes Depth 17:0
+Metric Prunes Depth 18:0
+Metric Prunes Depth 19:0
+Metric Prunes Depth 20:0
+Metric Prunes Depth 21:0
+Metric Prunes Depth 22:0
+Metric Prunes Depth 23:0
+Metric Prunes Depth 24:0
+Metric Prunes Depth 25:0
+Metric Prunes Depth 26:0
+Metric Prunes Depth 27:0
+Metric Prunes Depth 28:0
+Metric Prunes Depth 29:0
+Metric Prunes Depth 30:0
+Metric Prunes Depth 31:0
+Metric Prunes Depth 32:0
+Metric Prunes Depth 33:0
+Metric Prunes Depth 34:0
+Metric Prunes Depth 35:0
+Metric Prunes Depth 36:0
+Metric Prunes Depth 37:0
+Metric Prunes Depth 38:0
+Metric Prunes Depth 39:0
+Metric Prunes Depth 40:0
+Metric Prunes Depth 41:0
+Metric Prunes Depth 42:0
+Metric Prunes Depth 43:0
+Metric Prunes Depth 44:0
+Metric Prunes Depth 45:0
+Metric Prunes Depth 46:0
+Metric Prunes Depth 47:0
+Metric Prunes Depth 48:0
+Metric Prunes Depth 49:0
+Metric Prunes Depth 50:0
+Metric Prunes Depth 51:0
+Metric Prunes Depth 52:0
+Metric Prunes Depth 53:0
+Metric Prunes Depth 54:0
+Metric Prunes Depth 55:0
+Metric Prunes Depth 56:0
+Metric Prunes Depth 57:0
+Metric Prunes Depth 58:0
+Metric Prunes Depth 59:0
+Metric Prunes Depth 60:0
+Metric Prunes Depth 61:0
+Metric Prunes Depth 62:0
+Metric Prunes Depth 63:0
+Metric Prunes Depth 64:0
+Metric Prunes Depth 65:0
+Metric Prunes Depth 66:0
+Metric Prunes Depth 67:0
+Metric Prunes Depth 68:0
+Metric Prunes Depth 69:0
+Metric Prunes Depth 70:0
+Metric Prunes Depth 71:0
+Metric Prunes Depth 72:0
+Metric Prunes Depth 73:0
+Metric Prunes Depth 74:0
+Metric Prunes Depth 75:0
+Metric Prunes Depth 76:0
+Metric Prunes Depth 77:0
+Metric Prunes Depth 78:0
+Metric Prunes Depth 79:0
+Metric Prunes Depth 80:0
+Metric Prunes Depth 81:0
+Metric Prunes Depth 82:0
+Metric Prunes Depth 83:0
+Metric Prunes Depth 84:0
+Metric Prunes Depth 85:0
+Metric Prunes Depth 86:0
+Metric Prunes Depth 87:0
+Metric Prunes Depth 88:0
+Metric Prunes Depth 89:0
+Metric Prunes Depth 90:0
+Metric Prunes Depth 91:0
+Metric Prunes Depth 92:0
+Metric Prunes Depth 93:0
+Metric Prunes Depth 94:0
+Metric Prunes Depth 95:0
+Metric Prunes Depth 96:0
+Metric Prunes Depth 97:0
+Metric Prunes Depth 98:0
+Metric Prunes Depth 99:0
+Metric Prunes Depth 0:0
+Metric Prunes Depth 1:0
+Metric Prunes Depth 2:4368448355
+Metric Prunes Depth 3:0
+Metric Prunes Depth 4:0
+Metric Prunes Depth 5:0
+Metric Prunes Depth 6:0
+Metric Prunes Depth 7:0
+Metric Prunes Depth 8:0
+Metric Prunes Depth 9:0
+Metric Prunes Depth 10:0
+Metric Prunes Depth 11:0
+Metric Prunes Depth 12:0
+Metric Prunes Depth 13:0
+Metric Prunes Depth 14:0
+Metric Prunes Depth 15:0
+Metric Prunes Depth 16:0
+Metric Prunes Depth 17:0
+Metric Prunes Depth 18:0
+Metric Prunes Depth 19:0
+Metric Prunes Depth 20:0
+Metric Prunes Depth 21:0
+Metric Prunes Depth 22:0
+Metric Prunes Depth 23:0
+Metric Prunes Depth 24:0
+Metric Prunes Depth 25:0
+Metric Prunes Depth 26:0
+Metric Prunes Depth 27:0
+Metric Prunes Depth 28:0
+Metric Prunes Depth 29:0
+Metric Prunes Depth 30:0
+Metric Prunes Depth 31:0
+Metric Prunes Depth 32:0
+Metric Prunes Depth 33:0
+Metric Prunes Depth 34:0
+Metric Prunes Depth 35:0
+Metric Prunes Depth 36:0
+Metric Prunes Depth 37:0
+Metric Prunes Depth 38:0
+Metric Prunes Depth 39:0
+Metric Prunes Depth 40:0
+Metric Prunes Depth 41:0
+Metric Prunes Depth 42:0
+Metric Prunes Depth 43:0
+Metric Prunes Depth 44:0
+Metric Prunes Depth 45:0
+Metric Prunes Depth 46:0
+Metric Prunes Depth 47:0
+Metric Prunes Depth 48:0
+Metric Prunes Depth 49:0
+Metric Prunes Depth 50:0
+Metric Prunes Depth 51:0
+Metric Prunes Depth 52:0
+Metric Prunes Depth 53:0
+Metric Prunes Depth 54:0
+Metric Prunes Depth 55:0
+Metric Prunes Depth 56:0
+Metric Prunes Depth 57:0
+Metric Prunes Depth 58:0
+Metric Prunes Depth 59:0
+Metric Prunes Depth 60:0
+Metric Prunes Depth 61:0
+Metric Prunes Depth 62:0
+Metric Prunes Depth 63:0
+Metric Prunes Depth 64:0
+Metric Prunes Depth 65:0
+Metric Prunes Depth 66:0
+Metric Prunes Depth 67:0
+Metric Prunes Depth 68:0
+Metric Prunes Depth 69:0
+Metric Prunes Depth 70:0
+Metric Prunes Depth 71:0
+Metric Prunes Depth 72:0
+Metric Prunes Depth 73:0
+Metric Prunes Depth 74:0
+Metric Prunes Depth 75:0
+Metric Prunes Depth 76:0
+Metric Prunes Depth 77:0
+Metric Prunes Depth 78:0
+Metric Prunes Depth 79:0
+Metric Prunes Depth 80:0
+Metric Prunes Depth 81:0
+Metric Prunes Depth 82:0
+Metric Prunes Depth 83:0
+Metric Prunes Depth 84:0
+Metric Prunes Depth 85:0
+Metric Prunes Depth 86:0
+Metric Prunes Depth 87:0
+Metric Prunes Depth 88:0
+Metric Prunes Depth 89:0
+Metric Prunes Depth 90:0
+Metric Prunes Depth 91:0
+Metric Prunes Depth 92:0
+Metric Prunes Depth 93:0
+Metric Prunes Depth 94:0
+Metric Prunes Depth 95:0
+Metric Prunes Depth 96:0
+Metric Prunes Depth 97:0
+Metric Prunes Depth 98:0
+Metric Prunes Depth 99:0
+Metric Prunes Depth 0:0
+Metric Prunes Depth 1:407416807
+Metric Prunes Depth 2:7844457978
+Metric Prunes Depth 3:573071462
+Metric Prunes Depth 4:821189298
+Metric Prunes Depth 5:1222374757
+Metric Prunes Depth 6:407426767
+Metric Prunes Depth 7:0
+Metric Prunes Depth 8:0
+Metric Prunes Depth 9:0
+Metric Prunes Depth 10:0
+Metric Prunes Depth 11:0
+Metric Prunes Depth 12:0
+Metric Prunes Depth 13:0
+Metric Prunes Depth 14:0
+Metric Prunes Depth 15:0
+Metric Prunes Depth 16:0
+Metric Prunes Depth 17:0
+Metric Prunes Depth 18:0
+Metric Prunes Depth 19:0
+Metric Prunes Depth 20:0
+Metric Prunes Depth 21:0
+Metric Prunes Depth 22:0
+Metric Prunes Depth 23:0
+Metric Prunes Depth 24:0
+Metric Prunes Depth 25:0
+Metric Prunes Depth 26:0
+Metric Prunes Depth 27:0
+Metric Prunes Depth 28:0
+Metric Prunes Depth 29:0
+Metric Prunes Depth 30:0
+Metric Prunes Depth 31:0
+Metric Prunes Depth 32:0
+Metric Prunes Depth 33:0
+Metric Prunes Depth 34:0
+Metric Prunes Depth 35:0
+Metric Prunes Depth 36:0
+Metric Prunes Depth 37:0
+Metric Prunes Depth 38:0
+Metric Prunes Depth 39:0
+Metric Prunes Depth 40:0
+Metric Prunes Depth 41:0
+Metric Prunes Depth 42:0
+Metric Prunes Depth 43:0
+Metric Prunes Depth 44:0
+Metric Prunes Depth 45:0
+Metric Prunes Depth 46:0
+Metric Prunes Depth 47:0
+Metric Prunes Depth 48:0
+Metric Prunes Depth 49:0
+Metric Prunes Depth 50:0
+Metric Prunes Depth 51:0
+Metric Prunes Depth 52:0
+Metric Prunes Depth 53:0
+Metric Prunes Depth 54:0
+Metric Prunes Depth 55:0
+Metric Prunes Depth 56:0
+Metric Prunes Depth 57:0
+Metric Prunes Depth 58:0
+Metric Prunes Depth 59:0
+Metric Prunes Depth 60:0
+Metric Prunes Depth 61:0
+Metric Prunes Depth 62:0
+Metric Prunes Depth 63:0
+Metric Prunes Depth 64:0
+Metric Prunes Depth 65:0
+Metric Prunes Depth 66:0
+Metric Prunes Depth 67:0
+Metric Prunes Depth 68:0
+Metric Prunes Depth 69:0
+Metric Prunes Depth 70:0
+Metric Prunes Depth 71:0
+Metric Prunes Depth 72:0
+Metric Prunes Depth 73:0
+Metric Prunes Depth 74:0
+Metric Prunes Depth 75:0
+Metric Prunes Depth 76:0
+Metric Prunes Depth 77:0
+Metric Prunes Depth 78:0
+Metric Prunes Depth 79:0
+Metric Prunes Depth 80:0
+Metric Prunes Depth 81:0
+Metric Prunes Depth 82:0
+Metric Prunes Depth 83:0
+Metric Prunes Depth 84:0
+Metric Prunes Depth 85:0
+Metric Prunes Depth 86:0
+Metric Prunes Depth 87:0
+Metric Prunes Depth 88:0
+Metric Prunes Depth 89:0
+Metric Prunes Depth 90:0
+Metric Prunes Depth 91:0
+Metric Prunes Depth 92:0
+Metric Prunes Depth 93:0
+Metric Prunes Depth 94:0
+Metric Prunes Depth 95:0
+Metric Prunes Depth 96:0
+Metric Prunes Depth 97:0
+Metric Prunes Depth 98:0
+Metric Prunes Depth 99:0
+Metric Prunes Depth 0:0
+Metric Prunes Depth 1:0
+Metric Prunes Depth 2:4274090417
+Metric Prunes Depth 3:0
+Metric Prunes Depth 4:0
+Metric Prunes Depth 5:0
+Metric Prunes Depth 6:0
+Metric Prunes Depth 7:0
+Metric Prunes Depth 8:0
+Metric Prunes Depth 9:0
+Metric Prunes Depth 10:0
+Metric Prunes Depth 11:0
+Metric Prunes Depth 12:0
+Metric Prunes Depth 13:0
+Metric Prunes Depth 14:0
+Metric Prunes Depth 15:0
+Metric Prunes Depth 16:0
+Metric Prunes Depth 17:0
+Metric Prunes Depth 18:0
+Metric Prunes Depth 19:0
+Metric Prunes Depth 20:0
+Metric Prunes Depth 21:0
+Metric Prunes Depth 22:0
+Metric Prunes Depth 23:0
+Metric Prunes Depth 24:0
+Metric Prunes Depth 25:0
+Metric Prunes Depth 26:0
+Metric Prunes Depth 27:0
+Metric Prunes Depth 28:0
+Metric Prunes Depth 29:0
+Metric Prunes Depth 30:0
+Metric Prunes Depth 31:0
+Metric Prunes Depth 32:0
+Metric Prunes Depth 33:0
+Metric Prunes Depth 34:0
+Metric Prunes Depth 35:0
+Metric Prunes Depth 36:0
+Metric Prunes Depth 37:0
+Metric Prunes Depth 38:0
+Metric Prunes Depth 39:0
+Metric Prunes Depth 40:0
+Metric Prunes Depth 41:0
+Metric Prunes Depth 42:0
+Metric Prunes Depth 43:0
+Metric Prunes Depth 44:0
+Metric Prunes Depth 45:0
+Metric Prunes Depth 46:0
+Metric Prunes Depth 47:0
+Metric Prunes Depth 48:0
+Metric Prunes Depth 49:0
+Metric Prunes Depth 50:0
+Metric Prunes Depth 51:0
+Metric Prunes Depth 52:0
+Metric Prunes Depth 53:0
+Metric Prunes Depth 54:0
+Metric Prunes Depth 55:0
+Metric Prunes Depth 56:0
+Metric Prunes Depth 57:0
+Metric Prunes Depth 58:0
+Metric Prunes Depth 59:0
+Metric Prunes Depth 60:0
+Metric Prunes Depth 61:0
+Metric Prunes Depth 62:0
+Metric Prunes Depth 63:0
+Metric Prunes Depth 64:0
+Metric Prunes Depth 65:0
+Metric Prunes Depth 66:0
+Metric Prunes Depth 67:0
+Metric Prunes Depth 68:0
+Metric Prunes Depth 69:0
+Metric Prunes Depth 70:0
+Metric Prunes Depth 71:0
+Metric Prunes Depth 72:0
+Metric Prunes Depth 73:0
+Metric Prunes Depth 74:0
+Metric Prunes Depth 75:0
+Metric Prunes Depth 76:0
+Metric Prunes Depth 77:0
+Metric Prunes Depth 78:0
+Metric Prunes Depth 79:0
+Metric Prunes Depth 80:0
+Metric Prunes Depth 81:0
+Metric Prunes Depth 82:0
+Metric Prunes Depth 83:0
+Metric Prunes Depth 84:0
+Metric Prunes Depth 85:0
+Metric Prunes Depth 86:0
+Metric Prunes Depth 87:0
+Metric Prunes Depth 88:0
+Metric Prunes Depth 89:0
+Metric Prunes Depth 90:0
+Metric Prunes Depth 91:0
+Metric Prunes Depth 92:0
+Metric Prunes Depth 93:0
+Metric Prunes Depth 94:0
+Metric Prunes Depth 95:0
+Metric Prunes Depth 96:0
+Metric Prunes Depth 97:0
+Metric Prunes Depth 98:0
+Metric Prunes Depth 99:0
+
+Metric Backtracks Depth 0:0
+Metric Backtracks Depth 1:0
+Metric Backtracks Depth 2:112370660
+Metric Backtracks Depth 3:0
+Metric Backtracks Depth 4:0
+Metric Backtracks Depth 5:0
+Metric Backtracks Depth 6:0
+Metric Backtracks Depth 7:0
+Metric Backtracks Depth 8:0
+Metric Backtracks Depth 9:0
+Metric Backtracks Depth 10:0
+Metric Backtracks Depth 11:0
+Metric Backtracks Depth 12:0
+Metric Backtracks Depth 13:0
+Metric Backtracks Depth 14:0
+Metric Backtracks Depth 15:0
+Metric Backtracks Depth 16:0
+Metric Backtracks Depth 17:0
+Metric Backtracks Depth 18:0
+Metric Backtracks Depth 19:0
+Metric Backtracks Depth 20:0
+Metric Backtracks Depth 21:0
+Metric Backtracks Depth 22:0
+Metric Backtracks Depth 23:0
+Metric Backtracks Depth 24:0
+Metric Backtracks Depth 25:0
+Metric Backtracks Depth 26:0
+Metric Backtracks Depth 27:0
+Metric Backtracks Depth 28:0
+Metric Backtracks Depth 29:0
+Metric Backtracks Depth 30:0
+Metric Backtracks Depth 31:0
+Metric Backtracks Depth 32:0
+Metric Backtracks Depth 33:0
+Metric Backtracks Depth 34:0
+Metric Backtracks Depth 35:0
+Metric Backtracks Depth 36:0
+Metric Backtracks Depth 37:0
+Metric Backtracks Depth 38:0
+Metric Backtracks Depth 39:0
+Metric Backtracks Depth 40:0
+Metric Backtracks Depth 41:0
+Metric Backtracks Depth 42:0
+Metric Backtracks Depth 43:0
+Metric Backtracks Depth 44:0
+Metric Backtracks Depth 45:0
+Metric Backtracks Depth 46:0
+Metric Backtracks Depth 47:0
+Metric Backtracks Depth 48:0
+Metric Backtracks Depth 49:0
+Metric Backtracks Depth 50:0
+Metric Backtracks Depth 51:0
+Metric Backtracks Depth 52:0
+Metric Backtracks Depth 53:0
+Metric Backtracks Depth 54:0
+Metric Backtracks Depth 55:0
+Metric Backtracks Depth 56:0
+Metric Backtracks Depth 57:0
+Metric Backtracks Depth 58:0
+Metric Backtracks Depth 59:0
+Metric Backtracks Depth 60:0
+Metric Backtracks Depth 61:0
+Metric Backtracks Depth 62:0
+Metric Backtracks Depth 63:0
+Metric Backtracks Depth 64:0
+Metric Backtracks Depth 65:0
+Metric Backtracks Depth 66:0
+Metric Backtracks Depth 67:0
+Metric Backtracks Depth 68:0
+Metric Backtracks Depth 69:0
+Metric Backtracks Depth 70:0
+Metric Backtracks Depth 71:0
+Metric Backtracks Depth 72:0
+Metric Backtracks Depth 73:0
+Metric Backtracks Depth 74:0
+Metric Backtracks Depth 75:0
+Metric Backtracks Depth 76:0
+Metric Backtracks Depth 77:0
+Metric Backtracks Depth 78:0
+Metric Backtracks Depth 79:0
+Metric Backtracks Depth 80:0
+Metric Backtracks Depth 81:0
+Metric Backtracks Depth 82:0
+Metric Backtracks Depth 83:0
+Metric Backtracks Depth 84:0
+Metric Backtracks Depth 85:0
+Metric Backtracks Depth 86:0
+Metric Backtracks Depth 87:0
+Metric Backtracks Depth 88:0
+Metric Backtracks Depth 89:0
+Metric Backtracks Depth 90:0
+Metric Backtracks Depth 91:0
+Metric Backtracks Depth 92:0
+Metric Backtracks Depth 93:0
+Metric Backtracks Depth 94:0
+Metric Backtracks Depth 95:0
+Metric Backtracks Depth 96:0
+Metric Backtracks Depth 97:0
+Metric Backtracks Depth 98:0
+Metric Backtracks Depth 99:0
+Metric Backtracks Depth 0:0
+Metric Backtracks Depth 1:0
+Metric Backtracks Depth 2:85735275
+Metric Backtracks Depth 3:0
+Metric Backtracks Depth 4:0
+Metric Backtracks Depth 5:0
+Metric Backtracks Depth 6:0
+Metric Backtracks Depth 7:0
+Metric Backtracks Depth 8:0
+Metric Backtracks Depth 9:0
+Metric Backtracks Depth 10:0
+Metric Backtracks Depth 11:0
+Metric Backtracks Depth 12:0
+Metric Backtracks Depth 13:0
+Metric Backtracks Depth 14:0
+Metric Backtracks Depth 15:0
+Metric Backtracks Depth 16:0
+Metric Backtracks Depth 17:0
+Metric Backtracks Depth 18:0
+Metric Backtracks Depth 19:0
+Metric Backtracks Depth 20:0
+Metric Backtracks Depth 21:0
+Metric Backtracks Depth 22:0
+Metric Backtracks Depth 23:0
+Metric Backtracks Depth 24:0
+Metric Backtracks Depth 25:0
+Metric Backtracks Depth 26:0
+Metric Backtracks Depth 27:0
+Metric Backtracks Depth 28:0
+Metric Backtracks Depth 29:0
+Metric Backtracks Depth 30:0
+Metric Backtracks Depth 31:0
+Metric Backtracks Depth 32:0
+Metric Backtracks Depth 33:0
+Metric Backtracks Depth 34:0
+Metric Backtracks Depth 35:0
+Metric Backtracks Depth 36:0
+Metric Backtracks Depth 37:0
+Metric Backtracks Depth 38:0
+Metric Backtracks Depth 39:0
+Metric Backtracks Depth 40:0
+Metric Backtracks Depth 41:0
+Metric Backtracks Depth 42:0
+Metric Backtracks Depth 43:0
+Metric Backtracks Depth 44:0
+Metric Backtracks Depth 45:0
+Metric Backtracks Depth 46:0
+Metric Backtracks Depth 47:0
+Metric Backtracks Depth 48:0
+Metric Backtracks Depth 49:0
+Metric Backtracks Depth 50:0
+Metric Backtracks Depth 51:0
+Metric Backtracks Depth 52:0
+Metric Backtracks Depth 53:0
+Metric Backtracks Depth 54:0
+Metric Backtracks Depth 55:0
+Metric Backtracks Depth 56:0
+Metric Backtracks Depth 57:0
+Metric Backtracks Depth 58:0
+Metric Backtracks Depth 59:0
+Metric Backtracks Depth 60:0
+Metric Backtracks Depth 61:0
+Metric Backtracks Depth 62:0
+Metric Backtracks Depth 63:0
+Metric Backtracks Depth 64:0
+Metric Backtracks Depth 65:0
+Metric Backtracks Depth 66:0
+Metric Backtracks Depth 67:0
+Metric Backtracks Depth 68:0
+Metric Backtracks Depth 69:0
+Metric Backtracks Depth 70:0
+Metric Backtracks Depth 71:0
+Metric Backtracks Depth 72:0
+Metric Backtracks Depth 73:0
+Metric Backtracks Depth 74:0
+Metric Backtracks Depth 75:0
+Metric Backtracks Depth 76:0
+Metric Backtracks Depth 77:0
+Metric Backtracks Depth 78:0
+Metric Backtracks Depth 79:0
+Metric Backtracks Depth 80:0
+Metric Backtracks Depth 81:0
+Metric Backtracks Depth 82:0
+Metric Backtracks Depth 83:0
+Metric Backtracks Depth 84:0
+Metric Backtracks Depth 85:0
+Metric Backtracks Depth 86:0
+Metric Backtracks Depth 87:0
+Metric Backtracks Depth 88:0
+Metric Backtracks Depth 89:0
+Metric Backtracks Depth 90:0
+Metric Backtracks Depth 91:0
+Metric Backtracks Depth 92:0
+Metric Backtracks Depth 93:0
+Metric Backtracks Depth 94:0
+Metric Backtracks Depth 95:0
+Metric Backtracks Depth 96:0
+Metric Backtracks Depth 97:0
+Metric Backtracks Depth 98:0
+Metric Backtracks Depth 99:0
+Metric Backtracks Depth 0:0
+Metric Backtracks Depth 1:10000018
+Metric Backtracks Depth 2:162289826
+Metric Backtracks Depth 3:13740833
+Metric Backtracks Depth 4:20151167
+Metric Backtracks Depth 5:30003111
+Metric Backtracks Depth 6:10000286
+Metric Backtracks Depth 7:0
+Metric Backtracks Depth 8:0
+Metric Backtracks Depth 9:0
+Metric Backtracks Depth 10:0
+Metric Backtracks Depth 11:0
+Metric Backtracks Depth 12:0
+Metric Backtracks Depth 13:0
+Metric Backtracks Depth 14:0
+Metric Backtracks Depth 15:0
+Metric Backtracks Depth 16:0
+Metric Backtracks Depth 17:0
+Metric Backtracks Depth 18:0
+Metric Backtracks Depth 19:0
+Metric Backtracks Depth 20:0
+Metric Backtracks Depth 21:0
+Metric Backtracks Depth 22:0
+Metric Backtracks Depth 23:0
+Metric Backtracks Depth 24:0
+Metric Backtracks Depth 25:0
+Metric Backtracks Depth 26:0
+Metric Backtracks Depth 27:0
+Metric Backtracks Depth 28:0
+Metric Backtracks Depth 29:0
+Metric Backtracks Depth 30:0
+Metric Backtracks Depth 31:0
+Metric Backtracks Depth 32:0
+Metric Backtracks Depth 33:0
+Metric Backtracks Depth 34:0
+Metric Backtracks Depth 35:0
+Metric Backtracks Depth 36:0
+Metric Backtracks Depth 37:0
+Metric Backtracks Depth 38:0
+Metric Backtracks Depth 39:0
+Metric Backtracks Depth 40:0
+Metric Backtracks Depth 41:0
+Metric Backtracks Depth 42:0
+Metric Backtracks Depth 43:0
+Metric Backtracks Depth 44:0
+Metric Backtracks Depth 45:0
+Metric Backtracks Depth 46:0
+Metric Backtracks Depth 47:0
+Metric Backtracks Depth 48:0
+Metric Backtracks Depth 49:0
+Metric Backtracks Depth 50:0
+Metric Backtracks Depth 51:0
+Metric Backtracks Depth 52:0
+Metric Backtracks Depth 53:0
+Metric Backtracks Depth 54:0
+Metric Backtracks Depth 55:0
+Metric Backtracks Depth 56:0
+Metric Backtracks Depth 57:0
+Metric Backtracks Depth 58:0
+Metric Backtracks Depth 59:0
+Metric Backtracks Depth 60:0
+Metric Backtracks Depth 61:0
+Metric Backtracks Depth 62:0
+Metric Backtracks Depth 63:0
+Metric Backtracks Depth 64:0
+Metric Backtracks Depth 65:0
+Metric Backtracks Depth 66:0
+Metric Backtracks Depth 67:0
+Metric Backtracks Depth 68:0
+Metric Backtracks Depth 69:0
+Metric Backtracks Depth 70:0
+Metric Backtracks Depth 71:0
+Metric Backtracks Depth 72:0
+Metric Backtracks Depth 73:0
+Metric Backtracks Depth 74:0
+Metric Backtracks Depth 75:0
+Metric Backtracks Depth 76:0
+Metric Backtracks Depth 77:0
+Metric Backtracks Depth 78:0
+Metric Backtracks Depth 79:0
+Metric Backtracks Depth 80:0
+Metric Backtracks Depth 81:0
+Metric Backtracks Depth 82:0
+Metric Backtracks Depth 83:0
+Metric Backtracks Depth 84:0
+Metric Backtracks Depth 85:0
+Metric Backtracks Depth 86:0
+Metric Backtracks Depth 87:0
+Metric Backtracks Depth 88:0
+Metric Backtracks Depth 89:0
+Metric Backtracks Depth 90:0
+Metric Backtracks Depth 91:0
+Metric Backtracks Depth 92:0
+Metric Backtracks Depth 93:0
+Metric Backtracks Depth 94:0
+Metric Backtracks Depth 95:0
+Metric Backtracks Depth 96:0
+Metric Backtracks Depth 97:0
+Metric Backtracks Depth 98:0
+Metric Backtracks Depth 99:0
+Metric Backtracks Depth 0:0
+Metric Backtracks Depth 1:0
+Metric Backtracks Depth 2:87944375
+Metric Backtracks Depth 3:0
+Metric Backtracks Depth 4:0
+Metric Backtracks Depth 5:0
+Metric Backtracks Depth 6:0
+Metric Backtracks Depth 7:0
+Metric Backtracks Depth 8:0
+Metric Backtracks Depth 9:0
+Metric Backtracks Depth 10:0
+Metric Backtracks Depth 11:0
+Metric Backtracks Depth 12:0
+Metric Backtracks Depth 13:0
+Metric Backtracks Depth 14:0
+Metric Backtracks Depth 15:0
+Metric Backtracks Depth 16:0
+Metric Backtracks Depth 17:0
+Metric Backtracks Depth 18:0
+Metric Backtracks Depth 19:0
+Metric Backtracks Depth 20:0
+Metric Backtracks Depth 21:0
+Metric Backtracks Depth 22:0
+Metric Backtracks Depth 23:0
+Metric Backtracks Depth 24:0
+Metric Backtracks Depth 25:0
+Metric Backtracks Depth 26:0
+Metric Backtracks Depth 27:0
+Metric Backtracks Depth 28:0
+Metric Backtracks Depth 29:0
+Metric Backtracks Depth 30:0
+Metric Backtracks Depth 31:0
+Metric Backtracks Depth 32:0
+Metric Backtracks Depth 33:0
+Metric Backtracks Depth 34:0
+Metric Backtracks Depth 35:0
+Metric Backtracks Depth 36:0
+Metric Backtracks Depth 37:0
+Metric Backtracks Depth 38:0
+Metric Backtracks Depth 39:0
+Metric Backtracks Depth 40:0
+Metric Backtracks Depth 41:0
+Metric Backtracks Depth 42:0
+Metric Backtracks Depth 43:0
+Metric Backtracks Depth 44:0
+Metric Backtracks Depth 45:0
+Metric Backtracks Depth 46:0
+Metric Backtracks Depth 47:0
+Metric Backtracks Depth 48:0
+Metric Backtracks Depth 49:0
+Metric Backtracks Depth 50:0
+Metric Backtracks Depth 51:0
+Metric Backtracks Depth 52:0
+Metric Backtracks Depth 53:0
+Metric Backtracks Depth 54:0
+Metric Backtracks Depth 55:0
+Metric Backtracks Depth 56:0
+Metric Backtracks Depth 57:0
+Metric Backtracks Depth 58:0
+Metric Backtracks Depth 59:0
+Metric Backtracks Depth 60:0
+Metric Backtracks Depth 61:0
+Metric Backtracks Depth 62:0
+Metric Backtracks Depth 63:0
+Metric Backtracks Depth 64:0
+Metric Backtracks Depth 65:0
+Metric Backtracks Depth 66:0
+Metric Backtracks Depth 67:0
+Metric Backtracks Depth 68:0
+Metric Backtracks Depth 69:0
+Metric Backtracks Depth 70:0
+Metric Backtracks Depth 71:0
+Metric Backtracks Depth 72:0
+Metric Backtracks Depth 73:0
+Metric Backtracks Depth 74:0
+Metric Backtracks Depth 75:0
+Metric Backtracks Depth 76:0
+Metric Backtracks Depth 77:0
+Metric Backtracks Depth 78:0
+Metric Backtracks Depth 79:0
+Metric Backtracks Depth 80:0
+Metric Backtracks Depth 81:0
+Metric Backtracks Depth 82:0
+Metric Backtracks Depth 83:0
+Metric Backtracks Depth 84:0
+Metric Backtracks Depth 85:0
+Metric Backtracks Depth 86:0
+Metric Backtracks Depth 87:0
+Metric Backtracks Depth 88:0
+Metric Backtracks Depth 89:0
+Metric Backtracks Depth 90:0
+Metric Backtracks Depth 91:0
+Metric Backtracks Depth 92:0
+Metric Backtracks Depth 93:0
+Metric Backtracks Depth 94:0
+Metric Backtracks Depth 95:0
+Metric Backtracks Depth 96:0
+Metric Backtracks Depth 97:0
+Metric Backtracks Depth 98:0
+Metric Backtracks Depth 99:0
+
+Metric Nodes Depth 0:0
+Metric Nodes Depth 1:0
+Metric Nodes Depth 2:5592249473
+Metric Nodes Depth 3:0
+Metric Nodes Depth 4:0
+Metric Nodes Depth 5:0
+Metric Nodes Depth 6:0
+Metric Nodes Depth 7:0
+Metric Nodes Depth 8:0
+Metric Nodes Depth 9:0
+Metric Nodes Depth 10:0
+Metric Nodes Depth 11:0
+Metric Nodes Depth 12:0
+Metric Nodes Depth 13:0
+Metric Nodes Depth 14:0
+Metric Nodes Depth 15:0
+Metric Nodes Depth 16:0
+Metric Nodes Depth 17:0
+Metric Nodes Depth 18:0
+Metric Nodes Depth 19:0
+Metric Nodes Depth 20:0
+Metric Nodes Depth 21:0
+Metric Nodes Depth 22:0
+Metric Nodes Depth 23:0
+Metric Nodes Depth 24:0
+Metric Nodes Depth 25:0
+Metric Nodes Depth 26:0
+Metric Nodes Depth 27:0
+Metric Nodes Depth 28:0
+Metric Nodes Depth 29:0
+Metric Nodes Depth 30:0
+Metric Nodes Depth 31:0
+Metric Nodes Depth 32:0
+Metric Nodes Depth 33:0
+Metric Nodes Depth 34:0
+Metric Nodes Depth 35:0
+Metric Nodes Depth 36:0
+Metric Nodes Depth 37:0
+Metric Nodes Depth 38:0
+Metric Nodes Depth 39:0
+Metric Nodes Depth 40:0
+Metric Nodes Depth 41:0
+Metric Nodes Depth 42:0
+Metric Nodes Depth 43:0
+Metric Nodes Depth 44:0
+Metric Nodes Depth 45:0
+Metric Nodes Depth 46:0
+Metric Nodes Depth 47:0
+Metric Nodes Depth 48:0
+Metric Nodes Depth 49:0
+Metric Nodes Depth 50:0
+Metric Nodes Depth 51:0
+Metric Nodes Depth 52:0
+Metric Nodes Depth 53:0
+Metric Nodes Depth 54:0
+Metric Nodes Depth 55:0
+Metric Nodes Depth 56:0
+Metric Nodes Depth 57:0
+Metric Nodes Depth 58:0
+Metric Nodes Depth 59:0
+Metric Nodes Depth 60:0
+Metric Nodes Depth 61:0
+Metric Nodes Depth 62:0
+Metric Nodes Depth 63:0
+Metric Nodes Depth 64:0
+Metric Nodes Depth 65:0
+Metric Nodes Depth 66:0
+Metric Nodes Depth 67:0
+Metric Nodes Depth 68:0
+Metric Nodes Depth 69:0
+Metric Nodes Depth 70:0
+Metric Nodes Depth 71:0
+Metric Nodes Depth 72:0
+Metric Nodes Depth 73:0
+Metric Nodes Depth 74:0
+Metric Nodes Depth 75:0
+Metric Nodes Depth 76:0
+Metric Nodes Depth 77:0
+Metric Nodes Depth 78:0
+Metric Nodes Depth 79:0
+Metric Nodes Depth 80:0
+Metric Nodes Depth 81:0
+Metric Nodes Depth 82:0
+Metric Nodes Depth 83:0
+Metric Nodes Depth 84:0
+Metric Nodes Depth 85:0
+Metric Nodes Depth 86:0
+Metric Nodes Depth 87:0
+Metric Nodes Depth 88:0
+Metric Nodes Depth 89:0
+Metric Nodes Depth 90:0
+Metric Nodes Depth 91:0
+Metric Nodes Depth 92:0
+Metric Nodes Depth 93:0
+Metric Nodes Depth 94:0
+Metric Nodes Depth 95:0
+Metric Nodes Depth 96:0
+Metric Nodes Depth 97:0
+Metric Nodes Depth 98:0
+Metric Nodes Depth 99:0
+Metric Nodes Depth 0:0
+Metric Nodes Depth 1:0
+Metric Nodes Depth 2:4454183468
+Metric Nodes Depth 3:0
+Metric Nodes Depth 4:0
+Metric Nodes Depth 5:0
+Metric Nodes Depth 6:0
+Metric Nodes Depth 7:0
+Metric Nodes Depth 8:0
+Metric Nodes Depth 9:0
+Metric Nodes Depth 10:0
+Metric Nodes Depth 11:0
+Metric Nodes Depth 12:0
+Metric Nodes Depth 13:0
+Metric Nodes Depth 14:0
+Metric Nodes Depth 15:0
+Metric Nodes Depth 16:0
+Metric Nodes Depth 17:0
+Metric Nodes Depth 18:0
+Metric Nodes Depth 19:0
+Metric Nodes Depth 20:0
+Metric Nodes Depth 21:0
+Metric Nodes Depth 22:0
+Metric Nodes Depth 23:0
+Metric Nodes Depth 24:0
+Metric Nodes Depth 25:0
+Metric Nodes Depth 26:0
+Metric Nodes Depth 27:0
+Metric Nodes Depth 28:0
+Metric Nodes Depth 29:0
+Metric Nodes Depth 30:0
+Metric Nodes Depth 31:0
+Metric Nodes Depth 32:0
+Metric Nodes Depth 33:0
+Metric Nodes Depth 34:0
+Metric Nodes Depth 35:0
+Metric Nodes Depth 36:0
+Metric Nodes Depth 37:0
+Metric Nodes Depth 38:0
+Metric Nodes Depth 39:0
+Metric Nodes Depth 40:0
+Metric Nodes Depth 41:0
+Metric Nodes Depth 42:0
+Metric Nodes Depth 43:0
+Metric Nodes Depth 44:0
+Metric Nodes Depth 45:0
+Metric Nodes Depth 46:0
+Metric Nodes Depth 47:0
+Metric Nodes Depth 48:0
+Metric Nodes Depth 49:0
+Metric Nodes Depth 50:0
+Metric Nodes Depth 51:0
+Metric Nodes Depth 52:0
+Metric Nodes Depth 53:0
+Metric Nodes Depth 54:0
+Metric Nodes Depth 55:0
+Metric Nodes Depth 56:0
+Metric Nodes Depth 57:0
+Metric Nodes Depth 58:0
+Metric Nodes Depth 59:0
+Metric Nodes Depth 60:0
+Metric Nodes Depth 61:0
+Metric Nodes Depth 62:0
+Metric Nodes Depth 63:0
+Metric Nodes Depth 64:0
+Metric Nodes Depth 65:0
+Metric Nodes Depth 66:0
+Metric Nodes Depth 67:0
+Metric Nodes Depth 68:0
+Metric Nodes Depth 69:0
+Metric Nodes Depth 70:0
+Metric Nodes Depth 71:0
+Metric Nodes Depth 72:0
+Metric Nodes Depth 73:0
+Metric Nodes Depth 74:0
+Metric Nodes Depth 75:0
+Metric Nodes Depth 76:0
+Depth :2 Time :30124
+Depth :1 Time :71610
+Metric Nodes Depth 77:0
+Metric Nodes Depth 78:0
+Metric Nodes Depth 79:0
+Metric Nodes Depth 80:0
+Metric Nodes Depth 81:0
+Metric Nodes Depth 82:0
+Metric Nodes Depth 83:0
+Metric Nodes Depth 84:0
+Metric Nodes Depth 85:0
+Metric Nodes Depth 86:0
+Metric Nodes Depth 87:0
+Metric Nodes Depth 88:0
+Metric Nodes Depth 89:0
+Metric Nodes Depth 90:0
+Metric Nodes Depth 91:0
+Metric Nodes Depth 92:0
+Metric Nodes Depth 93:0
+Metric Nodes Depth 94:0
+Metric Nodes Depth 95:0
+Metric Nodes Depth 96:0
+Metric Nodes Depth 97:0
+Metric Nodes Depth 98:0
+Metric Nodes Depth 99:0
+Metric Nodes Depth 0:0
+Metric Nodes Depth 1:417416824
+Metric Nodes Depth 2:8006746349
+Metric Nodes Depth 3:586810719
+Metric Nodes Depth 4:841339680
+Metric Nodes Depth 5:1252377578
+Metric Nodes Depth 6:417426936
+Metric Nodes Depth 7:0
+Metric Nodes Depth 8:0
+Metric Nodes Depth 9:0
+Metric Nodes Depth 10:0
+Metric Nodes Depth 11:0
+Metric Nodes Depth 12:0
+Metric Nodes Depth 13:0
+Metric Nodes Depth 14:0
+Metric Nodes Depth 15:0
+Metric Nodes Depth 16:0
+Metric Nodes Depth 17:0
+Metric Nodes Depth 18:0
+Metric Nodes Depth 19:0
+Metric Nodes Depth 20:0
+Metric Nodes Depth 21:0
+Metric Nodes Depth 22:0
+Metric Nodes Depth 23:0
+Metric Nodes Depth 24:0
+Metric Nodes Depth 25:0
+Metric Nodes Depth 26:0
+Metric Nodes Depth 27:0
+Metric Nodes Depth 28:0
+Metric Nodes Depth 29:0
+Metric Nodes Depth 30:0
+Metric Nodes Depth 31:0
+Metric Nodes Depth 32:0
+Metric Nodes Depth 33:0
+Metric Nodes Depth 34:0
+Metric Nodes Depth 35:0
+Metric Nodes Depth 36:0
+Metric Nodes Depth 37:0
+Metric Nodes Depth 38:0
+Metric Nodes Depth 39:0
+Metric Nodes Depth 40:0
+Metric Nodes Depth 41:0
+Metric Nodes Depth 42:0
+Metric Nodes Depth 43:0
+Metric Nodes Depth 44:0
+Metric Nodes Depth 45:0
+Metric Nodes Depth 46:0
+Metric Nodes Depth 47:0
+Metric Nodes Depth 48:0
+Metric Nodes Depth 49:0
+Metric Nodes Depth 50:0
+Metric Nodes Depth 51:0
+Metric Nodes Depth 52:0
+Metric Nodes Depth 53:0
+Metric Nodes Depth 54:0
+Metric Nodes Depth 55:0
+Metric Nodes Depth 56:0
+Metric Nodes Depth 57:0
+Metric Nodes Depth 58:0
+Metric Nodes Depth 59:0
+Metric Nodes Depth 60:0
+Metric Nodes Depth 61:0
+Metric Nodes Depth 62:0
+Metric Nodes Depth 63:0
+Metric Nodes Depth 64:0
+Metric Nodes Depth 65:0
+Metric Nodes Depth 66:0
+Metric Nodes Depth 67:0
+Metric Nodes Depth 68:0
+Metric Nodes Depth 69:0
+Metric Nodes Depth 70:0
+Metric Nodes Depth 71:0
+Metric Nodes Depth 72:0
+Metric Nodes Depth 73:0
+Metric Nodes Depth 74:0
+Metric Nodes Depth 75:0
+Metric Nodes Depth 76:0
+Metric Nodes Depth 77:0
+Metric Nodes Depth 78:0
+Metric Nodes Depth 79:0
+Metric Nodes Depth 80:0
+Metric Nodes Depth 81:0
+Metric Nodes Depth 82:0
+Metric Nodes Depth 83:0
+Metric Nodes Depth 84:0
+Metric Nodes Depth 85:0
+Metric Nodes Depth 86:0
+Metric Nodes Depth 87:0
+Metric Nodes Depth 88:0
+Metric Nodes Depth 89:0
+Metric Nodes Depth 90:0
+Metric Nodes Depth 91:0
+Metric Nodes Depth 92:0
+Metric Nodes Depth 93:0
+Metric Nodes Depth 94:0
+Metric Nodes Depth 95:0
+Metric Nodes Depth 96:0
+Metric Nodes Depth 97:0
+Metric Nodes Depth 98:0
+Metric Nodes Depth 99:0
+Metric Nodes Depth 0:0
+Metric Nodes Depth 1:0
+Metric Nodes Depth 2:4362034690
+Metric Nodes Depth 3:0
+Metric Nodes Depth 4:0
+Metric Nodes Depth 5:0
+Metric Nodes Depth 6:0
+Metric Nodes Depth 7:0
+Metric Nodes Depth 8:0
+Metric Nodes Depth 9:0
+Metric Nodes Depth 10:0
+Metric Nodes Depth 11:0
+Metric Nodes Depth 12:0
+Metric Nodes Depth 13:0
+Metric Nodes Depth 14:0
+Metric Nodes Depth 15:0
+Metric Nodes Depth 16:0
+Metric Nodes Depth 17:0
+Metric Nodes Depth 18:0
+Metric Nodes Depth 19:0
+Metric Nodes Depth 20:0
+Metric Nodes Depth 21:0
+Metric Nodes Depth 22:0
+Metric Nodes Depth 23:0
+Metric Nodes Depth 24:0
+Metric Nodes Depth 25:0
+Metric Nodes Depth 26:0
+Metric Nodes Depth 27:0
+Metric Nodes Depth 28:0
+Metric Nodes Depth 29:0
+Metric Nodes Depth 30:0
+Metric Nodes Depth 31:0
+Metric Nodes Depth 32:0
+Metric Nodes Depth 33:0
+Metric Nodes Depth 34:0
+Metric Nodes Depth 35:0
+Metric Nodes Depth 36:0
+Metric Nodes Depth 37:0
+Metric Nodes Depth 38:0
+Metric Nodes Depth 39:0
+Metric Nodes Depth 40:0
+Metric Nodes Depth 41:0
+Metric Nodes Depth 42:0
+Metric Nodes Depth 43:0
+Metric Nodes Depth 44:0
+Metric Nodes Depth 45:0
+Metric Nodes Depth 46:0
+Metric Nodes Depth 47:0
+Metric Nodes Depth 48:0
+Metric Nodes Depth 49:0
+Metric Nodes Depth 50:0
+Metric Nodes Depth 51:0
+Metric Nodes Depth 52:0
+Metric Nodes Depth 53:0
+Metric Nodes Depth 54:0
+Metric Nodes Depth 55:0
+Metric Nodes Depth 56:0
+Metric Nodes Depth 57:0
+Metric Nodes Depth 58:0
+Metric Nodes Depth 59:0
+Metric Nodes Depth 60:0
+Metric Nodes Depth 61:0
+Metric Nodes Depth 62:0
+Metric Nodes Depth 63:0
+Metric Nodes Depth 64:0
+Metric Nodes Depth 65:0
+Metric Nodes Depth 66:0
+Metric Nodes Depth 67:0
+Metric Nodes Depth 68:0
+Metric Nodes Depth 69:0
+Metric Nodes Depth 70:0
+Metric Nodes Depth 71:0
+Metric Nodes Depth 72:0
+Metric Nodes Depth 73:0
+Metric Nodes Depth 74:0
+Metric Nodes Depth 75:0
+Metric Nodes Depth 76:0
+Metric Nodes Depth 77:0
+Metric Nodes Depth 78:0
+Metric Nodes Depth 79:0
+Metric Nodes Depth 80:0
+Metric Nodes Depth 81:0
+Metric Nodes Depth 82:0
+Metric Nodes Depth 83:0
+Metric Nodes Depth 84:0
+Metric Nodes Depth 85:0
+Metric Nodes Depth 86:0
+Metric Nodes Depth 87:0
+Metric Nodes Depth 88:0
+Metric Nodes Depth 89:0
+Metric Nodes Depth 90:0
+Metric Nodes Depth 91:0
+Metric Nodes Depth 92:0
+Metric Nodes Depth 93:0
+Metric Nodes Depth 94:0
+Metric Nodes Depth 95:0
+Metric Nodes Depth 96:0
+Metric Nodes Depth 97:0
+Metric Nodes Depth 98:0
+Metric Nodes Depth 99:0
+
+Depth :2 Time :34430
+Depth :2 Time :30235
+Depth :2 Time :57
+Depth :2 Time :42
+Depth :2 Time :2763
+Depth :2 Time :45
+Depth :2 Time :49
+Depth :2 Time :47
+Depth :2 Time :3904
+Depth :2 Time :40
+Depth :2 Time :42
+Depth :2 Time :38
+Depth :2 Time :268
+Depth :2 Time :918
+Depth :2 Time :6115
+Depth :2 Time :26218
+Depth :2 Time :33
+Depth :2 Time :2251
+Depth :2 Time :41
+Depth :2 Time :35
+Depth :2 Time :39
+Depth :2 Time :60
+Depth :2 Time :53
+Depth :2 Time :25089
+Depth :2 Time :853
+Depth :2 Time :47
+Depth :2 Time :206
+Depth :2 Time :53
+Depth :2 Time :29417
+Depth :2 Time :52
+Depth :2 Time :454
+Depth :2 Time :42
+Depth :2 Time :1835
+Depth :2 Time :35
+Depth :2 Time :138
+Depth :2 Time :499
+Depth :2 Time :2501
+Depth :2 Time :52
+Depth :2 Time :53
+Depth :2 Time :56
+Depth :2 Time :47
+Depth :2 Time :49
+Depth :2 Time :46
+Depth :2 Time :54
+Depth :2 Time :48
+Depth :2 Time :52
+Depth :2 Time :46
+Depth :2 Time :50
+Depth :2 Time :41
+Depth :2 Time :43
+Depth :2 Time :56
+Depth :2 Time :44
+Depth :2 Time :515
+Depth :2 Time :50
+Depth :2 Time :41
+Depth :2 Time :37
+Depth :2 Time :42
+Depth :2 Time :61
+Depth :2 Time :343
+Depth :2 Time :2028
+Depth :2 Time :47
+Depth :2 Time :43
+Depth :2 Time :67
+Depth :2 Time :139
+Depth :2 Time :121
+Depth :2 Time :889
+Depth :2 Time :559
+Depth :2 Time :3675
+Depth :2 Time :1138
+Depth :2 Time :2593
+Depth :2 Time :1111
+Depth :2 Time :28287
+Depth :2 Time :24328
+Depth :2 Time :26374
+Depth :2 Time :27614
+Depth :2 Time :6212
+Depth :2 Time :3705
+Depth :2 Time :6261
+Depth :2 Time :2831
+Depth :2 Time :25693
+Depth :2 Time :20302
+Depth :2 Time :16042
+Depth :2 Time :23470
+Depth :2 Time :21824
+Depth :2 Time :59
+Depth :2 Time :35033
+Depth :2 Time :29632
+Depth :2 Time :5932
+Depth :2 Time :32
+Depth :2 Time :41
+Depth :2 Time :42
+Depth :2 Time :49
+Depth :2 Time :43
+Depth :2 Time :133
+Depth :2 Time :631
+Depth :2 Time :31
+Depth :2 Time :45
+Depth :2 Time :43
+Depth :2 Time :38
+Depth :2 Time :40
+Depth :2 Time :46
+Depth :2 Time :39
+Depth :2 Time :54
+Depth :2 Time :56
+Depth :2 Time :61
+Depth :2 Time :40
+Depth :2 Time :57
+Depth :2 Time :55
+Depth :2 Time :50
+Depth :2 Time :46
+Depth :2 Time :53
+Depth :2 Time :44
+Depth :2 Time :51
+Depth :2 Time :60
+Depth :2 Time :28720
+Depth :2 Time :3412
+Depth :2 Time :24664
+Depth :2 Time :51
+Depth :2 Time :44
+Depth :2 Time :44
+Depth :2 Time :52
+Depth :2 Time :46
+Depth :2 Time :43
+Depth :2 Time :49
+Depth :2 Time :55
+Depth :2 Time :57
+Depth :2 Time :53
+Depth :2 Time :43
+Depth :2 Time :49
+Depth :2 Time :56
+Depth :2 Time :7976
+Depth :2 Time :54
+Depth :2 Time :25144
+Depth :2 Time :47
+Depth :2 Time :13836
+Depth :2 Time :46
+Depth :2 Time :51
+Depth :2 Time :54
+Depth :2 Time :47
+Depth :2 Time :80
+Depth :2 Time :107
+Depth :2 Time :281
+Depth :2 Time :88
+Depth :2 Time :70
+Depth :2 Time :89
+Depth :2 Time :149
+Depth :2 Time :130
+Depth :2 Time :389
+Depth :2 Time :344
+Depth :2 Time :116
+Depth :2 Time :90
+Depth :2 Time :373
+Depth :2 Time :53
+Depth :2 Time :2769
+Depth :2 Time :159
+Depth :2 Time :373
+Depth :2 Time :403
+Depth :2 Time :220
+Depth :2 Time :1117
+Depth :2 Time :1242
+Depth :2 Time :442
+Depth :2 Time :6383
+Depth :2 Time :22240
+Depth :2 Time :4836
+Depth :2 Time :7713
+Depth :2 Time :7286
+Depth :2 Time :2032
+Depth :2 Time :26050
+Depth :2 Time :25196
+Depth :2 Time :4939
+Depth :2 Time :23317
+Depth :2 Time :21095
+Depth :2 Time :22434
+Depth :2 Time :16653
+Depth :2 Time :15740
+Depth :2 Time :79
+Depth :2 Time :77
+Depth :2 Time :79
+Depth :2 Time :82
+Depth :2 Time :75
+Depth :2 Time :82
+Depth :2 Time :73
+Depth :2 Time :72
+Depth :2 Time :80
+Depth :2 Time :75
+Depth :2 Time :72
+Depth :2 Time :85
+Depth :2 Time :75
+Depth :2 Time :89
+Depth :2 Time :76
+Depth :2 Time :90
+Depth :2 Time :85
+Depth :2 Time :81
+Depth :2 Time :79
+Depth :2 Time :77
+Depth :2 Time :88
+Depth :2 Time :84
+Depth :2 Time :82
+Depth :2 Time :74
+Depth :2 Time :91
+Depth :2 Time :80
+Depth :2 Time :87
+Depth :2 Time :81
+Depth :2 Time :84
+Depth :2 Time :83
+Depth :2 Time :87
+Depth :2 Time :74
+Depth :2 Time :84
+Depth :2 Time :90
+Depth :2 Time :77
+Depth :2 Time :81
+Depth :2 Time :78
+Depth :2 Time :80
+Depth :2 Time :86
+Depth :2 Time :83
+Depth :2 Time :85
+Depth :2 Time :77
+Depth :2 Time :88
+Depth :2 Time :89
+Depth :2 Time :88
+Depth :2 Time :80
+Depth :2 Time :77
+Depth :2 Time :85
+Depth :2 Time :83
+Depth :2 Time :80
+Depth :2 Time :1533
+Depth :2 Time :80
+Depth :2 Time :78
+Depth :2 Time :72
+Depth :2 Time :88
+Depth :2 Time :80
+Depth :2 Time :80
+Depth :2 Time :80
+Depth :2 Time :79
+Depth :2 Time :582
+Depth :2 Time :82
+Depth :2 Time :86
+Depth :2 Time :82
+Depth :2 Time :82
+Depth :2 Time :67
+Depth :2 Time :73
+Depth :2 Time :69
+Depth :2 Time :73
+Depth :2 Time :82
+Depth :2 Time :85
+Depth :2 Time :78
+Depth :2 Time :83
+Depth :2 Time :79
+Depth :2 Time :37
+Depth :2 Time :39
+Depth :2 Time :48
+Depth :2 Time :404
+Depth :2 Time :809
+Depth :2 Time :31724
+Depth :2 Time :58
+Depth :2 Time :1136
+Depth :2 Time :30489
+Depth :2 Time :29789
+Depth :2 Time :45
+Depth :2 Time :48
+Depth :2 Time :43
+Depth :2 Time :48
+Depth :2 Time :3060
+Depth :2 Time :47
+Depth :2 Time :962
+Depth :2 Time :41
+Depth :2 Time :39
+Depth :2 Time :54
+Depth :2 Time :2796
+Depth :2 Time :22416
+Depth :2 Time :29533
+Depth :2 Time :46
+Depth :2 Time :37
+Depth :2 Time :57
+Depth :2 Time :1047
+Depth :2 Time :6283
+Depth :2 Time :26221
+Depth :2 Time :37
+MaxClique Size = 27
+cpu = 107462
+Depth :2 Time :32
+Depth :2 Time :50
+Depth :2 Time :45
+Depth :2 Time :56
+Depth :2 Time :44
+Depth :2 Time :989
+Depth :2 Time :52
+Depth :2 Time :51
+Depth :2 Time :46
+Depth :2 Time :65
+Depth :2 Time :57
+Depth :2 Time :80
+Depth :2 Time :581
+Depth :2 Time :123
+Depth :2 Time :433
+Depth :2 Time :61
+Depth :2 Time :68
+Depth :2 Time :66
+Depth :2 Time :54
+Depth :2 Time :146
+Depth :2 Time :59
+Depth :2 Time :70
+Depth :2 Time :193
+Depth :2 Time :289
+Depth :2 Time :758
+Depth :2 Time :28857
+Depth :2 Time :351
+Depth :2 Time :78
+Depth :2 Time :76
+Depth :2 Time :85
+Depth :2 Time :81
+Depth :2 Time :77
+Depth :2 Time :75
+Depth :2 Time :784
+Depth :2 Time :79
+Depth :2 Time :519
+Depth :2 Time :276
+Depth :2 Time :2033
+Depth :2 Time :95
+Depth :2 Time :87
+Depth :2 Time :123
+Depth :2 Time :80
+Depth :2 Time :808
+Depth :2 Time :160
+Depth :2 Time :389
+Depth :2 Time :67
+Depth :2 Time :65
+Depth :2 Time :56
+Depth :2 Time :346
+Depth :2 Time :315
+Depth :2 Time :113
+Depth :2 Time :104
+Depth :2 Time :354
+Depth :2 Time :80
+Depth :2 Time :1443
+Depth :2 Time :3056
+Depth :2 Time :483
+Depth :2 Time :172
+Depth :2 Time :1256
+Depth :2 Time :221
+Depth :2 Time :203
+Depth :2 Time :63
+Depth :2 Time :141
+Depth :2 Time :3322
+Depth :2 Time :6204
+Depth :2 Time :168
+Depth :2 Time :149
+Depth :2 Time :1527
+Depth :2 Time :294
+Depth :2 Time :1242
+Depth :2 Time :729
+Depth :2 Time :432
+Depth :2 Time :2034
+Depth :2 Time :1327
+Depth :2 Time :3861
+Depth :2 Time :936
+Depth :2 Time :7682
+Depth :2 Time :21611
+Depth :2 Time :4985
+Depth :2 Time :3332
+Depth :2 Time :2644
+Depth :2 Time :1717
+Depth :2 Time :18037
+Depth :2 Time :3062
+Depth :2 Time :5759
+Depth :2 Time :5372
+Depth :2 Time :4400
+Depth :2 Time :1813
+Depth :2 Time :5229
+Depth :2 Time :1466
+Depth :2 Time :21970
+Depth :2 Time :4193
+Depth :2 Time :8112
+Depth :2 Time :3616
+Depth :2 Time :16877
+Depth :2 Time :16779
+Depth :2 Time :5250
+Depth :2 Time :17414
+Depth :2 Time :16170
+Depth :2 Time :20886
+Depth :2 Time :16921
+Depth :2 Time :19857
+Depth :2 Time :17297
+Depth :2 Time :16283
+Depth :2 Time :19990
+Depth :2 Time :16731
+Depth :2 Time :13927
+Depth :3 Time :68
+Depth :3 Time :86
+Depth :3 Time :77
+Depth :3 Time :71
+Depth :3 Time :78
+Depth :3 Time :82
+Depth :3 Time :80
+Depth :3 Time :75
+Depth :3 Time :81
+Depth :3 Time :64
+Depth :3 Time :85
+Depth :3 Time :83
+Depth :3 Time :85
+Depth :3 Time :83
+Depth :3 Time :86
+Depth :3 Time :82
+Depth :3 Time :83
+Depth :3 Time :77
+Depth :3 Time :74
+Depth :3 Time :81
+Depth :3 Time :72
+Depth :3 Time :94
+Depth :3 Time :86
+Depth :3 Time :78
+Depth :3 Time :77
+Depth :3 Time :89
+Depth :3 Time :80
+Depth :3 Time :86
+Depth :3 Time :87
+Depth :3 Time :80
+Depth :3 Time :69
+Depth :3 Time :79
+Depth :3 Time :89
+Depth :3 Time :91
+Depth :3 Time :85
+Depth :3 Time :90
+Depth :3 Time :91
+Depth :3 Time :84
+Depth :3 Time :72
+Depth :3 Time :73
+Depth :3 Time :78
+Depth :3 Time :82
+Depth :3 Time :77
+Depth :3 Time :74
+Depth :3 Time :81
+Depth :3 Time :77
+Depth :3 Time :76
+Depth :3 Time :77
+Depth :3 Time :65
+Depth :3 Time :81
+Depth :3 Time :76
+Depth :3 Time :84
+Depth :3 Time :70
+Depth :3 Time :77
+Depth :3 Time :87
+Depth :3 Time :89
+Depth :3 Time :68
+Depth :3 Time :81
+Depth :3 Time :78
+Depth :3 Time :67
+Depth :3 Time :74
+Depth :3 Time :84
+Depth :3 Time :80
+Depth :3 Time :80
+Depth :3 Time :78
+Depth :3 Time :87
+Depth :3 Time :82
+Depth :3 Time :87
+Depth :3 Time :85
+Depth :3 Time :78
+Depth :3 Time :88
+Depth :3 Time :90
+Depth :3 Time :89
+Depth :3 Time :83
+Depth :3 Time :90
+Depth :3 Time :77
+Depth :3 Time :84
+Depth :3 Time :69
+Depth :3 Time :86
+Depth :3 Time :87
+Depth :3 Time :83
+Depth :3 Time :84
+Depth :3 Time :78
+Depth :3 Time :73
+Depth :3 Time :86
+Depth :3 Time :79
+Depth :3 Time :79
+Depth :3 Time :85
+Depth :3 Time :87
+Depth :3 Time :82
+Depth :3 Time :78
+Depth :3 Time :70
+Depth :3 Time :70
+Depth :3 Time :73
+Depth :3 Time :87
+Depth :3 Time :81
+Depth :3 Time :68
+Depth :3 Time :76
+Depth :3 Time :67
+Depth :3 Time :73
+Depth :3 Time :72
+Depth :3 Time :77
+Depth :3 Time :70
+Depth :3 Time :64
+Depth :3 Time :64
+Depth :3 Time :72
+Depth :3 Time :66
+Depth :3 Time :66
+Depth :3 Time :79
+Depth :3 Time :79
+Depth :3 Time :75
+Depth :3 Time :81
+Depth :3 Time :65
+Depth :3 Time :66
+Depth :3 Time :73
+Depth :3 Time :82
+Depth :3 Time :77
+Depth :3 Time :78
+Depth :3 Time :76
+Depth :3 Time :74
+Depth :3 Time :82
+Depth :3 Time :72
+Depth :3 Time :72
+Depth :3 Time :90
+Depth :3 Time :71
+Depth :3 Time :81
+Depth :3 Time :72
+Depth :3 Time :78
+Depth :3 Time :82
+Depth :3 Time :80
+Depth :3 Time :75
+Depth :3 Time :76
+Depth :3 Time :69
+Depth :3 Time :66
+Depth :3 Time :78
+Depth :3 Time :91
+Depth :3 Time :81
+Depth :3 Time :83
+Depth :3 Time :68
+Depth :3 Time :80
+Depth :3 Time :88
+Depth :3 Time :72
+Depth :3 Time :83
+Depth :3 Time :84
+Depth :3 Time :86
+Depth :3 Time :81
+Depth :3 Time :66
+Depth :3 Time :78
+Depth :3 Time :63
+Depth :3 Time :74
+Depth :3 Time :83
+Depth :3 Time :70
+Depth :3 Time :166
+Depth :3 Time :84
+Depth :3 Time :96
+Depth :3 Time :83
+Depth :3 Time :83
+Depth :3 Time :101
+Depth :3 Time :80
+Depth :3 Time :78
+Depth :3 Time :89
+Depth :3 Time :71
+Depth :3 Time :78
+Depth :3 Time :88
+Depth :3 Time :90
+Depth :3 Time :81
+Depth :3 Time :71
+Depth :3 Time :75
+Depth :3 Time :76
+Depth :3 Time :73
+Depth :3 Time :72
+Depth :3 Time :56
+Depth :3 Time :85
+Depth :3 Time :77
+Depth :3 Time :82
+Depth :3 Time :93
+Depth :3 Time :97
+Depth :3 Time :71
+Depth :3 Time :164
+Depth :3 Time :90
+Depth :3 Time :88
+Depth :3 Time :91
+Depth :3 Time :94
+Depth :3 Time :82
+Depth :3 Time :75
+Depth :3 Time :75
+Depth :3 Time :143
+Depth :3 Time :164
+Depth :3 Time :78
+Depth :3 Time :105
+Depth :3 Time :73
+Depth :3 Time :623
+Depth :3 Time :615
+Depth :3 Time :290
+Depth :3 Time :470
+Depth :3 Time :87
+Depth :3 Time :85
+Depth :3 Time :137
+Depth :3 Time :100
+Depth :3 Time :69
+Depth :3 Time :106
+Depth :3 Time :90
+Depth :3 Time :175
+Depth :3 Time :86
+Depth :3 Time :181
+Depth :3 Time :110
+Depth :3 Time :468
+Depth :3 Time :523
+Depth :3 Time :387
+Depth :3 Time :493
+Depth :3 Time :232
+Depth :3 Time :107
+Depth :3 Time :113
+Depth :3 Time :338
+Depth :3 Time :287
+Depth :3 Time :166
+Depth :3 Time :423
+Depth :3 Time :421
+Depth :3 Time :367
+Depth :3 Time :264
+Depth :3 Time :188
+Depth :3 Time :281
+Depth :4 Time :79
+Depth :4 Time :70
+Depth :4 Time :71
+Depth :4 Time :80
+Depth :4 Time :76
+Depth :4 Time :75
+Depth :4 Time :61
+Depth :4 Time :82
+Depth :4 Time :73
+Depth :4 Time :81
+Depth :4 Time :73
+Depth :4 Time :85
+Depth :4 Time :78
+Depth :4 Time :92
+Depth :4 Time :72
+Depth :4 Time :84
+Depth :4 Time :85
+Depth :4 Time :89
+Depth :4 Time :89
+Depth :4 Time :88
+Depth :4 Time :84
+Depth :4 Time :94
+Depth :4 Time :73
+Depth :4 Time :85
+Depth :4 Time :90
+Depth :4 Time :76
+Depth :4 Time :86
+Depth :4 Time :95
+Depth :4 Time :88
+Depth :4 Time :87
+Depth :4 Time :89
+Depth :4 Time :86
+Depth :4 Time :80
+Depth :4 Time :87
+Depth :4 Time :66
+Depth :4 Time :76
+Depth :4 Time :89
+Depth :4 Time :83
+Depth :4 Time :77
+Depth :4 Time :91
+Depth :4 Time :85
+Depth :4 Time :88
+Depth :4 Time :85
+Depth :4 Time :82
+Depth :4 Time :81
+Depth :4 Time :81
+Depth :4 Time :81
+Depth :4 Time :76
+Depth :4 Time :85
+Depth :4 Time :86
+Depth :4 Time :80
+Depth :4 Time :82
+Depth :4 Time :73
+Depth :4 Time :80
+Depth :4 Time :76
+Depth :4 Time :79
+Depth :4 Time :80
+Depth :4 Time :73
+Depth :4 Time :78
+Depth :4 Time :82
+Depth :4 Time :87
+Depth :4 Time :73
+Depth :4 Time :83
+Depth :4 Time :83
+Depth :4 Time :85
+Depth :4 Time :78
+Depth :4 Time :88
+Depth :4 Time :85
+Depth :4 Time :84
+Depth :4 Time :85
+Depth :4 Time :79
+Depth :4 Time :70
+Depth :4 Time :87
+Depth :4 Time :85
+Depth :4 Time :84
+Depth :4 Time :79
+Depth :4 Time :87
+Depth :4 Time :76
+Depth :4 Time :79
+Depth :4 Time :76
+Depth :4 Time :87
+Depth :4 Time :80
+Depth :4 Time :79
+Depth :4 Time :78
+Depth :4 Time :83
+Depth :4 Time :79
+Depth :4 Time :74
+Depth :4 Time :88
+Depth :4 Time :85
+Depth :4 Time :89
+Depth :4 Time :82
+Depth :4 Time :82
+Depth :4 Time :84
+Depth :4 Time :84
+Depth :4 Time :80
+Depth :4 Time :86
+Depth :4 Time :71
+Depth :4 Time :84
+Depth :4 Time :78
+Depth :4 Time :83
+Depth :4 Time :69
+Depth :4 Time :74
+Depth :4 Time :84
+Depth :4 Time :81
+Depth :4 Time :82
+Depth :4 Time :84
+Depth :4 Time :69
+Depth :4 Time :79
+Depth :4 Time :79
+Depth :4 Time :86
+Depth :4 Time :72
+Depth :4 Time :74
+Depth :4 Time :83
+Depth :4 Time :71
+Depth :4 Time :81
+Depth :4 Time :72
+Depth :4 Time :69
+Depth :4 Time :89
+Depth :4 Time :84
+Depth :4 Time :74
+Depth :4 Time :79
+Depth :4 Time :67
+Depth :4 Time :88
+Depth :4 Time :87
+Depth :4 Time :67
+Depth :4 Time :72
+Depth :4 Time :76
+Depth :4 Time :65
+Depth :4 Time :76
+Depth :4 Time :82
+Depth :4 Time :69
+Depth :4 Time :83
+Depth :4 Time :87
+Depth :4 Time :84
+Depth :4 Time :87
+Depth :4 Time :83
+Depth :4 Time :86
+Depth :4 Time :93
+Depth :4 Time :88
+Depth :4 Time :84
+Depth :4 Time :91
+Depth :4 Time :72
+Depth :4 Time :77
+Depth :4 Time :82
+Depth :4 Time :103
+Depth :4 Time :83
+Depth :4 Time :89
+Depth :4 Time :143
+Depth :4 Time :87
+Depth :4 Time :80
+Depth :4 Time :91
+Depth :4 Time :103
+Depth :4 Time :91
+Depth :4 Time :79
+Depth :4 Time :76
+Depth :4 Time :110
+Depth :4 Time :83
+Depth :5 Time :88
+Depth :5 Time :77
+Depth :5 Time :86
+Depth :5 Time :89
+Depth :5 Time :87
+Depth :5 Time :85
+Depth :5 Time :91
+Depth :5 Time :83
+Depth :5 Time :76
+Depth :5 Time :93
+Depth :5 Time :88
+Depth :5 Time :84
+Depth :5 Time :83
+Depth :5 Time :86
+Depth :5 Time :83
+Depth :5 Time :73
+Depth :5 Time :81
+Depth :5 Time :83
+Depth :5 Time :90
+Depth :5 Time :85
+Depth :5 Time :80
+Depth :5 Time :85
+Depth :5 Time :86
+Depth :5 Time :87
+Depth :5 Time :75
+Depth :5 Time :81
+Depth :5 Time :90
+Depth :5 Time :70
+Depth :5 Time :68
+Depth :5 Time :79
+Depth :5 Time :89
+Depth :5 Time :83
+Depth :5 Time :79
+Depth :5 Time :88
+Depth :5 Time :89
+Depth :5 Time :70
+Depth :5 Time :83
+Depth :5 Time :85
+Depth :5 Time :79
+Depth :5 Time :90
+Depth :5 Time :77
+Depth :5 Time :67
+Depth :5 Time :86
+Depth :5 Time :82
+Depth :5 Time :90
+Depth :5 Time :78
+Depth :5 Time :89
+Depth :5 Time :91
+Depth :5 Time :80
+Depth :5 Time :72
+Depth :5 Time :81
+Depth :5 Time :79
+Depth :5 Time :78
+Depth :5 Time :87
+Depth :5 Time :80
+Depth :5 Time :94
+Depth :5 Time :83
+Depth :5 Time :70
+Depth :5 Time :79
+Depth :5 Time :83
+Depth :5 Time :83
+Depth :5 Time :81
+Depth :5 Time :80
+Depth :5 Time :75
+Depth :5 Time :89
+Depth :5 Time :87
+Depth :5 Time :68
+Depth :5 Time :68
+Depth :5 Time :80
+Depth :5 Time :81
+Depth :5 Time :88
+Depth :5 Time :85
+Depth :5 Time :88
+Depth :5 Time :85
+Depth :5 Time :76
+Depth :5 Time :87
+Depth :5 Time :90
+Depth :5 Time :79
+Depth :5 Time :76
+Depth :5 Time :70
+Depth :5 Time :73
+Depth :5 Time :83
+Depth :5 Time :81
+Depth :5 Time :87
+Depth :5 Time :75
+Depth :5 Time :73
+Depth :5 Time :73
+Depth :5 Time :78
+Depth :5 Time :69
+Depth :5 Time :68
+Depth :5 Time :80
+Depth :5 Time :58
+Depth :5 Time :81
+Depth :5 Time :81
+Depth :5 Time :76
+Depth :5 Time :66
+Depth :5 Time :85
+Depth :5 Time :76
+Depth :5 Time :85
+Depth :5 Time :93
+Depth :5 Time :78
+Depth :5 Time :64
+Depth :5 Time :80
+Depth :5 Time :69
+Depth :5 Time :78
+Depth :5 Time :75
+Depth :6 Time :86
+Depth :6 Time :74
+Depth :6 Time :69
+Depth :6 Time :90
+Depth :6 Time :92
+Depth :6 Time :94
+Depth :6 Time :74
+Depth :6 Time :71
+Depth :6 Time :81
+Depth :6 Time :97
+Depth :6 Time :95
+Depth :6 Time :101
+Depth :6 Time :83
+Depth :6 Time :73
+Depth :6 Time :89
+Depth :6 Time :81
+Depth :6 Time :86
+Depth :6 Time :85
+Depth :6 Time :76
+Depth :6 Time :87
+Depth :6 Time :83
+Depth :6 Time :87
+Depth :6 Time :83
+Depth :6 Time :79
+Depth :6 Time :69
+Depth :6 Time :78
+Depth :6 Time :80
+Depth :6 Time :75
+Depth :6 Time :82
+Depth :6 Time :76
+Depth :6 Time :66
+Depth :6 Time :84
+Depth :6 Time :82
+Depth :6 Time :71
+Depth :6 Time :79
+Depth :6 Time :82
+Depth :6 Time :63
+Depth :6 Time :82
+Depth :6 Time :85
+Depth :6 Time :89
+Depth :6 Time :67
+Depth :6 Time :85
+Depth :6 Time :90
+Depth :6 Time :99
+Depth :6 Time :80
+Depth :6 Time :68
+Depth :6 Time :81
+Depth :6 Time :79
+Depth :6 Time :88
+Depth :6 Time :68
+Depth :6 Time :74
+Depth :6 Time :81
+Depth :6 Time :92
+Depth :6 Time :87
+Depth :6 Time :94
+Depth :6 Time :81
+Depth :6 Time :73
+Depth :6 Time :100
+Depth :6 Time :91
+Depth :6 Time :95
+Depth :6 Time :82
+Depth :6 Time :97
+Depth :6 Time :67
+Depth :6 Time :72
+Depth :6 Time :85
+Depth :2 Time :5699
+Depth :2 Time :2223
+Depth :2 Time :22788
+Depth :2 Time :523
+Depth :2 Time :27814
+Depth :2 Time :26386
+Depth :2 Time :331
+Depth :2 Time :2675
+Depth :2 Time :4037
+Depth :2 Time :24534
+Depth :2 Time :25009
+Depth :2 Time :24177
+Depth :2 Time :24138
+Depth :6 Time :88
+Depth :6 Time :79
+Depth :6 Time :76
+Depth :6 Time :74
+Depth :6 Time :58
+Depth :6 Time :31
+Depth :6 Time :31
+Depth :6 Time :32
+Depth :6 Time :31
+Depth :6 Time :31
+Depth :6 Time :32
+Depth :6 Time :32
+Depth :6 Time :32
