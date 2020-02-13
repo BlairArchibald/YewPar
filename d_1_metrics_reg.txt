@@ -1,0 +1,20 @@
+CPU Time (Before collecting metrics) 106294
+
+MaxClique Size = 26
+cpu = 106300
+CPU Time (Before collecting metrics) 109223
+
+MaxClique Size = 26
+cpu = 109228
+CPU Time (Before collecting metrics) 107235
+
+MaxClique Size = 26
+cpu = 107240
+CPU Time (Before collecting metrics) 109146
+
+MaxClique Size = 26
+cpu = 109151
+CPU Time (Before collecting metrics) 108943
+
+MaxClique Size = 26
+cpu = 108948
