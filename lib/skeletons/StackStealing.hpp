@@ -50,11 +50,11 @@ struct StackStealing {
   typedef typename parameter::value_type<args, API::tag::NodeCounts_, std::integral_constant<unsigned, 0> >::type NodeCounts;
   static constexpr unsigned nodeCounts = NodeCounts::value;
 
-  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 0> >::type Regulairty;
+  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 0> >::type Regularity;
   static constexpr unsigned regularity = Regularity::value;
 
   typedef typename parameter::value_type<args, API::tag::Backtracks_, std::integral_constant<unsigned, 0> >::type Backtracks;
-  static constexpr unsigned countBacktracks = Backtracks::::value;
+  static constexpr unsigned countBacktracks = Backtracks::value;
 
   typedef typename parameter::value_type<args, API::tag::Prunes_, std::integral_constant<unsigned, 0> >::type Prunes;
   static constexpr unsigned countPrunes = Prunes::value;
@@ -314,19 +314,19 @@ struct StackStealing {
     }
 
     if constexpr(countBacktracks) {
-      hpx::apply(hpx::util::bind[=]() {
+      hpx::apply(hpx::util::bind([=]() {
         store->updateBacktracks(depth, backtracks);
       }));
     }
 
     if constexpr(countPrunes) {
-      hpx::apply(hpx::util::bind[=]() {
-        store->updatePrunes(prunes);
+      hpx::apply(hpx::util::bind([=]() {
+        store->updatePrunes(depth, prunes);
       }));
     }
 
     if constexpr (regularity) {
-      auto t2 = sd::chrono::steady_clock::now();
+      auto t2 = std::chrono::steady_clock::now();
       auto diff = t2-t1;
       const auto time = (const std::uint64_t) diff.count();
       hpx::apply(hpx::util::bind([=]() {

@@ -55,13 +55,13 @@ struct Metrics : Metrics_<std::integral_constant<unsigned, 1> > {};
 BOOST_PARAMETER_TEMPLATE_KEYWORD(NodeCounts_)
 struct NodeCounts : NodeCounts_<std::integral_constant<unsigned, 1> > {};
 
-BOOST_PARAMETER_TEMPLATE_KEYWORD(Regularity)
-struct Regularity : Regulariy_<std::integral_constant<unsigned, 1 > > {};
+BOOST_PARAMETER_TEMPLATE_KEYWORD(Regularity_)
+struct Regularity : Regularity_<std::integral_constant<unsigned, 1> > {};
 
-BOOST_PARAMETER_TEMPLATE_KEYWORD(Prunes)
-struct Prunes : Prunes_<std::integral_constant<unsigned, 1, > > {};
+BOOST_PARAMETER_TEMPLATE_KEYWORD(Prunes_)
+struct Prunes : Prunes_<std::integral_constant<unsigned, 1> > {};
 
-BOOST_PARAMETER_TEMPLATE_KEYWORD(NodeCounts_)
+BOOST_PARAMETER_TEMPLATE_KEYWORD(Backtracks_)
 struct Backtracks : Backtracks_<std::integral_constant<unsigned, 1> > {};
 
 
