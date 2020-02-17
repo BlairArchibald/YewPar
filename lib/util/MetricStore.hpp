@@ -59,22 +59,23 @@ struct MetricStore {
     updateBacktracks(depth, b);
   }
 
-  void updateTimes(const unsigned & depth, const std::uint64_t & time) {
+  void updateTimes(const unsigned depth, const std::uint64_t time) {
 		if (time >= 1) {
-      (*taskTimes)[depth].push_front(time);
-			(*tasks)[depth]++;
+			const auto depthIdx = depth < taskTimes->size() ? depth : taskTimes->size()-1;
+      (*taskTimes)[depthIdx].push_front(time);
+			(*tasks)[depthIdx]++;
    	}
   }
 
-  void updatePrunes(const unsigned & depth, const std::uint64_t & p) {
+  void updatePrunes(const unsigned depth, const std::uint64_t p) {
     updateMetric(*prunes, p, depth);
   }
 
-  void updateNodesVisited(const unsigned & depth, const std::uint64_t & n) {
+  void updateNodesVisited(const unsigned depth, const std::uint64_t n) {
     updateMetric(*nodesVisited, n, depth);
   }
 
-  void updateBacktracks(const unsigned & depth, const std::uint64_t & b) {
+  void updateBacktracks(const unsigned depth, const std::uint64_t b) {
     updateMetric(*backtracks, b, depth);
   }
 
@@ -98,8 +99,10 @@ struct MetricStore {
     auto depth = 0;
 		for (const auto & timeDepths : *taskTimes) {
       for (const auto & time : timeDepths) {
-			  hpx::cout << "Depth :" << depth << " Time :" << time << hpx::endl;
-      }
+			  if (time >= 1) {
+					hpx::cout << "Depth :" << depth << " Time :" << time << hpx::endl;
+      	}
+			}
       depth++;
 		}
 	}

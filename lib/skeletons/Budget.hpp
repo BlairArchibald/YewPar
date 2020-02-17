@@ -293,7 +293,7 @@ struct Budget {
     }
   
     std::chrono::time_point<std::chrono::steady_clock> t1;
-    if constexpr(metrics) {
+    if constexpr(nodeCounts || countBacktracks) {
       t1 = std::chrono::steady_clock::now();
     }
 
@@ -303,18 +303,18 @@ struct Budget {
         hpx::find_all_localities()));
 
     
-    if constexpr(regularity && verbose) {
+    if constexpr(regularity) {
       printTotalTasks();
       for (const auto & l : hpx::find_all_localities()) {
         hpx::wait_all(hpx::async<PrintTimesAct>(l));
       }
     }
 
-    if constexpr(countPrunes && verbose) {
+    if constexpr(countPrunes) {
       printPrunes();
     }
 
-    if constexpr(verbose) {
+    if constexpr(nodeCounts || countBacktracks) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = diff.count();
@@ -326,11 +326,6 @@ struct Budget {
         printBacktracks();
       }
     }
-
-    if constexpr(countBacktracks && verbose) {
-      printBacktracks();
-    }
-
 
     // Return the right thing
     if constexpr(isCountNodes) {

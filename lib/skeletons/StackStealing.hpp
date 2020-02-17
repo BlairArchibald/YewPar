@@ -309,28 +309,28 @@ struct StackStealing {
 
      if constexpr(nodeCounts) {
       hpx::apply(hpx::util::bind([=]() {
-        store->updateNodesVisited(depth, nodeCount);
+        store->updateNodesVisited(depth > 0 ? depth : 0, nodeCount);
       }));
     }
 
     if constexpr(countBacktracks) {
       hpx::apply(hpx::util::bind([=]() {
-        store->updateBacktracks(depth, backtracks);
+        store->updateBacktracks(depth > 0 ? depth : 0, backtracks);
       }));
     }
 
     if constexpr(countPrunes) {
       hpx::apply(hpx::util::bind([=]() {
-        store->updatePrunes(depth, prunes);
+        store->updatePrunes(depth > 0 ? depth : 0, prunes);
       }));
     }
 
-    if constexpr (regularity) {
+    if constexpr(regularity) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = t2-t1;
       const auto time = (const std::uint64_t) diff.count();
       hpx::apply(hpx::util::bind([=]() {
-        store->updateTimes(depth, time);
+        store->updateTimes(depth > 0 ? depth : 0, time);
       }));
    }
 
@@ -527,7 +527,17 @@ struct StackStealing {
       }
     }
 
-    if constexpr(verbose) {
+		if constexpr(countPrunes) {
+			printPrunes();
+		}
+	
+		if constexpr(regularity) {
+			for (const auto &l : hpx::find_all_localities()) {
+				hpx::wait_all(hpx::async<PrintTimesAct>(l));
+			}
+		}
+
+    if constexpr(nodeCounts || countBacktracks) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = diff.count();
