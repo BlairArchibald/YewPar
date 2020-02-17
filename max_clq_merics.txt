@@ -1,1 +1,0 @@
-Invalid skeleton type option. Should be: seq, depthbound, stacksteal or ordered

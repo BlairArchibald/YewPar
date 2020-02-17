@@ -51,8 +51,18 @@ struct DepthBounded {
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
   static constexpr unsigned verbose = Verbose::value;
 
-  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics_;
-  static constexpr unsigned metrics = Metrics_::value;
+  typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics;
+  static constexpr unsigned metrics = Metrics::value;
+
+  typedef typename parameter::value_type<args, API::tag::NodeCounts_, std::integral_constant<unsigned, 0> >::type NodeCounts;
+  static constexpr unsigned nodeCounts = NodeCounts::value;
+
+  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 0> >::type Regulairty;
+  static constexpr unsigned regularity = NodeCounts::value;
+
+  typedef typename parameter::value_type<args, API::tag::Backtracks, std::integral_constant<unsigned, 0> >::type Backtracks;
+  static constexpr unsigned countBacktracks = NodeCounts::value;
+
 
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;

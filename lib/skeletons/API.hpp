@@ -52,6 +52,19 @@ struct EvenMoreVerbose : Verbose_<std::integral_constant<unsigned, 3> > {};
 BOOST_PARAMETER_TEMPLATE_KEYWORD(Metrics_)
 struct Metrics : Metrics_<std::integral_constant<unsigned, 1> > {};
 
+BOOST_PARAMETER_TEMPLATE_KEYWORD(NodeCounts_)
+struct NodeCounts : NodeCounts_<std::integral_constant<unsigned, 1> > {};
+
+BOOST_PARAMETER_TEMPLATE_KEYWORD(Regularity)
+struct Regularity : Regulariy_<std::integral_constant<unsigned, 1 > > {};
+
+BOOST_PARAMETER_TEMPLATE_KEYWORD(Prunes)
+struct Prunes : Prunes_<std::integral_constant<unsigned, 1, > > {};
+
+BOOST_PARAMETER_TEMPLATE_KEYWORD(NodeCounts_)
+struct Backtracks : Backtracks_<std::integral_constant<unsigned, 1> > {};
+
+
 // Signature, everything is optional since the generators are explicitly passed as arg 1 on each skeleton
 BOOST_PARAMETER_TEMPLATE_KEYWORD(null)
 typedef parameter::parameters<parameter::optional<tag::null> > skeleton_signature;
