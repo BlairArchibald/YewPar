@@ -59,7 +59,7 @@ struct MetricStore {
     updateBacktracks(depth, b);
   }
 
-  void updateTimes(const unsigned depth, const std::uint64_t time) {
+  void updateTimes(const unsigned depth, std::uint64_t time) {
 		if (time >= 1) {
 			const auto depthIdx = depth < taskTimes->size() ? depth : taskTimes->size()-1;
       (*taskTimes)[depthIdx].push_front(time);
@@ -67,15 +67,15 @@ struct MetricStore {
    	}
   }
 
-  void updatePrunes(const unsigned depth, const std::uint64_t p) {
+  void updatePrunes(const unsigned depth, std::uint64_t p) {
     updateMetric(*prunes, p, depth);
   }
 
-  void updateNodesVisited(const unsigned depth, const std::uint64_t n) {
+  void updateNodesVisited(const unsigned depth, std::uint64_t n) {
     updateMetric(*nodesVisited, n, depth);
   }
 
-  void updateBacktracks(const unsigned depth, const std::uint64_t b) {
+  void updateBacktracks(const unsigned depth, std::uint64_t b) {
     updateMetric(*backtracks, b, depth);
   }
 

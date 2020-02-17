@@ -281,7 +281,7 @@ struct DepthBounded {
         hpx::find_all_localities(), space, root, params));
 
     // If we are performing an analysis on any of the metrics
-    if constexpr(metrics) {
+    if constexpr(nodeCounts || countBacktracks || countPrunes || regularity) {
       hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities()));
     }
 

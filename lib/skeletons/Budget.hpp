@@ -306,7 +306,7 @@ struct Budget {
     if constexpr(regularity) {
       printTotalTasks();
       for (const auto & l : hpx::find_all_localities()) {
-        hpx::wait_all(hpx::async<PrintTimesAct>(l));
+        hpx::async<PrintTimesAct>(l).get();
       }
     }
 

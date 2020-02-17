@@ -309,19 +309,19 @@ struct StackStealing {
 
      if constexpr(nodeCounts) {
       hpx::apply(hpx::util::bind([=]() {
-        store->updateNodesVisited(depth > 0 ? depth : 0, nodeCount);
+        store->updateNodesVisited(depth >= 0 ? depth : 0, nodeCount);
       }));
     }
 
     if constexpr(countBacktracks) {
       hpx::apply(hpx::util::bind([=]() {
-        store->updateBacktracks(depth > 0 ? depth : 0, backtracks);
+        store->updateBacktracks(depth >= 0 ? depth : 0, backtracks);
       }));
     }
 
     if constexpr(countPrunes) {
       hpx::apply(hpx::util::bind([=]() {
-        store->updatePrunes(depth > 0 ? depth : 0, prunes);
+        store->updatePrunes(depth >= 0 ? depth : 0, prunes);
       }));
     }
 
@@ -330,7 +330,7 @@ struct StackStealing {
       auto diff = t2-t1;
       const auto time = (const std::uint64_t) diff.count();
       hpx::apply(hpx::util::bind([=]() {
-        store->updateTimes(depth > 0 ? depth : 0, time);
+        store->updateTimes(depth >= 0 ? depth : 0, time);
       }));
    }
 
@@ -495,7 +495,7 @@ struct StackStealing {
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
-    if constexpr(nodeCounts) {
+    if constexpr(nodeCounts || countBacktracks || countPrunes || regularity) {
       hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities()));
     }
 
@@ -533,7 +533,7 @@ struct StackStealing {
 	
 		if constexpr(regularity) {
 			for (const auto &l : hpx::find_all_localities()) {
-				hpx::wait_all(hpx::async<PrintTimesAct>(l));
+				hpx::async<PrintTimesAct>(l).get();
 			}
 		}
 
