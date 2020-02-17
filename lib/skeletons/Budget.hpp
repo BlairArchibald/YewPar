@@ -33,6 +33,18 @@ struct Budget {
   typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics_;
   static constexpr unsigned metrics = Metrics_::value;
 
+  typedef typename parameter::value_type<args, API::tag::NodeCounts_, std::integral_constant<unsigned, 0> >::type NodeCounts;
+  static constexpr unsigned nodeCounts = NodeCounts::value;
+
+  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 0> >::type Regulairty;
+  static constexpr unsigned regularity = Regularity::value;
+
+  typedef typename parameter::value_type<args, API::tag::Backtracks_, std::integral_constant<unsigned, 0> >::type Backtracks;
+  static constexpr unsigned countBacktracks = Backtracks::::value;
+
+  typedef typename parameter::value_type<args, API::tag::Prunes_, std::integral_constant<unsigned, 0> >::type Prunes;
+  static constexpr unsigned countPrunes = Prunes::value;
+
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
@@ -103,7 +115,9 @@ struct Budget {
             }
           }
         }
-        totalBacktracks += backtracks;
+        if constexpr(countBacktracks) {
+          totalBacktracks += backtracks;
+        }
         backtracks = 0;
       }
 
@@ -116,13 +130,13 @@ struct Budget {
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, child);
         
-        if constexpr(metrics) {
+        if constexpr(nodeCounts) {
           nodeCount++;
         }
 
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
-          if constexpr(metrics) {
+          if constexpr(countPrunes) {
             prunes++;
           }
           continue;
@@ -163,7 +177,7 @@ struct Budget {
       }
     }
 
-    if constexpr(metrics) {
+    if constexpr(countBacktracks) {
       totalBacktracks += backtracks;
     }
 
@@ -186,20 +200,38 @@ struct Budget {
 
     std::chrono::time_point<std::chrono::steady_clock> t1;
     
-    if constexpr(metrics) {
+    if constexpr(regularity) {
       t1 = std::chrono::steady_clock::now();
     }
     
     expand(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth, nodeCount, prunes, backtracks);
 
-    if constexpr(metrics) {
-      auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
-     	const std::uint64_t time = (const std::uint64_t) diff.count();
+     if constexpr(nodeCounts) {
       hpx::apply(hpx::util::bind([=]() {
-        store->updateMetrics(childDepth, time, prunes, nodeCount, backtracks);
+        store->updateNodesVisited(childDepth, nodeCount);
       }));
     }
+
+    if constexpr(countBacktracks) {
+      hpx::apply(hpx::util::bind[=]() {
+        store->updateBacktracks(childDepth, backtracks);
+      }));
+    }
+
+    if constexpr(countPrunes) {
+      hpx::apply(hpx::util::bind[=]() {
+        store->updatePrunes(prunes);
+      }));
+    }
+
+    if constexpr (regularity) {
+      auto t2 = sd::chrono::steady_clock::now();
+      auto diff = t2-t1;
+      const auto time = (const std::uint64_t) diff.count();
+      hpx::apply(hpx::util::bind([=]() {
+        store->updateTimes(childDepth, time);
+      }));
+   }
 
     // Atomically updates the (process) local counter
     if constexpr (isCountNodes) {
@@ -243,7 +275,7 @@ struct Budget {
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
-    if constexpr(metrics) {
+    if constexpr(nodeCounts || countPrunes || countBacktracks || regularity) {
       hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities()));
     }
 
@@ -270,20 +302,32 @@ struct Budget {
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
-    if constexpr(metrics) {
+    
+    if constexpr(regularity && verbose) {
+      printTotalTasks();
+      for (const auto & l : hpx::find_all_localities()) {
+        hpx::wait_all(hpx::async<PrintTimesAct>(l));
+      }
+    }
+
+    if constexpr(countPrunes && verbose) {
+      printPrunes();
+    }
+
+    if constexpr(nodeCounts) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = diff.count();
-      hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
-      printTotalTasks();
-      printPrunes();
-      printBacktracks();
-      printNodeCounts();
-      // Prints regularity metrics
-      for (const auto & l : hpx::find_all_localities()) {
-        hpx::async<PrintTimesAct>(l).get();
+      if constexpr(verbose) {
+        hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
+        printNodeCounts();
       }
-    } 
+    }
+
+    if constexpr(countBacktracks && verbose) {
+      printBacktracks();
+    }
+
 
     // Return the right thing
     if constexpr(isCountNodes) {

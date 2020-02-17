@@ -47,6 +47,19 @@ struct StackStealing {
   typedef typename parameter::value_type<args, API::tag::Metrics_, std::integral_constant<unsigned, 0> >::type Metrics_;
   static constexpr unsigned metrics = Metrics_::value;
 
+  typedef typename parameter::value_type<args, API::tag::NodeCounts_, std::integral_constant<unsigned, 0> >::type NodeCounts;
+  static constexpr unsigned nodeCounts = NodeCounts::value;
+
+  typedef typename parameter::value_type<args, API::tag::Regularity_, std::integral_constant<unsigned, 0> >::type Regulairty;
+  static constexpr unsigned regularity = Regularity::value;
+
+  typedef typename parameter::value_type<args, API::tag::Backtracks_, std::integral_constant<unsigned, 0> >::type Backtracks;
+  static constexpr unsigned countBacktracks = Backtracks::::value;
+
+  typedef typename parameter::value_type<args, API::tag::Prunes_, std::integral_constant<unsigned, 0> >::type Prunes;
+  static constexpr unsigned countPrunes = Prunes::value;
+
+
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
@@ -214,20 +227,20 @@ struct StackStealing {
         generatorStack[stackDepth].seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child);
-        if constexpr(metrics) {
+        if constexpr(nodeCounts) {
 					nodeCount++;
 				}
         
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) {
-          if constexpr(metrics) {
+          if constexpr(countPrunes) {
 						prunes++;
 					}
           continue;
         }
         else if (pn == ProcessNodeRet::Break) {
           stackDepth--;
-          if constexpr(metrics) {
+          if constexpr(countBacktracks) {
 				  	backtracks++;
 					}
           depth--;
@@ -249,7 +262,7 @@ struct StackStealing {
             // This doesn't look quite right to me, we want the next element at this level not the previous?
             if (depth == reg->params.maxDepth) {
               stackDepth--;
-              if constexpr(metrics) {
+              if constexpr(countBacktracks) {
 								backtracks++;
 							}
               depth--;
@@ -262,7 +275,7 @@ struct StackStealing {
       } else {
         stackDepth--;
         depth--;
-        if constexpr(metrics) {
+        if constexpr(countBacktracks) {
 					backtracks++;
 				}
       }
@@ -288,21 +301,38 @@ struct StackStealing {
     std::uint64_t nodeCount, prunes, backtracks;
     std::chrono::time_point<std::chrono::steady_clock> t1;
 
-		if constexpr(metrics) {
+		if constexpr(regularity) {
     	t1 = std::chrono::steady_clock::now();
     }
 
 		runWithStack(startingDepth, space, generatorStack, stealRequest, cntMap, futures, nodeCount, prunes, backtracks, stackDepth, depth);
 
-    if constexpr(metrics) {
-      auto t2 = std::chrono::steady_clock::now();
-      auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);      
-     	const std::uint64_t time = (const std::uint64_t) diff.count();
+     if constexpr(nodeCounts) {
       hpx::apply(hpx::util::bind([=]() {
-        const unsigned depthIdx = (depth >= 0) ? (depth) : (0);
-        store->updateMetrics(depthIdx, time, prunes, nodeCount, backtracks); 
+        store->updateNodesVisited(depth, nodeCount);
       }));
     }
+
+    if constexpr(countBacktracks) {
+      hpx::apply(hpx::util::bind[=]() {
+        store->updateBacktracks(depth, backtracks);
+      }));
+    }
+
+    if constexpr(countPrunes) {
+      hpx::apply(hpx::util::bind[=]() {
+        store->updatePrunes(prunes);
+      }));
+    }
+
+    if constexpr (regularity) {
+      auto t2 = sd::chrono::steady_clock::now();
+      auto diff = t2-t1;
+      const auto time = (const std::uint64_t) diff.count();
+      hpx::apply(hpx::util::bind([=]() {
+        store->updateTimes(depth, time);
+      }));
+   }
 
     // Atomically updates the (process) local counter
     if constexpr(isCountNodes) {
@@ -465,7 +495,7 @@ struct StackStealing {
     hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
         hpx::find_all_localities(), space, root, params));
 
-    if constexpr(metrics) {
+    if constexpr(nodeCounts) {
       hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities()));
     }
 
