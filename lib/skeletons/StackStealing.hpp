@@ -509,7 +509,7 @@ struct StackStealing {
     }
 
     std::chrono::time_point<std::chrono::steady_clock> t1;
-    if constexpr(metrics) {
+    if constexpr(nodeCounts || countBacktracks) {
       t1 = std::chrono::steady_clock::now();
     }
 
@@ -527,20 +527,18 @@ struct StackStealing {
       }
     }
 
-    if constexpr(metrics) {
+    if constexpr(verbose) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
-      printTotalTasks();
-      printPrunes();
-      printBacktracks();
-      printNodeCounts();
-      // Prints regularity metrics
-     // for (const auto & l : hpx::find_all_localities()) {
-     //   hpx::async<PrintTimesAct>(l).get();
-    //  }
-    } 
+      if constexpr(nodeCounts) {
+        printNodeCounts();
+      }
+      if constexpr(countBacktracks) {
+        printBacktracks();
+      }
+    }
 
     // Return the right thing
     if constexpr(isCountNodes) {

@@ -314,13 +314,16 @@ struct Budget {
       printPrunes();
     }
 
-    if constexpr(nodeCounts) {
+    if constexpr(verbose) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = diff.count();
-      if constexpr(verbose) {
-        hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
+      hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
+      if constexpr(nodeCounts) {
         printNodeCounts();
+      }
+      if constexpr(countBacktracks) {
+        printBacktracks();
       }
     }
 

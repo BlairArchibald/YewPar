@@ -299,7 +299,7 @@ struct DepthBounded {
     }
 
     std::chrono::time_point<std::chrono::steady_clock> t1;
-    if constexpr(nodeCounts) {
+    if constexpr(nodeCounts || backtracks) {
       t1 = std::chrono::steady_clock::now();
     }
 
@@ -320,16 +320,17 @@ struct DepthBounded {
       printPrunes();
     }
 
-    if constexpr(nodeCounts && verbose) {
+    if constexpr(verbose) {
       auto t2 = std::chrono::steady_clock::now();
       auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
       const std::uint64_t time = diff.count();
       hpx::cout << "CPU Time (Before collecting metrics) " << time << hpx::endl;
-      printNodeCounts();
-    }
-
-    if constexpr(countBacktracks && verbose) {
-      printBacktracks();
+      if constexpr(nodeCounts) {
+        printNodeCounts();
+      }
+      if constexpr(countBacktracks) {
+        printBacktracks();
+      }
     }
 
     // Return the right thing

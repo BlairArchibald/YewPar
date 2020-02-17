@@ -232,24 +232,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   auto sol = root;
   auto skeletonType = opts["skeleton"].as<std::string>();
 
-  if (skeletonType == "seq") {
-    if (decisionBound != 0) {
-      YewPar::Skeletons::API::Params<int> searchParameters;
-      searchParameters.expectedObjective = decisionBound;
-
-      sol = YewPar::Skeletons::Seq<GenNode,
-                                   YewPar::Skeletons::API::Decision,
-                                   YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                   YewPar::Skeletons::API::PruneLevel>
-            ::search(graph, root, searchParameters);
-    } else {
-      sol = YewPar::Skeletons::Seq<GenNode,
-                                 YewPar::Skeletons::API::Optimisation,
-                                 YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                 YewPar::Skeletons::API::PruneLevel>
-          ::search(graph, root);
-    }
-  } else if (skeletonType == "depthbounded") {
+  if (skeletonType == "depthbounded") {
     if (decisionBound != 0) {
       YewPar::Skeletons::API::Params<int> searchParameters;
       searchParameters.expectedObjective = decisionBound;
@@ -263,24 +246,54 @@ int hpx_main(boost::program_options::variables_map & opts) {
       YewPar::Skeletons::API::Params<int> searchParameters;
       searchParameters.spawnDepth = spawnDepth;
       auto poolType = opts["poolType"].as<std::string>();
-      if (opts.count("metrics")) {
+      if (opts.count("nodes")) {
           sol = YewPar::Skeletons::DepthBounded<GenNode,
                                                YewPar::Skeletons::API::Optimisation,
                                                YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                                YewPar::Skeletons::API::PruneLevel,
-                                               YewPar::Skeletons::API::Metrics,
+                                               YewPar::Skeletons::API::NodeCounts,
+                                               YewPar::Skeletons::API::Verbose,
                                                YewPar::Skeletons::API::DepthBoundedPoolPolicy<
                                                  Workstealing::Policies::DepthPoolPolicy> >
               ::search(graph, root, searchParameters);
-        } else {
+      } else if (opts.count("backtracks")) {
           sol = YewPar::Skeletons::DepthBounded<GenNode,
                                                YewPar::Skeletons::API::Optimisation,
                                                YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                                YewPar::Skeletons::API::PruneLevel,
+                                               YewPar::Skeletons::API::Backtracks,
+                                               YewPar::Skeletons::API::Verbose,
                                                YewPar::Skeletons::API::DepthBoundedPoolPolicy<
                                                  Workstealing::Policies::DepthPoolPolicy> >
               ::search(graph, root, searchParameters);
-        }
+      } else if (opts.count("regularity")) {
+          sol = YewPar::Skeletons::DepthBounded<GenNode,
+                                               YewPar::Skeletons::API::Optimisation,
+                                               YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                               YewPar::Skeletons::API::PruneLevel,
+                                               YewPar::Skeletons::API::Regularity,
+                                               YewPar::Skeletons::API::Verbose,
+                                               YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                                                 Workstealing::Policies::DepthPoolPolicy> >
+              ::search(graph, root, searchParameters);
+      } else if (opts.count("prunes")) {
+        sol = YewPar::Skeletons::DepthBounded<GenNode,
+                                               YewPar::Skeletons::API::Optimisation,
+                                               YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                               YewPar::Skeletons::API::Prunes,
+                                               YewPar::Skeletons::API::Verbose,
+                                               YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                                               Workstealing::Policies::DepthPoolPolicy> >
+              ::search(graph, root, searchParameters);
+      } else {
+        sol = YewPar::Skeletons::DepthBounded<GenNode,
+                                               YewPar::Skeletons::API::Optimisation,
+                                               YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                               YewPar::Skeletons::API::PruneLevel,
+                                               YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                                               Workstealing::Policies::DepthPoolPolicy> >
+              ::search(graph, root, searchParameters);
+      }
     }
   } else if (skeletonType == "stacksteal") {
     if (decisionBound != 0) {
@@ -295,10 +308,35 @@ int hpx_main(boost::program_options::variables_map & opts) {
     } else {
       YewPar::Skeletons::API::Params<int> searchParameters;
       searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
-      if (opts.count("metrics")) {
+      if (opts.count("nodes")) {
         sol = YewPar::Skeletons::StackStealing<GenNode,
                                               YewPar::Skeletons::API::Optimisation,
-                                              YewPar::Skeletons::API::Metrics,
+                                              YewPar::Skeletons::API::NodeCounts,
+                                              YewPar::Skeletons::API::Verbose,
+                                              YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                              YewPar::Skeletons::API::PruneLevel>
+            ::search(graph, root, searchParameters);
+      } else if (opts.counts("backtracks"))  {
+        sol = YewPar::Skeletons::StackStealing<GenNode,
+                                              YewPar::Skeletons::API::Optimisation,
+                                              YewPar::Skeletons::API::Backtracks,
+                                              YewPar::Skeletons::API::Verbose,
+                                              YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                              YewPar::Skeletons::API::PruneLevel>
+            ::search(graph, root, searchParameters);
+      } else if (opts.count("regularity")) {
+        sol = YewPar::Skeletons::StackStealing<GenNode,
+                                              YewPar::Skeletons::API::Optimisation,
+                                              YewPar::Skeletons::API::Regularity,
+                                              YewPar::Skeletons::API::Verbose,
+                                              YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                              YewPar::Skeletons::API::PruneLevel>
+            ::search(graph, root, searchParameters);
+      } else if (opts.count("prunes")) {
+        sol = YewPar::Skeletons::StackStealing<GenNode,
+                                              YewPar::Skeletons::API::Optimisation,
+                                              YewPar::Skeletons::API::Prunes,
+                                              YewPar::Skeletons::API::Verbose,
                                               YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                               YewPar::Skeletons::API::PruneLevel>
             ::search(graph, root, searchParameters);
@@ -309,23 +347,6 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                               YewPar::Skeletons::API::PruneLevel>
             ::search(graph, root, searchParameters);
       }
-    }
-  } else if (skeletonType == "ordered") {
-    YewPar::Skeletons::API::Params<int> searchParameters;
-    searchParameters.spawnDepth = spawnDepth;
-    if (opts.count("discrepancyOrder")) {
-      sol = YewPar::Skeletons::Ordered<GenNode,
-                                       YewPar::Skeletons::API::Optimisation,
-                                       YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                       YewPar::Skeletons::API::DiscrepancySearch,
-                                       YewPar::Skeletons::API::PruneLevel>
-          ::search(graph, root, searchParameters);
-    } else {
-      sol = YewPar::Skeletons::Ordered<GenNode,
-                                         YewPar::Skeletons::API::Optimisation,
-                                         YewPar::Skeletons::API::BoundFunction<upperBound_func>,
-                                         YewPar::Skeletons::API::PruneLevel>
-          ::search(graph, root, searchParameters);
     }
   } else if (skeletonType == "budget") {
     if (decisionBound != 0) {
@@ -340,10 +361,35 @@ int hpx_main(boost::program_options::variables_map & opts) {
     } else {
       YewPar::Skeletons::API::Params<int> searchParameters;
       searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
-      if (opts.count("metrics")) {
+      if (opts.count("nodes")) {
         sol = YewPar::Skeletons::Budget<GenNode,
                                         YewPar::Skeletons::API::Optimisation,
-                                        YewPar::Skeletons::API::Metrics,
+                                        YewPar::Skeletons::API::NodeCounts,
+                                        YewPar::Skeletons::API::Verbose,
+                                        YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                        YewPar::Skeletons::API::PruneLevel>
+          ::search(graph, root, searchParameters);
+      } else if(opts.count("backtracks")) {
+        sol = YewPar::Skeletons::Budget<GenNode,
+                                        YewPar::Skeletons::API::Optimisation,
+                                        YewPar::Skeletons::API::Backtracks,
+                                        YewPar::Skeletons::API::Verbose,
+                                        YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                        YewPar::Skeletons::API::PruneLevel>
+          ::search(graph, root, searchParameters);
+      } else if (opts.count("regularity")) {
+        sol = YewPar::Skeletons::Budget<GenNode,
+                                        YewPar::Skeletons::API::Optimisation,
+                                        YewPar::Skeletons::API::Regularity,
+                                        YewPar::Skeletons::API::Verbose,
+                                        YewPar::Skeletons::API::BoundFunction<upperBound_func>,
+                                        YewPar::Skeletons::API::PruneLevel>
+          ::search(graph, root, searchParameters);
+      } else if (opts.count("prunes")) {
+        sol = YewPar::Skeletons::Budget<GenNode,
+                                        YewPar::Skeletons::API::Optimisation,
+                                        YewPar::Skeletons::API::Prunes,
+                                        YewPar::Skeletons::API::Verbose,
                                         YewPar::Skeletons::API::BoundFunction<upperBound_func>,
                                         YewPar::Skeletons::API::PruneLevel>
           ::search(graph, root, searchParameters);
@@ -400,7 +446,10 @@ int main (int argc, char* argv[]) {
     boost::program_options::value<int>()->default_value(0),
     "For Decision Skeletons. Size of the clique to search for"
     )
-    ("metrics", "Collect the regularity, pruning and backtracks");
+    ("backtracks", "Collect the backtracks metric")
+    ("nodes", "Collect the backtracks metric")
+    ("regularity", "Collect the backtracks metric")
+    ("prunes", "Collect the backtracks metric");
 
   YewPar::registerPerformanceCounters();
 
