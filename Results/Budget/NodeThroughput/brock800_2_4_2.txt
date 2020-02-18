@@ -1,0 +1,15 @@
+CPU Time (Before collecting metrics) 315252
+Nodes Depth 0:560866101637
+Nodes Depth 1:236865635
+Nodes Depth 0:1505060726993
+
+MaxClique Size = 24
+cpu = 315264
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 23641 RUNNING AT 130.209.255.4
+=   EXIT CODE: 139
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================

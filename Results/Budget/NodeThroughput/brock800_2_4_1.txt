@@ -1,0 +1,17 @@
+CPU Time (Before collecting metrics) 415326
+Nodes Depth 0:994399378653
+Nodes Depth 1:309751227
+
+MaxClique Size = 24
+cpu = 415328
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 23414 RUNNING AT 130.209.255.4
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+YOUR APPLICATION TERMINATED WITH THE EXIT STRING: Aborted (signal 6)
+This typically refers to a problem with your application.
+Please see the FAQ page for debugging suggestions

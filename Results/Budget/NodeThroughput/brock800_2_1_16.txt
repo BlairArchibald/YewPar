@@ -1,0 +1,29 @@
+CPU Time (Before collecting metrics) 38131
+Nodes Depth 0:15126147458
+Nodes Depth 1:28585341
+Nodes Depth 0:32938232764
+Nodes Depth 0:31161671556
+Nodes Depth 0:28783665927
+Nodes Depth 0:32865820240
+Nodes Depth 0:29684849929
+Nodes Depth 0:33868088449
+Nodes Depth 0:31172960687
+Nodes Depth 0:32648638452
+Nodes Depth 0:36992954394
+Nodes Depth 0:34400618890
+Nodes Depth 0:25774976637
+Nodes Depth 0:32013728196
+Nodes Depth 0:35092890342
+Nodes Depth 0:35812025696
+Nodes Depth 0:32915612457
+
+MaxClique Size = 24
+cpu = 38344
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 10483 RUNNING AT 130.209.255.15
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================

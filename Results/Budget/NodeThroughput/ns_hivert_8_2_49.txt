@@ -1,0 +1,359 @@
+CPU Time (Before collecting metrics) 50251
+Nodes Depth 1:10000053
+Nodes Depth 14:723454
+Nodes Depth 15:773000
+Nodes Depth 16:941261
+Nodes Depth 17:2231426
+Nodes Depth 18:3708350
+Nodes Depth 19:6983493
+Nodes Depth 20:10208585
+Nodes Depth 21:22618631
+Nodes Depth 22:29103970
+Nodes Depth 23:45220753
+Nodes Depth 24:72469792
+Nodes Depth 25:62342123
+Nodes Depth 26:87544000
+Nodes Depth 27:131189870
+Nodes Depth 28:49635904
+Nodes Depth 29:121217582
+Nodes Depth 30:201298848
+Nodes Depth 31:205275827
+Nodes Depth 32:334183002
+Nodes Depth 33:402380127
+Nodes Depth 34:481328918
+Nodes Depth 35:614011173
+Nodes Depth 36:628189804
+Nodes Depth 37:577266589
+Nodes Depth 38:637820524
+Nodes Depth 39:1569876011
+Nodes Depth 40:3216977350
+Nodes Depth 41:3597768017
+Nodes Depth 42:1873160812
+Nodes Depth 43:699663406
+Nodes Depth 44:437836854
+Nodes Depth 45:316483987
+Nodes Depth 46:232008646
+Nodes Depth 47:154975432
+Nodes Depth 48:80220422
+Nodes Depth 25:31770341
+Nodes Depth 26:64061504
+Nodes Depth 27:50582101
+Nodes Depth 28:150004663
+Nodes Depth 29:71286402
+Nodes Depth 30:232340817
+Nodes Depth 31:184181907
+Nodes Depth 32:290802717
+Nodes Depth 33:369608941
+Nodes Depth 34:487953610
+Nodes Depth 35:715856409
+Nodes Depth 36:1100322480
+Nodes Depth 37:1633101963
+Nodes Depth 38:2332824061
+Nodes Depth 39:2803513494
+Nodes Depth 40:2394463673
+Nodes Depth 41:1549844037
+Nodes Depth 42:693457568
+Nodes Depth 43:423530152
+Nodes Depth 44:310963068
+Nodes Depth 45:240666850
+Nodes Depth 46:176262765
+Nodes Depth 47:103959673
+Nodes Depth 48:45942401
+Nodes Depth 15:815044
+Nodes Depth 16:2039396
+Nodes Depth 17:2094569
+Nodes Depth 18:2566234
+Nodes Depth 19:2675478
+Nodes Depth 20:3792819
+Nodes Depth 21:10448178
+Nodes Depth 22:4808497
+Nodes Depth 23:6534825
+Nodes Depth 24:10219300
+Nodes Depth 25:21497931
+Nodes Depth 26:18350146
+Nodes Depth 27:32174142
+Nodes Depth 28:95007223
+Nodes Depth 29:111515735
+Nodes Depth 30:56694936
+Nodes Depth 31:152689888
+Nodes Depth 32:289212275
+Nodes Depth 33:372051295
+Nodes Depth 34:523713654
+Nodes Depth 35:685878760
+Nodes Depth 36:1140336528
+Nodes Depth 37:1714053308
+Nodes Depth 38:2533465051
+Nodes Depth 39:2803194202
+Nodes Depth 40:2307704011
+Nodes Depth 41:1451449969
+Nodes Depth 42:656518505
+Nodes Depth 43:406131464
+Nodes Depth 44:311017936
+Nodes Depth 45:233493308
+Nodes Depth 46:167507737
+Nodes Depth 47:105924853
+Nodes Depth 48:47187613
+Nodes Depth 7:26
+Nodes Depth 9:244
+Nodes Depth 10:1649914
+Nodes Depth 11:16
+Nodes Depth 12:8520285
+Nodes Depth 13:10066683
+Nodes Depth 14:162
+Nodes Depth 15:6828
+Nodes Depth 16:10065862
+Nodes Depth 17:137191
+Nodes Depth 18:10079378
+Nodes Depth 19:360464
+Nodes Depth 20:10015630
+Nodes Depth 21:10142855
+Nodes Depth 22:10089343
+Nodes Depth 23:10245884
+Nodes Depth 24:508033
+Nodes Depth 25:20065579
+Nodes Depth 26:31
+Nodes Depth 27:8067267
+Nodes Depth 30:65551
+Nodes Depth 31:222930428
+Nodes Depth 32:272735100
+Nodes Depth 33:602693744
+Nodes Depth 34:814080331
+Nodes Depth 35:1150952853
+Nodes Depth 36:1529211195
+Nodes Depth 37:2042455844
+Nodes Depth 38:2394768037
+Nodes Depth 39:2420342922
+Nodes Depth 40:1942361815
+Nodes Depth 41:1208492752
+Nodes Depth 42:583386485
+Nodes Depth 43:399438044
+Nodes Depth 44:311239411
+Nodes Depth 45:234690135
+Nodes Depth 46:167767867
+Nodes Depth 47:99303887
+Nodes Depth 48:43779555
+Nodes Depth 5:3732
+Nodes Depth 6:1
+Nodes Depth 7:4
+Nodes Depth 8:197599
+Nodes Depth 9:725938
+Nodes Depth 11:45
+Nodes Depth 12:99
+Nodes Depth 13:226
+Nodes Depth 14:2697
+Nodes Depth 15:66032
+Nodes Depth 16:394473
+Nodes Depth 17:238888
+Nodes Depth 18:2920413
+Nodes Depth 19:13165909
+Nodes Depth 20:23029732
+Nodes Depth 21:11476401
+Nodes Depth 22:40002819
+Nodes Depth 23:47896980
+Nodes Depth 24:55788984
+Nodes Depth 25:82163938
+Nodes Depth 26:118642091
+Nodes Depth 27:198254803
+Nodes Depth 28:273378996
+Nodes Depth 29:532073531
+Nodes Depth 30:659900861
+Nodes Depth 31:840008511
+Nodes Depth 32:1051893151
+Nodes Depth 33:1303308643
+Nodes Depth 34:1461541398
+Nodes Depth 35:1629087240
+Nodes Depth 36:1695619954
+Nodes Depth 37:1650897070
+Nodes Depth 38:1417885153
+Nodes Depth 39:1129362069
+Nodes Depth 40:664368541
+Nodes Depth 41:422940508
+Nodes Depth 42:312239423
+Nodes Depth 43:246745178
+Nodes Depth 44:196907638
+Nodes Depth 45:149890674
+Nodes Depth 46:103404863
+Nodes Depth 47:60629198
+Nodes Depth 48:27984817
+Nodes Depth 5:2
+Nodes Depth 7:1
+Nodes Depth 8:80
+Nodes Depth 10:65558
+Nodes Depth 11:67759
+Nodes Depth 12:16
+Nodes Depth 13:7
+Nodes Depth 14:188737
+Nodes Depth 15:221479
+Nodes Depth 16:68149
+Nodes Depth 17:10065566
+Nodes Depth 18:2232380
+Nodes Depth 19:4627536
+Nodes Depth 20:698621
+Nodes Depth 21:342844
+Nodes Depth 22:2237226
+Nodes Depth 23:4391273
+Nodes Depth 24:10236582
+Nodes Depth 25:638892
+Nodes Depth 26:804309
+Nodes Depth 27:18122966
+Nodes Depth 28:36370067
+Nodes Depth 29:27432674
+Nodes Depth 30:94613928
+Nodes Depth 31:198839541
+Nodes Depth 32:227269847
+Nodes Depth 33:330956463
+Nodes Depth 34:727294633
+Nodes Depth 35:1245162528
+Nodes Depth 36:1766204164
+Nodes Depth 37:2187660703
+Nodes Depth 38:2490279104
+Nodes Depth 39:2451565637
+Nodes Depth 40:1879311789
+Nodes Depth 41:991463287
+Nodes Depth 42:530513613
+Nodes Depth 43:356194699
+Nodes Depth 44:270425808
+Nodes Depth 45:204138893
+Nodes Depth 46:143609454
+Nodes Depth 47:85930231
+Nodes Depth 48:40371578
+Nodes Depth 6:8
+Nodes Depth 9:29
+Nodes Depth 10:78
+Nodes Depth 11:179
+Nodes Depth 12:437
+Nodes Depth 13:151383
+Nodes Depth 14:504
+Nodes Depth 15:66743
+Nodes Depth 16:82366
+Nodes Depth 17:1005152
+Nodes Depth 18:230582
+Nodes Depth 19:292656
+Nodes Depth 20:198002
+Nodes Depth 21:10296740
+Nodes Depth 22:567294
+Nodes Depth 23:754933
+Nodes Depth 24:7684212
+Nodes Depth 25:417764
+Nodes Depth 26:11471040
+Nodes Depth 27:2482188
+Nodes Depth 28:14946014
+Nodes Depth 29:23527396
+Nodes Depth 30:30656528
+Nodes Depth 31:34820579
+Nodes Depth 32:210393962
+Nodes Depth 33:422982434
+Nodes Depth 34:760168166
+Nodes Depth 35:1213766744
+Nodes Depth 36:1823700434
+Nodes Depth 37:2426543144
+Nodes Depth 38:2739090041
+Nodes Depth 39:2453427245
+Nodes Depth 40:1585735412
+Nodes Depth 41:771428210
+Nodes Depth 42:466059107
+Nodes Depth 43:350104969
+Nodes Depth 44:275048326
+Nodes Depth 45:212643821
+Nodes Depth 46:148791296
+Nodes Depth 47:90518122
+Nodes Depth 48:41420117
+Nodes Depth 3:46
+Nodes Depth 4:420
+Nodes Depth 6:14060
+Nodes Depth 7:75811
+Nodes Depth 8:11
+Nodes Depth 9:65537
+Nodes Depth 10:728
+Nodes Depth 11:4520253
+Nodes Depth 12:6760
+Nodes Depth 13:32
+Nodes Depth 14:10000108
+Nodes Depth 15:10000032
+Nodes Depth 16:66279
+Nodes Depth 17:67275
+Nodes Depth 18:15
+Nodes Depth 19:65543
+Nodes Depth 20:131752
+Nodes Depth 21:1130827
+Nodes Depth 22:71728
+Nodes Depth 23:346576
+Nodes Depth 24:1623771
+Nodes Depth 25:2651951
+Nodes Depth 26:10549982
+Nodes Depth 27:11143036
+Nodes Depth 28:11980716
+Nodes Depth 29:18677003
+Nodes Depth 30:18964956
+Nodes Depth 31:31201411
+Nodes Depth 32:30065581
+Nodes Depth 33:86734325
+Nodes Depth 34:303855104
+Nodes Depth 35:669471747
+Nodes Depth 36:1338665764
+Nodes Depth 37:2365447612
+Nodes Depth 38:3157573185
+Nodes Depth 39:3353006040
+Nodes Depth 40:2368707839
+Nodes Depth 41:1154967848
+Nodes Depth 42:585522703
+Nodes Depth 43:425415927
+Nodes Depth 44:332680207
+Nodes Depth 45:252983250
+Nodes Depth 46:178768613
+Nodes Depth 47:111363987
+Nodes Depth 48:51381963
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+48: 38260496374
+49: 62200036752
+=====
+cpu = 50291

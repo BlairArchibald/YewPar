@@ -1,0 +1,21 @@
+CPU Time (Before collecting metrics) 79085
+Nodes Depth 0:58185606343
+Nodes Depth 1:56980995
+Nodes Depth 0:110957976098
+Nodes Depth 0:124659026947
+Nodes Depth 0:120923886531
+Nodes Depth 0:143293055942
+Nodes Depth 0:135434205821
+Nodes Depth 0:115381714070
+Nodes Depth 0:127959419064
+
+MaxClique Size = 24
+cpu = 79153
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 20152 RUNNING AT 130.209.255.5
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================

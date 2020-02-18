@@ -1,0 +1,17 @@
+CPU Time (Before collecting metrics) 181110
+Nodes Depth 0:279614349527828
+Nodes Depth 1:131366845
+Nodes Depth 0:644041140494
+Nodes Depth 0:431553470037
+Nodes Depth 0:617868768847
+
+MaxClique Size = 24
+cpu = 181133
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 27122 RUNNING AT 130.209.255.6
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================

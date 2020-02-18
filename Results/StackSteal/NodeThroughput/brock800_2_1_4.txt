@@ -1,0 +1,29 @@
+CPU Time (Before collecting metrics) 203535
+Nodes Depth 2:1831417976
+Nodes Depth 3:26076325608
+Nodes Depth 4:7927821128
+Nodes Depth 5:3807025236
+Nodes Depth 6:2500012766
+Nodes Depth 7:340000276
+Nodes Depth 2:2735585909
+Nodes Depth 3:24752331312
+Nodes Depth 4:8081168654
+Nodes Depth 5:4080454574
+Nodes Depth 6:2320009508
+Nodes Depth 7:300000471
+Nodes Depth 1:19999993
+Nodes Depth 2:3878402169
+Nodes Depth 3:24164957084
+Nodes Depth 4:11374210711
+Nodes Depth 5:6884319387
+Nodes Depth 6:3742827048
+Nodes Depth 7:1119134937
+Nodes Depth 2:1969776486
+Nodes Depth 3:23321868292
+Nodes Depth 4:10438132761
+Nodes Depth 5:6140917973
+Nodes Depth 6:2860032991
+Nodes Depth 7:1960004011
+
+MaxClique Size = 24
+cpu = 203571

@@ -1,0 +1,209 @@
+CPU Time (Before collecting metrics) 95628
+Nodes Depth 1:10000053
+Nodes Depth 25:11776092
+Nodes Depth 26:25415848
+Nodes Depth 27:35046532
+Nodes Depth 28:29648284
+Nodes Depth 29:5392929
+Nodes Depth 30:9805261
+Nodes Depth 31:31661923
+Nodes Depth 32:164798148
+Nodes Depth 33:18510227
+Nodes Depth 34:191324354
+Nodes Depth 35:350129137
+Nodes Depth 36:510689077
+Nodes Depth 37:1519229589
+Nodes Depth 38:3761666011
+Nodes Depth 39:6398531057
+Nodes Depth 40:7484120640
+Nodes Depth 41:6306198376
+Nodes Depth 42:2960319518
+Nodes Depth 43:1315079437
+Nodes Depth 44:893490108
+Nodes Depth 45:671778238
+Nodes Depth 46:494553484
+Nodes Depth 47:318978882
+Nodes Depth 48:158538801
+Nodes Depth 4:420
+Nodes Depth 5:3732
+Nodes Depth 6:1
+Nodes Depth 7:26
+Nodes Depth 8:65550
+Nodes Depth 11:65722
+Nodes Depth 12:453
+Nodes Depth 13:10065808
+Nodes Depth 14:726225
+Nodes Depth 15:10839724
+Nodes Depth 16:2574059
+Nodes Depth 17:2109854
+Nodes Depth 18:3584634
+Nodes Depth 19:7114614
+Nodes Depth 20:3975626
+Nodes Depth 21:7380389
+Nodes Depth 22:14418708
+Nodes Depth 23:20834640
+Nodes Depth 24:33962796
+Nodes Depth 25:64643701
+Nodes Depth 26:65732853
+Nodes Depth 27:100753841
+Nodes Depth 28:148315758
+Nodes Depth 29:251801817
+Nodes Depth 30:395967559
+Nodes Depth 31:587871569
+Nodes Depth 32:986839368
+Nodes Depth 33:1326865747
+Nodes Depth 34:1971169496
+Nodes Depth 35:2560585185
+Nodes Depth 36:3560246882
+Nodes Depth 37:4297288272
+Nodes Depth 38:4482456850
+Nodes Depth 39:4053619063
+Nodes Depth 40:2908624949
+Nodes Depth 41:1720887498
+Nodes Depth 42:957623985
+Nodes Depth 43:684693657
+Nodes Depth 44:532374718
+Nodes Depth 45:403503921
+Nodes Depth 46:285342540
+Nodes Depth 47:172782041
+Nodes Depth 48:77269650
+Nodes Depth 3:46
+Nodes Depth 5:2
+Nodes Depth 6:8
+Nodes Depth 7:75812
+Nodes Depth 8:65616
+Nodes Depth 11:47
+Nodes Depth 12:6788
+Nodes Depth 13:1135
+Nodes Depth 14:10262728
+Nodes Depth 15:1036874
+Nodes Depth 16:11001107
+Nodes Depth 17:3396384
+Nodes Depth 18:5218464
+Nodes Depth 19:13446029
+Nodes Depth 20:23118301
+Nodes Depth 21:25958299
+Nodes Depth 22:29976858
+Nodes Depth 23:46338611
+Nodes Depth 24:55925732
+Nodes Depth 25:67527325
+Nodes Depth 26:101875069
+Nodes Depth 27:146716365
+Nodes Depth 28:230216012
+Nodes Depth 29:323147740
+Nodes Depth 30:440300517
+Nodes Depth 31:656551286
+Nodes Depth 32:945011376
+Nodes Depth 33:1458334375
+Nodes Depth 34:1950379452
+Nodes Depth 35:2822281668
+Nodes Depth 36:3736298086
+Nodes Depth 37:4423553188
+Nodes Depth 38:4429221240
+Nodes Depth 39:3749314129
+Nodes Depth 40:2595826995
+Nodes Depth 41:1436714289
+Nodes Depth 42:868124587
+Nodes Depth 43:631893716
+Nodes Depth 44:488721466
+Nodes Depth 45:365099744
+Nodes Depth 46:253883518
+Nodes Depth 47:149048016
+Nodes Depth 48:66717797
+Nodes Depth 6:14060
+Nodes Depth 7:4
+Nodes Depth 8:197596
+Nodes Depth 9:726212
+Nodes Depth 10:1781814
+Nodes Depth 11:4588019
+Nodes Depth 12:8585892
+Nodes Depth 13:151388
+Nodes Depth 14:319925
+Nodes Depth 15:72560
+Nodes Depth 16:82620
+Nodes Depth 17:10071685
+Nodes Depth 18:12999790
+Nodes Depth 19:7348292
+Nodes Depth 20:20850142
+Nodes Depth 21:32986716
+Nodes Depth 22:42485311
+Nodes Depth 23:47824757
+Nodes Depth 24:68380002
+Nodes Depth 25:77798009
+Nodes Depth 26:118399333
+Nodes Depth 27:169827315
+Nodes Depth 28:222946921
+Nodes Depth 29:325518909
+Nodes Depth 30:448987376
+Nodes Depth 31:594518674
+Nodes Depth 32:612134967
+Nodes Depth 33:1089954743
+Nodes Depth 34:1449094128
+Nodes Depth 35:2193616296
+Nodes Depth 36:3218030934
+Nodes Depth 37:4358272688
+Nodes Depth 38:5034751967
+Nodes Depth 39:4790294475
+Nodes Depth 40:3388490422
+Nodes Depth 41:1710572257
+Nodes Depth 42:945854190
+Nodes Depth 43:702033573
+Nodes Depth 44:552701084
+Nodes Depth 45:423483383
+Nodes Depth 46:294237635
+Nodes Depth 47:178481116
+Nodes Depth 48:78842410
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+48: 38260496374
+49: 62200036752
+=====
+cpu = 95648
