@@ -1,0 +1,14 @@
+[mpiexec@gpgnode-04] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-04] Press Ctrl-C again to force abort
+Using pattern file: test/g75
+Using target file: test/g34
+Skeleton Type: StackStealing
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Chunking Enabled: false
+Solution found: false
+cpu = 7602

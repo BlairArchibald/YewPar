@@ -1,0 +1,36 @@
+Using pattern file: test/g75
+Using target file: test/g34
+[mpiexec@gpgnode-04] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-04] Press Ctrl-C again to force abort
+[gpgnode-04:03222] *** Process received signal ***
+[gpgnode-04:03222] Signal: Aborted (6)
+[gpgnode-04:03222] Signal code:  (-6)
+[gpgnode-04:03222] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f198203f890]
+[gpgnode-04:03222] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f197f587e97]
+[gpgnode-04:03222] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f197f589801]
+[gpgnode-04:03222] [ 3] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7f19801d33ed]
+[gpgnode-04:03222] [ 4] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f198203f890]
+[gpgnode-04:03222] [ 5] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7f198203a9f3]
+[gpgnode-04:03222] [ 6] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7f1980562bcc]
+[gpgnode-04:03222] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7f1980732c0a]
+[gpgnode-04:03222] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7f19801d97ee]
+[gpgnode-04:03222] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7f19801d73b5]
+[gpgnode-04:03222] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7f19801b1805]
+[gpgnode-04:03222] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7f19801b1a36]
+[gpgnode-04:03222] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7f19801b1e17]
+[gpgnode-04:03222] [13] ./build/install/bin/sip(+0x17d1e2)[0x5583770561e2]
+[gpgnode-04:03222] [14] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f197f56ab97]
+[gpgnode-04:03222] [15] ./build/install/bin/sip(+0x18205a)[0x55837705b05a]
+[gpgnode-04:03222] *** End of error message ***
+Using pattern file: test/g75
+Using target file: test/g34
+Skeleton Type: StackStealing
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Chunking Enabled: false
+Solution found: false
+cpu = 7806

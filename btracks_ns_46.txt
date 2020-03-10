@@ -1,0 +1,349 @@
+CPU Time (Before collecting metrics) 1937825
+Backtracks Depth 1:10057
+Backtracks Depth 3:65580
+Backtracks Depth 4:131445
+Backtracks Depth 5:199723
+Backtracks Depth 6:272180
+Backtracks Depth 7:534379
+Backtracks Depth 8:862464
+Backtracks Depth 9:1256937
+Backtracks Depth 10:1455227
+Backtracks Depth 11:1587808
+Backtracks Depth 12:2407552
+Backtracks Depth 13:4173792
+Backtracks Depth 14:5902148
+Backtracks Depth 15:8822892
+Backtracks Depth 16:12784591
+Backtracks Depth 17:17863475
+Backtracks Depth 18:26015170
+Backtracks Depth 19:38451010
+Backtracks Depth 20:57488412
+Backtracks Depth 21:86715922
+Backtracks Depth 22:129673999
+Backtracks Depth 23:201159032
+Backtracks Depth 24:304368275
+Backtracks Depth 25:461314703
+Backtracks Depth 26:710665897
+Backtracks Depth 27:1102973910
+Backtracks Depth 28:1739663861
+Backtracks Depth 29:2730759024
+Backtracks Depth 30:4312112000
+Backtracks Depth 31:6876120231
+Backtracks Depth 32:10948598031
+Backtracks Depth 33:17431655914
+Backtracks Depth 34:27826738698
+Backtracks Depth 35:44555167572
+Backtracks Depth 36:70981557482
+Backtracks Depth 37:112520000724
+Backtracks Depth 38:176606350224
+Backtracks Depth 39:267242336624
+Backtracks Depth 40:367439533169
+Backtracks Depth 41:439617671544
+Backtracks Depth 42:420906646808
+Backtracks Depth 43:327119232286
+Backtracks Depth 44:219931435398
+Backtracks Depth 45:100213975645
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:8
+Total tasks Depth 8:13
+Total tasks Depth 9:19
+Total tasks Depth 10:26
+Total tasks Depth 11:34
+Total tasks Depth 12:43
+Total tasks Depth 13:64
+Total tasks Depth 14:89
+Total tasks Depth 15:133
+Total tasks Depth 16:194
+Total tasks Depth 17:272
+Total tasks Depth 18:394
+Total tasks Depth 19:584
+Total tasks Depth 20:874
+Total tasks Depth 21:1314
+Total tasks Depth 22:1970
+Total tasks Depth 23:3038
+Total tasks Depth 24:4623
+Total tasks Depth 25:7017
+Total tasks Depth 26:10796
+Total tasks Depth 27:16754
+Total tasks Depth 28:26423
+Total tasks Depth 29:41483
+Total tasks Depth 30:65549
+Total tasks Depth 31:104447
+Total tasks Depth 32:166281
+Total tasks Depth 33:264833
+Total tasks Depth 34:422804
+Total tasks Depth 35:677074
+Total tasks Depth 36:1078212
+Total tasks Depth 37:1709979
+Total tasks Depth 38:2684245
+Total tasks Depth 39:4067498
+Total tasks Depth 40:5603242
+Total tasks Depth 41:6728858
+Total tasks Depth 42:6474060
+Total tasks Depth 43:5043576
+Total tasks Depth 44:3390005
+Total tasks Depth 45:1542228
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+=====
+cpu = 1937831
+CPU Time (Before collecting metrics) 1981568
+Backtracks Depth 1:10057
+Backtracks Depth 3:65580
+Backtracks Depth 4:131445
+Backtracks Depth 5:199723
+Backtracks Depth 6:272180
+Backtracks Depth 7:534379
+Backtracks Depth 8:862464
+Backtracks Depth 9:1256937
+Backtracks Depth 10:1717371
+Backtracks Depth 11:2243168
+Backtracks Depth 12:2735232
+Backtracks Depth 13:3780576
+Backtracks Depth 14:5508932
+Backtracks Depth 15:8757356
+Backtracks Depth 16:12784591
+Backtracks Depth 17:17666867
+Backtracks Depth 18:25818562
+Backtracks Depth 19:38516546
+Backtracks Depth 20:56964124
+Backtracks Depth 21:85995026
+Backtracks Depth 22:129018639
+Backtracks Depth 23:199586168
+Backtracks Depth 24:303778451
+Backtracks Depth 25:461838991
+Backtracks Depth 26:709289641
+Backtracks Depth 27:1104284630
+Backtracks Depth 28:1737632245
+Backtracks Depth 29:2725647216
+Backtracks Depth 30:4306934656
+Backtracks Depth 31:6870746279
+Backtracks Depth 32:10940864783
+Backtracks Depth 33:17431000554
+Backtracks Depth 34:27830408714
+Backtracks Depth 35:44567357268
+Backtracks Depth 36:70991846634
+Backtracks Depth 37:112577606868
+Backtracks Depth 38:176632302480
+Backtracks Depth 39:267248628080
+Backtracks Depth 40:367541245041
+Backtracks Depth 41:439731573112
+Backtracks Depth 42:421005540632
+Backtracks Depth 43:327171661086
+Backtracks Depth 44:219899912582
+Backtracks Depth 45:100200409693
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:8
+Total tasks Depth 8:13
+Total tasks Depth 9:19
+Total tasks Depth 10:26
+Total tasks Depth 11:34
+Total tasks Depth 12:43
+Total tasks Depth 13:64
+Total tasks Depth 14:89
+Total tasks Depth 15:133
+Total tasks Depth 16:194
+Total tasks Depth 17:272
+Total tasks Depth 18:394
+Total tasks Depth 19:584
+Total tasks Depth 20:874
+Total tasks Depth 21:1314
+Total tasks Depth 22:1970
+Total tasks Depth 23:3038
+Total tasks Depth 24:4623
+Total tasks Depth 25:7017
+Total tasks Depth 26:10796
+Total tasks Depth 27:16754
+Total tasks Depth 28:26423
+Total tasks Depth 29:41483
+Total tasks Depth 30:65549
+Total tasks Depth 31:104447
+Total tasks Depth 32:166281
+Total tasks Depth 33:264833
+Total tasks Depth 34:422804
+Total tasks Depth 35:677074
+Total tasks Depth 36:1078212
+Total tasks Depth 37:1709979
+Total tasks Depth 38:2684245
+Total tasks Depth 39:4067498
+Total tasks Depth 40:5603242
+Total tasks Depth 41:6728858
+Total tasks Depth 42:6474060
+Total tasks Depth 43:5043576
+Total tasks Depth 44:3390005
+Total tasks Depth 45:1542228
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+=====
+cpu = 1981574
+[mpiexec@gpgnode-04] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-04] Press Ctrl-C again to force abort
+[gpgnode-04:01224] *** Process received signal ***
+[gpgnode-04:01224] Signal: Aborted (6)
+[gpgnode-04:01224] Signal code:  (-6)
+[gpgnode-04:01224] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f865ef54890]
+[gpgnode-04:01224] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f865c92de97]
+[gpgnode-04:01224] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f865c92f801]
+[gpgnode-04:01224] [ 3] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7f865d5793ed]
+[gpgnode-04:01224] [ 4] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f865ef54890]
+[gpgnode-04:01224] [ 5] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7f865ef4f9f3]
+[gpgnode-04:01224] [ 6] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7f865d908bcc]
+[gpgnode-04:01224] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7f865dad8c0a]
+[gpgnode-04:01224] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7f865d57f7ee]
+[gpgnode-04:01224] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7f865d57d3b5]
+[gpgnode-04:01224] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7f865d557805]
+[gpgnode-04:01224] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7f865d557a36]
+[gpgnode-04:01224] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7f865d557e17]
+[gpgnode-04:01224] [13] ./build/install/bin/NS-hivert(+0x10c833)[0x55b98a480833]
+[gpgnode-04:01224] [14] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f865c910b97]
+[gpgnode-04:01224] [15] ./build/install/bin/NS-hivert(+0x111a5a)[0x55b98a485a5a]
+[gpgnode-04:01224] *** End of error message ***
+[mpiexec@gpgnode-04] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-04] Press Ctrl-C again to force abort
+[gpgnode-04:01307] *** Process received signal ***
+[gpgnode-04:01307] Signal: Aborted (6)
+[gpgnode-04:01307] Signal code:  (-6)
+[gpgnode-04:01307] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f7ca0247890]
+[gpgnode-04:01307] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f7c9dc20e97]
+[gpgnode-04:01307] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f7c9dc22801]
+[gpgnode-04:01307] [ 3] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7f7c9e86c3ed]
+[gpgnode-04:01307] [ 4] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f7ca0247890]
+[gpgnode-04:01307] [ 5] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7f7ca02429f3]
+[gpgnode-04:01307] [ 6] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7f7c9ebfbbcc]
+[gpgnode-04:01307] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7f7c9edcbc0a]
+[gpgnode-04:01307] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7f7c9e8727ee]
+[gpgnode-04:01307] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7f7c9e8703b5]
+[gpgnode-04:01307] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7f7c9e84a805]
+[gpgnode-04:01307] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7f7c9e84aa36]
+[gpgnode-04:01307] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7f7c9e84ae17]
+[gpgnode-04:01307] [13] ./build/install/bin/NS-hivert(+0x10c833)[0x559ae328d833]
+[gpgnode-04:01307] [14] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f7c9dc03b97]
+[gpgnode-04:01307] [15] ./build/install/bin/NS-hivert(+0x111a5a)[0x559ae3292a5a]
+[gpgnode-04:01307] *** End of error message ***
+[mpiexec@gpgnode-04] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-04] Press Ctrl-C again to force abort
+[gpgnode-04:01344] *** Process received signal ***
+[gpgnode-04:01344] Signal: Aborted (6)
+[gpgnode-04:01344] Signal code:  (-6)
+[gpgnode-04:01344] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f63a9fe2890]
+[gpgnode-04:01344] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f63a79bbe97]
+[gpgnode-04:01344] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f63a79bd801]
+[gpgnode-04:01344] [ 3] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7f63a86073ed]
+[gpgnode-04:01344] [ 4] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f63a9fe2890]
+[gpgnode-04:01344] [ 5] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7f63a9fdd9f3]
+[gpgnode-04:01344] [ 6] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7f63a8996bcc]
+[gpgnode-04:01344] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7f63a8b66c0a]
+[gpgnode-04:01344] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7f63a860d7ee]
+[gpgnode-04:01344] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7f63a860b3b5]
+[gpgnode-04:01344] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7f63a85e5805]
+[gpgnode-04:01344] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7f63a85e5a36]
+[gpgnode-04:01344] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7f63a85e5e17]
+[gpgnode-04:01344] [13] ./build/install/bin/NS-hivert(+0x10c833)[0x5611fe4c6833]
+[gpgnode-04:01344] [14] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f63a799eb97]
+[gpgnode-04:01344] [15] ./build/install/bin/NS-hivert(+0x111a5a)[0x5611fe4cba5a]
+[gpgnode-04:01344] *** End of error message ***
+Ctrl-C caught... cleaning up processes

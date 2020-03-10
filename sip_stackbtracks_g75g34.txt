@@ -1,0 +1,35 @@
+[mpiexec@gpgnode-04] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-04] Press Ctrl-C again to force abort
+[gpgnode-04:03186] *** Process received signal ***
+[gpgnode-04:03186] Signal: Aborted (6)
+[gpgnode-04:03186] Signal code:  (-6)
+[gpgnode-04:03186] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f4ee88ac890]
+[gpgnode-04:03186] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f4ee5df4e97]
+[gpgnode-04:03186] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f4ee5df6801]
+[gpgnode-04:03186] [ 3] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7f4ee6a403ed]
+[gpgnode-04:03186] [ 4] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f4ee88ac890]
+[gpgnode-04:03186] [ 5] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7f4ee88a79f3]
+[gpgnode-04:03186] [ 6] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7f4ee6dcfbcc]
+[gpgnode-04:03186] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7f4ee6f9fc0a]
+[gpgnode-04:03186] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7f4ee6a467ee]
+[gpgnode-04:03186] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7f4ee6a443b5]
+[gpgnode-04:03186] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7f4ee6a1e805]
+[gpgnode-04:03186] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7f4ee6a1ea36]
+[gpgnode-04:03186] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7f4ee6a1ee17]
+[gpgnode-04:03186] [13] ./build/install/bin/sip(+0x17d1e2)[0x55afafaa41e2]
+[gpgnode-04:03186] [14] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f4ee5dd7b97]
+[gpgnode-04:03186] [15] ./build/install/bin/sip(+0x18205a)[0x55afafaa905a]
+[gpgnode-04:03186] *** End of error message ***
+Ctrl-C caught... cleaning up processes
+Using pattern file: test/g75
+Using target file: test/g34
+Skeleton Type: StackStealing
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Chunking Enabled: false
+Solution found: false
+cpu = 7718
