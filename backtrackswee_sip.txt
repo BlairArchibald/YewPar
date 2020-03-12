@@ -1,0 +1,806 @@
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g18
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using pattern file: test/g18
+Using target file: test/g106
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+CPU Time (Before collecting metrics) 388387
+Backtracks Depth 1:10007
+Backtracks Depth 2:156764973
+Backtracks Depth 3:13911199
+Backtracks Depth 4:12612492
+Backtracks Depth 5:3548207
+Backtracks Depth 6:11199905
+Backtracks Depth 7:25423312
+Backtracks Depth 8:46531237
+Backtracks Depth 9:52629917
+Backtracks Depth 10:57075161
+Backtracks Depth 11:48449999
+Backtracks Depth 12:50996970
+Backtracks Depth 13:47140699
+Backtracks Depth 14:42520711
+Backtracks Depth 15:36871797
+Backtracks Depth 16:27415371
+Backtracks Depth 17:20028269
+Backtracks Depth 18:14722498
+Backtracks Depth 19:7115988
+Backtracks Depth 20:5423875
+Backtracks Depth 21:2910945
+Backtracks Depth 22:1411961
+Backtracks Depth 23:504435
+Backtracks Depth 24:303106
+Backtracks Depth 25:45593
+Backtracks Depth 26:35849
+Backtracks Depth 27:23076
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2182
+Total tasks Depth 3:180
+Total tasks Depth 4:223
+Total tasks Depth 5:90
+Total tasks Depth 6:260
+Total tasks Depth 7:490
+Total tasks Depth 8:941
+Total tasks Depth 9:1128
+Total tasks Depth 10:1173
+Total tasks Depth 11:993
+Total tasks Depth 12:1043
+Total tasks Depth 13:939
+Total tasks Depth 14:835
+Total tasks Depth 15:734
+Total tasks Depth 16:532
+Total tasks Depth 17:381
+Total tasks Depth 18:280
+Total tasks Depth 19:131
+Total tasks Depth 20:108
+Total tasks Depth 21:59
+Total tasks Depth 22:26
+Total tasks Depth 23:16
+Total tasks Depth 24:7
+Total tasks Depth 25:2
+Total tasks Depth 26:1
+Total tasks Depth 27:1
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 388472
+CPU Time (Before collecting metrics) 391806
+Backtracks Depth 1:10007
+Backtracks Depth 2:128385102
+Backtracks Depth 3:5454101
+Backtracks Depth 4:6722451
+Backtracks Depth 5:5600106
+Backtracks Depth 6:10970899
+Backtracks Depth 7:25952449
+Backtracks Depth 8:40714765
+Backtracks Depth 9:50877749
+Backtracks Depth 10:52722134
+Backtracks Depth 11:46632483
+Backtracks Depth 12:49179445
+Backtracks Depth 13:45573755
+Backtracks Depth 14:38425157
+Backtracks Depth 15:34228914
+Backtracks Depth 16:28134936
+Backtracks Depth 17:19504579
+Backtracks Depth 18:14613489
+Backtracks Depth 19:7833875
+Backtracks Depth 20:5661759
+Backtracks Depth 21:3131404
+Backtracks Depth 22:1297259
+Backtracks Depth 23:899853
+Backtracks Depth 24:176052
+Backtracks Depth 25:5507
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2182
+Total tasks Depth 3:116
+Total tasks Depth 4:182
+Total tasks Depth 5:138
+Total tasks Depth 6:285
+Total tasks Depth 7:522
+Total tasks Depth 8:965
+Total tasks Depth 9:1095
+Total tasks Depth 10:1136
+Total tasks Depth 11:1044
+Total tasks Depth 12:1058
+Total tasks Depth 13:983
+Total tasks Depth 14:832
+Total tasks Depth 15:731
+Total tasks Depth 16:597
+Total tasks Depth 17:409
+Total tasks Depth 18:303
+Total tasks Depth 19:174
+Total tasks Depth 20:114
+Total tasks Depth 21:74
+Total tasks Depth 22:34
+Total tasks Depth 23:20
+Total tasks Depth 24:4
+Total tasks Depth 25:1
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 1504) (9 -> 2645) (10 -> 1417) (11 -> 153) (12 -> 584) (13 -> 171) (14 -> 1341) (15 -> 2256) (16 -> 268) (17 -> 1275) (18 -> 2548) (19 -> 2375) (20 -> 3037) (21 -> 2318) (22 -> 186) (23 -> 3379) (24 -> 470) (25 -> 1388) (26 -> 988) (27 -> 1906) (28 -> 3578) (29 -> 1915) (30 -> 494) (31 -> 3562) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 1548) (41 -> 791) (42 -> 2631) (43 -> 1813) (44 -> 1216) (45 -> 2517) (46 -> 1407) (47 -> 684) (48 -> 232) (49 -> 2558) (50 -> 1657) (51 -> 2998) (52 -> 2932) (53 -> 2244) (54 -> 1302) (55 -> 3003) (56 -> 506) (57 -> 215) (58 -> 558) (59 -> 1850) (60 -> 3194) (61 -> 2777) (62 -> 490) (63 -> 4031) 
+cpu = 391865
+CPU Time (Before collecting metrics) 418884
+Backtracks Depth 1:10007
+Backtracks Depth 2:172529883
+Backtracks Depth 3:8452863
+Backtracks Depth 4:6104204
+Backtracks Depth 5:2781183
+Backtracks Depth 6:15790147
+Backtracks Depth 7:39685786
+Backtracks Depth 8:66922009
+Backtracks Depth 9:55122169
+Backtracks Depth 10:65307322
+Backtracks Depth 11:57945062
+Backtracks Depth 12:58127666
+Backtracks Depth 13:54216388
+Backtracks Depth 14:50692065
+Backtracks Depth 15:41590200
+Backtracks Depth 16:34153427
+Backtracks Depth 17:22699510
+Backtracks Depth 18:17958325
+Backtracks Depth 19:10875163
+Backtracks Depth 20:7816656
+Backtracks Depth 21:4822575
+Backtracks Depth 22:1938918
+Backtracks Depth 23:1527405
+Backtracks Depth 24:363890
+Backtracks Depth 25:15132
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2182
+Total tasks Depth 3:116
+Total tasks Depth 4:182
+Total tasks Depth 5:91
+Total tasks Depth 6:339
+Total tasks Depth 7:663
+Total tasks Depth 8:1200
+Total tasks Depth 9:1085
+Total tasks Depth 10:1205
+Total tasks Depth 11:1078
+Total tasks Depth 12:1105
+Total tasks Depth 13:1040
+Total tasks Depth 14:901
+Total tasks Depth 15:789
+Total tasks Depth 16:609
+Total tasks Depth 17:423
+Total tasks Depth 18:318
+Total tasks Depth 19:172
+Total tasks Depth 20:138
+Total tasks Depth 21:83
+Total tasks Depth 22:38
+Total tasks Depth 23:22
+Total tasks Depth 24:4
+Total tasks Depth 25:1
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 1504) (9 -> 2645) (10 -> 1417) (11 -> 153) (12 -> 584) (13 -> 171) (14 -> 1341) (15 -> 2256) (16 -> 268) (17 -> 1275) (18 -> 2548) (19 -> 2375) (20 -> 3037) (21 -> 2318) (22 -> 186) (23 -> 3379) (24 -> 470) (25 -> 1388) (26 -> 988) (27 -> 1906) (28 -> 3578) (29 -> 1915) (30 -> 494) (31 -> 3562) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 1548) (41 -> 791) (42 -> 2631) (43 -> 1813) (44 -> 1216) (45 -> 2517) (46 -> 1407) (47 -> 684) (48 -> 232) (49 -> 2558) (50 -> 1657) (51 -> 2998) (52 -> 2932) (53 -> 2244) (54 -> 1302) (55 -> 3003) (56 -> 506) (57 -> 215) (58 -> 558) (59 -> 1850) (60 -> 3194) (61 -> 2777) (62 -> 490) (63 -> 4031) 
+cpu = 418973
+CPU Time (Before collecting metrics) 447581
+Backtracks Depth 1:10007
+Backtracks Depth 2:154995076
+Backtracks Depth 3:15579050
+Backtracks Depth 4:12568528
+Backtracks Depth 5:4272773
+Backtracks Depth 6:13233207
+Backtracks Depth 7:35131349
+Backtracks Depth 8:55276520
+Backtracks Depth 9:70274112
+Backtracks Depth 10:71582158
+Backtracks Depth 11:64455019
+Backtracks Depth 12:66330665
+Backtracks Depth 13:62067393
+Backtracks Depth 14:51247961
+Backtracks Depth 15:46566284
+Backtracks Depth 16:36089910
+Backtracks Depth 17:21845180
+Backtracks Depth 18:17856452
+Backtracks Depth 19:8437591
+Backtracks Depth 20:6076888
+Backtracks Depth 21:3260330
+Backtracks Depth 22:2537349
+Backtracks Depth 23:901531
+Backtracks Depth 24:490469
+Backtracks Depth 25:280412
+Backtracks Depth 26:112808
+Backtracks Depth 27:21691
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2182
+Total tasks Depth 3:220
+Total tasks Depth 4:247
+Total tasks Depth 5:109
+Total tasks Depth 6:282
+Total tasks Depth 7:638
+Total tasks Depth 8:1103
+Total tasks Depth 9:1332
+Total tasks Depth 10:1389
+Total tasks Depth 11:1238
+Total tasks Depth 12:1252
+Total tasks Depth 13:1127
+Total tasks Depth 14:982
+Total tasks Depth 15:872
+Total tasks Depth 16:651
+Total tasks Depth 17:431
+Total tasks Depth 18:327
+Total tasks Depth 19:165
+Total tasks Depth 20:123
+Total tasks Depth 21:56
+Total tasks Depth 22:36
+Total tasks Depth 23:19
+Total tasks Depth 24:9
+Total tasks Depth 25:5
+Total tasks Depth 26:3
+Total tasks Depth 27:1
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 1595) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1621) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 1275) (17 -> 2548) (18 -> 2538) (19 -> 790) (20 -> 2896) (21 -> 988) (22 -> 1388) (23 -> 2846) (24 -> 1587) (25 -> 3767) (26 -> 1687) (27 -> 171) (28 -> 474) (29 -> 4483) (30 -> 1499) (31 -> 4415) (32 -> 597) (33 -> 2341) (34 -> 4430) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 4320) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1222) (52 -> 592) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 1266) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 447667
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+CPU Time (Before collecting metrics) 568775
+Backtracks Depth 1:10007
+Backtracks Depth 2:183672141
+Backtracks Depth 3:24697778
+Backtracks Depth 4:19018130
+Backtracks Depth 5:7679751
+Backtracks Depth 6:20007597
+Backtracks Depth 7:53222702
+Backtracks Depth 8:90814037
+Backtracks Depth 9:108627101
+Backtracks Depth 10:108193046
+Backtracks Depth 11:104457900
+Backtracks Depth 12:111242233
+Backtracks Depth 13:102576048
+Backtracks Depth 14:89037318
+Backtracks Depth 15:76140388
+Backtracks Depth 16:62485663
+Backtracks Depth 17:43446850
+Backtracks Depth 18:30991791
+Backtracks Depth 19:17346062
+Backtracks Depth 20:11756606
+Backtracks Depth 21:5846491
+Backtracks Depth 22:3098539
+Backtracks Depth 23:1306363
+Backtracks Depth 24:1394318
+Backtracks Depth 25:348414
+Backtracks Depth 26:45350
+Backtracks Depth 27:84972
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2182
+Total tasks Depth 3:280
+Total tasks Depth 4:288
+Total tasks Depth 5:134
+Total tasks Depth 6:347
+Total tasks Depth 7:772
+Total tasks Depth 8:1387
+Total tasks Depth 9:1733
+Total tasks Depth 10:1787
+Total tasks Depth 11:1626
+Total tasks Depth 12:1721
+Total tasks Depth 13:1510
+Total tasks Depth 14:1352
+Total tasks Depth 15:1141
+Total tasks Depth 16:872
+Total tasks Depth 17:618
+Total tasks Depth 18:453
+Total tasks Depth 19:252
+Total tasks Depth 20:179
+Total tasks Depth 21:91
+Total tasks Depth 22:43
+Total tasks Depth 23:19
+Total tasks Depth 24:19
+Total tasks Depth 25:6
+Total tasks Depth 26:1
+Total tasks Depth 27:2
+
+Solution found: true
+mapping = (0 -> 2375) (1 -> 2645) (2 -> 1621) (3 -> 1043) (4 -> 791) (5 -> 2573) (6 -> 1906) (7 -> 2045) (8 -> 1281) (9 -> 2393) (10 -> 1595) (11 -> 1714) (12 -> 777) (13 -> 1548) (14 -> 2238) (15 -> 3063) (16 -> 1715) (17 -> 4031) (18 -> 1266) (19 -> 580) (20 -> 1262) (21 -> 3003) (22 -> 684) (23 -> 1268) (24 -> 2256) (25 -> 2215) (26 -> 3282) (27 -> 1222) (28 -> 592) (29 -> 2953) (30 -> 2140) (31 -> 3262) (32 -> 2584) (33 -> 490) (34 -> 4320) (35 -> 4366) (36 -> 3180) (37 -> 1302) (38 -> 1407) (39 -> 3475) (40 -> 597) (41 -> 2341) (42 -> 4430) (43 -> 1055) (44 -> 325) (45 -> 2517) (46 -> 473) (47 -> 2500) (48 -> 1587) (49 -> 3767) (50 -> 1687) (51 -> 171) (52 -> 474) (53 -> 4483) (54 -> 1499) (55 -> 4415) (56 -> 1275) (57 -> 2548) (58 -> 2538) (59 -> 790) (60 -> 2896) (61 -> 988) (62 -> 1388) (63 -> 2846) 
+cpu = 568863
+CPU Time (Before collecting metrics) 586463
+Backtracks Depth 1:10007
+Backtracks Depth 2:173174477
+Backtracks Depth 3:27590565
+Backtracks Depth 4:19286096
+Backtracks Depth 5:8345453
+Backtracks Depth 6:25283749
+Backtracks Depth 7:63465095
+Backtracks Depth 8:97217598
+Backtracks Depth 9:113256208
+Backtracks Depth 10:112699246
+Backtracks Depth 11:103838806
+Backtracks Depth 12:115306467
+Backtracks Depth 13:101883385
+Backtracks Depth 14:89436023
+Backtracks Depth 15:72876056
+Backtracks Depth 16:61902762
+Backtracks Depth 17:43189373
+Backtracks Depth 18:29489459
+Backtracks Depth 19:16947302
+Backtracks Depth 20:12285346
+Backtracks Depth 21:5390663
+Backtracks Depth 22:2418055
+Backtracks Depth 23:1438382
+Backtracks Depth 24:1292818
+Backtracks Depth 25:336658
+Backtracks Depth 26:24699
+Backtracks Depth 27:236215
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2182
+Total tasks Depth 3:299
+Total tasks Depth 4:301
+Total tasks Depth 5:139
+Total tasks Depth 6:401
+Total tasks Depth 7:892
+Total tasks Depth 8:1486
+Total tasks Depth 9:1807
+Total tasks Depth 10:1831
+Total tasks Depth 11:1677
+Total tasks Depth 12:1805
+Total tasks Depth 13:1566
+Total tasks Depth 14:1396
+Total tasks Depth 15:1173
+Total tasks Depth 16:919
+Total tasks Depth 17:649
+Total tasks Depth 18:468
+Total tasks Depth 19:260
+Total tasks Depth 20:185
+Total tasks Depth 21:91
+Total tasks Depth 22:44
+Total tasks Depth 23:19
+Total tasks Depth 24:17
+Total tasks Depth 25:6
+Total tasks Depth 26:1
+Total tasks Depth 27:2
+
+Solution found: true
+mapping = (0 -> 2375) (1 -> 2645) (2 -> 1621) (3 -> 1043) (4 -> 791) (5 -> 2573) (6 -> 1906) (7 -> 2045) (8 -> 1281) (9 -> 2393) (10 -> 1595) (11 -> 1714) (12 -> 777) (13 -> 1548) (14 -> 2238) (15 -> 3063) (16 -> 1715) (17 -> 4031) (18 -> 1266) (19 -> 580) (20 -> 1262) (21 -> 3003) (22 -> 684) (23 -> 1268) (24 -> 2256) (25 -> 2215) (26 -> 3282) (27 -> 1222) (28 -> 592) (29 -> 2953) (30 -> 2140) (31 -> 3262) (32 -> 2584) (33 -> 490) (34 -> 4320) (35 -> 4366) (36 -> 3180) (37 -> 1302) (38 -> 1407) (39 -> 3475) (40 -> 597) (41 -> 2341) (42 -> 4430) (43 -> 1055) (44 -> 325) (45 -> 2517) (46 -> 473) (47 -> 2500) (48 -> 1587) (49 -> 3767) (50 -> 1687) (51 -> 171) (52 -> 474) (53 -> 4483) (54 -> 1499) (55 -> 4415) (56 -> 1275) (57 -> 2548) (58 -> 2538) (59 -> 790) (60 -> 2896) (61 -> 988) (62 -> 1388) (63 -> 2846) 
+cpu = 586549
+CPU Time (Before collecting metrics) 615694
+Backtracks Depth 1:10007
+Backtracks Depth 2:189941056
+Backtracks Depth 3:24712643
+Backtracks Depth 4:16040338
+Backtracks Depth 5:6601475
+Backtracks Depth 6:29111365
+Backtracks Depth 7:69101138
+Backtracks Depth 8:105672086
+Backtracks Depth 9:120790072
+Backtracks Depth 10:121701055
+Backtracks Depth 11:112993843
+Backtracks Depth 12:119218103
+Backtracks Depth 13:104353745
+Backtracks Depth 14:97908319
+Backtracks Depth 15:81877680
+Backtracks Depth 16:65681628
+Backtracks Depth 17:47569338
+Backtracks Depth 18:32159483
+Backtracks Depth 19:17713338
+Backtracks Depth 20:13843433
+Backtracks Depth 21:6800379
+Backtracks Depth 22:4060870
+Backtracks Depth 23:1492243
+Backtracks Depth 24:1271695
+Backtracks Depth 25:737265
+Backtracks Depth 26:196509
+Backtracks Depth 27:217477
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2182
+Total tasks Depth 3:260
+Total tasks Depth 4:275
+Total tasks Depth 5:126
+Total tasks Depth 6:456
+Total tasks Depth 7:975
+Total tasks Depth 8:1596
+Total tasks Depth 9:1872
+Total tasks Depth 10:1881
+Total tasks Depth 11:1742
+Total tasks Depth 12:1831
+Total tasks Depth 13:1604
+Total tasks Depth 14:1477
+Total tasks Depth 15:1241
+Total tasks Depth 16:969
+Total tasks Depth 17:706
+Total tasks Depth 18:497
+Total tasks Depth 19:269
+Total tasks Depth 20:188
+Total tasks Depth 21:98
+Total tasks Depth 22:53
+Total tasks Depth 23:22
+Total tasks Depth 24:20
+Total tasks Depth 25:8
+Total tasks Depth 26:2
+Total tasks Depth 27:2
+
+Solution found: true
+mapping = (0 -> 2375) (1 -> 2645) (2 -> 1621) (3 -> 1043) (4 -> 791) (5 -> 2573) (6 -> 1906) (7 -> 2045) (8 -> 1281) (9 -> 2393) (10 -> 1595) (11 -> 1714) (12 -> 777) (13 -> 1548) (14 -> 2238) (15 -> 3063) (16 -> 1715) (17 -> 4031) (18 -> 1266) (19 -> 580) (20 -> 1262) (21 -> 3003) (22 -> 684) (23 -> 1268) (24 -> 2256) (25 -> 2215) (26 -> 3282) (27 -> 1222) (28 -> 592) (29 -> 2953) (30 -> 2140) (31 -> 3262) (32 -> 2584) (33 -> 490) (34 -> 4320) (35 -> 4366) (36 -> 3180) (37 -> 1302) (38 -> 1407) (39 -> 3475) (40 -> 597) (41 -> 2341) (42 -> 4430) (43 -> 1055) (44 -> 325) (45 -> 2517) (46 -> 473) (47 -> 2500) (48 -> 1587) (49 -> 3767) (50 -> 1687) (51 -> 171) (52 -> 474) (53 -> 4483) (54 -> 1499) (55 -> 4415) (56 -> 1275) (57 -> 2548) (58 -> 2538) (59 -> 790) (60 -> 2896) (61 -> 988) (62 -> 1388) (63 -> 2846) 
+cpu = 615779
+CPU Time (Before collecting metrics) 643891
+Backtracks Depth 1:10007
+Backtracks Depth 2:192729166
+Backtracks Depth 3:21296236
+Backtracks Depth 4:16597562
+Backtracks Depth 5:9967761
+Backtracks Depth 6:30971903
+Backtracks Depth 7:70080287
+Backtracks Depth 8:110275594
+Backtracks Depth 9:135905306
+Backtracks Depth 10:135674222
+Backtracks Depth 11:129725788
+Backtracks Depth 12:134498578
+Backtracks Depth 13:122418145
+Backtracks Depth 14:106427311
+Backtracks Depth 15:91899548
+Backtracks Depth 16:74396237
+Backtracks Depth 17:53912176
+Backtracks Depth 18:37232299
+Backtracks Depth 19:20535195
+Backtracks Depth 20:14447428
+Backtracks Depth 21:5813591
+Backtracks Depth 22:4820077
+Backtracks Depth 23:1719772
+Backtracks Depth 24:1436255
+Backtracks Depth 25:898094
+Backtracks Depth 26:324906
+Backtracks Depth 27:41848
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2182
+Total tasks Depth 3:280
+Total tasks Depth 4:301
+Total tasks Depth 5:143
+Total tasks Depth 6:433
+Total tasks Depth 7:946
+Total tasks Depth 8:1612
+Total tasks Depth 9:1960
+Total tasks Depth 10:2025
+Total tasks Depth 11:1876
+Total tasks Depth 12:1945
+Total tasks Depth 13:1701
+Total tasks Depth 14:1535
+Total tasks Depth 15:1294
+Total tasks Depth 16:1020
+Total tasks Depth 17:725
+Total tasks Depth 18:542
+Total tasks Depth 19:300
+Total tasks Depth 20:193
+Total tasks Depth 21:94
+Total tasks Depth 22:61
+Total tasks Depth 23:27
+Total tasks Depth 24:18
+Total tasks Depth 25:11
+Total tasks Depth 26:4
+Total tasks Depth 27:1
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 643970
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g18
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[gpgnode-15:11255] *** Process received signal ***
+[gpgnode-18:20777] *** Process received signal ***
+[gpgnode-15:11255] Signal: Aborted (6)
+[gpgnode-15:11255] Signal code:  (-6)
+[gpgnode-14:14474] *** Process received signal ***
+[gpgnode-18:20777] Signal: Aborted (6)
+[gpgnode-18:20777] Signal code:  (-6)
+[gpgnode-13:28211] *** Process received signal ***
+[gpgnode-16:03946] *** Process received signal ***
+[gpgnode-15:11255] [ 0] [gpgnode-14:14474] Signal: Aborted (6)
+[gpgnode-14:14474] Signal code:  (-6)
+[gpgnode-18:20777] [ 0] [gpgnode-13:28211] Signal: Aborted (6)
+[gpgnode-13:28211] Signal code:  (-6)
+[gpgnode-16:03946] Signal: Aborted (6)
+[gpgnode-16:03946] Signal code:  (-6)
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f23454c7890]
+[gpgnode-15:11255] [ 1] [gpgnode-14:14474] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7fb2edca9890]
+[gpgnode-18:20777] [ 1] [gpgnode-13:28211] [ 0] [gpgnode-16:03946] [ 0] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f2342a0fe97]
+[gpgnode-15:11255] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f40b3014890]
+[gpgnode-14:14474] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7fb2eb1f1e97]
+[gpgnode-18:20777] [ 2] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f3827dbb890]
+[gpgnode-13:28211] [ 1] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7ff6ca9c6890]
+[gpgnode-16:03946] [ 1] [ 2] [ 1] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7fb2eb1f3801]
+[gpgnode-18:20777] [ 3] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f3825303e97]
+[gpgnode-13:28211] [ 2] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7ff6c7f0ee97]
+[gpgnode-16:03946] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f2342a11801]
+[gpgnode-15:11255] [ 3] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f40b055ce97]
+[gpgnode-14:14474] [ 2] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7fb2ebe3d3ed]
+[gpgnode-18:20777] [ 4] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f3825305801]
+[gpgnode-13:28211] [ 3] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f40b055e801]
+[gpgnode-14:14474] [ 3] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7fb2edca9890]
+[gpgnode-18:20777] [ 5] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7f3825f4f3ed]
+[gpgnode-13:28211] [ 4] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7ff6c7f10801]
+[gpgnode-16:03946] [ 3] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7f234365b3ed]
+[gpgnode-15:11255] [ 4] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7f40b11a83ed]
+[gpgnode-14:14474] [ 4] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7fb2edca49f3]
+[gpgnode-18:20777] [ 6] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f3827dbb890]
+[gpgnode-13:28211] [ 5] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7ff6c8b5a3ed]
+[gpgnode-16:03946] [ 4] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f23454c7890]
+[gpgnode-15:11255] [ 5] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f40b3014890]
+[gpgnode-14:14474] [ 5] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7fb2ec1ccbcc]
+[gpgnode-18:20777] [ 7] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7f3827db69f3]
+[gpgnode-13:28211] [ 6] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7ff6ca9c6890]
+[gpgnode-16:03946] [ 5] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7f23454c29f3]
+[gpgnode-15:11255] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7f40b300f9f3]
+[gpgnode-14:14474] [ 6] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7fb2ec39cc0a]
+[gpgnode-18:20777] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7f38262debcc]
+[gpgnode-13:28211] [ 7] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7ff6ca9c19f3]
+[gpgnode-16:03946] [ 6] [ 6] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7f40b1537bcc]
+[gpgnode-14:14474] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7fb2ebe437ee]
+[gpgnode-18:20777] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7f38264aec0a]
+[gpgnode-13:28211] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7ff6c8ee9bcc]
+[gpgnode-16:03946] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7f23439eabcc]
+[gpgnode-15:11255] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7f40b1707c0a]
+[gpgnode-14:14474] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7fb2ebe413b5]
+[gpgnode-18:20777] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7f3825f557ee]
+[gpgnode-13:28211] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7ff6c90b9c0a]
+[gpgnode-16:03946] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7f2343bbac0a]
+[gpgnode-15:11255] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7f40b11ae7ee]
+[gpgnode-14:14474] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7fb2ebe1b805]
+[gpgnode-18:20777] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7ff6c8b607ee]
+[gpgnode-16:03946] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7f23436617ee]
+[gpgnode-15:11255] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7f40b11ac3b5]
+[gpgnode-14:14474] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7fb2ebe1ba36]
+[gpgnode-18:20777] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7f3825f533b5]
+[gpgnode-13:28211] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7f234365f3b5]
+[gpgnode-15:11255] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7f40b1186805]
+[gpgnode-14:14474] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7f2343639805]
+[gpgnode-15:11255] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7f40b1186a36]
+[gpgnode-14:14474] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7f3825f2d805]
+[gpgnode-13:28211] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7ff6c8b5e3b5]
+[gpgnode-16:03946] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7f2343639a36]
+[gpgnode-15:11255] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7fb2ebe1be17]
+[gpgnode-18:20777] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7f2343639e17]
+[gpgnode-15:11255] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7ff6c8b38805]
+[gpgnode-16:03946] [11] ./build/install/bin/sip(+0x18c47e)[0x5577753e647e]
+[gpgnode-15:11255] [14] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7f40b1186e17]
+[gpgnode-14:14474] [13] ./build/install/bin/sip(+0x18c47e)[0x5558b769a47e]
+[gpgnode-18:20777] [14] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7f3825f2da36]
+[gpgnode-13:28211] [12] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f23429f2b97]
+[gpgnode-15:11255] [15] ./build/install/bin/sip(+0x18c47e)[0x5599eff0a47e]
+[gpgnode-14:14474] [14] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7fb2eb1d4b97]
+[gpgnode-18:20777] [15] ./build/install/bin/sip(+0x1917da)[0x5577753eb7da]
+[gpgnode-15:11255] *** End of error message ***
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f40b053fb97]
+[gpgnode-14:14474] [15] ./build/install/bin/sip(+0x1917da)[0x5558b769f7da]
+[gpgnode-18:20777] *** End of error message ***
+/users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7ff6c8b38a36]
+[gpgnode-16:03946] [12] ./build/install/bin/sip(+0x1917da)[0x5599eff0f7da]
+[gpgnode-14:14474] *** End of error message ***
+/users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7f3825f2de17]
+[gpgnode-13:28211] [13] ./build/install/bin/sip(+0x18c47e)[0x55adce52147e]
+[gpgnode-13:28211] [14] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7ff6c8b38e17]
+[gpgnode-16:03946] [13] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f38252e6b97]
+[gpgnode-13:28211] [15] ./build/install/bin/sip(+0x1917da)[0x55adce5267da]
+./build/install/bin/sip(+0x18c47e)[0x555d40bad47e]
+[gpgnode-16:03946] [14] [gpgnode-13:28211] *** End of error message ***
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7ff6c7ef1b97]
+[gpgnode-16:03946] [15] ./build/install/bin/sip(+0x1917da)[0x555d40bb27da]
+[gpgnode-16:03946] *** End of error message ***
+[gpgnode-19:19694] *** Process received signal ***
+[gpgnode-19:19694] Signal: Aborted (6)
+[gpgnode-19:19694] Signal code:  (-6)
+[gpgnode-19:19694] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f374a378890]
+[gpgnode-19:19694] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f37478c0e97]
+[gpgnode-19:19694] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f37478c2801]
+[gpgnode-19:19694] [ 3] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7f374850c3ed]
+[gpgnode-19:19694] [ 4] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f374a378890]
+[gpgnode-19:19694] [ 5] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7f374a3739f3]
+[gpgnode-19:19694] [ 6] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7f374889bbcc]
+[gpgnode-19:19694] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7f3748a6bc0a]
+[gpgnode-19:19694] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7f37485127ee]
+[gpgnode-19:19694] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7f37485103b5]
+[gpgnode-19:19694] [10] [gpgnode-17:18925] *** Process received signal ***
+/users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7f37484ea805]
+[gpgnode-19:19694] [11] [gpgnode-17:18925] Signal: Aborted (6)
+[gpgnode-17:18925] Signal code:  (-6)
+/users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7f37484eaa36]
+[gpgnode-19:19694] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7f37484eae17]
+[gpgnode-19:19694] [13] [gpgnode-17:18925] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f5689dea890]
+[gpgnode-17:18925] [ 1] ./build/install/bin/sip(+0x18c47e)[0x55d2de5ef47e]
+[gpgnode-19:19694] [14] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f5687332e97]
+[gpgnode-17:18925] [ 2] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f37478a3b97]
+[gpgnode-19:19694] [15] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f5687334801]
+[gpgnode-17:18925] [ 3] ./build/install/bin/sip(+0x1917da)[0x55d2de5f47da]
+[gpgnode-19:19694] *** End of error message ***
+/users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7f5687f7e3ed]
+[gpgnode-17:18925] [ 4] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f5689dea890]
+[gpgnode-17:18925] [ 5] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7f5689de59f3]
+[gpgnode-17:18925] [ 6] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7f568830dbcc]
+[gpgnode-17:18925] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7f56884ddc0a]
+[gpgnode-17:18925] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7f5687f847ee]
+[gpgnode-17:18925] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7f5687f823b5]
+[gpgnode-17:18925] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7f5687f5c805]
+[gpgnode-17:18925] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7f5687f5ca36]
+[gpgnode-17:18925] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7f5687f5ce17]
+[gpgnode-17:18925] [13] ./build/install/bin/sip(+0x18c47e)[0x5586999c047e]
+[gpgnode-17:18925] [14] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f5687315b97]
+[gpgnode-17:18925] [15] ./build/install/bin/sip(+0x1917da)[0x5586999c57da]
+[gpgnode-17:18925] *** End of error message ***
+[gpgnode-12:21717] *** Process received signal ***
+[gpgnode-12:21717] Signal: Aborted (6)
+[gpgnode-12:21717] Signal code:  (-6)
+[gpgnode-12:21717] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7fa05afd9890]
+[gpgnode-12:21717] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7fa058521e97]
+[gpgnode-12:21717] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7fa058523801]
+[gpgnode-12:21717] [ 3] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7fa05916d3ed]
+[gpgnode-12:21717] [ 4] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7fa05afd9890]
+[gpgnode-12:21717] [ 5] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7fa05afd49f3]
+[gpgnode-12:21717] [ 6] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7fa0594fcbcc]
+[gpgnode-12:21717] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7fa0596ccc0a]
+[gpgnode-12:21717] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7fa0591737ee]
+[gpgnode-12:21717] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7fa0591713b5]
+[gpgnode-12:21717] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7fa05914b805]
+[gpgnode-12:21717] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7fa05914ba36]
+[gpgnode-12:21717] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7fa05914be17]
+[gpgnode-12:21717] [13] ./build/install/bin/sip(+0x18c47e)[0x5652444d447e]
+[gpgnode-12:21717] [14] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7fa058504b97]
+[gpgnode-12:21717] [15] ./build/install/bin/sip(+0x1917da)[0x5652444d97da]
+[gpgnode-12:21717] *** End of error message ***
+Using pattern file: test/g18
+Using target file: test/g106
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort

@@ -1,0 +1,520 @@
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Solution found: false
+cpu = 79467
+Solution found: false
+cpu = 79442
+Solution found: false
+cpu = 79652
+Solution found: false
+cpu = 79507
+Solution found: false
+cpu = 79859
+Solution found: false
+cpu = 79375
+Solution found: false
+cpu = 79761
+Solution found: false
+cpu = 79761
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Solution found: false
+cpu = 79656
+Solution found: false
+cpu = 79517
+Solution found: false
+cpu = 79582
+Solution found: false
+cpu = 79754
+Solution found: false
+cpu = 79702
+Solution found: false
+cpu = 79686
+Solution found: false
+cpu = 79863
+Solution found: false
+cpu = 80056
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Solution found: false
+cpu = 79761
+Solution found: false
+cpu = 79216
+Solution found: false
+cpu = 79441
+Solution found: false
+cpu = 79501
+Solution found: false
+cpu = 79527
+Solution found: false
+cpu = 79579
+Solution found: false
+cpu = 79662
+Solution found: false
+cpu = 80096
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Solution found: false
+cpu = 79581
+Solution found: false
+cpu = 79253
+Solution found: false
+cpu = 79469
+Solution found: false
+cpu = 79634
+Solution found: false
+cpu = 79649
+Solution found: false
+cpu = 79682
+Solution found: false
+cpu = 79880
+Solution found: false
+cpu = 79898
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+Solution found: false
+cpu = 79479
+Solution found: false
+cpu = 79532
+Solution found: false
+cpu = 79568
+Solution found: false
+cpu = 79576
+Solution found: false
+cpu = 79593
+Solution found: false
+cpu = 79652
+Solution found: false
+cpu = 79710
+Solution found: false
+cpu = 79789
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+[mpiexec@gpgnode-18] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-18] Press Ctrl-C again to force abort
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+[mpiexec@gpgnode-18] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-18] Press Ctrl-C again to force abort
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+[mpiexec@gpgnode-18] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-18] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-18] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-18] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-18] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-18] Press Ctrl-C again to force abort

@@ -1,0 +1,5400 @@
+CPU Time (Before collecting metrics) 38909
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111701307
+Backtracks Depth 21:123589702
+Backtracks Depth 22:148048996
+Backtracks Depth 23:173489933
+Backtracks Depth 24:232470640
+Backtracks Depth 25:304399782
+Backtracks Depth 26:401061529
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779656729
+Backtracks Depth 30:913600449
+Backtracks Depth 31:1037376822
+Backtracks Depth 32:1077425895
+Backtracks Depth 33:948421045
+Backtracks Depth 34:619719476
+Backtracks Depth 35:333287516
+Backtracks Depth 36:99039872
+Backtracks Depth 37:34162176
+Backtracks Depth 38:22344173
+Backtracks Depth 39:15122085
+Backtracks Depth 40:10776566
+Backtracks Depth 41:8394391
+Backtracks Depth 42:4916681
+Backtracks Depth 43:1572966
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38916
+CPU Time (Before collecting metrics) 37161
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35596721
+Backtracks Depth 17:59270781
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111701307
+Backtracks Depth 21:123393094
+Backtracks Depth 22:147786852
+Backtracks Depth 23:173227789
+Backtracks Depth 24:232208496
+Backtracks Depth 25:304530854
+Backtracks Depth 26:401127065
+Backtracks Depth 27:527093720
+Backtracks Depth 28:665136086
+Backtracks Depth 29:779591193
+Backtracks Depth 30:914190273
+Backtracks Depth 31:1037114678
+Backtracks Depth 32:1076967143
+Backtracks Depth 33:946848181
+Backtracks Depth 34:618212148
+Backtracks Depth 35:333090908
+Backtracks Depth 36:98908800
+Backtracks Depth 37:34424320
+Backtracks Depth 38:22868461
+Backtracks Depth 39:15384229
+Backtracks Depth 40:10842102
+Backtracks Depth 41:8263319
+Backtracks Depth 42:5309897
+Backtracks Depth 43:1769574
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 37167
+CPU Time (Before collecting metrics) 37354
+Backtracks Depth 1:100000044
+Backtracks Depth 3:42
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:438769
+Backtracks Depth 9:833455
+Backtracks Depth 10:1247520
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4012011
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23893882
+Backtracks Depth 16:35662257
+Backtracks Depth 17:59270781
+Backtracks Depth 18:80302110
+Backtracks Depth 19:103772424
+Backtracks Depth 20:111635771
+Backtracks Depth 21:123655238
+Backtracks Depth 22:148114532
+Backtracks Depth 23:173293325
+Backtracks Depth 24:232274032
+Backtracks Depth 25:304596390
+Backtracks Depth 26:401192601
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665791446
+Backtracks Depth 29:779394585
+Backtracks Depth 30:914386881
+Backtracks Depth 31:1037901110
+Backtracks Depth 32:1078408935
+Backtracks Depth 33:948224437
+Backtracks Depth 34:619457332
+Backtracks Depth 35:333156444
+Backtracks Depth 36:99367552
+Backtracks Depth 37:35014144
+Backtracks Depth 38:22868461
+Backtracks Depth 39:14925477
+Backtracks Depth 40:10514422
+Backtracks Depth 41:7739031
+Backtracks Depth 42:4982217
+Backtracks Depth 43:1638502
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 37360
+CPU Time (Before collecting metrics) 37957
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:438769
+Backtracks Depth 9:833455
+Backtracks Depth 10:1247520
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4077547
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23828346
+Backtracks Depth 16:35596721
+Backtracks Depth 17:59270781
+Backtracks Depth 18:80367646
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111701307
+Backtracks Depth 21:123720774
+Backtracks Depth 22:148376676
+Backtracks Depth 23:173358861
+Backtracks Depth 24:232405104
+Backtracks Depth 25:304596390
+Backtracks Depth 26:401192601
+Backtracks Depth 27:527683544
+Backtracks Depth 28:665856982
+Backtracks Depth 29:779656729
+Backtracks Depth 30:914780097
+Backtracks Depth 31:1038294326
+Backtracks Depth 32:1077884647
+Backtracks Depth 33:948093365
+Backtracks Depth 34:618736436
+Backtracks Depth 35:333156444
+Backtracks Depth 36:99564160
+Backtracks Depth 37:34686464
+Backtracks Depth 38:21885421
+Backtracks Depth 39:14859941
+Backtracks Depth 40:10907638
+Backtracks Depth 41:8197783
+Backtracks Depth 42:5113289
+Backtracks Depth 43:1769574
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 37963
+CPU Time (Before collecting metrics) 37992
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123851846
+Backtracks Depth 22:147852388
+Backtracks Depth 23:173489933
+Backtracks Depth 24:232470640
+Backtracks Depth 25:304530854
+Backtracks Depth 26:400995993
+Backtracks Depth 27:527683544
+Backtracks Depth 28:665791446
+Backtracks Depth 29:778935833
+Backtracks Depth 30:914649025
+Backtracks Depth 31:1038425398
+Backtracks Depth 32:1078605543
+Backtracks Depth 33:947634613
+Backtracks Depth 34:617884468
+Backtracks Depth 35:332697692
+Backtracks Depth 36:99302016
+Backtracks Depth 37:35014144
+Backtracks Depth 38:22540781
+Backtracks Depth 39:15318693
+Backtracks Depth 40:10579958
+Backtracks Depth 41:8263319
+Backtracks Depth 42:5113289
+Backtracks Depth 43:1572966
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 37998
+CPU Time (Before collecting metrics) 38207
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123655238
+Backtracks Depth 22:148311140
+Backtracks Depth 23:172900109
+Backtracks Depth 24:232536176
+Backtracks Depth 25:304727462
+Backtracks Depth 26:401127065
+Backtracks Depth 27:527814616
+Backtracks Depth 28:665791446
+Backtracks Depth 29:779853337
+Backtracks Depth 30:914780097
+Backtracks Depth 31:1037376822
+Backtracks Depth 32:1078081255
+Backtracks Depth 33:947306933
+Backtracks Depth 34:619326260
+Backtracks Depth 35:332107868
+Backtracks Depth 36:99170944
+Backtracks Depth 37:34489856
+Backtracks Depth 38:21754349
+Backtracks Depth 39:15384229
+Backtracks Depth 40:10973174
+Backtracks Depth 41:8001175
+Backtracks Depth 42:5047753
+Backtracks Depth 43:1638502
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38213
+CPU Time (Before collecting metrics) 39049
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111701307
+Backtracks Depth 21:123786310
+Backtracks Depth 22:148311140
+Backtracks Depth 23:173489933
+Backtracks Depth 24:232470640
+Backtracks Depth 25:303875494
+Backtracks Depth 26:400144025
+Backtracks Depth 27:527683544
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779853337
+Backtracks Depth 30:914321345
+Backtracks Depth 31:1037049142
+Backtracks Depth 32:1077294823
+Backtracks Depth 33:948552117
+Backtracks Depth 34:619522868
+Backtracks Depth 35:332697692
+Backtracks Depth 36:99367552
+Backtracks Depth 37:34555392
+Backtracks Depth 38:22213101
+Backtracks Depth 39:14859941
+Backtracks Depth 40:10973174
+Backtracks Depth 41:7935639
+Backtracks Depth 42:5178825
+Backtracks Depth 43:1704038
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 39055
+CPU Time (Before collecting metrics) 39322
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111635771
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148245604
+Backtracks Depth 23:173489933
+Backtracks Depth 24:232470640
+Backtracks Depth 25:304596390
+Backtracks Depth 26:400995993
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779591193
+Backtracks Depth 30:913797057
+Backtracks Depth 31:1037376822
+Backtracks Depth 32:1077688039
+Backtracks Depth 33:946389429
+Backtracks Depth 34:617032500
+Backtracks Depth 35:332435548
+Backtracks Depth 36:99039872
+Backtracks Depth 37:35538432
+Backtracks Depth 38:23720429
+Backtracks Depth 39:15908517
+Backtracks Depth 40:11890678
+Backtracks Depth 41:8656535
+Backtracks Depth 42:5637577
+Backtracks Depth 43:1900646
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 39328
+CPU Time (Before collecting metrics) 37439
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148180068
+Backtracks Depth 23:173555469
+Backtracks Depth 24:232601712
+Backtracks Depth 25:304727462
+Backtracks Depth 26:401192601
+Backtracks Depth 27:527618008
+Backtracks Depth 28:665594838
+Backtracks Depth 29:779460121
+Backtracks Depth 30:914059201
+Backtracks Depth 31:1037311286
+Backtracks Depth 32:1078408935
+Backtracks Depth 33:948224437
+Backtracks Depth 34:618343220
+Backtracks Depth 35:333549660
+Backtracks Depth 36:99826304
+Backtracks Depth 37:35669504
+Backtracks Depth 38:22278637
+Backtracks Depth 39:15318693
+Backtracks Depth 40:11169782
+Backtracks Depth 41:8459927
+Backtracks Depth 42:5178825
+Backtracks Depth 43:1704038
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 37445
+CPU Time (Before collecting metrics) 37389
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23762810
+Backtracks Depth 16:35662257
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80367646
+Backtracks Depth 19:103837960
+Backtracks Depth 20:111701307
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148311140
+Backtracks Depth 23:173293325
+Backtracks Depth 24:232405104
+Backtracks Depth 25:304334246
+Backtracks Depth 26:400602777
+Backtracks Depth 27:527093720
+Backtracks Depth 28:665725910
+Backtracks Depth 29:779656729
+Backtracks Depth 30:914845633
+Backtracks Depth 31:1037901110
+Backtracks Depth 32:1078212327
+Backtracks Depth 33:947831221
+Backtracks Depth 34:618605364
+Backtracks Depth 35:332566620
+Backtracks Depth 36:99498624
+Backtracks Depth 37:35145216
+Backtracks Depth 38:21819885
+Backtracks Depth 39:14597797
+Backtracks Depth 40:10252278
+Backtracks Depth 41:8197783
+Backtracks Depth 42:5113289
+Backtracks Depth 43:1441894
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 37395
+CPU Time (Before collecting metrics) 38086
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148180068
+Backtracks Depth 23:173358861
+Backtracks Depth 24:232470640
+Backtracks Depth 25:304727462
+Backtracks Depth 26:400995993
+Backtracks Depth 27:527224792
+Backtracks Depth 28:665463766
+Backtracks Depth 29:779001369
+Backtracks Depth 30:913534913
+Backtracks Depth 31:1037770038
+Backtracks Depth 32:1077360359
+Backtracks Depth 33:947831221
+Backtracks Depth 34:618277684
+Backtracks Depth 35:332763228
+Backtracks Depth 36:100285056
+Backtracks Depth 37:36128256
+Backtracks Depth 38:23065069
+Backtracks Depth 39:15056549
+Backtracks Depth 40:11038710
+Backtracks Depth 41:8525463
+Backtracks Depth 42:5375433
+Backtracks Depth 43:1441894
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38092
+CPU Time (Before collecting metrics) 38493
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148245604
+Backtracks Depth 23:173424397
+Backtracks Depth 24:232405104
+Backtracks Depth 25:304661926
+Backtracks Depth 26:401192601
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779263513
+Backtracks Depth 30:913797057
+Backtracks Depth 31:1037638966
+Backtracks Depth 32:1077753575
+Backtracks Depth 33:947175861
+Backtracks Depth 34:618539828
+Backtracks Depth 35:333156444
+Backtracks Depth 36:98581120
+Backtracks Depth 37:34424320
+Backtracks Depth 38:22016493
+Backtracks Depth 39:15056549
+Backtracks Depth 40:11038710
+Backtracks Depth 41:8132247
+Backtracks Depth 42:5244361
+Backtracks Depth 43:1835110
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38498
+CPU Time (Before collecting metrics) 38726
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148376676
+Backtracks Depth 23:173621005
+Backtracks Depth 24:232667248
+Backtracks Depth 25:304530854
+Backtracks Depth 26:401192601
+Backtracks Depth 27:527814616
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779787801
+Backtracks Depth 30:914059201
+Backtracks Depth 31:1037770038
+Backtracks Depth 32:1078540007
+Backtracks Depth 33:948289973
+Backtracks Depth 34:619719476
+Backtracks Depth 35:333353052
+Backtracks Depth 36:98515584
+Backtracks Depth 37:34817536
+Backtracks Depth 38:22082029
+Backtracks Depth 39:15318693
+Backtracks Depth 40:10776566
+Backtracks Depth 41:8328855
+Backtracks Depth 42:5113289
+Backtracks Depth 43:1376358
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38732
+CPU Time (Before collecting metrics) 38976
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:206035
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1247520
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123786310
+Backtracks Depth 22:147917924
+Backtracks Depth 23:173358861
+Backtracks Depth 24:232667248
+Backtracks Depth 25:304465318
+Backtracks Depth 26:400995993
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779722265
+Backtracks Depth 30:914583489
+Backtracks Depth 31:1037180214
+Backtracks Depth 32:1078277863
+Backtracks Depth 33:948552117
+Backtracks Depth 34:619785012
+Backtracks Depth 35:333549660
+Backtracks Depth 36:99105408
+Backtracks Depth 37:33900032
+Backtracks Depth 38:22278637
+Backtracks Depth 39:14794405
+Backtracks Depth 40:10907638
+Backtracks Depth 41:8001175
+Backtracks Depth 42:5178825
+Backtracks Depth 43:1572966
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38981
+CPU Time (Before collecting metrics) 39063
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123786310
+Backtracks Depth 22:148245604
+Backtracks Depth 23:173555469
+Backtracks Depth 24:232667248
+Backtracks Depth 25:304727462
+Backtracks Depth 26:401192601
+Backtracks Depth 27:527421400
+Backtracks Depth 28:665594838
+Backtracks Depth 29:779263513
+Backtracks Depth 30:913403841
+Backtracks Depth 31:1037114678
+Backtracks Depth 32:1077753575
+Backtracks Depth 33:947962293
+Backtracks Depth 34:619391796
+Backtracks Depth 35:333484124
+Backtracks Depth 36:100612736
+Backtracks Depth 37:35210752
+Backtracks Depth 38:22344173
+Backtracks Depth 39:15122085
+Backtracks Depth 40:10842102
+Backtracks Depth 41:8525463
+Backtracks Depth 42:5178825
+Backtracks Depth 43:1638502
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 39069
+CPU Time (Before collecting metrics) 39383
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:206035
+Backtracks Depth 7:374021
+Backtracks Depth 8:438769
+Backtracks Depth 9:767919
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148311140
+Backtracks Depth 23:173621005
+Backtracks Depth 24:232667248
+Backtracks Depth 25:304727462
+Backtracks Depth 26:401192601
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779853337
+Backtracks Depth 30:913993665
+Backtracks Depth 31:1037638966
+Backtracks Depth 32:1078605543
+Backtracks Depth 33:948093365
+Backtracks Depth 34:615852852
+Backtracks Depth 35:332828764
+Backtracks Depth 36:100088448
+Backtracks Depth 37:35276288
+Backtracks Depth 38:22868461
+Backtracks Depth 39:15777445
+Backtracks Depth 40:11366390
+Backtracks Depth 41:8263319
+Backtracks Depth 42:4982217
+Backtracks Depth 43:1704038
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 39389
+CPU Time (Before collecting metrics) 38662
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148311140
+Backtracks Depth 23:173621005
+Backtracks Depth 24:232536176
+Backtracks Depth 25:304727462
+Backtracks Depth 26:401061529
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779460121
+Backtracks Depth 30:914583489
+Backtracks Depth 31:1037573430
+Backtracks Depth 32:1078671079
+Backtracks Depth 33:947503541
+Backtracks Depth 34:618933044
+Backtracks Depth 35:332697692
+Backtracks Depth 36:98777728
+Backtracks Depth 37:35341824
+Backtracks Depth 38:21623277
+Backtracks Depth 39:15449765
+Backtracks Depth 40:10776566
+Backtracks Depth 41:8263319
+Backtracks Depth 42:5309897
+Backtracks Depth 43:1572966
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38669
+CPU Time (Before collecting metrics) 37739
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:438769
+Backtracks Depth 9:833455
+Backtracks Depth 10:1247520
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4077547
+Backtracks Depth 13:8553322
+Backtracks Depth 14:12837788
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111570235
+Backtracks Depth 21:123196486
+Backtracks Depth 22:148114532
+Backtracks Depth 23:172769037
+Backtracks Depth 24:232142960
+Backtracks Depth 25:304203174
+Backtracks Depth 26:401192601
+Backtracks Depth 27:527093720
+Backtracks Depth 28:665594838
+Backtracks Depth 29:779787801
+Backtracks Depth 30:914452417
+Backtracks Depth 31:1037376822
+Backtracks Depth 32:1076311783
+Backtracks Depth 33:948158901
+Backtracks Depth 34:618474292
+Backtracks Depth 35:333287516
+Backtracks Depth 36:99826304
+Backtracks Depth 37:35276288
+Backtracks Depth 38:22671853
+Backtracks Depth 39:15384229
+Backtracks Depth 40:10973174
+Backtracks Depth 41:8197783
+Backtracks Depth 42:5178825
+Backtracks Depth 43:1638502
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 37745
+CPU Time (Before collecting metrics) 37944
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:702383
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111701307
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148245604
+Backtracks Depth 23:173555469
+Backtracks Depth 24:232667248
+Backtracks Depth 25:304268710
+Backtracks Depth 26:401061529
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665856982
+Backtracks Depth 29:779591193
+Backtracks Depth 30:913993665
+Backtracks Depth 31:1037507894
+Backtracks Depth 32:1078212327
+Backtracks Depth 33:948748725
+Backtracks Depth 34:618867508
+Backtracks Depth 35:333811804
+Backtracks Depth 36:99695232
+Backtracks Depth 37:34227712
+Backtracks Depth 38:22147565
+Backtracks Depth 39:15056549
+Backtracks Depth 40:10579958
+Backtracks Depth 41:8001175
+Backtracks Depth 42:5113289
+Backtracks Depth 43:1638502
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 37950
+CPU Time (Before collecting metrics) 38089
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148376676
+Backtracks Depth 23:173555469
+Backtracks Depth 24:232536176
+Backtracks Depth 25:304727462
+Backtracks Depth 26:400733849
+Backtracks Depth 27:527355864
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779591193
+Backtracks Depth 30:914452417
+Backtracks Depth 31:1036721462
+Backtracks Depth 32:1078081255
+Backtracks Depth 33:946651573
+Backtracks Depth 34:616835892
+Backtracks Depth 35:333287516
+Backtracks Depth 36:100153984
+Backtracks Depth 37:35472896
+Backtracks Depth 38:22802925
+Backtracks Depth 39:15580837
+Backtracks Depth 40:11825142
+Backtracks Depth 41:8722071
+Backtracks Depth 42:5244361
+Backtracks Depth 43:1835110
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38095
+CPU Time (Before collecting metrics) 38308
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123851846
+Backtracks Depth 22:147983460
+Backtracks Depth 23:173621005
+Backtracks Depth 24:232470640
+Backtracks Depth 25:304203174
+Backtracks Depth 26:400668313
+Backtracks Depth 27:527290328
+Backtracks Depth 28:665332694
+Backtracks Depth 29:779787801
+Backtracks Depth 30:914059201
+Backtracks Depth 31:1036983606
+Backtracks Depth 32:1076901607
+Backtracks Depth 33:947372469
+Backtracks Depth 34:618801972
+Backtracks Depth 35:332828764
+Backtracks Depth 36:99760768
+Backtracks Depth 37:34883072
+Backtracks Depth 38:22999533
+Backtracks Depth 39:15646373
+Backtracks Depth 40:11628534
+Backtracks Depth 41:8656535
+Backtracks Depth 42:5047753
+Backtracks Depth 43:1638502
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38314
+CPU Time (Before collecting metrics) 38452
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:308485
+Backtracks Depth 8:504305
+Backtracks Depth 9:767919
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8553322
+Backtracks Depth 14:12837788
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111570235
+Backtracks Depth 21:123458630
+Backtracks Depth 22:148048996
+Backtracks Depth 23:173293325
+Backtracks Depth 24:232667248
+Backtracks Depth 25:304727462
+Backtracks Depth 26:400864921
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779787801
+Backtracks Depth 30:914124737
+Backtracks Depth 31:1037704502
+Backtracks Depth 32:1077360359
+Backtracks Depth 33:946913717
+Backtracks Depth 34:618343220
+Backtracks Depth 35:332501084
+Backtracks Depth 36:99957376
+Backtracks Depth 37:34489856
+Backtracks Depth 38:22606317
+Backtracks Depth 39:15711909
+Backtracks Depth 40:11300854
+Backtracks Depth 41:8525463
+Backtracks Depth 42:5113289
+Backtracks Depth 43:1704038
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38458
+CPU Time (Before collecting metrics) 38548
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123720774
+Backtracks Depth 22:147983460
+Backtracks Depth 23:173293325
+Backtracks Depth 24:232601712
+Backtracks Depth 25:304530854
+Backtracks Depth 26:400864921
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779787801
+Backtracks Depth 30:914321345
+Backtracks Depth 31:1038228790
+Backtracks Depth 32:1077622503
+Backtracks Depth 33:946913717
+Backtracks Depth 34:618081076
+Backtracks Depth 35:333484124
+Backtracks Depth 36:99695232
+Backtracks Depth 37:33834496
+Backtracks Depth 38:22278637
+Backtracks Depth 39:15187621
+Backtracks Depth 40:10907638
+Backtracks Depth 41:8263319
+Backtracks Depth 42:5440969
+Backtracks Depth 43:1638502
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38554
+CPU Time (Before collecting metrics) 39737
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123655238
+Backtracks Depth 22:148048996
+Backtracks Depth 23:173489933
+Backtracks Depth 24:232470640
+Backtracks Depth 25:304334246
+Backtracks Depth 26:400471705
+Backtracks Depth 27:526831576
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779722265
+Backtracks Depth 30:914649025
+Backtracks Depth 31:1037376822
+Backtracks Depth 32:1077622503
+Backtracks Depth 33:949010869
+Backtracks Depth 34:618670900
+Backtracks Depth 35:331845724
+Backtracks Depth 36:97991296
+Backtracks Depth 37:33441280
+Backtracks Depth 38:21492205
+Backtracks Depth 39:14728869
+Backtracks Depth 40:10973174
+Backtracks Depth 41:8328855
+Backtracks Depth 42:5113289
+Backtracks Depth 43:1769574
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 39743
+CPU Time (Before collecting metrics) 38157
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111701307
+Backtracks Depth 21:123720774
+Backtracks Depth 22:148376676
+Backtracks Depth 23:173555469
+Backtracks Depth 24:232536176
+Backtracks Depth 25:304596390
+Backtracks Depth 26:401192601
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779853337
+Backtracks Depth 30:914714561
+Backtracks Depth 31:1038228790
+Backtracks Depth 32:1078343399
+Backtracks Depth 33:947634613
+Backtracks Depth 34:619457332
+Backtracks Depth 35:332501084
+Backtracks Depth 36:99039872
+Backtracks Depth 37:33637888
+Backtracks Depth 38:21819885
+Backtracks Depth 39:15777445
+Backtracks Depth 40:11235318
+Backtracks Depth 41:8394391
+Backtracks Depth 42:5703113
+Backtracks Depth 43:1638502
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38164
+CPU Time (Before collecting metrics) 37335
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111701307
+Backtracks Depth 21:123655238
+Backtracks Depth 22:148376676
+Backtracks Depth 23:173424397
+Backtracks Depth 24:232142960
+Backtracks Depth 25:304596390
+Backtracks Depth 26:400995993
+Backtracks Depth 27:526831576
+Backtracks Depth 28:665070550
+Backtracks Depth 29:779066905
+Backtracks Depth 30:913207233
+Backtracks Depth 31:1037573430
+Backtracks Depth 32:1076639463
+Backtracks Depth 33:946782645
+Backtracks Depth 34:618277684
+Backtracks Depth 35:332435548
+Backtracks Depth 36:99433088
+Backtracks Depth 37:35472896
+Backtracks Depth 38:22540781
+Backtracks Depth 39:15449765
+Backtracks Depth 40:11300854
+Backtracks Depth 41:8197783
+Backtracks Depth 42:5375433
+Backtracks Depth 43:1704038
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 37341
+CPU Time (Before collecting metrics) 37462
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148376676
+Backtracks Depth 23:173621005
+Backtracks Depth 24:232667248
+Backtracks Depth 25:304727462
+Backtracks Depth 26:401127065
+Backtracks Depth 27:527421400
+Backtracks Depth 28:665660374
+Backtracks Depth 29:779787801
+Backtracks Depth 30:914911169
+Backtracks Depth 31:1036852534
+Backtracks Depth 32:1076967143
+Backtracks Depth 33:947765685
+Backtracks Depth 34:617950004
+Backtracks Depth 35:331583580
+Backtracks Depth 36:99170944
+Backtracks Depth 37:34883072
+Backtracks Depth 38:22213101
+Backtracks Depth 39:15908517
+Backtracks Depth 40:10842102
+Backtracks Depth 41:8328855
+Backtracks Depth 42:5178825
+Backtracks Depth 43:1704038
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 37468
+CPU Time (Before collecting metrics) 37888
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123786310
+Backtracks Depth 22:148245604
+Backtracks Depth 23:173358861
+Backtracks Depth 24:232339568
+Backtracks Depth 25:304268710
+Backtracks Depth 26:401061529
+Backtracks Depth 27:527618008
+Backtracks Depth 28:665332694
+Backtracks Depth 29:779197977
+Backtracks Depth 30:914124737
+Backtracks Depth 31:1037114678
+Backtracks Depth 32:1077950183
+Backtracks Depth 33:948683189
+Backtracks Depth 34:618343220
+Backtracks Depth 35:332566620
+Backtracks Depth 36:99367552
+Backtracks Depth 37:35341824
+Backtracks Depth 38:22082029
+Backtracks Depth 39:15777445
+Backtracks Depth 40:10842102
+Backtracks Depth 41:8001175
+Backtracks Depth 42:5309897
+Backtracks Depth 43:1507430
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 37894
+CPU Time (Before collecting metrics) 38042
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:65878
+Backtracks Depth 5:133813
+Backtracks Depth 6:206035
+Backtracks Depth 7:308485
+Backtracks Depth 8:438769
+Backtracks Depth 9:833455
+Backtracks Depth 10:1247520
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8487786
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35662257
+Backtracks Depth 17:59205245
+Backtracks Depth 18:80302110
+Backtracks Depth 19:103837960
+Backtracks Depth 20:111635771
+Backtracks Depth 21:123720774
+Backtracks Depth 22:148311140
+Backtracks Depth 23:173358861
+Backtracks Depth 24:231880816
+Backtracks Depth 25:304203174
+Backtracks Depth 26:400995993
+Backtracks Depth 27:527814616
+Backtracks Depth 28:665660374
+Backtracks Depth 29:779394585
+Backtracks Depth 30:914649025
+Backtracks Depth 31:1037704502
+Backtracks Depth 32:1078540007
+Backtracks Depth 33:949076405
+Backtracks Depth 34:618867508
+Backtracks Depth 35:332763228
+Backtracks Depth 36:98974336
+Backtracks Depth 37:34489856
+Backtracks Depth 38:21885421
+Backtracks Depth 39:15318693
+Backtracks Depth 40:11235318
+Backtracks Depth 41:8459927
+Backtracks Depth 42:5309897
+Backtracks Depth 43:1572966
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38048
+CPU Time (Before collecting metrics) 38790
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148245604
+Backtracks Depth 23:173358861
+Backtracks Depth 24:232536176
+Backtracks Depth 25:304727462
+Backtracks Depth 26:400930457
+Backtracks Depth 27:527355864
+Backtracks Depth 28:665398230
+Backtracks Depth 29:778935833
+Backtracks Depth 30:914911169
+Backtracks Depth 31:1037835574
+Backtracks Depth 32:1075918567
+Backtracks Depth 33:948027829
+Backtracks Depth 34:617491252
+Backtracks Depth 35:332304476
+Backtracks Depth 36:100219520
+Backtracks Depth 37:34555392
+Backtracks Depth 38:22278637
+Backtracks Depth 39:15842981
+Backtracks Depth 40:10907638
+Backtracks Depth 41:8525463
+Backtracks Depth 42:5572041
+Backtracks Depth 43:1507430
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38796
+CPU Time (Before collecting metrics) 39191
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:206035
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:767919
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4077547
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23893882
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59205245
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103837960
+Backtracks Depth 20:111570235
+Backtracks Depth 21:123458630
+Backtracks Depth 22:147786852
+Backtracks Depth 23:172965645
+Backtracks Depth 24:231880816
+Backtracks Depth 25:304006566
+Backtracks Depth 26:400799385
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779656729
+Backtracks Depth 30:914649025
+Backtracks Depth 31:1037901110
+Backtracks Depth 32:1077360359
+Backtracks Depth 33:947831221
+Backtracks Depth 34:619064116
+Backtracks Depth 35:332959836
+Backtracks Depth 36:100416128
+Backtracks Depth 37:36128256
+Backtracks Depth 38:22999533
+Backtracks Depth 39:15318693
+Backtracks Depth 40:10973174
+Backtracks Depth 41:8132247
+Backtracks Depth 42:4982217
+Backtracks Depth 43:1638502
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 39197
+CPU Time (Before collecting metrics) 40486
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123720774
+Backtracks Depth 22:148048996
+Backtracks Depth 23:173162253
+Backtracks Depth 24:232339568
+Backtracks Depth 25:304530854
+Backtracks Depth 26:401127065
+Backtracks Depth 27:527683544
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779853337
+Backtracks Depth 30:914517953
+Backtracks Depth 31:1038032182
+Backtracks Depth 32:1078671079
+Backtracks Depth 33:948224437
+Backtracks Depth 34:618539828
+Backtracks Depth 35:333418588
+Backtracks Depth 36:99891840
+Backtracks Depth 37:33900032
+Backtracks Depth 38:21492205
+Backtracks Depth 39:15056549
+Backtracks Depth 40:11169782
+Backtracks Depth 41:8394391
+Backtracks Depth 42:5309897
+Backtracks Depth 43:1572966
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 40493
+CPU Time (Before collecting metrics) 37642
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:206035
+Backtracks Depth 7:308485
+Backtracks Depth 8:438769
+Backtracks Depth 9:767919
+Backtracks Depth 10:1247520
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4077547
+Backtracks Depth 13:8553322
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35662257
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80367646
+Backtracks Depth 19:103837960
+Backtracks Depth 20:111635771
+Backtracks Depth 21:123589702
+Backtracks Depth 22:147917924
+Backtracks Depth 23:173096717
+Backtracks Depth 24:232208496
+Backtracks Depth 25:304465318
+Backtracks Depth 26:401192601
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665791446
+Backtracks Depth 29:779263513
+Backtracks Depth 30:914911169
+Backtracks Depth 31:1038097718
+Backtracks Depth 32:1077819111
+Backtracks Depth 33:948617653
+Backtracks Depth 34:619260724
+Backtracks Depth 35:331714652
+Backtracks Depth 36:100416128
+Backtracks Depth 37:34620928
+Backtracks Depth 38:22278637
+Backtracks Depth 39:14794405
+Backtracks Depth 40:11366390
+Backtracks Depth 41:8197783
+Backtracks Depth 42:5309897
+Backtracks Depth 43:1638502
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 37648
+CPU Time (Before collecting metrics) 35370
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59074173
+Backtracks Depth 18:80302110
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123786310
+Backtracks Depth 22:148245604
+Backtracks Depth 23:173489933
+Backtracks Depth 24:232667248
+Backtracks Depth 25:304334246
+Backtracks Depth 26:401127065
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665725910
+Backtracks Depth 29:779853337
+Backtracks Depth 30:913665985
+Backtracks Depth 31:1037770038
+Backtracks Depth 32:1076704999
+Backtracks Depth 33:948355509
+Backtracks Depth 34:618867508
+Backtracks Depth 35:333484124
+Backtracks Depth 36:99826304
+Backtracks Depth 37:34489856
+Backtracks Depth 38:21623277
+Backtracks Depth 39:14270117
+Backtracks Depth 40:10186742
+Backtracks Depth 41:8525463
+Backtracks Depth 42:5113289
+Backtracks Depth 43:1572966
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 35376
+CPU Time (Before collecting metrics) 36874
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:65878
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:308485
+Backtracks Depth 8:438769
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2494254
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111635771
+Backtracks Depth 21:123786310
+Backtracks Depth 22:148245604
+Backtracks Depth 23:173555469
+Backtracks Depth 24:232405104
+Backtracks Depth 25:304137638
+Backtracks Depth 26:400340633
+Backtracks Depth 27:527355864
+Backtracks Depth 28:665725910
+Backtracks Depth 29:779722265
+Backtracks Depth 30:914649025
+Backtracks Depth 31:1036459318
+Backtracks Depth 32:1078146791
+Backtracks Depth 33:947044789
+Backtracks Depth 34:617622324
+Backtracks Depth 35:333746268
+Backtracks Depth 36:100612736
+Backtracks Depth 37:35669504
+Backtracks Depth 38:23720429
+Backtracks Depth 39:15974053
+Backtracks Depth 40:11694070
+Backtracks Depth 41:8722071
+Backtracks Depth 42:5506505
+Backtracks Depth 43:1704038
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 36880
+CPU Time (Before collecting metrics) 37080
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:65878
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:438769
+Backtracks Depth 9:833455
+Backtracks Depth 10:1247520
+Backtracks Depth 11:2494254
+Backtracks Depth 12:4012011
+Backtracks Depth 13:8553322
+Backtracks Depth 14:12837788
+Backtracks Depth 15:23893882
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59270781
+Backtracks Depth 18:80367646
+Backtracks Depth 19:103837960
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148311140
+Backtracks Depth 23:173358861
+Backtracks Depth 24:232536176
+Backtracks Depth 25:304727462
+Backtracks Depth 26:401192601
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779656729
+Backtracks Depth 30:914780097
+Backtracks Depth 31:1037311286
+Backtracks Depth 32:1078081255
+Backtracks Depth 33:948289973
+Backtracks Depth 34:617753396
+Backtracks Depth 35:332566620
+Backtracks Depth 36:99236480
+Backtracks Depth 37:34948608
+Backtracks Depth 38:22409709
+Backtracks Depth 39:15777445
+Backtracks Depth 40:10645494
+Backtracks Depth 41:8590999
+Backtracks Depth 42:5113289
+Backtracks Depth 43:1704038
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 37086
+CPU Time (Before collecting metrics) 38332
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123786310
+Backtracks Depth 22:148311140
+Backtracks Depth 23:173424397
+Backtracks Depth 24:232339568
+Backtracks Depth 25:304661926
+Backtracks Depth 26:401192601
+Backtracks Depth 27:527814616
+Backtracks Depth 28:665267158
+Backtracks Depth 29:779001369
+Backtracks Depth 30:913862593
+Backtracks Depth 31:1036262710
+Backtracks Depth 32:1076967143
+Backtracks Depth 33:948355509
+Backtracks Depth 34:618998580
+Backtracks Depth 35:334139484
+Backtracks Depth 36:99826304
+Backtracks Depth 37:35669504
+Backtracks Depth 38:21492205
+Backtracks Depth 39:14663333
+Backtracks Depth 40:11104246
+Backtracks Depth 41:8590999
+Backtracks Depth 42:5506505
+Backtracks Depth 43:1835110
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 38338
+CPU Time (Before collecting metrics) 39215
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123851846
+Backtracks Depth 22:148180068
+Backtracks Depth 23:173424397
+Backtracks Depth 24:232470640
+Backtracks Depth 25:304661926
+Backtracks Depth 26:401127065
+Backtracks Depth 27:527749080
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779460121
+Backtracks Depth 30:914517953
+Backtracks Depth 31:1037573430
+Backtracks Depth 32:1077360359
+Backtracks Depth 33:948879797
+Backtracks Depth 34:618408756
+Backtracks Depth 35:332304476
+Backtracks Depth 36:98712192
+Backtracks Depth 37:34424320
+Backtracks Depth 38:22016493
+Backtracks Depth 39:15318693
+Backtracks Depth 40:11366390
+Backtracks Depth 41:7935639
+Backtracks Depth 42:5113289
+Backtracks Depth 43:1572966
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 39221
+CPU Time (Before collecting metrics) 39646
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4143083
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111701307
+Backtracks Depth 21:123655238
+Backtracks Depth 22:148180068
+Backtracks Depth 23:173555469
+Backtracks Depth 24:232142960
+Backtracks Depth 25:304661926
+Backtracks Depth 26:401061529
+Backtracks Depth 27:527683544
+Backtracks Depth 28:665594838
+Backtracks Depth 29:779132441
+Backtracks Depth 30:913862593
+Backtracks Depth 31:1037770038
+Backtracks Depth 32:1077098215
+Backtracks Depth 33:948158901
+Backtracks Depth 34:618801972
+Backtracks Depth 35:333942876
+Backtracks Depth 36:99629696
+Backtracks Depth 37:34883072
+Backtracks Depth 38:22606317
+Backtracks Depth 39:15318693
+Backtracks Depth 40:11169782
+Backtracks Depth 41:8132247
+Backtracks Depth 42:4916681
+Backtracks Depth 43:1638502
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 39652
+CPU Time (Before collecting metrics) 39409
+Backtracks Depth 1:100000044
+Backtracks Depth 3:65578
+Backtracks Depth 4:131414
+Backtracks Depth 5:199349
+Backtracks Depth 6:271571
+Backtracks Depth 7:374021
+Backtracks Depth 8:504305
+Backtracks Depth 9:833455
+Backtracks Depth 10:1313056
+Backtracks Depth 11:2559790
+Backtracks Depth 12:4077547
+Backtracks Depth 13:8618858
+Backtracks Depth 14:12903324
+Backtracks Depth 15:23959418
+Backtracks Depth 16:35727793
+Backtracks Depth 17:59336317
+Backtracks Depth 18:80433182
+Backtracks Depth 19:103903496
+Backtracks Depth 20:111766843
+Backtracks Depth 21:123720774
+Backtracks Depth 22:148245604
+Backtracks Depth 23:173555469
+Backtracks Depth 24:232601712
+Backtracks Depth 25:304727462
+Backtracks Depth 26:401192601
+Backtracks Depth 27:527880152
+Backtracks Depth 28:665922518
+Backtracks Depth 29:779787801
+Backtracks Depth 30:914255809
+Backtracks Depth 31:1036852534
+Backtracks Depth 32:1077032679
+Backtracks Depth 33:947896757
+Backtracks Depth 34:618670900
+Backtracks Depth 35:332566620
+Backtracks Depth 36:99564160
+Backtracks Depth 37:34817536
+Backtracks Depth 38:22475245
+Backtracks Depth 39:15515301
+Backtracks Depth 40:11366390
+Backtracks Depth 41:8656535
+Backtracks Depth 42:4916681
+Backtracks Depth 43:1638502
+
+Total tasks Depth 1:1
+Total tasks Depth 3:1
+Total tasks Depth 4:2
+Total tasks Depth 5:3
+Total tasks Depth 6:4
+Total tasks Depth 7:5
+Total tasks Depth 8:6
+Total tasks Depth 9:7
+Total tasks Depth 10:8
+Total tasks Depth 11:9
+Total tasks Depth 12:10
+Total tasks Depth 13:11
+Total tasks Depth 14:12
+Total tasks Depth 15:13
+Total tasks Depth 16:14
+Total tasks Depth 17:15
+Total tasks Depth 18:16
+Total tasks Depth 19:17
+Total tasks Depth 20:34
+Total tasks Depth 21:52
+Total tasks Depth 22:71
+Total tasks Depth 23:90
+Total tasks Depth 24:111
+Total tasks Depth 25:133
+Total tasks Depth 26:155
+Total tasks Depth 27:179
+Total tasks Depth 28:201
+Total tasks Depth 29:226
+Total tasks Depth 30:295
+Total tasks Depth 31:386
+Total tasks Depth 32:478
+Total tasks Depth 33:535
+Total tasks Depth 34:520
+Total tasks Depth 35:496
+Total tasks Depth 36:451
+Total tasks Depth 37:398
+Total tasks Depth 38:349
+Total tasks Depth 39:262
+Total tasks Depth 40:189
+Total tasks Depth 41:143
+Total tasks Depth 42:98
+Total tasks Depth 43:34
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+=====
+cpu = 39415

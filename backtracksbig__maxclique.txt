@@ -1,0 +1,524 @@
+CPU Time (Before collecting metrics) 256549
+Backtracks Depth 1:100000009
+Backtracks Depth 2:1195157772
+Backtracks Depth 3:218942966
+Backtracks Depth 4:200151312
+Backtracks Depth 5:200002429
+Backtracks Depth 6:200000334
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 256555
+CPU Time (Before collecting metrics) 248394
+Backtracks Depth 1:100000009
+Backtracks Depth 2:678688651
+Backtracks Depth 3:515838955
+Backtracks Depth 4:104069835
+Backtracks Depth 5:202736250
+Backtracks Depth 6:880729
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 248401
+CPU Time (Before collecting metrics) 248511
+Backtracks Depth 1:100000009
+Backtracks Depth 2:1002023595
+Backtracks Depth 3:317588761
+Backtracks Depth 4:200165677
+Backtracks Depth 5:200002307
+Backtracks Depth 6:400000311
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 248517
+CPU Time (Before collecting metrics) 250242
+Backtracks Depth 1:100000009
+Backtracks Depth 2:487213990
+Backtracks Depth 3:17491006
+Backtracks Depth 4:124890
+Backtracks Depth 5:2402
+Backtracks Depth 6:292
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 250248
+CPU Time (Before collecting metrics) 251815
+Backtracks Depth 1:100000009
+Backtracks Depth 2:1461023246
+Backtracks Depth 3:317675092
+Backtracks Depth 4:300146732
+Backtracks Depth 5:100002425
+Backtracks Depth 6:200000319
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 251822
+CPU Time (Before collecting metrics) 253579
+Backtracks Depth 1:100000009
+Backtracks Depth 2:918627059
+Backtracks Depth 3:715704195
+Backtracks Depth 4:400169149
+Backtracks Depth 5:200001815
+Backtracks Depth 6:200000253
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 253585
+CPU Time (Before collecting metrics) 256048
+Backtracks Depth 1:100000009
+Backtracks Depth 2:1341085902
+Backtracks Depth 3:418517940
+Backtracks Depth 4:300155512
+Backtracks Depth 5:300002612
+Backtracks Depth 6:100000305
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 256055
+CPU Time (Before collecting metrics) 258582
+Backtracks Depth 1:100000009
+Backtracks Depth 2:1269130681
+Backtracks Depth 3:416017500
+Backtracks Depth 4:200154962
+Backtracks Depth 5:100002416
+Backtracks Depth 6:100000306
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 258588
+CPU Time (Before collecting metrics) 253422
+Backtracks Depth 1:100000009
+Backtracks Depth 2:1011869804
+Backtracks Depth 3:417012269
+Backtracks Depth 4:500158980
+Backtracks Depth 5:200002066
+Backtracks Depth 6:100000345
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 253428
+CPU Time (Before collecting metrics) 247894
+Backtracks Depth 1:100000009
+Backtracks Depth 2:616015301
+Backtracks Depth 3:618000060
+Backtracks Depth 4:400174323
+Backtracks Depth 5:400002830
+Backtracks Depth 6:100000252
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 247900
+CPU Time (Before collecting metrics) 249273
+Backtracks Depth 1:100000009
+Backtracks Depth 2:607200524
+Backtracks Depth 3:816408920
+Backtracks Depth 4:400140709
+Backtracks Depth 5:100002063
+Backtracks Depth 6:100000285
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 249279
+CPU Time (Before collecting metrics) 249914
+Backtracks Depth 1:100000009
+Backtracks Depth 2:521249135
+Backtracks Depth 3:18158115
+Backtracks Depth 4:149707
+Backtracks Depth 5:2339
+Backtracks Depth 6:312
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 249920
+CPU Time (Before collecting metrics) 251775
+Backtracks Depth 1:100000009
+Backtracks Depth 2:1050950944
+Backtracks Depth 3:514700399
+Backtracks Depth 4:400146023
+Backtracks Depth 5:100002537
+Backtracks Depth 6:200000326
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 251781
+CPU Time (Before collecting metrics) 254084
+Backtracks Depth 1:100000009
+Backtracks Depth 2:562282107
+Backtracks Depth 3:115610754
+Backtracks Depth 4:200168841
+Backtracks Depth 5:100002348
+Backtracks Depth 6:255
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 254090
+CPU Time (Before collecting metrics) 258882
+Backtracks Depth 1:100000009
+Backtracks Depth 2:1205183050
+Backtracks Depth 3:217403479
+Backtracks Depth 4:200165611
+Backtracks Depth 5:2342
+Backtracks Depth 6:200000321
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 258888
+CPU Time (Before collecting metrics) 266402
+Backtracks Depth 1:100000009
+Backtracks Depth 2:943380102
+Backtracks Depth 3:517549578
+Backtracks Depth 4:300147204
+Backtracks Depth 5:200002215
+Backtracks Depth 6:100000299
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 266408
+CPU Time (Before collecting metrics) 248044
+Backtracks Depth 1:100000009
+Backtracks Depth 2:908440149
+Backtracks Depth 3:217662528
+Backtracks Depth 4:200147567
+Backtracks Depth 5:300002267
+Backtracks Depth 6:200000306
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 248051
+CPU Time (Before collecting metrics) 247806
+Backtracks Depth 1:100000009
+Backtracks Depth 2:1030847703
+Backtracks Depth 3:217729575
+Backtracks Depth 4:200155030
+Backtracks Depth 5:100002402
+Backtracks Depth 6:100000271
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 247812
+CPU Time (Before collecting metrics) 248705
+Backtracks Depth 1:100000009
+Backtracks Depth 2:1209732153
+Backtracks Depth 3:16823833
+Backtracks Depth 4:200162917
+Backtracks Depth 5:100002043
+Backtracks Depth 6:300000288
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 248711
+CPU Time (Before collecting metrics) 251792
+Backtracks Depth 1:100000009
+Backtracks Depth 2:537765418
+Backtracks Depth 3:115300298
+Backtracks Depth 4:100156610
+Backtracks Depth 5:200001932
+Backtracks Depth 6:200000269
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 251798
+CPU Time (Before collecting metrics) 254978
+Backtracks Depth 1:100000009
+Backtracks Depth 2:679619748
+Backtracks Depth 3:17812862
+Backtracks Depth 4:200140778
+Backtracks Depth 5:200002420
+Backtracks Depth 6:300000332
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 254983
+CPU Time (Before collecting metrics) 254995
+Backtracks Depth 1:100000009
+Backtracks Depth 2:767926052
+Backtracks Depth 3:618543353
+Backtracks Depth 4:300184667
+Backtracks Depth 5:200002320
+Backtracks Depth 6:500000323
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 255001
+CPU Time (Before collecting metrics) 257188
+Backtracks Depth 1:100000009
+Backtracks Depth 2:594480606
+Backtracks Depth 3:16457418
+Backtracks Depth 4:156539
+Backtracks Depth 5:2456
+Backtracks Depth 6:242
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 257194
+CPU Time (Before collecting metrics) 266149
+Backtracks Depth 1:100000009
+Backtracks Depth 2:638326241
+Backtracks Depth 3:417037551
+Backtracks Depth 4:500137618
+Backtracks Depth 5:400002570
+Backtracks Depth 6:200000265
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 266156
+CPU Time (Before collecting metrics) 257202
+Backtracks Depth 1:100000009
+Backtracks Depth 2:1581059307
+Backtracks Depth 3:116054098
+Backtracks Depth 4:200147609
+Backtracks Depth 5:2417
+Backtracks Depth 6:200000301
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 257208
+CPU Time (Before collecting metrics) 248088
+Backtracks Depth 1:100000009
+Backtracks Depth 2:526452881
+Backtracks Depth 3:17565452
+Backtracks Depth 4:164935
+Backtracks Depth 5:2182
+Backtracks Depth 6:298
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 248094
+CPU Time (Before collecting metrics) 249091
+Backtracks Depth 1:100000009
+Backtracks Depth 2:606246110
+Backtracks Depth 3:17041067
+Backtracks Depth 4:200177372
+Backtracks Depth 5:400002590
+Backtracks Depth 6:285
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 249097
+CPU Time (Before collecting metrics) 249895
+Backtracks Depth 1:100000009
+Backtracks Depth 2:1034972750
+Backtracks Depth 3:716024015
+Backtracks Depth 4:400132940
+Backtracks Depth 5:100001970
+Backtracks Depth 6:300000333
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 249902
+CPU Time (Before collecting metrics) 250326
+Backtracks Depth 1:100000009
+Backtracks Depth 2:841570903
+Backtracks Depth 3:517564767
+Backtracks Depth 4:200175808
+Backtracks Depth 5:300002111
+Backtracks Depth 6:200000331
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 250332
+CPU Time (Before collecting metrics) 260022
+Backtracks Depth 1:100000009
+Backtracks Depth 2:1245469723
+Backtracks Depth 3:717402250
+Backtracks Depth 4:300164397
+Backtracks Depth 5:300002453
+Backtracks Depth 6:200000272
+
+Total tasks Depth 1:1
+Total tasks Depth 2:383
+Total tasks Depth 3:272
+Total tasks Depth 4:175
+Total tasks Depth 5:115
+Total tasks Depth 6:85
+
+MaxClique Size = 27
+cpu = 260028
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort

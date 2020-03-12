@@ -1,0 +1,4222 @@
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+[mpiexec@gpgnode-12] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-12] Press Ctrl-C again to force abort
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+CPU Time (Before collecting metrics) 175618
+Backtracks Depth 1:10010
+Backtracks Depth 2:6693250
+Backtracks Depth 3:16939940
+Backtracks Depth 4:16738956
+Backtracks Depth 5:11553197
+Backtracks Depth 6:10489386
+Backtracks Depth 7:9006622
+Backtracks Depth 8:8716359
+Backtracks Depth 9:4372551
+Backtracks Depth 10:4614437
+Backtracks Depth 11:2780441
+Backtracks Depth 12:1703928
+Backtracks Depth 13:1002576
+Backtracks Depth 14:465299
+Backtracks Depth 15:250610
+Backtracks Depth 16:114606
+Backtracks Depth 17:19817
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 175638
+CPU Time (Before collecting metrics) 173762
+Backtracks Depth 1:10010
+Backtracks Depth 2:6309733
+Backtracks Depth 3:16290412
+Backtracks Depth 4:17724071
+Backtracks Depth 5:12105021
+Backtracks Depth 6:11123594
+Backtracks Depth 7:8587725
+Backtracks Depth 8:8391558
+Backtracks Depth 9:3717951
+Backtracks Depth 10:4411931
+Backtracks Depth 11:2445898
+Backtracks Depth 12:1470282
+Backtracks Depth 13:1004210
+Backtracks Depth 14:464116
+Backtracks Depth 15:250212
+Backtracks Depth 16:151662
+Backtracks Depth 17:74069
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 173781
+CPU Time (Before collecting metrics) 173871
+Backtracks Depth 1:10010
+Backtracks Depth 2:5895089
+Backtracks Depth 3:17551409
+Backtracks Depth 4:16988047
+Backtracks Depth 5:11739405
+Backtracks Depth 6:10409541
+Backtracks Depth 7:9084935
+Backtracks Depth 8:8577739
+Backtracks Depth 9:3996458
+Backtracks Depth 10:4641921
+Backtracks Depth 11:2576824
+Backtracks Depth 12:1903917
+Backtracks Depth 13:914109
+Backtracks Depth 14:290823
+Backtracks Depth 15:290162
+Backtracks Depth 16:108545
+Backtracks Depth 17:52502
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 173893
+CPU Time (Before collecting metrics) 174749
+Backtracks Depth 1:10010
+Backtracks Depth 2:6425818
+Backtracks Depth 3:18433405
+Backtracks Depth 4:19844012
+Backtracks Depth 5:13123197
+Backtracks Depth 6:12083723
+Backtracks Depth 7:9192980
+Backtracks Depth 8:9087827
+Backtracks Depth 9:4568152
+Backtracks Depth 10:4780171
+Backtracks Depth 11:2668205
+Backtracks Depth 12:1492385
+Backtracks Depth 13:959830
+Backtracks Depth 14:689434
+Backtracks Depth 15:197994
+Backtracks Depth 16:78321
+Backtracks Depth 17:28053
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174769
+CPU Time (Before collecting metrics) 174396
+Backtracks Depth 1:10010
+Backtracks Depth 2:6645604
+Backtracks Depth 3:18332440
+Backtracks Depth 4:18710574
+Backtracks Depth 5:12104268
+Backtracks Depth 6:11394642
+Backtracks Depth 7:9190472
+Backtracks Depth 8:8962913
+Backtracks Depth 9:4523933
+Backtracks Depth 10:5270872
+Backtracks Depth 11:2774127
+Backtracks Depth 12:1846738
+Backtracks Depth 13:1257430
+Backtracks Depth 14:453613
+Backtracks Depth 15:218155
+Backtracks Depth 16:226154
+Backtracks Depth 17:26676
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174418
+CPU Time (Before collecting metrics) 174496
+Backtracks Depth 1:10010
+Backtracks Depth 2:5817920
+Backtracks Depth 3:17207625
+Backtracks Depth 4:17106966
+Backtracks Depth 5:12355240
+Backtracks Depth 6:10225466
+Backtracks Depth 7:8906828
+Backtracks Depth 8:7780842
+Backtracks Depth 9:4230310
+Backtracks Depth 10:5135630
+Backtracks Depth 11:2580308
+Backtracks Depth 12:1434884
+Backtracks Depth 13:1053264
+Backtracks Depth 14:502859
+Backtracks Depth 15:188511
+Backtracks Depth 16:57818
+Backtracks Depth 17:64208
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174517
+CPU Time (Before collecting metrics) 175100
+Backtracks Depth 1:10010
+Backtracks Depth 2:5776866
+Backtracks Depth 3:17712805
+Backtracks Depth 4:17018959
+Backtracks Depth 5:11640923
+Backtracks Depth 6:10786528
+Backtracks Depth 7:8380663
+Backtracks Depth 8:8282105
+Backtracks Depth 9:4151266
+Backtracks Depth 10:5135286
+Backtracks Depth 11:2590586
+Backtracks Depth 12:1549806
+Backtracks Depth 13:1084261
+Backtracks Depth 14:473931
+Backtracks Depth 15:155825
+Backtracks Depth 16:99253
+Backtracks Depth 17:5700
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 175121
+CPU Time (Before collecting metrics) 174942
+Backtracks Depth 1:10010
+Backtracks Depth 2:6522244
+Backtracks Depth 3:16344301
+Backtracks Depth 4:16681163
+Backtracks Depth 5:11556127
+Backtracks Depth 6:10189002
+Backtracks Depth 7:8543505
+Backtracks Depth 8:8079365
+Backtracks Depth 9:3918643
+Backtracks Depth 10:4311913
+Backtracks Depth 11:2098953
+Backtracks Depth 12:1633051
+Backtracks Depth 13:797605
+Backtracks Depth 14:558009
+Backtracks Depth 15:165916
+Backtracks Depth 16:86165
+Backtracks Depth 17:31825
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174962
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+CPU Time (Before collecting metrics) 174337
+Backtracks Depth 1:10010
+Backtracks Depth 2:6168445
+Backtracks Depth 3:16424275
+Backtracks Depth 4:15956293
+Backtracks Depth 5:10617865
+Backtracks Depth 6:9644817
+Backtracks Depth 7:8009642
+Backtracks Depth 8:7128102
+Backtracks Depth 9:3834950
+Backtracks Depth 10:4264769
+Backtracks Depth 11:2169465
+Backtracks Depth 12:1329441
+Backtracks Depth 13:885881
+Backtracks Depth 14:421376
+Backtracks Depth 15:250648
+Backtracks Depth 16:144905
+Backtracks Depth 17:20603
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174358
+CPU Time (Before collecting metrics) 173417
+Backtracks Depth 1:10010
+Backtracks Depth 2:5782661
+Backtracks Depth 3:17944540
+Backtracks Depth 4:17844697
+Backtracks Depth 5:12579448
+Backtracks Depth 6:11074269
+Backtracks Depth 7:9315951
+Backtracks Depth 8:8750752
+Backtracks Depth 9:3972114
+Backtracks Depth 10:5058934
+Backtracks Depth 11:3033455
+Backtracks Depth 12:2045895
+Backtracks Depth 13:878093
+Backtracks Depth 14:388778
+Backtracks Depth 15:184972
+Backtracks Depth 16:155741
+Backtracks Depth 17:8882
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 173437
+CPU Time (Before collecting metrics) 173623
+Backtracks Depth 1:10010
+Backtracks Depth 2:6408094
+Backtracks Depth 3:16714319
+Backtracks Depth 4:17432719
+Backtracks Depth 5:12467480
+Backtracks Depth 6:10405694
+Backtracks Depth 7:8717822
+Backtracks Depth 8:8739710
+Backtracks Depth 9:3900615
+Backtracks Depth 10:4763169
+Backtracks Depth 11:2858604
+Backtracks Depth 12:1546387
+Backtracks Depth 13:1024968
+Backtracks Depth 14:517372
+Backtracks Depth 15:277398
+Backtracks Depth 16:112372
+Backtracks Depth 17:57970
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 173643
+CPU Time (Before collecting metrics) 174359
+Backtracks Depth 1:10010
+Backtracks Depth 2:6171525
+Backtracks Depth 3:17691122
+Backtracks Depth 4:17699100
+Backtracks Depth 5:12166190
+Backtracks Depth 6:10499517
+Backtracks Depth 7:8642412
+Backtracks Depth 8:8344416
+Backtracks Depth 9:4579243
+Backtracks Depth 10:4145348
+Backtracks Depth 11:2522654
+Backtracks Depth 12:1554173
+Backtracks Depth 13:843070
+Backtracks Depth 14:437535
+Backtracks Depth 15:126692
+Backtracks Depth 16:78142
+Backtracks Depth 17:18161
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174380
+CPU Time (Before collecting metrics) 175030
+Backtracks Depth 1:10010
+Backtracks Depth 2:5788446
+Backtracks Depth 3:18454329
+Backtracks Depth 4:18117176
+Backtracks Depth 5:13136008
+Backtracks Depth 6:11288964
+Backtracks Depth 7:9088219
+Backtracks Depth 8:9167882
+Backtracks Depth 9:4576694
+Backtracks Depth 10:4477228
+Backtracks Depth 11:2762665
+Backtracks Depth 12:1626257
+Backtracks Depth 13:846057
+Backtracks Depth 14:547183
+Backtracks Depth 15:190806
+Backtracks Depth 16:90968
+Backtracks Depth 17:83858
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 175050
+CPU Time (Before collecting metrics) 175326
+Backtracks Depth 1:10010
+Backtracks Depth 2:6646516
+Backtracks Depth 3:18035837
+Backtracks Depth 4:17967759
+Backtracks Depth 5:12369112
+Backtracks Depth 6:10164575
+Backtracks Depth 7:9230984
+Backtracks Depth 8:9208000
+Backtracks Depth 9:4681264
+Backtracks Depth 10:4532830
+Backtracks Depth 11:2254232
+Backtracks Depth 12:1929871
+Backtracks Depth 13:1064551
+Backtracks Depth 14:448925
+Backtracks Depth 15:283767
+Backtracks Depth 16:119259
+Backtracks Depth 17:34801
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 175346
+CPU Time (Before collecting metrics) 175413
+Backtracks Depth 1:10010
+Backtracks Depth 2:6200555
+Backtracks Depth 3:17439326
+Backtracks Depth 4:16776920
+Backtracks Depth 5:12306850
+Backtracks Depth 6:10288696
+Backtracks Depth 7:8951286
+Backtracks Depth 8:8804136
+Backtracks Depth 9:3846631
+Backtracks Depth 10:4588404
+Backtracks Depth 11:2562338
+Backtracks Depth 12:1739956
+Backtracks Depth 13:955012
+Backtracks Depth 14:517587
+Backtracks Depth 15:266961
+Backtracks Depth 16:146086
+Backtracks Depth 17:39270
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 175434
+CPU Time (Before collecting metrics) 175814
+Backtracks Depth 1:10010
+Backtracks Depth 2:6615778
+Backtracks Depth 3:18136323
+Backtracks Depth 4:18408696
+Backtracks Depth 5:12859530
+Backtracks Depth 6:11065832
+Backtracks Depth 7:8213825
+Backtracks Depth 8:9104907
+Backtracks Depth 9:4753961
+Backtracks Depth 10:5034649
+Backtracks Depth 11:2725424
+Backtracks Depth 12:1834077
+Backtracks Depth 13:973329
+Backtracks Depth 14:445344
+Backtracks Depth 15:230080
+Backtracks Depth 16:135788
+Backtracks Depth 17:46757
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 175835
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+CPU Time (Before collecting metrics) 172659
+Backtracks Depth 1:10010
+Backtracks Depth 2:6380766
+Backtracks Depth 3:17869055
+Backtracks Depth 4:17688666
+Backtracks Depth 5:11801308
+Backtracks Depth 6:10605771
+Backtracks Depth 7:8126880
+Backtracks Depth 8:9010271
+Backtracks Depth 9:4267092
+Backtracks Depth 10:4332329
+Backtracks Depth 11:2497631
+Backtracks Depth 12:1666500
+Backtracks Depth 13:1062222
+Backtracks Depth 14:454153
+Backtracks Depth 15:228257
+Backtracks Depth 16:131848
+Backtracks Depth 17:31158
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 172680
+CPU Time (Before collecting metrics) 173721
+Backtracks Depth 1:10010
+Backtracks Depth 2:6550600
+Backtracks Depth 3:17517959
+Backtracks Depth 4:18240877
+Backtracks Depth 5:12639215
+Backtracks Depth 6:10785807
+Backtracks Depth 7:8986838
+Backtracks Depth 8:8631914
+Backtracks Depth 9:4022036
+Backtracks Depth 10:4500486
+Backtracks Depth 11:2387993
+Backtracks Depth 12:1583416
+Backtracks Depth 13:1190481
+Backtracks Depth 14:508304
+Backtracks Depth 15:327496
+Backtracks Depth 16:130859
+Backtracks Depth 17:13884
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 173742
+CPU Time (Before collecting metrics) 174013
+Backtracks Depth 1:10010
+Backtracks Depth 2:6275630
+Backtracks Depth 3:16488485
+Backtracks Depth 4:17625271
+Backtracks Depth 5:11747915
+Backtracks Depth 6:9788273
+Backtracks Depth 7:8879993
+Backtracks Depth 8:8378762
+Backtracks Depth 9:4128177
+Backtracks Depth 10:4603560
+Backtracks Depth 11:2735794
+Backtracks Depth 12:1743917
+Backtracks Depth 13:987766
+Backtracks Depth 14:585984
+Backtracks Depth 15:254286
+Backtracks Depth 16:100900
+Backtracks Depth 17:53071
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174035
+CPU Time (Before collecting metrics) 174996
+Backtracks Depth 1:10010
+Backtracks Depth 2:6014943
+Backtracks Depth 3:17495421
+Backtracks Depth 4:17936650
+Backtracks Depth 5:11935008
+Backtracks Depth 6:10629179
+Backtracks Depth 7:8797697
+Backtracks Depth 8:8671245
+Backtracks Depth 9:4207386
+Backtracks Depth 10:4513564
+Backtracks Depth 11:2205612
+Backtracks Depth 12:1531413
+Backtracks Depth 13:1060943
+Backtracks Depth 14:570836
+Backtracks Depth 15:267097
+Backtracks Depth 16:107587
+Backtracks Depth 17:23381
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 175016
+CPU Time (Before collecting metrics) 175108
+Backtracks Depth 1:10010
+Backtracks Depth 2:6285139
+Backtracks Depth 3:18023303
+Backtracks Depth 4:17690497
+Backtracks Depth 5:12270881
+Backtracks Depth 6:10779968
+Backtracks Depth 7:8831072
+Backtracks Depth 8:8936284
+Backtracks Depth 9:4412597
+Backtracks Depth 10:4935727
+Backtracks Depth 11:2698114
+Backtracks Depth 12:1603142
+Backtracks Depth 13:897468
+Backtracks Depth 14:537929
+Backtracks Depth 15:182350
+Backtracks Depth 16:136765
+Backtracks Depth 17:26190
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 175131
+CPU Time (Before collecting metrics) 175119
+Backtracks Depth 1:10010
+Backtracks Depth 2:6572806
+Backtracks Depth 3:17619615
+Backtracks Depth 4:17897976
+Backtracks Depth 5:12515636
+Backtracks Depth 6:10515244
+Backtracks Depth 7:9020872
+Backtracks Depth 8:9192328
+Backtracks Depth 9:4674516
+Backtracks Depth 10:5063279
+Backtracks Depth 11:2433206
+Backtracks Depth 12:1786391
+Backtracks Depth 13:1033549
+Backtracks Depth 14:537172
+Backtracks Depth 15:232884
+Backtracks Depth 16:91827
+Backtracks Depth 17:78266
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 175140
+CPU Time (Before collecting metrics) 175764
+Backtracks Depth 1:10010
+Backtracks Depth 2:6405926
+Backtracks Depth 3:17855080
+Backtracks Depth 4:17294949
+Backtracks Depth 5:10995759
+Backtracks Depth 6:10867080
+Backtracks Depth 7:8946545
+Backtracks Depth 8:8494660
+Backtracks Depth 9:3803141
+Backtracks Depth 10:4531591
+Backtracks Depth 11:2397795
+Backtracks Depth 12:1705492
+Backtracks Depth 13:889520
+Backtracks Depth 14:533485
+Backtracks Depth 15:235685
+Backtracks Depth 16:112734
+Backtracks Depth 17:15431
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 175785
+CPU Time (Before collecting metrics) 176533
+Backtracks Depth 1:10010
+Backtracks Depth 2:6541223
+Backtracks Depth 3:16748783
+Backtracks Depth 4:18132628
+Backtracks Depth 5:11246242
+Backtracks Depth 6:10631958
+Backtracks Depth 7:9666925
+Backtracks Depth 8:9473473
+Backtracks Depth 9:4346509
+Backtracks Depth 10:4749830
+Backtracks Depth 11:2952688
+Backtracks Depth 12:1682328
+Backtracks Depth 13:1000659
+Backtracks Depth 14:522001
+Backtracks Depth 15:214728
+Backtracks Depth 16:137844
+Backtracks Depth 17:23571
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 176553
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+CPU Time (Before collecting metrics) 174130
+Backtracks Depth 1:10010
+Backtracks Depth 2:6041800
+Backtracks Depth 3:16437377
+Backtracks Depth 4:16383658
+Backtracks Depth 5:11659466
+Backtracks Depth 6:10106199
+Backtracks Depth 7:8337706
+Backtracks Depth 8:8162525
+Backtracks Depth 9:4334123
+Backtracks Depth 10:4337841
+Backtracks Depth 11:2258065
+Backtracks Depth 12:1417886
+Backtracks Depth 13:910252
+Backtracks Depth 14:471487
+Backtracks Depth 15:182475
+Backtracks Depth 16:163528
+Backtracks Depth 17:77983
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174149
+CPU Time (Before collecting metrics) 174062
+Backtracks Depth 1:10010
+Backtracks Depth 2:6567461
+Backtracks Depth 3:18349964
+Backtracks Depth 4:18330757
+Backtracks Depth 5:12900455
+Backtracks Depth 6:11389978
+Backtracks Depth 7:9153217
+Backtracks Depth 8:9436300
+Backtracks Depth 9:4403033
+Backtracks Depth 10:4839395
+Backtracks Depth 11:2685092
+Backtracks Depth 12:1780559
+Backtracks Depth 13:1215976
+Backtracks Depth 14:571000
+Backtracks Depth 15:285708
+Backtracks Depth 16:116094
+Backtracks Depth 17:14563
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174083
+CPU Time (Before collecting metrics) 174072
+Backtracks Depth 1:10010
+Backtracks Depth 2:7150152
+Backtracks Depth 3:17450798
+Backtracks Depth 4:17770885
+Backtracks Depth 5:12506669
+Backtracks Depth 6:11004462
+Backtracks Depth 7:8877661
+Backtracks Depth 8:8958163
+Backtracks Depth 9:4833750
+Backtracks Depth 10:4982917
+Backtracks Depth 11:2851252
+Backtracks Depth 12:1699636
+Backtracks Depth 13:974397
+Backtracks Depth 14:614994
+Backtracks Depth 15:238810
+Backtracks Depth 16:149131
+Backtracks Depth 17:24580
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174093
+CPU Time (Before collecting metrics) 174434
+Backtracks Depth 1:10010
+Backtracks Depth 2:6892138
+Backtracks Depth 3:18353651
+Backtracks Depth 4:17874598
+Backtracks Depth 5:12492574
+Backtracks Depth 6:11021042
+Backtracks Depth 7:9047792
+Backtracks Depth 8:8384422
+Backtracks Depth 9:4599807
+Backtracks Depth 10:4884409
+Backtracks Depth 11:2509161
+Backtracks Depth 12:1495359
+Backtracks Depth 13:1145496
+Backtracks Depth 14:491321
+Backtracks Depth 15:221496
+Backtracks Depth 16:206929
+Backtracks Depth 17:18146
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174456
+CPU Time (Before collecting metrics) 174778
+Backtracks Depth 1:10010
+Backtracks Depth 2:6251859
+Backtracks Depth 3:17648253
+Backtracks Depth 4:18376865
+Backtracks Depth 5:12520916
+Backtracks Depth 6:10642219
+Backtracks Depth 7:8509103
+Backtracks Depth 8:9182194
+Backtracks Depth 9:4315653
+Backtracks Depth 10:4778252
+Backtracks Depth 11:2369723
+Backtracks Depth 12:1753048
+Backtracks Depth 13:985696
+Backtracks Depth 14:493482
+Backtracks Depth 15:320651
+Backtracks Depth 16:213241
+Backtracks Depth 17:64615
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174799
+CPU Time (Before collecting metrics) 175850
+Backtracks Depth 1:10010
+Backtracks Depth 2:5947420
+Backtracks Depth 3:16651914
+Backtracks Depth 4:17156570
+Backtracks Depth 5:11548547
+Backtracks Depth 6:10306325
+Backtracks Depth 7:8511941
+Backtracks Depth 8:7859498
+Backtracks Depth 9:3999585
+Backtracks Depth 10:4739419
+Backtracks Depth 11:2326854
+Backtracks Depth 12:1839257
+Backtracks Depth 13:831683
+Backtracks Depth 14:474942
+Backtracks Depth 15:133264
+Backtracks Depth 16:100396
+Backtracks Depth 17:54479
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 175870
+CPU Time (Before collecting metrics) 175937
+Backtracks Depth 1:10010
+Backtracks Depth 2:6317817
+Backtracks Depth 3:17643967
+Backtracks Depth 4:18180174
+Backtracks Depth 5:12631082
+Backtracks Depth 6:10703285
+Backtracks Depth 7:9000146
+Backtracks Depth 8:8615230
+Backtracks Depth 9:4827509
+Backtracks Depth 10:4520402
+Backtracks Depth 11:2353778
+Backtracks Depth 12:2021572
+Backtracks Depth 13:769017
+Backtracks Depth 14:371222
+Backtracks Depth 15:277707
+Backtracks Depth 16:137990
+Backtracks Depth 17:17190
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 175957
+CPU Time (Before collecting metrics) 176782
+Backtracks Depth 1:10010
+Backtracks Depth 2:6323296
+Backtracks Depth 3:17504033
+Backtracks Depth 4:16476679
+Backtracks Depth 5:12264437
+Backtracks Depth 6:9983691
+Backtracks Depth 7:8244383
+Backtracks Depth 8:7998782
+Backtracks Depth 9:4200937
+Backtracks Depth 10:4611204
+Backtracks Depth 11:2398861
+Backtracks Depth 12:1842984
+Backtracks Depth 13:761059
+Backtracks Depth 14:357773
+Backtracks Depth 15:264961
+Backtracks Depth 16:205259
+Backtracks Depth 17:10011
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 176803
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using target file: test/g79
+Using pattern file: test/g34
+Using pattern file: test/g34
+Using pattern file: test/g34
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using target file: test/g79
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using target file: test/g79
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+CPU Time (Before collecting metrics) 174433
+Backtracks Depth 1:10010
+Backtracks Depth 2:6680514
+Backtracks Depth 3:17584455
+Backtracks Depth 4:18089515
+Backtracks Depth 5:13055203
+Backtracks Depth 6:11347763
+Backtracks Depth 7:9023765
+Backtracks Depth 8:9183234
+Backtracks Depth 9:4365036
+Backtracks Depth 10:4598161
+Backtracks Depth 11:2601675
+Backtracks Depth 12:1559988
+Backtracks Depth 13:938961
+Backtracks Depth 14:539772
+Backtracks Depth 15:254345
+Backtracks Depth 16:112007
+Backtracks Depth 17:51088
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174455
+CPU Time (Before collecting metrics) 172473
+Backtracks Depth 1:10010
+Backtracks Depth 2:6021110
+Backtracks Depth 3:15951798
+Backtracks Depth 4:15425732
+Backtracks Depth 5:10220478
+Backtracks Depth 6:10147092
+Backtracks Depth 7:7989489
+Backtracks Depth 8:7821268
+Backtracks Depth 9:3860336
+Backtracks Depth 10:4346655
+Backtracks Depth 11:2163395
+Backtracks Depth 12:1266453
+Backtracks Depth 13:754826
+Backtracks Depth 14:499451
+Backtracks Depth 15:161916
+Backtracks Depth 16:87315
+Backtracks Depth 17:34086
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 172494
+CPU Time (Before collecting metrics) 173140
+Backtracks Depth 1:10010
+Backtracks Depth 2:6457886
+Backtracks Depth 3:17461444
+Backtracks Depth 4:18234403
+Backtracks Depth 5:11520396
+Backtracks Depth 6:10638999
+Backtracks Depth 7:8969255
+Backtracks Depth 8:8811031
+Backtracks Depth 9:4128139
+Backtracks Depth 10:4692197
+Backtracks Depth 11:2376309
+Backtracks Depth 12:1664565
+Backtracks Depth 13:1040567
+Backtracks Depth 14:554266
+Backtracks Depth 15:276743
+Backtracks Depth 16:154738
+Backtracks Depth 17:40446
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 173160
+CPU Time (Before collecting metrics) 173385
+Backtracks Depth 1:10010
+Backtracks Depth 2:6794299
+Backtracks Depth 3:17429110
+Backtracks Depth 4:18145792
+Backtracks Depth 5:12859447
+Backtracks Depth 6:11246484
+Backtracks Depth 7:9459843
+Backtracks Depth 8:9056984
+Backtracks Depth 9:4520391
+Backtracks Depth 10:4839600
+Backtracks Depth 11:2966248
+Backtracks Depth 12:1609724
+Backtracks Depth 13:1062100
+Backtracks Depth 14:382854
+Backtracks Depth 15:298331
+Backtracks Depth 16:119822
+Backtracks Depth 17:15488
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 173405
+CPU Time (Before collecting metrics) 174198
+Backtracks Depth 1:10010
+Backtracks Depth 2:7141023
+Backtracks Depth 3:18873868
+Backtracks Depth 4:19088900
+Backtracks Depth 5:12973225
+Backtracks Depth 6:12159691
+Backtracks Depth 7:9087853
+Backtracks Depth 8:9454710
+Backtracks Depth 9:4244876
+Backtracks Depth 10:4645698
+Backtracks Depth 11:2789380
+Backtracks Depth 12:1993927
+Backtracks Depth 13:911789
+Backtracks Depth 14:555067
+Backtracks Depth 15:304239
+Backtracks Depth 16:61944
+Backtracks Depth 17:33936
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174219
+CPU Time (Before collecting metrics) 174210
+Backtracks Depth 1:10010
+Backtracks Depth 2:6385482
+Backtracks Depth 3:16397839
+Backtracks Depth 4:16685692
+Backtracks Depth 5:11754569
+Backtracks Depth 6:10458381
+Backtracks Depth 7:8323583
+Backtracks Depth 8:7713283
+Backtracks Depth 9:4398249
+Backtracks Depth 10:3957387
+Backtracks Depth 11:2614985
+Backtracks Depth 12:1578872
+Backtracks Depth 13:1181234
+Backtracks Depth 14:465487
+Backtracks Depth 15:221051
+Backtracks Depth 16:112903
+Backtracks Depth 17:21458
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174231
+CPU Time (Before collecting metrics) 174931
+Backtracks Depth 1:10010
+Backtracks Depth 2:6619851
+Backtracks Depth 3:16533656
+Backtracks Depth 4:17686026
+Backtracks Depth 5:12928784
+Backtracks Depth 6:10550499
+Backtracks Depth 7:9125808
+Backtracks Depth 8:9447521
+Backtracks Depth 9:4101484
+Backtracks Depth 10:4872153
+Backtracks Depth 11:2498987
+Backtracks Depth 12:1787153
+Backtracks Depth 13:907515
+Backtracks Depth 14:456233
+Backtracks Depth 15:211053
+Backtracks Depth 16:174069
+Backtracks Depth 17:40563
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 174952
+CPU Time (Before collecting metrics) 175760
+Backtracks Depth 1:10010
+Backtracks Depth 2:6079244
+Backtracks Depth 3:16081889
+Backtracks Depth 4:15859056
+Backtracks Depth 5:10744143
+Backtracks Depth 6:9398229
+Backtracks Depth 7:8224403
+Backtracks Depth 8:7141017
+Backtracks Depth 9:3679491
+Backtracks Depth 10:4501016
+Backtracks Depth 11:2116929
+Backtracks Depth 12:1585186
+Backtracks Depth 13:902196
+Backtracks Depth 14:447207
+Backtracks Depth 15:306754
+Backtracks Depth 16:95310
+Backtracks Depth 17:67031
+
+Total tasks Depth 1:1
+Total tasks Depth 2:154
+Total tasks Depth 3:557
+Total tasks Depth 4:533
+Total tasks Depth 5:438
+Total tasks Depth 6:340
+Total tasks Depth 7:330
+Total tasks Depth 8:242
+Total tasks Depth 9:139
+Total tasks Depth 10:151
+Total tasks Depth 11:75
+Total tasks Depth 12:50
+Total tasks Depth 13:33
+Total tasks Depth 14:13
+Total tasks Depth 15:9
+Total tasks Depth 16:3
+Total tasks Depth 17:1
+
+Solution found: false
+cpu = 175781
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+CPU Time (Before collecting metrics) 154730
+Backtracks Depth 1:1000022
+Backtracks Depth 2:64866696
+Backtracks Depth 3:2457213
+Backtracks Depth 4:1517593
+Backtracks Depth 5:1504788
+Backtracks Depth 6:758865
+Backtracks Depth 7:104997
+Backtracks Depth 8:28969
+Backtracks Depth 9:708
+Backtracks Depth 10:38
+Backtracks Depth 11:289
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 1504) (9 -> 2645) (10 -> 1417) (11 -> 153) (12 -> 584) (13 -> 171) (14 -> 1341) (15 -> 2256) (16 -> 268) (17 -> 1275) (18 -> 2548) (19 -> 2375) (20 -> 3037) (21 -> 2318) (22 -> 186) (23 -> 3379) (24 -> 470) (25 -> 1388) (26 -> 988) (27 -> 1906) (28 -> 3578) (29 -> 1915) (30 -> 494) (31 -> 3562) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 1548) (41 -> 791) (42 -> 2631) (43 -> 1813) (44 -> 1216) (45 -> 2517) (46 -> 1407) (47 -> 684) (48 -> 232) (49 -> 2558) (50 -> 1657) (51 -> 2998) (52 -> 2932) (53 -> 2244) (54 -> 1302) (55 -> 3003) (56 -> 506) (57 -> 215) (58 -> 558) (59 -> 1850) (60 -> 3194) (61 -> 2777) (62 -> 490) (63 -> 4031) 
+cpu = 154810
+CPU Time (Before collecting metrics) 158629
+Backtracks Depth 1:1000022
+Backtracks Depth 2:52019946
+Backtracks Depth 3:2076120
+Backtracks Depth 4:1633679
+Backtracks Depth 5:2157941
+Backtracks Depth 6:1758948
+Backtracks Depth 7:105000
+Backtracks Depth 8:28969
+Backtracks Depth 9:465
+Backtracks Depth 10:37
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:1000037
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 1504) (9 -> 2645) (10 -> 1417) (11 -> 153) (12 -> 584) (13 -> 171) (14 -> 1341) (15 -> 2256) (16 -> 268) (17 -> 1275) (18 -> 2548) (19 -> 2375) (20 -> 3037) (21 -> 2318) (22 -> 186) (23 -> 3379) (24 -> 470) (25 -> 1388) (26 -> 988) (27 -> 1906) (28 -> 3578) (29 -> 1915) (30 -> 494) (31 -> 3562) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 1548) (41 -> 791) (42 -> 2631) (43 -> 1813) (44 -> 1216) (45 -> 2517) (46 -> 1407) (47 -> 684) (48 -> 232) (49 -> 2558) (50 -> 1657) (51 -> 2998) (52 -> 2932) (53 -> 2244) (54 -> 1302) (55 -> 3003) (56 -> 506) (57 -> 215) (58 -> 558) (59 -> 1850) (60 -> 3194) (61 -> 2777) (62 -> 490) (63 -> 4031) 
+cpu = 158714
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+CPU Time (Before collecting metrics) 242607
+Backtracks Depth 1:1000022
+Backtracks Depth 2:380510341
+Backtracks Depth 3:73362648
+Backtracks Depth 4:55128501
+Backtracks Depth 5:40198040
+Backtracks Depth 6:21087115
+Backtracks Depth 7:7157133
+Backtracks Depth 8:5545243
+Backtracks Depth 9:1094454
+Backtracks Depth 10:1172608
+Backtracks Depth 11:5427991
+Backtracks Depth 12:155696
+Backtracks Depth 13:1002706
+Backtracks Depth 14:3000367
+Backtracks Depth 15:2242650
+Backtracks Depth 16:1094297
+Backtracks Depth 17:1109039
+Backtracks Depth 18:14486
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+Backtracks Depth 22:2
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 242692
+CPU Time (Before collecting metrics) 223284
+Backtracks Depth 1:1000022
+Backtracks Depth 2:265261077
+Backtracks Depth 3:47535044
+Backtracks Depth 4:32089711
+Backtracks Depth 5:24943741
+Backtracks Depth 6:19411143
+Backtracks Depth 7:1647929
+Backtracks Depth 8:5193969
+Backtracks Depth 9:1047134
+Backtracks Depth 10:1029139
+Backtracks Depth 11:4016385
+Backtracks Depth 12:2001552
+Backtracks Depth 13:1613
+Backtracks Depth 14:311
+Backtracks Depth 15:466
+Backtracks Depth 16:1000931
+Backtracks Depth 17:2000089
+Backtracks Depth 18:1000027
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+Backtracks Depth 22:249
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:266
+Total tasks Depth 4:155
+Total tasks Depth 5:80
+Total tasks Depth 6:71
+Total tasks Depth 7:24
+Total tasks Depth 8:38
+Total tasks Depth 9:12
+Total tasks Depth 10:25
+Total tasks Depth 11:23
+Total tasks Depth 12:19
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:9
+Total tasks Depth 16:6
+Total tasks Depth 17:5
+Total tasks Depth 18:3
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 223370
+CPU Time (Before collecting metrics) 233794
+Backtracks Depth 1:1000022
+Backtracks Depth 2:394821851
+Backtracks Depth 3:72145266
+Backtracks Depth 4:56053239
+Backtracks Depth 5:44950004
+Backtracks Depth 6:22747448
+Backtracks Depth 7:6959354
+Backtracks Depth 8:5317245
+Backtracks Depth 9:4245201
+Backtracks Depth 10:3468747
+Backtracks Depth 11:3959255
+Backtracks Depth 12:4325120
+Backtracks Depth 13:1453703
+Backtracks Depth 14:1026476
+Backtracks Depth 15:1285171
+Backtracks Depth 16:47693
+Backtracks Depth 17:12927
+Backtracks Depth 18:2035271
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+Backtracks Depth 22:2
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 233851
+CPU Time (Before collecting metrics) 240640
+Backtracks Depth 1:1000022
+Backtracks Depth 2:368041507
+Backtracks Depth 3:72831847
+Backtracks Depth 4:52785418
+Backtracks Depth 5:43482058
+Backtracks Depth 6:24315339
+Backtracks Depth 7:8657670
+Backtracks Depth 8:3405575
+Backtracks Depth 9:2056596
+Backtracks Depth 10:3065966
+Backtracks Depth 11:4039563
+Backtracks Depth 12:2004209
+Backtracks Depth 13:1001697
+Backtracks Depth 14:408
+Backtracks Depth 15:1000518
+Backtracks Depth 16:141
+Backtracks Depth 17:2000087
+Backtracks Depth 18:6
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+Backtracks Depth 22:2
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 240728
+CPU Time (Before collecting metrics) 240667
+Backtracks Depth 1:1000022
+Backtracks Depth 2:540926928
+Backtracks Depth 3:99099130
+Backtracks Depth 4:54883644
+Backtracks Depth 5:45253119
+Backtracks Depth 6:16905774
+Backtracks Depth 7:4623434
+Backtracks Depth 8:5364326
+Backtracks Depth 9:3054429
+Backtracks Depth 10:1064921
+Backtracks Depth 11:4048364
+Backtracks Depth 12:4006265
+Backtracks Depth 13:2002648
+Backtracks Depth 14:1001373
+Backtracks Depth 15:2001505
+Backtracks Depth 16:1000147
+Backtracks Depth 17:296
+Backtracks Depth 18:14
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+Backtracks Depth 22:2
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 240752
+CPU Time (Before collecting metrics) 248500
+Backtracks Depth 1:1000022
+Backtracks Depth 2:507793302
+Backtracks Depth 3:72466369
+Backtracks Depth 4:43186294
+Backtracks Depth 5:37295717
+Backtracks Depth 6:16286424
+Backtracks Depth 7:4640416
+Backtracks Depth 8:5325758
+Backtracks Depth 9:100930
+Backtracks Depth 10:2037344
+Backtracks Depth 11:5035979
+Backtracks Depth 12:4005008
+Backtracks Depth 13:3002782
+Backtracks Depth 14:332
+Backtracks Depth 15:1000469
+Backtracks Depth 16:2000197
+Backtracks Depth 17:59
+Backtracks Depth 18:6
+Backtracks Depth 19:1000058
+Backtracks Depth 20:1000033
+Backtracks Depth 22:3
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 248584
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+CPU Time (Before collecting metrics) 155272
+Backtracks Depth 1:1000022
+Backtracks Depth 2:74774718
+Backtracks Depth 3:1789263
+Backtracks Depth 4:222497
+Backtracks Depth 5:1508860
+Backtracks Depth 6:759146
+Backtracks Depth 7:104997
+Backtracks Depth 8:1028991
+Backtracks Depth 9:465
+Backtracks Depth 10:47
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 506) (9 -> 215) (10 -> 558) (11 -> 1850) (12 -> 3194) (13 -> 597) (14 -> 490) (15 -> 4031) (16 -> 232) (17 -> 2558) (18 -> 1657) (19 -> 2998) (20 -> 2932) (21 -> 473) (22 -> 1302) (23 -> 3003) (24 -> 1548) (25 -> 791) (26 -> 2631) (27 -> 1813) (28 -> 1216) (29 -> 2517) (30 -> 1407) (31 -> 684) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 470) (41 -> 1388) (42 -> 988) (43 -> 1906) (44 -> 3578) (45 -> 1915) (46 -> 494) (47 -> 3562) (48 -> 268) (49 -> 1275) (50 -> 2548) (51 -> 2375) (52 -> 3037) (53 -> 2318) (54 -> 186) (55 -> 3379) (56 -> 1504) (57 -> 2645) (58 -> 1417) (59 -> 153) (60 -> 584) (61 -> 171) (62 -> 1341) (63 -> 2256) 
+cpu = 155360
+New Incumbent Bound: 1
+CPU Time (Before collecting metrics) 154897
+Backtracks Depth 1:1000022
+Backtracks Depth 2:57515000
+Backtracks Depth 3:2022114
+Backtracks Depth 4:606405
+Backtracks Depth 5:1513057
+Backtracks Depth 6:758946
+Backtracks Depth 7:105113
+Backtracks Depth 8:28969
+Backtracks Depth 9:465
+Backtracks Depth 10:47
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 1504) (9 -> 2645) (10 -> 1417) (11 -> 153) (12 -> 584) (13 -> 171) (14 -> 1341) (15 -> 2256) (16 -> 268) (17 -> 1275) (18 -> 2548) (19 -> 2375) (20 -> 3037) (21 -> 2318) (22 -> 186) (23 -> 3379) (24 -> 470) (25 -> 1388) (26 -> 988) (27 -> 1906) (28 -> 3578) (29 -> 1915) (30 -> 494) (31 -> 3562) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 1548) (41 -> 791) (42 -> 2631) (43 -> 1813) (44 -> 1216) (45 -> 2517) (46 -> 1407) (47 -> 684) (48 -> 232) (49 -> 2558) (50 -> 1657) (51 -> 2998) (52 -> 2932) (53 -> 2244) (54 -> 1302) (55 -> 3003) (56 -> 506) (57 -> 215) (58 -> 558) (59 -> 1850) (60 -> 3194) (61 -> 2777) (62 -> 490) (63 -> 4031) 
+cpu = 154982
+CPU Time (Before collecting metrics) 154952
+Backtracks Depth 1:1000022
+Backtracks Depth 2:56451085
+Backtracks Depth 3:1925013
+Backtracks Depth 4:1275067
+Backtracks Depth 5:1504632
+Backtracks Depth 6:758865
+Backtracks Depth 7:105083
+Backtracks Depth 8:28986
+Backtracks Depth 9:465
+Backtracks Depth 10:37
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 1504) (9 -> 2645) (10 -> 1417) (11 -> 153) (12 -> 584) (13 -> 171) (14 -> 1341) (15 -> 2256) (16 -> 268) (17 -> 1275) (18 -> 2548) (19 -> 2375) (20 -> 3037) (21 -> 2318) (22 -> 186) (23 -> 3379) (24 -> 470) (25 -> 1388) (26 -> 988) (27 -> 1906) (28 -> 3578) (29 -> 1915) (30 -> 494) (31 -> 3562) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 1548) (41 -> 791) (42 -> 2631) (43 -> 1813) (44 -> 1216) (45 -> 2517) (46 -> 1407) (47 -> 684) (48 -> 232) (49 -> 2558) (50 -> 1657) (51 -> 2998) (52 -> 2932) (53 -> 2244) (54 -> 1302) (55 -> 3003) (56 -> 506) (57 -> 215) (58 -> 558) (59 -> 1850) (60 -> 3194) (61 -> 2777) (62 -> 490) (63 -> 4031) 
+cpu = 155007
+CPU Time (Before collecting metrics) 155221
+Backtracks Depth 1:1000022
+Backtracks Depth 2:71251689
+Backtracks Depth 3:1280931
+Backtracks Depth 4:620633
+Backtracks Depth 5:1497974
+Backtracks Depth 6:758821
+Backtracks Depth 7:105005
+Backtracks Depth 8:28969
+Backtracks Depth 9:465
+Backtracks Depth 10:38
+Backtracks Depth 11:289
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 506) (9 -> 215) (10 -> 558) (11 -> 1850) (12 -> 3194) (13 -> 597) (14 -> 490) (15 -> 4031) (16 -> 232) (17 -> 2558) (18 -> 1657) (19 -> 2998) (20 -> 2932) (21 -> 473) (22 -> 1302) (23 -> 3003) (24 -> 1548) (25 -> 791) (26 -> 2631) (27 -> 1813) (28 -> 1216) (29 -> 2517) (30 -> 1407) (31 -> 684) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 470) (41 -> 1388) (42 -> 988) (43 -> 1906) (44 -> 3578) (45 -> 1915) (46 -> 494) (47 -> 3562) (48 -> 268) (49 -> 1275) (50 -> 2548) (51 -> 2375) (52 -> 3037) (53 -> 2318) (54 -> 186) (55 -> 3379) (56 -> 1504) (57 -> 2645) (58 -> 1417) (59 -> 153) (60 -> 584) (61 -> 171) (62 -> 1341) (63 -> 2256) 
+cpu = 155286
+CPU Time (Before collecting metrics) 155647
+Backtracks Depth 1:1000022
+Backtracks Depth 2:56592830
+Backtracks Depth 3:2443495
+Backtracks Depth 4:1696731
+Backtracks Depth 5:1497386
+Backtracks Depth 6:758940
+Backtracks Depth 7:1105019
+Backtracks Depth 8:28979
+Backtracks Depth 9:465
+Backtracks Depth 10:37
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 506) (9 -> 215) (10 -> 558) (11 -> 1850) (12 -> 3194) (13 -> 597) (14 -> 490) (15 -> 4031) (16 -> 232) (17 -> 2558) (18 -> 1657) (19 -> 2998) (20 -> 2932) (21 -> 473) (22 -> 1302) (23 -> 3003) (24 -> 1548) (25 -> 791) (26 -> 2631) (27 -> 1813) (28 -> 1216) (29 -> 2517) (30 -> 1407) (31 -> 684) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 470) (41 -> 1388) (42 -> 988) (43 -> 1906) (44 -> 3578) (45 -> 1915) (46 -> 494) (47 -> 3562) (48 -> 268) (49 -> 1275) (50 -> 2548) (51 -> 2375) (52 -> 3037) (53 -> 2318) (54 -> 186) (55 -> 3379) (56 -> 1504) (57 -> 2645) (58 -> 1417) (59 -> 153) (60 -> 584) (61 -> 171) (62 -> 1341) (63 -> 2256) 
+cpu = 155735
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+CPU Time (Before collecting metrics) 235601
+Backtracks Depth 1:1000022
+Backtracks Depth 2:525666789
+Backtracks Depth 3:83357922
+Backtracks Depth 4:50755486
+Backtracks Depth 5:40970865
+Backtracks Depth 6:21938109
+Backtracks Depth 7:6927537
+Backtracks Depth 8:9921960
+Backtracks Depth 9:3256153
+Backtracks Depth 10:3136262
+Backtracks Depth 11:3294566
+Backtracks Depth 12:3239498
+Backtracks Depth 13:1341442
+Backtracks Depth 14:2042706
+Backtracks Depth 15:1311709
+Backtracks Depth 16:1049064
+Backtracks Depth 17:1384814
+Backtracks Depth 18:99
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+Backtracks Depth 22:26140
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 235680
+CPU Time (Before collecting metrics) 238120
+Backtracks Depth 1:1000022
+Backtracks Depth 2:525070895
+Backtracks Depth 3:95363888
+Backtracks Depth 4:58832531
+Backtracks Depth 5:37592285
+Backtracks Depth 6:21605048
+Backtracks Depth 7:2643423
+Backtracks Depth 8:4276745
+Backtracks Depth 9:5113259
+Backtracks Depth 10:2031474
+Backtracks Depth 11:8018868
+Backtracks Depth 12:3004055
+Backtracks Depth 13:3001726
+Backtracks Depth 14:2001953
+Backtracks Depth 15:1001241
+Backtracks Depth 16:963
+Backtracks Depth 17:298
+Backtracks Depth 18:6
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+Backtracks Depth 22:1000021
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 238206
+CPU Time (Before collecting metrics) 252350
+Backtracks Depth 1:1000022
+Backtracks Depth 2:399066581
+Backtracks Depth 3:83825803
+Backtracks Depth 4:60366992
+Backtracks Depth 5:53897204
+Backtracks Depth 6:23478565
+Backtracks Depth 7:4245280
+Backtracks Depth 8:7731979
+Backtracks Depth 9:5080780
+Backtracks Depth 10:5790141
+Backtracks Depth 11:4929921
+Backtracks Depth 12:2038931
+Backtracks Depth 13:4545655
+Backtracks Depth 14:324
+Backtracks Depth 15:1000435
+Backtracks Depth 16:2000264
+Backtracks Depth 17:1139522
+Backtracks Depth 18:1000024
+Backtracks Depth 19:1546366
+Backtracks Depth 20:5106
+Backtracks Depth 21:214708
+Backtracks Depth 22:2
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:82
+Total tasks Depth 7:27
+Total tasks Depth 8:45
+Total tasks Depth 9:15
+Total tasks Depth 10:30
+Total tasks Depth 11:28
+Total tasks Depth 12:24
+Total tasks Depth 13:18
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:7
+Total tasks Depth 18:4
+Total tasks Depth 19:3
+Total tasks Depth 20:3
+Total tasks Depth 21:1
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 2375) (1 -> 2645) (2 -> 1337) (3 -> 1043) (4 -> 791) (5 -> 2573) (6 -> 1906) (7 -> 2045) (8 -> 1281) (9 -> 2393) (10 -> 4461) (11 -> 1714) (12 -> 777) (13 -> 1548) (14 -> 2238) (15 -> 3063) (16 -> 1715) (17 -> 4031) (18 -> 4320) (19 -> 580) (20 -> 1262) (21 -> 3003) (22 -> 684) (23 -> 1268) (24 -> 2256) (25 -> 2215) (26 -> 3282) (27 -> 1266) (28 -> 2210) (29 -> 2953) (30 -> 2140) (31 -> 3262) (32 -> 2584) (33 -> 490) (34 -> 1222) (35 -> 4366) (36 -> 3180) (37 -> 1302) (38 -> 1407) (39 -> 3475) (40 -> 597) (41 -> 2341) (42 -> 2538) (43 -> 1055) (44 -> 325) (45 -> 2517) (46 -> 473) (47 -> 2500) (48 -> 1275) (49 -> 2548) (50 -> 171) (51 -> 790) (52 -> 2896) (53 -> 988) (54 -> 1388) (55 -> 2846) (56 -> 153) (57 -> 1417) (58 -> 2318) (59 -> 1857) (60 -> 2631) (61 -> 3390) (62 -> 2738) (63 -> 3429) 
+cpu = 252438
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+CPU Time (Before collecting metrics) 154595
+Backtracks Depth 1:1000022
+Backtracks Depth 2:69831559
+Backtracks Depth 3:1505239
+Backtracks Depth 4:1245638
+Backtracks Depth 5:1497261
+Backtracks Depth 6:1758845
+Backtracks Depth 7:105011
+Backtracks Depth 8:28970
+Backtracks Depth 9:465
+Backtracks Depth 10:37
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:1000267
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 506) (9 -> 215) (10 -> 558) (11 -> 1850) (12 -> 3194) (13 -> 597) (14 -> 490) (15 -> 4031) (16 -> 232) (17 -> 2558) (18 -> 1657) (19 -> 2998) (20 -> 2932) (21 -> 473) (22 -> 1302) (23 -> 3003) (24 -> 1548) (25 -> 791) (26 -> 2631) (27 -> 1813) (28 -> 1216) (29 -> 2517) (30 -> 1407) (31 -> 684) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 470) (41 -> 1388) (42 -> 988) (43 -> 1906) (44 -> 3578) (45 -> 1915) (46 -> 494) (47 -> 3562) (48 -> 268) (49 -> 1275) (50 -> 2548) (51 -> 2375) (52 -> 3037) (53 -> 2318) (54 -> 186) (55 -> 3379) (56 -> 1504) (57 -> 2645) (58 -> 1417) (59 -> 153) (60 -> 584) (61 -> 171) (62 -> 1341) (63 -> 2256) 
+cpu = 154680
+CPU Time (Before collecting metrics) 155051
+Backtracks Depth 1:1000022
+Backtracks Depth 2:66446769
+Backtracks Depth 3:2404985
+Backtracks Depth 4:1431559
+Backtracks Depth 5:1497400
+Backtracks Depth 6:758821
+Backtracks Depth 7:104997
+Backtracks Depth 8:28969
+Backtracks Depth 9:465
+Backtracks Depth 10:37
+Backtracks Depth 11:279
+Backtracks Depth 12:1000224
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 1504) (9 -> 2645) (10 -> 1417) (11 -> 153) (12 -> 584) (13 -> 171) (14 -> 1341) (15 -> 2256) (16 -> 268) (17 -> 1275) (18 -> 2548) (19 -> 2375) (20 -> 3037) (21 -> 2318) (22 -> 186) (23 -> 3379) (24 -> 470) (25 -> 1388) (26 -> 988) (27 -> 1906) (28 -> 3578) (29 -> 1915) (30 -> 494) (31 -> 3562) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 1548) (41 -> 791) (42 -> 2631) (43 -> 1813) (44 -> 1216) (45 -> 2517) (46 -> 1407) (47 -> 684) (48 -> 232) (49 -> 2558) (50 -> 1657) (51 -> 2998) (52 -> 2932) (53 -> 2244) (54 -> 1302) (55 -> 3003) (56 -> 506) (57 -> 215) (58 -> 558) (59 -> 1850) (60 -> 3194) (61 -> 2777) (62 -> 490) (63 -> 4031) 
+cpu = 155136
+CPU Time (Before collecting metrics) 155411
+Backtracks Depth 1:1000022
+Backtracks Depth 2:58842579
+Backtracks Depth 3:1517545
+Backtracks Depth 4:2085638
+Backtracks Depth 5:1497632
+Backtracks Depth 6:1758910
+Backtracks Depth 7:105240
+Backtracks Depth 8:28992
+Backtracks Depth 9:465
+Backtracks Depth 10:37
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 506) (9 -> 215) (10 -> 558) (11 -> 1850) (12 -> 3194) (13 -> 597) (14 -> 490) (15 -> 4031) (16 -> 232) (17 -> 2558) (18 -> 1657) (19 -> 2998) (20 -> 2932) (21 -> 473) (22 -> 1302) (23 -> 3003) (24 -> 1548) (25 -> 791) (26 -> 2631) (27 -> 1813) (28 -> 1216) (29 -> 2517) (30 -> 1407) (31 -> 684) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 470) (41 -> 1388) (42 -> 988) (43 -> 1906) (44 -> 3578) (45 -> 1915) (46 -> 494) (47 -> 3562) (48 -> 268) (49 -> 1275) (50 -> 2548) (51 -> 2375) (52 -> 3037) (53 -> 2318) (54 -> 186) (55 -> 3379) (56 -> 1504) (57 -> 2645) (58 -> 1417) (59 -> 153) (60 -> 584) (61 -> 171) (62 -> 1341) (63 -> 2256) 
+cpu = 155490
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+CPU Time (Before collecting metrics) 247428
+Backtracks Depth 1:1000022
+Backtracks Depth 2:524260168
+Backtracks Depth 3:97133613
+Backtracks Depth 4:67099344
+Backtracks Depth 5:49444123
+Backtracks Depth 6:27542066
+Backtracks Depth 7:4812039
+Backtracks Depth 8:9834650
+Backtracks Depth 9:58773
+Backtracks Depth 10:5845292
+Backtracks Depth 11:2190372
+Backtracks Depth 12:2003255
+Backtracks Depth 13:2001962
+Backtracks Depth 14:330
+Backtracks Depth 15:1000510
+Backtracks Depth 16:1000229
+Backtracks Depth 17:55
+Backtracks Depth 18:6
+Backtracks Depth 19:1000062
+Backtracks Depth 20:21
+Backtracks Depth 22:12
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 247514
+CPU Time (Before collecting metrics) 236754
+Backtracks Depth 1:1000022
+Backtracks Depth 2:374394030
+Backtracks Depth 3:66042647
+Backtracks Depth 4:59018552
+Backtracks Depth 5:44292460
+Backtracks Depth 6:19147489
+Backtracks Depth 7:5246563
+Backtracks Depth 8:8087238
+Backtracks Depth 9:3263516
+Backtracks Depth 10:4617493
+Backtracks Depth 11:5429331
+Backtracks Depth 12:2510137
+Backtracks Depth 13:1228241
+Backtracks Depth 14:2407689
+Backtracks Depth 15:1116647
+Backtracks Depth 16:1222948
+Backtracks Depth 17:1017440
+Backtracks Depth 18:212662
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+Backtracks Depth 22:155190
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 236843
+CPU Time (Before collecting metrics) 239986
+Backtracks Depth 1:1000022
+Backtracks Depth 2:390251180
+Backtracks Depth 3:81817946
+Backtracks Depth 4:50463701
+Backtracks Depth 5:45782617
+Backtracks Depth 6:18696063
+Backtracks Depth 7:4048332
+Backtracks Depth 8:6670626
+Backtracks Depth 9:2090039
+Backtracks Depth 10:2311369
+Backtracks Depth 11:7296350
+Backtracks Depth 12:2393874
+Backtracks Depth 13:2247197
+Backtracks Depth 14:308
+Backtracks Depth 15:2048827
+Backtracks Depth 16:1048094
+Backtracks Depth 17:111149
+Backtracks Depth 18:8213
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+Backtracks Depth 22:50781
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 240073
+CPU Time (Before collecting metrics) 240378
+Backtracks Depth 1:1000022
+Backtracks Depth 2:339083941
+Backtracks Depth 3:66877405
+Backtracks Depth 4:49580890
+Backtracks Depth 5:39441893
+Backtracks Depth 6:23777272
+Backtracks Depth 7:6070713
+Backtracks Depth 8:11809694
+Backtracks Depth 9:2270388
+Backtracks Depth 10:3031749
+Backtracks Depth 11:4070917
+Backtracks Depth 12:3358034
+Backtracks Depth 13:1002119
+Backtracks Depth 14:3000414
+Backtracks Depth 15:2439659
+Backtracks Depth 16:1085957
+Backtracks Depth 17:1117808
+Backtracks Depth 18:1001270
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+Backtracks Depth 22:2
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 2375) (1 -> 2645) (2 -> 1337) (3 -> 1043) (4 -> 791) (5 -> 2573) (6 -> 1906) (7 -> 2045) (8 -> 1281) (9 -> 2393) (10 -> 4461) (11 -> 1714) (12 -> 777) (13 -> 1548) (14 -> 2238) (15 -> 3063) (16 -> 1715) (17 -> 4031) (18 -> 4320) (19 -> 580) (20 -> 1262) (21 -> 3003) (22 -> 684) (23 -> 1268) (24 -> 2256) (25 -> 2215) (26 -> 3282) (27 -> 1266) (28 -> 2210) (29 -> 2953) (30 -> 2140) (31 -> 3262) (32 -> 2584) (33 -> 490) (34 -> 1222) (35 -> 4366) (36 -> 3180) (37 -> 1302) (38 -> 1407) (39 -> 3475) (40 -> 597) (41 -> 2341) (42 -> 2538) (43 -> 1055) (44 -> 325) (45 -> 2517) (46 -> 473) (47 -> 2500) (48 -> 1275) (49 -> 2548) (50 -> 171) (51 -> 790) (52 -> 2896) (53 -> 988) (54 -> 1388) (55 -> 2846) (56 -> 153) (57 -> 1417) (58 -> 2318) (59 -> 1857) (60 -> 2631) (61 -> 3390) (62 -> 2738) (63 -> 3429) 
+cpu = 240462
+CPU Time (Before collecting metrics) 241265
+Backtracks Depth 1:1000022
+Backtracks Depth 2:468684531
+Backtracks Depth 3:84916947
+Backtracks Depth 4:56176894
+Backtracks Depth 5:38414355
+Backtracks Depth 6:18306773
+Backtracks Depth 7:6730993
+Backtracks Depth 8:10300132
+Backtracks Depth 9:3094016
+Backtracks Depth 10:6080061
+Backtracks Depth 11:8095756
+Backtracks Depth 12:3005351
+Backtracks Depth 13:2040
+Backtracks Depth 14:3000365
+Backtracks Depth 15:1000452
+Backtracks Depth 16:2000172
+Backtracks Depth 17:1000072
+Backtracks Depth 18:27
+Backtracks Depth 19:1000836
+Backtracks Depth 20:11
+Backtracks Depth 22:2
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 241352
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+CPU Time (Before collecting metrics) 153990
+Backtracks Depth 1:1000022
+Backtracks Depth 2:48355869
+Backtracks Depth 3:1881198
+Backtracks Depth 4:86886
+Backtracks Depth 5:1511005
+Backtracks Depth 6:759073
+Backtracks Depth 7:104997
+Backtracks Depth 8:28969
+Backtracks Depth 9:465
+Backtracks Depth 10:37
+Backtracks Depth 11:280
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 506) (9 -> 215) (10 -> 558) (11 -> 1850) (12 -> 3194) (13 -> 597) (14 -> 490) (15 -> 4031) (16 -> 232) (17 -> 2558) (18 -> 1657) (19 -> 2998) (20 -> 2932) (21 -> 473) (22 -> 1302) (23 -> 3003) (24 -> 1548) (25 -> 791) (26 -> 2631) (27 -> 1813) (28 -> 1216) (29 -> 2517) (30 -> 1407) (31 -> 684) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 470) (41 -> 1388) (42 -> 988) (43 -> 1906) (44 -> 3578) (45 -> 1915) (46 -> 494) (47 -> 3562) (48 -> 268) (49 -> 1275) (50 -> 2548) (51 -> 2375) (52 -> 3037) (53 -> 2318) (54 -> 186) (55 -> 3379) (56 -> 1504) (57 -> 2645) (58 -> 1417) (59 -> 153) (60 -> 584) (61 -> 171) (62 -> 1341) (63 -> 2256) 
+cpu = 154076
+CPU Time (Before collecting metrics) 154876
+Backtracks Depth 1:1000022
+Backtracks Depth 2:72546115
+Backtracks Depth 3:2192453
+Backtracks Depth 4:350509
+Backtracks Depth 5:1497239
+Backtracks Depth 6:759056
+Backtracks Depth 7:1105029
+Backtracks Depth 8:28969
+Backtracks Depth 9:465
+Backtracks Depth 10:37
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 1504) (9 -> 2645) (10 -> 1417) (11 -> 153) (12 -> 584) (13 -> 171) (14 -> 1341) (15 -> 2256) (16 -> 268) (17 -> 1275) (18 -> 2548) (19 -> 2375) (20 -> 3037) (21 -> 2318) (22 -> 186) (23 -> 3379) (24 -> 470) (25 -> 1388) (26 -> 988) (27 -> 1906) (28 -> 3578) (29 -> 1915) (30 -> 494) (31 -> 3562) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 1548) (41 -> 791) (42 -> 2631) (43 -> 1813) (44 -> 1216) (45 -> 2517) (46 -> 1407) (47 -> 684) (48 -> 232) (49 -> 2558) (50 -> 1657) (51 -> 2998) (52 -> 2932) (53 -> 2244) (54 -> 1302) (55 -> 3003) (56 -> 506) (57 -> 215) (58 -> 558) (59 -> 1850) (60 -> 3194) (61 -> 2777) (62 -> 490) (63 -> 4031) 
+cpu = 154962
+CPU Time (Before collecting metrics) 154940
+Backtracks Depth 1:1000022
+Backtracks Depth 2:53331390
+Backtracks Depth 3:1310615
+Backtracks Depth 4:436231
+Backtracks Depth 5:2498396
+Backtracks Depth 6:759243
+Backtracks Depth 7:105001
+Backtracks Depth 8:28970
+Backtracks Depth 9:468
+Backtracks Depth 10:37
+Backtracks Depth 11:296
+Backtracks Depth 12:1000224
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 1504) (9 -> 2645) (10 -> 1417) (11 -> 153) (12 -> 584) (13 -> 171) (14 -> 1341) (15 -> 2256) (16 -> 268) (17 -> 1275) (18 -> 2548) (19 -> 2375) (20 -> 3037) (21 -> 2318) (22 -> 186) (23 -> 3379) (24 -> 470) (25 -> 1388) (26 -> 988) (27 -> 1906) (28 -> 3578) (29 -> 1915) (30 -> 494) (31 -> 3562) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 1548) (41 -> 791) (42 -> 2631) (43 -> 1813) (44 -> 1216) (45 -> 2517) (46 -> 1407) (47 -> 684) (48 -> 232) (49 -> 2558) (50 -> 1657) (51 -> 2998) (52 -> 2932) (53 -> 2244) (54 -> 1302) (55 -> 3003) (56 -> 506) (57 -> 215) (58 -> 558) (59 -> 1850) (60 -> 3194) (61 -> 2777) (62 -> 490) (63 -> 4031) 
+cpu = 155028
+New Incumbent Bound: 1
+CPU Time (Before collecting metrics) 159374
+Backtracks Depth 1:1000022
+Backtracks Depth 2:85535461
+Backtracks Depth 3:1962008
+Backtracks Depth 4:561387
+Backtracks Depth 5:2131389
+Backtracks Depth 6:758898
+Backtracks Depth 7:105007
+Backtracks Depth 8:28969
+Backtracks Depth 9:1000487
+Backtracks Depth 10:37
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 506) (9 -> 215) (10 -> 558) (11 -> 1850) (12 -> 3194) (13 -> 597) (14 -> 490) (15 -> 4031) (16 -> 232) (17 -> 2558) (18 -> 1657) (19 -> 2998) (20 -> 2932) (21 -> 473) (22 -> 1302) (23 -> 3003) (24 -> 1548) (25 -> 791) (26 -> 2631) (27 -> 1813) (28 -> 1216) (29 -> 2517) (30 -> 1407) (31 -> 684) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 470) (41 -> 1388) (42 -> 988) (43 -> 1906) (44 -> 3578) (45 -> 1915) (46 -> 494) (47 -> 3562) (48 -> 268) (49 -> 1275) (50 -> 2548) (51 -> 2375) (52 -> 3037) (53 -> 2318) (54 -> 186) (55 -> 3379) (56 -> 1504) (57 -> 2645) (58 -> 1417) (59 -> 153) (60 -> 584) (61 -> 171) (62 -> 1341) (63 -> 2256) 
+cpu = 159451
+CPU Time (Before collecting metrics) 204158
+Backtracks Depth 1:1000022
+Backtracks Depth 2:265893767
+Backtracks Depth 3:42478400
+Backtracks Depth 4:29715352
+Backtracks Depth 5:18260079
+Backtracks Depth 6:14842688
+Backtracks Depth 7:3550165
+Backtracks Depth 8:5206497
+Backtracks Depth 9:2050056
+Backtracks Depth 10:1035229
+Backtracks Depth 11:3025408
+Backtracks Depth 12:2001821
+Backtracks Depth 13:2002002
+Backtracks Depth 14:2000363
+Backtracks Depth 15:1000443
+Backtracks Depth 16:1000147
+Backtracks Depth 17:1000067
+Backtracks Depth 18:2000817
+Backtracks Depth 19:41
+Backtracks Depth 20:11
+Backtracks Depth 22:1000020
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:250
+Total tasks Depth 4:149
+Total tasks Depth 5:74
+Total tasks Depth 6:63
+Total tasks Depth 7:21
+Total tasks Depth 8:36
+Total tasks Depth 9:12
+Total tasks Depth 10:24
+Total tasks Depth 11:21
+Total tasks Depth 12:19
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:9
+Total tasks Depth 16:6
+Total tasks Depth 17:5
+Total tasks Depth 18:3
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 2375) (1 -> 2645) (2 -> 1337) (3 -> 1043) (4 -> 791) (5 -> 2573) (6 -> 1906) (7 -> 2045) (8 -> 1281) (9 -> 2393) (10 -> 4461) (11 -> 1714) (12 -> 777) (13 -> 1548) (14 -> 2238) (15 -> 3063) (16 -> 1715) (17 -> 4031) (18 -> 4320) (19 -> 580) (20 -> 1262) (21 -> 3003) (22 -> 684) (23 -> 1268) (24 -> 2256) (25 -> 2215) (26 -> 3282) (27 -> 1266) (28 -> 2210) (29 -> 2953) (30 -> 2140) (31 -> 3262) (32 -> 2584) (33 -> 490) (34 -> 1222) (35 -> 4366) (36 -> 3180) (37 -> 1302) (38 -> 1407) (39 -> 3475) (40 -> 597) (41 -> 2341) (42 -> 2538) (43 -> 1055) (44 -> 325) (45 -> 2517) (46 -> 473) (47 -> 2500) (48 -> 1275) (49 -> 2548) (50 -> 171) (51 -> 790) (52 -> 2896) (53 -> 988) (54 -> 1388) (55 -> 2846) (56 -> 153) (57 -> 1417) (58 -> 2318) (59 -> 1857) (60 -> 2631) (61 -> 3390) (62 -> 2738) (63 -> 3429) 
+cpu = 204246
+CPU Time (Before collecting metrics) 242436
+Backtracks Depth 1:1000022
+Backtracks Depth 2:449444860
+Backtracks Depth 3:76577944
+Backtracks Depth 4:57056473
+Backtracks Depth 5:40162120
+Backtracks Depth 6:23966955
+Backtracks Depth 7:7652489
+Backtracks Depth 8:3338786
+Backtracks Depth 9:1050775
+Backtracks Depth 10:2048310
+Backtracks Depth 11:3010307
+Backtracks Depth 12:3004432
+Backtracks Depth 13:5002015
+Backtracks Depth 14:2000373
+Backtracks Depth 15:459
+Backtracks Depth 16:226
+Backtracks Depth 17:83
+Backtracks Depth 18:1000028
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+Backtracks Depth 22:2000816
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 242524
+CPU Time (Before collecting metrics) 231113
+Backtracks Depth 1:1000022
+Backtracks Depth 2:374865548
+Backtracks Depth 3:58194749
+Backtracks Depth 4:43680978
+Backtracks Depth 5:32186356
+Backtracks Depth 6:20874893
+Backtracks Depth 7:5597414
+Backtracks Depth 8:4314811
+Backtracks Depth 9:2419454
+Backtracks Depth 10:6109804
+Backtracks Depth 11:4164889
+Backtracks Depth 12:4018959
+Backtracks Depth 13:2001633
+Backtracks Depth 14:1000428
+Backtracks Depth 15:2514231
+Backtracks Depth 16:1016535
+Backtracks Depth 17:1554341
+Backtracks Depth 18:1163885
+Backtracks Depth 19:1000080
+Backtracks Depth 20:1000219
+Backtracks Depth 22:2
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 1595) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1621) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 1275) (17 -> 2548) (18 -> 2538) (19 -> 790) (20 -> 2896) (21 -> 988) (22 -> 1388) (23 -> 2846) (24 -> 1587) (25 -> 3767) (26 -> 1687) (27 -> 171) (28 -> 474) (29 -> 4483) (30 -> 1499) (31 -> 4415) (32 -> 597) (33 -> 2341) (34 -> 4430) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 4320) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1222) (52 -> 592) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 1266) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 231198
+CPU Time (Before collecting metrics) 236290
+Backtracks Depth 1:1000022
+Backtracks Depth 2:411166984
+Backtracks Depth 3:80178952
+Backtracks Depth 4:47348703
+Backtracks Depth 5:39306073
+Backtracks Depth 6:29169372
+Backtracks Depth 7:4668913
+Backtracks Depth 8:7327499
+Backtracks Depth 9:3133779
+Backtracks Depth 10:4042039
+Backtracks Depth 11:8025580
+Backtracks Depth 12:2004456
+Backtracks Depth 13:3001935
+Backtracks Depth 14:307
+Backtracks Depth 15:1000521
+Backtracks Depth 16:140
+Backtracks Depth 17:80
+Backtracks Depth 18:6
+Backtracks Depth 19:40
+Backtracks Depth 20:1000033
+Backtracks Depth 22:1000084
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 236375
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Using pattern file: test/g18
+Using target file: test/g106
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+Skeleton Type: Budget
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthBounded: false
+MaxStackDepth: 5000
+Using Bounding: false
+Workpool: DepthPool
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+CPU Time (Before collecting metrics) 154867
+Backtracks Depth 1:1000022
+Backtracks Depth 2:58017669
+Backtracks Depth 3:1776336
+Backtracks Depth 4:311224
+Backtracks Depth 5:1498224
+Backtracks Depth 6:758939
+Backtracks Depth 7:105000
+Backtracks Depth 8:28969
+Backtracks Depth 9:465
+Backtracks Depth 10:37
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 506) (9 -> 215) (10 -> 558) (11 -> 1850) (12 -> 3194) (13 -> 597) (14 -> 490) (15 -> 4031) (16 -> 232) (17 -> 2558) (18 -> 1657) (19 -> 2998) (20 -> 2932) (21 -> 473) (22 -> 1302) (23 -> 3003) (24 -> 1548) (25 -> 791) (26 -> 2631) (27 -> 1813) (28 -> 1216) (29 -> 2517) (30 -> 1407) (31 -> 684) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 470) (41 -> 1388) (42 -> 988) (43 -> 1906) (44 -> 3578) (45 -> 1915) (46 -> 494) (47 -> 3562) (48 -> 268) (49 -> 1275) (50 -> 2548) (51 -> 2375) (52 -> 3037) (53 -> 2318) (54 -> 186) (55 -> 3379) (56 -> 1504) (57 -> 2645) (58 -> 1417) (59 -> 153) (60 -> 584) (61 -> 171) (62 -> 1341) (63 -> 2256) 
+cpu = 154954
+CPU Time (Before collecting metrics) 153314
+Backtracks Depth 1:1000022
+Backtracks Depth 2:58972879
+Backtracks Depth 3:1396563
+Backtracks Depth 4:582898
+Backtracks Depth 5:2497689
+Backtracks Depth 6:758946
+Backtracks Depth 7:104997
+Backtracks Depth 8:28969
+Backtracks Depth 9:475
+Backtracks Depth 10:1000059
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 506) (9 -> 215) (10 -> 558) (11 -> 1850) (12 -> 3194) (13 -> 597) (14 -> 490) (15 -> 4031) (16 -> 232) (17 -> 2558) (18 -> 1657) (19 -> 2998) (20 -> 2932) (21 -> 473) (22 -> 1302) (23 -> 3003) (24 -> 1548) (25 -> 791) (26 -> 2631) (27 -> 1813) (28 -> 1216) (29 -> 2517) (30 -> 1407) (31 -> 684) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 470) (41 -> 1388) (42 -> 988) (43 -> 1906) (44 -> 3578) (45 -> 1915) (46 -> 494) (47 -> 3562) (48 -> 268) (49 -> 1275) (50 -> 2548) (51 -> 2375) (52 -> 3037) (53 -> 2318) (54 -> 186) (55 -> 3379) (56 -> 1504) (57 -> 2645) (58 -> 1417) (59 -> 153) (60 -> 584) (61 -> 171) (62 -> 1341) (63 -> 2256) 
+cpu = 153399
+CPU Time (Before collecting metrics) 153467
+Backtracks Depth 1:1000022
+Backtracks Depth 2:71566817
+Backtracks Depth 3:2326063
+Backtracks Depth 4:828348
+Backtracks Depth 5:1505829
+Backtracks Depth 6:1759083
+Backtracks Depth 7:105014
+Backtracks Depth 8:28969
+Backtracks Depth 9:465
+Backtracks Depth 10:37
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:25
+Backtracks Depth 15:1000267
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 1504) (9 -> 2645) (10 -> 1417) (11 -> 153) (12 -> 584) (13 -> 171) (14 -> 1341) (15 -> 2256) (16 -> 268) (17 -> 1275) (18 -> 2548) (19 -> 2375) (20 -> 3037) (21 -> 2318) (22 -> 186) (23 -> 3379) (24 -> 470) (25 -> 1388) (26 -> 988) (27 -> 1906) (28 -> 3578) (29 -> 1915) (30 -> 494) (31 -> 3562) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 1548) (41 -> 791) (42 -> 2631) (43 -> 1813) (44 -> 1216) (45 -> 2517) (46 -> 1407) (47 -> 684) (48 -> 232) (49 -> 2558) (50 -> 1657) (51 -> 2998) (52 -> 2932) (53 -> 2244) (54 -> 1302) (55 -> 3003) (56 -> 506) (57 -> 215) (58 -> 558) (59 -> 1850) (60 -> 3194) (61 -> 2777) (62 -> 490) (63 -> 4031) 
+cpu = 153556
+CPU Time (Before collecting metrics) 153993
+Backtracks Depth 1:1000022
+Backtracks Depth 2:98935682
+Backtracks Depth 3:2144572
+Backtracks Depth 4:1591637
+Backtracks Depth 5:1501861
+Backtracks Depth 6:758842
+Backtracks Depth 7:105001
+Backtracks Depth 8:28969
+Backtracks Depth 9:466
+Backtracks Depth 10:37
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 506) (9 -> 215) (10 -> 558) (11 -> 1850) (12 -> 3194) (13 -> 597) (14 -> 490) (15 -> 4031) (16 -> 232) (17 -> 2558) (18 -> 1657) (19 -> 2998) (20 -> 2932) (21 -> 473) (22 -> 1302) (23 -> 3003) (24 -> 1548) (25 -> 791) (26 -> 2631) (27 -> 1813) (28 -> 1216) (29 -> 2517) (30 -> 1407) (31 -> 684) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 470) (41 -> 1388) (42 -> 988) (43 -> 1906) (44 -> 3578) (45 -> 1915) (46 -> 494) (47 -> 3562) (48 -> 268) (49 -> 1275) (50 -> 2548) (51 -> 2375) (52 -> 3037) (53 -> 2318) (54 -> 186) (55 -> 3379) (56 -> 1504) (57 -> 2645) (58 -> 1417) (59 -> 153) (60 -> 584) (61 -> 171) (62 -> 1341) (63 -> 2256) 
+cpu = 154080
+CPU Time (Before collecting metrics) 154242
+Backtracks Depth 1:1000022
+Backtracks Depth 2:53747822
+Backtracks Depth 3:2295394
+Backtracks Depth 4:1594150
+Backtracks Depth 5:1497739
+Backtracks Depth 6:759053
+Backtracks Depth 7:104998
+Backtracks Depth 8:28969
+Backtracks Depth 9:465
+Backtracks Depth 10:1000059
+Backtracks Depth 11:279
+Backtracks Depth 12:212
+Backtracks Depth 13:15
+Backtracks Depth 15:245
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 506) (9 -> 215) (10 -> 558) (11 -> 1850) (12 -> 3194) (13 -> 597) (14 -> 490) (15 -> 4031) (16 -> 232) (17 -> 2558) (18 -> 1657) (19 -> 2998) (20 -> 2932) (21 -> 473) (22 -> 1302) (23 -> 3003) (24 -> 1548) (25 -> 791) (26 -> 2631) (27 -> 1813) (28 -> 1216) (29 -> 2517) (30 -> 1407) (31 -> 684) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 470) (41 -> 1388) (42 -> 988) (43 -> 1906) (44 -> 3578) (45 -> 1915) (46 -> 494) (47 -> 3562) (48 -> 268) (49 -> 1275) (50 -> 2548) (51 -> 2375) (52 -> 3037) (53 -> 2318) (54 -> 186) (55 -> 3379) (56 -> 1504) (57 -> 2645) (58 -> 1417) (59 -> 153) (60 -> 584) (61 -> 171) (62 -> 1341) (63 -> 2256) 
+cpu = 154327
+CPU Time (Before collecting metrics) 157559
+Backtracks Depth 1:1000022
+Backtracks Depth 2:85017212
+Backtracks Depth 3:3043822
+Backtracks Depth 4:151900
+Backtracks Depth 5:2135937
+Backtracks Depth 6:1758972
+Backtracks Depth 7:104997
+Backtracks Depth 8:28969
+Backtracks Depth 9:465
+Backtracks Depth 10:37
+Backtracks Depth 11:279
+Backtracks Depth 12:202
+Backtracks Depth 13:15
+Backtracks Depth 15:1000267
+Backtracks Depth 16:3
+Backtracks Depth 18:3
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:24
+Total tasks Depth 4:14
+Total tasks Depth 5:6
+Total tasks Depth 6:10
+Total tasks Depth 7:3
+Total tasks Depth 8:4
+Total tasks Depth 9:2
+Total tasks Depth 10:2
+Total tasks Depth 11:2
+Total tasks Depth 12:3
+Total tasks Depth 13:3
+Total tasks Depth 15:3
+Total tasks Depth 16:1
+Total tasks Depth 18:1
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+
+Solution found: true
+mapping = (0 -> 2393) (1 -> 1043) (2 -> 1857) (3 -> 1030) (4 -> 1945) (5 -> 2341) (6 -> 2584) (7 -> 1715) (8 -> 1504) (9 -> 2645) (10 -> 1417) (11 -> 153) (12 -> 584) (13 -> 171) (14 -> 1341) (15 -> 2256) (16 -> 268) (17 -> 1275) (18 -> 2548) (19 -> 2375) (20 -> 3037) (21 -> 2318) (22 -> 186) (23 -> 3379) (24 -> 470) (25 -> 1388) (26 -> 988) (27 -> 1906) (28 -> 3578) (29 -> 1915) (30 -> 494) (31 -> 3562) (32 -> 1862) (33 -> 2573) (34 -> 3390) (35 -> 2738) (36 -> 1578) (37 -> 474) (38 -> 1775) (39 -> 2140) (40 -> 1548) (41 -> 791) (42 -> 2631) (43 -> 1813) (44 -> 1216) (45 -> 2517) (46 -> 1407) (47 -> 684) (48 -> 232) (49 -> 2558) (50 -> 1657) (51 -> 2998) (52 -> 2932) (53 -> 2244) (54 -> 1302) (55 -> 3003) (56 -> 506) (57 -> 215) (58 -> 558) (59 -> 1850) (60 -> 3194) (61 -> 2777) (62 -> 490) (63 -> 4031) 
+cpu = 157645
+New Incumbent Bound: 1
+New Incumbent Bound: 1
+CPU Time (Before collecting metrics) 241476
+Backtracks Depth 1:1000022
+Backtracks Depth 2:416584855
+Backtracks Depth 3:86708678
+Backtracks Depth 4:56092092
+Backtracks Depth 5:41422234
+Backtracks Depth 6:24386646
+Backtracks Depth 7:3727572
+Backtracks Depth 8:9261219
+Backtracks Depth 9:2061404
+Backtracks Depth 10:7043168
+Backtracks Depth 11:7164589
+Backtracks Depth 12:4004551
+Backtracks Depth 13:2001668
+Backtracks Depth 14:2000350
+Backtracks Depth 15:2001254
+Backtracks Depth 16:1000158
+Backtracks Depth 17:1000874
+Backtracks Depth 18:1000028
+Backtracks Depth 19:40
+Backtracks Depth 20:11
+Backtracks Depth 22:1000020
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 1281) (1 -> 2393) (2 -> 4461) (3 -> 1714) (4 -> 777) (5 -> 1548) (6 -> 2238) (7 -> 3063) (8 -> 2375) (9 -> 2645) (10 -> 1337) (11 -> 1043) (12 -> 791) (13 -> 2573) (14 -> 1906) (15 -> 2045) (16 -> 153) (17 -> 1417) (18 -> 2318) (19 -> 1857) (20 -> 2631) (21 -> 3390) (22 -> 2738) (23 -> 3429) (24 -> 1275) (25 -> 2548) (26 -> 171) (27 -> 790) (28 -> 2896) (29 -> 988) (30 -> 1388) (31 -> 2846) (32 -> 597) (33 -> 2341) (34 -> 2538) (35 -> 1055) (36 -> 325) (37 -> 2517) (38 -> 473) (39 -> 2500) (40 -> 2584) (41 -> 490) (42 -> 1222) (43 -> 4366) (44 -> 3180) (45 -> 1302) (46 -> 1407) (47 -> 3475) (48 -> 2256) (49 -> 2215) (50 -> 3282) (51 -> 1266) (52 -> 2210) (53 -> 2953) (54 -> 2140) (55 -> 3262) (56 -> 1715) (57 -> 4031) (58 -> 4320) (59 -> 580) (60 -> 1262) (61 -> 3003) (62 -> 684) (63 -> 1268) 
+cpu = 241561
+CPU Time (Before collecting metrics) 243960
+Backtracks Depth 1:1000022
+Backtracks Depth 2:419668083
+Backtracks Depth 3:81011763
+Backtracks Depth 4:64660747
+Backtracks Depth 5:38932603
+Backtracks Depth 6:22276729
+Backtracks Depth 7:4699453
+Backtracks Depth 8:10250129
+Backtracks Depth 9:57759
+Backtracks Depth 10:7093138
+Backtracks Depth 11:3037118
+Backtracks Depth 12:4005504
+Backtracks Depth 13:4002486
+Backtracks Depth 14:354
+Backtracks Depth 15:2000691
+Backtracks Depth 16:2000173
+Backtracks Depth 17:1000260
+Backtracks Depth 18:16
+Backtracks Depth 19:1000846
+Backtracks Depth 20:11
+Backtracks Depth 22:29
+
+Total tasks Depth 1:1
+Total tasks Depth 2:2181
+Total tasks Depth 3:306
+Total tasks Depth 4:179
+Total tasks Depth 5:89
+Total tasks Depth 6:80
+Total tasks Depth 7:27
+Total tasks Depth 8:43
+Total tasks Depth 9:15
+Total tasks Depth 10:27
+Total tasks Depth 11:26
+Total tasks Depth 12:21
+Total tasks Depth 13:17
+Total tasks Depth 14:8
+Total tasks Depth 15:10
+Total tasks Depth 16:7
+Total tasks Depth 17:6
+Total tasks Depth 18:4
+Total tasks Depth 19:2
+Total tasks Depth 20:2
+Total tasks Depth 22:2
+
+Solution found: true
+mapping = (0 -> 2375) (1 -> 2645) (2 -> 1337) (3 -> 1043) (4 -> 791) (5 -> 2573) (6 -> 1906) (7 -> 2045) (8 -> 1281) (9 -> 2393) (10 -> 4461) (11 -> 1714) (12 -> 777) (13 -> 1548) (14 -> 2238) (15 -> 3063) (16 -> 1715) (17 -> 4031) (18 -> 4320) (19 -> 580) (20 -> 1262) (21 -> 3003) (22 -> 684) (23 -> 1268) (24 -> 2256) (25 -> 2215) (26 -> 3282) (27 -> 1266) (28 -> 2210) (29 -> 2953) (30 -> 2140) (31 -> 3262) (32 -> 2584) (33 -> 490) (34 -> 1222) (35 -> 4366) (36 -> 3180) (37 -> 1302) (38 -> 1407) (39 -> 3475) (40 -> 597) (41 -> 2341) (42 -> 2538) (43 -> 1055) (44 -> 325) (45 -> 2517) (46 -> 473) (47 -> 2500) (48 -> 1275) (49 -> 2548) (50 -> 171) (51 -> 790) (52 -> 2896) (53 -> 988) (54 -> 1388) (55 -> 2846) (56 -> 153) (57 -> 1417) (58 -> 2318) (59 -> 1857) (60 -> 2631) (61 -> 3390) (62 -> 2738) (63 -> 3429) 
+cpu = 244039

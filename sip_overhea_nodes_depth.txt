@@ -1,0 +1,95 @@
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+CPU Time (Before collecting metrics) 79757
+Nodes Depth 1:155
+Nodes Depth 2:3203941
+Nodes Depth 3:15772296
+Nodes Depth 4:71711194
+Nodes Depth 5:257330976
+
+Solution found: false
+cpu = 79778
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+CPU Time (Before collecting metrics) 79908
+Nodes Depth 1:155
+Nodes Depth 2:2915678
+Nodes Depth 3:14665620
+Nodes Depth 4:69050029
+Nodes Depth 5:251100324
+
+Solution found: false
+cpu = 79929
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+CPU Time (Before collecting metrics) 79797
+Nodes Depth 1:155
+Nodes Depth 2:2668480
+Nodes Depth 3:15201618
+Nodes Depth 4:67932127
+Nodes Depth 5:251202648
+
+Solution found: false
+cpu = 79818
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+CPU Time (Before collecting metrics) 79815
+Nodes Depth 1:155
+Nodes Depth 2:2770630
+Nodes Depth 3:15137250
+Nodes Depth 4:67914320
+Nodes Depth 5:252537463
+
+Solution found: false
+cpu = 79835
+Using pattern file: test/g34
+Using target file: test/g79
+Skeleton Type: DepthBounded
+d_cutoff: 4
+CountNodes : false
+Optimisation: false
+Decision: true
+DepthLimited: false
+Using Bounding: false
+Workpool: DepthPool
+CPU Time (Before collecting metrics) 79542
+Nodes Depth 1:155
+Nodes Depth 2:2579085
+Nodes Depth 3:13293179
+Nodes Depth 4:61154467
+Nodes Depth 5:227189695
+
+Solution found: false
+cpu = 79562
