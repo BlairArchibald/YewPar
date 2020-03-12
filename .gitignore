@@ -31,3 +31,4 @@
 newSIPbenchmarks/
 .vscode/
 build/
+scripts/*.txt

@@ -126,7 +126,7 @@ struct DepthBounded {
         if constexpr(countBacktracks) {
           backtracks++;
         }
-        break; 
+        break;
       }
       //default continue
 

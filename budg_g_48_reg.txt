@@ -1,3 +1,0 @@
-[mpiexec@gpgnode-04] Sending Ctrl-C to processes as requested
-[mpiexec@gpgnode-04] Press Ctrl-C again to force abort
-Ctrl-C caught... cleaning up processes

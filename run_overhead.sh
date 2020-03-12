@@ -7,44 +7,38 @@ createHostFile() {
 	done
 }
 
-for i in {1..5}; do
-	mpiexec -n 1 -f hostfile.txt ./build/install/bin/maxclique-16 -f test/brock800_4.clq --skel depthbounded -d 2 --metrics --hpx:threads 16 >> d_i_1_metrics_reg.txt 
-done
+runExpr() {
+	for i in {1..5}; do
+		timeout 3600 mpiexec -n $1 -f hostfile.txt ./build/install/bin/maxclique-16 -f test/brock400_1.clq --skel depthbounded -d 2 --$2 --hpx:threads 16 >> Results/Depthbounded/b400_$2_cost_$1.txt 
 
-for i in {1..5}; do
-	mpiexec -n 1 -f hostfile.txt ./build/install/bin/NS-hivert -g 47 --skel budget -b 10000000 --metrics --hpx:threads 16 >> d_2_m_ns_ietrics_reg.txt 
-done
+		timeout 3600 mpiexec -n $1 -f hostfile.txt ./build/install/bin/maxclique-16 -f test/brock400_4.clq --skel depthbounded -d 2 --$2 --hpx:threads 16 >> Results/Depthbounded/b400_$2_cost_$1.txt 
 
+		timeout 3600 mpiexec -n $1 -f hostfile.txt ./build/install/bin/maxclique-16 -f test/p_hat700-3.clq --skel depthbounded -d 2 --$2 --hpx:threads 16 >> Results/Depthbounded/b400_$2_cost_$1.txt 
 
-createHostFile 5 5
+		timeout 3600 mpiexec -n $1 -f hostfile.txt ./build/install/bin/maxclique-16 -f test/brock400_2.clq --skel depthbounded -d 2 --$2 --hpx:threads 16 >> Results/Depthbounded/b400_$2_cost_$1.txt 
 
-for i in {1..5}; do
-	mpiexec -n 2 -f hostfile.txt ./build/install/bin/maxclique-16 -f test/brock800_4.clq --skel depthbounded -d 2 --metrics --hpx:threads 16 >> d_2_m_ietrics_reg.txt 
-done
+		timeout 3600 mpiexec -n $1 -f hostfile.txt ./build/install/bin/NS-hivert -g 46 --skel budget -b 10000000 --hpx:threads 16 --$2 >> Results/Budget/ns_46_$2_cost_$1.txt	
 
-for i in {1..5}; do
-	mpiexec -n 2 -f hostfile.txt ./build/install/bin/NS-hivert -g 47 --skel budget -b 10000000 --metrics --hpx:threads 16 >> d_2_m_ietrics_reg.txt 
-done
+		timeout 3600 mpiexec -n $1 -f hostfile.txt ./build/install/bin/NS-hivert -g 47 --skel budget -b 10000000 --hpx:threads 16 --$2 >> Results/Budget/ns_47_$2_cost_$1.txt
 
+		timeout 3600 mpiexec -n $1 -f hostfile.txt ./build/install/bin/NS-hivert -g 45 --skel budget -b 10000000 --hpx:threads 16 --$2 >> Results/Budget/ns_45_$2_cost_$1.txt
 
-createHostFile 5 7
+		timeout 2700 mpiexec -n $1 -f hostfile.txt ./build/install/bin/sip --pattern test/g34 --target test/g79 --skel stacksteal --hpx:threads 16 >> Results/StackSteal/sip_g34_g79_$2_cost_$1.txt
 
-for i in {1..5}; do
-	mpiexec -n 4 -f hostfile.txt ./build/install/bin/maxclique-16 -f test/brock800_4.clq --skel depthbounded -d 2 --metrics --hpx:threads 16 >> node_d_4__nmetrics_reg.txt 
-done
+		timeout 2700 mpiexec -n $1 -f hostfile.txt ./build/install/bin/sip --pattern test/g35 --target test/g76 --skel stacksteal --hpx:threads 16 >> Results/StackSteal/sip_g35_g76_cost_$1.txt
+	done
+}
 
-for i in {1..5}; do
-	mpiexec -n 4 ./build/install/bin/NS-hivert -g 47 --skel budget -b 10000000 --metrics --hpx:threads 16 >> ns_4__nreg_node.txt
-done
-
-createHostFile 5 11
-
-for i in {1..5}; do
-	mpiexec -n 8 -f hostfile.txt ./build/install/bin/maxclique-16 -f test/brock800_4.clq --skel depthbounded -d 2 --metrics --hpx:threads 16 >> d_8_metrics_reg_node.txt 
-done
-
-for i in {1..5}; do
-	mpiexec -n 8 ./build/install/bin/NS-hivert -g 47 --skel budget -b 10000000 --metrics --hpx:threads 16 >> ns_8_reg_node.txt 
+echo "130.209.255.4" > hostfile.txt
+METRICS="nodes regularity backtracks"
+for i in $METRICS; do
+	runExpr 1 $i
+	createHostFile 5 5
+	runExpr 2 $i
+	createHostFile 5 7
+	runExpr 4 $i
+	createHostFile 5 11
+	runExpr 8 $i
 done
 
 exit 0
