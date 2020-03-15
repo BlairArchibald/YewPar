@@ -1,0 +1,85 @@
+CPU Time (Before collecting metrics) 391604
+Backtracks Depth 1:100000007
+Backtracks Depth 2:8350525374
+Backtracks Depth 3:606224347
+Backtracks Depth 4:301268869
+Backtracks Depth 5:500015835
+Backtracks Depth 6:300000209
+
+Total tasks Depth 1:1
+Total tasks Depth 2:797
+Total tasks Depth 3:472
+Total tasks Depth 4:280
+Total tasks Depth 5:172
+Total tasks Depth 6:91
+
+MaxClique Size = 26
+cpu = 391611
+CPU Time (Before collecting metrics) 408343
+Backtracks Depth 1:100000007
+Backtracks Depth 2:9444155730
+Backtracks Depth 3:497347748
+Backtracks Depth 4:301200089
+Backtracks Depth 5:15401
+Backtracks Depth 6:100000239
+
+Total tasks Depth 1:1
+Total tasks Depth 2:797
+Total tasks Depth 3:472
+Total tasks Depth 4:280
+Total tasks Depth 5:172
+Total tasks Depth 6:91
+
+MaxClique Size = 26
+cpu = 408349
+CPU Time (Before collecting metrics) 419594
+Backtracks Depth 1:100000007
+Backtracks Depth 2:10101810377
+Backtracks Depth 3:393971450
+Backtracks Depth 4:401251848
+Backtracks Depth 5:300014769
+Backtracks Depth 6:200000242
+
+Total tasks Depth 1:1
+Total tasks Depth 2:797
+Total tasks Depth 3:472
+Total tasks Depth 4:280
+Total tasks Depth 5:172
+Total tasks Depth 6:91
+
+MaxClique Size = 26
+cpu = 419601
+CPU Time (Before collecting metrics) 411129
+Backtracks Depth 1:100000007
+Backtracks Depth 2:9980308876
+Backtracks Depth 3:1090883610
+Backtracks Depth 4:301146254
+Backtracks Depth 5:14124
+Backtracks Depth 6:200000237
+
+Total tasks Depth 1:1
+Total tasks Depth 2:797
+Total tasks Depth 3:472
+Total tasks Depth 4:280
+Total tasks Depth 5:172
+Total tasks Depth 6:91
+
+MaxClique Size = 26
+cpu = 411135
+CPU Time (Before collecting metrics) 414570
+Backtracks Depth 1:100000007
+Backtracks Depth 2:8900668471
+Backtracks Depth 3:196438902
+Backtracks Depth 4:1086240
+Backtracks Depth 5:100016276
+Backtracks Depth 6:300000250
+
+Total tasks Depth 1:1
+Total tasks Depth 2:797
+Total tasks Depth 3:472
+Total tasks Depth 4:280
+Total tasks Depth 5:172
+Total tasks Depth 6:91
+
+MaxClique Size = 26
+cpu = 414576
