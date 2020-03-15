@@ -1,0 +1,95 @@
+CPU Time (Before collecting metrics) 305512
+Backtracks Depth 1:10000009
+Backtracks Depth 2:7343373857
+Backtracks Depth 3:18520077706
+Backtracks Depth 4:3800381376
+Backtracks Depth 5:2738002358
+Backtracks Depth 6:1687260629
+Backtracks Depth 7:193
+
+Total tasks Depth 1:1
+Total tasks Depth 2:799
+Total tasks Depth 3:7506
+Total tasks Depth 4:4414
+Total tasks Depth 5:2569
+Total tasks Depth 6:1001
+Total tasks Depth 7:77
+
+MaxClique Size = 26
+cpu = 305519
+CPU Time (Before collecting metrics) 300117
+Backtracks Depth 1:10000009
+Backtracks Depth 2:7713793178
+Backtracks Depth 3:16482744023
+Backtracks Depth 4:3241392668
+Backtracks Depth 5:3020815955
+Backtracks Depth 6:1765760214
+Backtracks Depth 7:20000209
+
+Total tasks Depth 1:1
+Total tasks Depth 2:799
+Total tasks Depth 3:7506
+Total tasks Depth 4:4414
+Total tasks Depth 5:2569
+Total tasks Depth 6:1001
+Total tasks Depth 7:77
+
+MaxClique Size = 26
+cpu = 300124
+CPU Time (Before collecting metrics) 284304
+Backtracks Depth 1:10000009
+Backtracks Depth 2:6440009687
+Backtracks Depth 3:13280441157
+Backtracks Depth 4:4216657112
+Backtracks Depth 5:2387170787
+Backtracks Depth 6:1634071394
+Backtracks Depth 7:20000224
+
+Total tasks Depth 1:1
+Total tasks Depth 2:799
+Total tasks Depth 3:7036
+Total tasks Depth 4:4125
+Total tasks Depth 5:2386
+Total tasks Depth 6:894
+Total tasks Depth 7:77
+
+MaxClique Size = 26
+cpu = 284311
+CPU Time (Before collecting metrics) 299003
+Backtracks Depth 1:10000009
+Backtracks Depth 2:7118300603
+Backtracks Depth 3:17187517271
+Backtracks Depth 4:4696838174
+Backtracks Depth 5:3454035672
+Backtracks Depth 6:2098577284
+Backtracks Depth 7:20000222
+
+Total tasks Depth 1:1
+Total tasks Depth 2:799
+Total tasks Depth 3:7506
+Total tasks Depth 4:4414
+Total tasks Depth 5:2569
+Total tasks Depth 6:1001
+Total tasks Depth 7:77
+
+MaxClique Size = 26
+cpu = 299009
+CPU Time (Before collecting metrics) 289972
+Backtracks Depth 1:10000009
+Backtracks Depth 2:6943341302
+Backtracks Depth 3:14630661320
+Backtracks Depth 4:3731585148
+Backtracks Depth 5:2993510517
+Backtracks Depth 6:1878973071
+Backtracks Depth 7:30000253
+
+Total tasks Depth 1:1
+Total tasks Depth 2:799
+Total tasks Depth 3:7506
+Total tasks Depth 4:4414
+Total tasks Depth 5:2569
+Total tasks Depth 6:1001
+Total tasks Depth 7:77
+
+MaxClique Size = 26
+cpu = 289978
