@@ -166,7 +166,7 @@ for i in [1,2,4,8,16]:
     files[1][idx].append("Budget/NodeThroughput/brock800_2_{}_{}.txt".format(j,i))
     files[2][idx].append("Depthbounded/NodeThroughput/brock800_2_{}_{}.txt".format(j,i))
 
-#collect_all_tput("Node throughput for Numerical Semigroups, Budget b = 10000000. Measured on Beowulf Cluster", 2, 10**7, files)
+collect_all_tput("Node throughput for Numerical Semigroups, Budget b = 10000000. Measured on Beowulf Cluster", 2, 10**7, files)
 
 """for i in files:
   for j in i:
@@ -428,21 +428,21 @@ def draw_bar_chart(data, data2, data3, title, yaxes):
 
 
 
-times, ts = collect_reg("reg_depth.txt")
-draw_bucket_graph(times, "Runtime regularity on MaxClique brock400_1.clq, Depthbounded d = 2, 1 Locality", [i for i in range(3)], [len(i) for i in times[1:4]])
+#times, ts = collect_reg("reg_depth.txt")
+#draw_bucket_graph(times, "Runtime regularity on MaxClique brock400_1.clq, Depthbounded d = 2, 1 Locality", [i for i in range(3)], [len(i) for i in times[1:4]])
 
 
-times, ts = collect_reg("b800_reg_bug.txt")
-draw_bucket_graph(times[:-1], "Runtime regularity on MaxClique brock400_1.clq,Budget b = 10000000, 1 Locality", [i for i in range(6)],  [len(i) for i in times[1:7]])
+#times, ts = collect_reg("b800_reg_bug.txt")
+#draw_bucket_graph(times[:-1], "Runtime regularity on MaxClique brock400_1.clq,Budget b = 10000000, 1 Locality", [i for i in range(6)],  [len(i) for i in times[1:7]])
 
 #times, ts = read_search_metrics("rs_sip_d_6.txt")
 #draw_bucket_graph(times, "Runtime regularity on Subgraph Isomporhism g34-g79, Depthbounded d = 6, 1 Locality", [i for i in range(7)], [len(i) for i in times[1:7]])
 
-times, ts = collect_reg("rs_sip_stack.txt")
-draw_bucket_graph(times, "Runtime regularity on Subgraph Isomporhism g34-g79, Stacksteal, 1 Locality", [i for i in range(2)], [len(i) for i in times[0:2]])
+#times, ts = collect_reg("rs_sip_stack.txt")
+#draw_bucket_graph(times, "Runtime regularity on Subgraph Isomporhism g34-g79, Stacksteal, 1 Locality", [i for i in range(2)], [len(i) for i in times[0:2]])
 
-times, ts = collect_reg("rs_sip_budg.txt")
-draw_bucket_graph(times, "Runtime regularity on Subgraph Isomporhism g34-g79, Budget b = 10000000, 1 Locality", [i for i in range(7)], [len(i) for i in times[1:7]])
+#times, ts = collect_reg("rs_sip_budg.txt")
+#draw_bucket_graph(times, "Runtime regularity on Subgraph Isomporhism g34-g79, Budget b = 10000000, 1 Locality", [i for i in range(7)], [len(i) for i in times[1:7]])
 
 """
 times, nodes, backtracks, sTimes, p, ns, bs, ts = read_search_metrics("ns_hivert_budget__52_metrics.txt")
@@ -451,15 +451,17 @@ draw_bucket_graph(times, "Runtime regularity on Numerical Semigroups g = 52, Bud
 """
 """
 times, ts = collect_reg("ns_hivert_budget_1_48_metrics.txt")
-#pprint(times)
-draw_bucket_graph(times, "Runtime regularity on Numerical Semigroups g = 48, Budget b = 10000000, 1 Localities", [i for i in range(49)], [])
+for i in range(len(times)):
+  print("{} & {} \\\\".format(i, len(times[i])))
+#draw_bucket_graph(times, "Runtime regularity on Numerical Semigroups g = 48, Budget b = 10000000, 1 Localities", [i for i in range(49)], [])
 """
 times, nodes, backtracks, sTimes, p, ns, bs, ts = read_search_metrics("ns_hivert_budget_2_48_metrics.txt")
 draw_bucket_graph(times, "Runtime regularity on Numerical Semigroups g = 48, Budget b = 10000000, 2 Localities", [i for i in range(49)])
 
 times, nodes, backtracks, sTimes, p, ns, bs, ts = read_search_metrics("ns_hivert_budget_4_48_metrics.txt")
 draw_bucket_graph(times, "Runtime regularity on Numerical Semigroups g = 48, Budget b = 10000000, 4 Localities", [i for i in range(49)])
-
-times, nodes, backtracks, sTimes, p, ns, bs, ts = read_search_metrics("ns_hivert_budget_8_48_metrics.txt")
-draw_bucket_graph(times, "Runtime regularity on Numerical Semigroups g = 48, Budget b = 10000000, 8 Localities", [i for i in range(49)])
 """
+#times, nodes, backtracks, sTimes, p, ns, bs, ts = read_search_metrics("../ns_hivert_budget_8_48_metrics.txt")
+#print(ts)
+
+#draw_bucket_graph(times, "Runtime regularity on Numerical Semigroups g = 48, Budget b = 10000000, 8 Localities", [i for i in range(49)])
