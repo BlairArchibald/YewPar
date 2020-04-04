@@ -12,7 +12,7 @@ NUM_LOCALITIES_RUN = 5
 NUM_BUCKETS = 13
 font = {'family' : 'normal',
           'weight' : 'normal',
-          'size'   : 8 }
+          'size'   : 12 }
 matplotlib.rc('font', **font)
 
 plt.style.use('seaborn-darkgrid')
@@ -151,8 +151,8 @@ def collect_all_tput(problem, d, b, files):
       k += 1
     i += 1
 
-  draw_node_throughput("Node throughput for Depthbounded, brock800_2.clq. Measured on Beowulf Cluster", d, b, depth, [], [], med_depth, [], [])
-  draw_node_throughput("Node throughput for Stacksteal, brock800_2.clq. Measured on Beowulf Cluster", d, b, [], stack, [], [], med_stack, [])
+  draw_node_throughput("Node throughput for Depthbounded, d = 2, brock800_2.clq. (Beowulf Cluster)", d, b, depth, [], [], med_depth, [], [])
+  draw_node_throughput("Node throughput for Stacksteal, brock800_2.clq. (Beowulf Cluster)", d, b, [], stack, [], [], med_stack, [])
   draw_node_throughput(problem, d, b, [], [], budget, [], [], [])
 
 skels = ["Budget", "Stacksteal", "Depthbounded"]
@@ -166,7 +166,7 @@ for i in [1,2,4,8,16]:
     files[1][idx].append("Budget/NodeThroughput/brock800_2_{}_{}.txt".format(j,i))
     files[2][idx].append("Depthbounded/NodeThroughput/brock800_2_{}_{}.txt".format(j,i))
 
-collect_all_tput("Node throughput for Numerical Semigroups, Budget b = 10000000. Measured on Beowulf Cluster", 2, 10**7, files)
+collect_all_tput("Node throughput for Numerical Semigroups, g = 49, Budget b = 10000000. (Beowulf Cluster)", 2, 10**7, files)
 
 """for i in files:
   for j in i:
@@ -240,7 +240,7 @@ def draw_scaling_graph(data, speedups, labels, speedLabels, problem, x_axes, n_t
     ax.set_ylabel(y)
     plt.xticks(x_axes, ["{}({})".format(x_axes[i]//x_axes[0],x_axes[i]) for i in range(len(x_axes))])
 
-  set_style(ax, problem.replace("Runtime", "Relative Speedup from 1({}) for Subgraph Isomorphism, g34-g79 on Depthbounded, $d = 4$ (Beowulf Cluster)".format(n_threads)), "Relative Speedup (from 1({}))".format(n_threads))
+  set_style(ax, "Relative Speedup from 1(16) for Subgraph Isomorphism, g34-g79 on Depthbounded, $d = 4$ (Beowulf Cluster)", "Relative Speedup (from 1({}))".format(n_threads))
   idx = 0
   maxScale = x_axes[-1]//x_axes[0]
   ax.plot([16, 32, 64, 128, 256], [1, 2, 4, 8, 16], linestyle="--", label="Ideal Speedup")
