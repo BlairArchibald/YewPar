@@ -1,0 +1,2 @@
+Using pattern file: test/g43
+Using target file: test/g86

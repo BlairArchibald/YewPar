@@ -1,0 +1,160 @@
+[gpgnode-04:19717] *** Process received signal ***
+[gpgnode-04:19717] Signal: Aborted (6)
+[gpgnode-04:19717] Signal code:  (-6)
+[gpgnode-04:19717] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f843059a890]
+[gpgnode-04:19717] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f842df73e97]
+[gpgnode-04:19717] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f842df75801]
+[gpgnode-04:19717] [ 3] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x8c957)[0x7f842e5ca957]
+[gpgnode-04:19717] [ 4] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92ab6)[0x7f842e5d0ab6]
+[gpgnode-04:19717] [ 5] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92af1)[0x7f842e5d0af1]
+[gpgnode-04:19717] [ 6] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92aaa)[0x7f842e5d0aaa]
+[gpgnode-04:19717] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionINS_9exceptionEEEvRKT_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_l+0x73)[0x7f842eb8f873]
+[gpgnode-04:19717] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionENS_5errorERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_l+0x5e)[0x7f842ebd883e]
+[gpgnode-04:19717] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset8policies3tcp18connection_handler6do_runEv+0xd9f)[0x7f842f267b3f]
+[gpgnode-04:19717] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset15parcelport_implINS0_8policies3tcp18connection_handlerEE3runEb+0x29)[0x7f842f26e349]
+[gpgnode-04:19717] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset13parcelhandler10initializeERNS_4agas18addressing_serviceEPNS_7applier7applierE+0x63)[0x7f842ef201d3]
+[gpgnode-04:19717] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_implC2ERNS_4util21runtime_configurationE+0x515)[0x7f842ebc8075]
+[gpgnode-04:19717] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x26f)[0x7f842eb9dd5f]
+[gpgnode-04:19717] [14] ./build/install/bin/NS-hivert(+0x10c833)[0x564f69409833]
+[gpgnode-04:19717] [15] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f842df56b97]
+[gpgnode-04:19717] [16] ./build/install/bin/NS-hivert(+0x111a5a)[0x564f6940ea5a]
+[gpgnode-04:19717] *** End of error message ***
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 19717 RUNNING AT gpgnode-04
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+YOUR APPLICATION TERMINATED WITH THE EXIT STRING: Aborted (signal 6)
+This typically refers to a problem with your application.
+Please see the FAQ page for debugging suggestions
+[gpgnode-04:19733] *** Process received signal ***
+[gpgnode-04:19733] Signal: Aborted (6)
+[gpgnode-04:19733] Signal code:  (-6)
+[gpgnode-04:19733] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f1f6949a890]
+[gpgnode-04:19733] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f1f66e73e97]
+[gpgnode-04:19733] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f1f66e75801]
+[gpgnode-04:19733] [ 3] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x8c957)[0x7f1f674ca957]
+[gpgnode-04:19733] [ 4] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92ab6)[0x7f1f674d0ab6]
+[gpgnode-04:19733] [ 5] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92af1)[0x7f1f674d0af1]
+[gpgnode-04:19733] [ 6] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92aaa)[0x7f1f674d0aaa]
+[gpgnode-04:19733] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionINS_9exceptionEEEvRKT_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_l+0x73)[0x7f1f67a8f873]
+[gpgnode-04:19733] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionENS_5errorERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_l+0x5e)[0x7f1f67ad883e]
+[gpgnode-04:19733] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset8policies3tcp18connection_handler6do_runEv+0xd9f)[0x7f1f68167b3f]
+[gpgnode-04:19733] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset15parcelport_implINS0_8policies3tcp18connection_handlerEE3runEb+0x29)[0x7f1f6816e349]
+[gpgnode-04:19733] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset13parcelhandler10initializeERNS_4agas18addressing_serviceEPNS_7applier7applierE+0x63)[0x7f1f67e201d3]
+[gpgnode-04:19733] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_implC2ERNS_4util21runtime_configurationE+0x515)[0x7f1f67ac8075]
+[gpgnode-04:19733] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x26f)[0x7f1f67a9dd5f]
+[gpgnode-04:19733] [14] ./build/install/bin/NS-hivert(+0x10c833)[0x55980d05f833]
+[gpgnode-04:19733] [15] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f1f66e56b97]
+[gpgnode-04:19733] [16] ./build/install/bin/NS-hivert(+0x111a5a)[0x55980d064a5a]
+[gpgnode-04:19733] *** End of error message ***
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 19733 RUNNING AT gpgnode-04
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+YOUR APPLICATION TERMINATED WITH THE EXIT STRING: Aborted (signal 6)
+This typically refers to a problem with your application.
+Please see the FAQ page for debugging suggestions
+[gpgnode-04:19748] *** Process received signal ***
+[gpgnode-04:19748] Signal: Aborted (6)
+[gpgnode-04:19748] Signal code:  (-6)
+[gpgnode-04:19748] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f3387c07890]
+[gpgnode-04:19748] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f33855e0e97]
+[gpgnode-04:19748] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f33855e2801]
+[gpgnode-04:19748] [ 3] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x8c957)[0x7f3385c37957]
+[gpgnode-04:19748] [ 4] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92ab6)[0x7f3385c3dab6]
+[gpgnode-04:19748] [ 5] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92af1)[0x7f3385c3daf1]
+[gpgnode-04:19748] [ 6] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92aaa)[0x7f3385c3daaa]
+[gpgnode-04:19748] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionINS_9exceptionEEEvRKT_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_l+0x73)[0x7f33861fc873]
+[gpgnode-04:19748] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionENS_5errorERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_l+0x5e)[0x7f338624583e]
+[gpgnode-04:19748] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset8policies3tcp18connection_handler6do_runEv+0xd9f)[0x7f33868d4b3f]
+[gpgnode-04:19748] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset15parcelport_implINS0_8policies3tcp18connection_handlerEE3runEb+0x29)[0x7f33868db349]
+[gpgnode-04:19748] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset13parcelhandler10initializeERNS_4agas18addressing_serviceEPNS_7applier7applierE+0x63)[0x7f338658d1d3]
+[gpgnode-04:19748] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_implC2ERNS_4util21runtime_configurationE+0x515)[0x7f3386235075]
+[gpgnode-04:19748] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x26f)[0x7f338620ad5f]
+[gpgnode-04:19748] [14] ./build/install/bin/NS-hivert(+0x10c833)[0x55af570cd833]
+[gpgnode-04:19748] [15] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f33855c3b97]
+[gpgnode-04:19748] [16] ./build/install/bin/NS-hivert(+0x111a5a)[0x55af570d2a5a]
+[gpgnode-04:19748] *** End of error message ***
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 19748 RUNNING AT gpgnode-04
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+YOUR APPLICATION TERMINATED WITH THE EXIT STRING: Aborted (signal 6)
+This typically refers to a problem with your application.
+Please see the FAQ page for debugging suggestions
+[gpgnode-04:19763] *** Process received signal ***
+[gpgnode-04:19763] Signal: Aborted (6)
+[gpgnode-04:19763] Signal code:  (-6)
+[gpgnode-04:19763] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7efe5cf1e890]
+[gpgnode-04:19763] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7efe5a8f7e97]
+[gpgnode-04:19763] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7efe5a8f9801]
+[gpgnode-04:19763] [ 3] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x8c957)[0x7efe5af4e957]
+[gpgnode-04:19763] [ 4] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92ab6)[0x7efe5af54ab6]
+[gpgnode-04:19763] [ 5] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92af1)[0x7efe5af54af1]
+[gpgnode-04:19763] [ 6] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92aaa)[0x7efe5af54aaa]
+[gpgnode-04:19763] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionINS_9exceptionEEEvRKT_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_l+0x73)[0x7efe5b513873]
+[gpgnode-04:19763] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionENS_5errorERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_l+0x5e)[0x7efe5b55c83e]
+[gpgnode-04:19763] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset8policies3tcp18connection_handler6do_runEv+0xd9f)[0x7efe5bbebb3f]
+[gpgnode-04:19763] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset15parcelport_implINS0_8policies3tcp18connection_handlerEE3runEb+0x29)[0x7efe5bbf2349]
+[gpgnode-04:19763] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset13parcelhandler10initializeERNS_4agas18addressing_serviceEPNS_7applier7applierE+0x63)[0x7efe5b8a41d3]
+[gpgnode-04:19763] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_implC2ERNS_4util21runtime_configurationE+0x515)[0x7efe5b54c075]
+[gpgnode-04:19763] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x26f)[0x7efe5b521d5f]
+[gpgnode-04:19763] [14] ./build/install/bin/NS-hivert(+0x10c833)[0x563d05fcd833]
+[gpgnode-04:19763] [15] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7efe5a8dab97]
+[gpgnode-04:19763] [16] ./build/install/bin/NS-hivert(+0x111a5a)[0x563d05fd2a5a]
+[gpgnode-04:19763] *** End of error message ***
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 19763 RUNNING AT gpgnode-04
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+YOUR APPLICATION TERMINATED WITH THE EXIT STRING: Aborted (signal 6)
+This typically refers to a problem with your application.
+Please see the FAQ page for debugging suggestions
+[gpgnode-04:19778] *** Process received signal ***
+[gpgnode-04:19778] Signal: Aborted (6)
+[gpgnode-04:19778] Signal code:  (-6)
+[gpgnode-04:19778] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f2b68378890]
+[gpgnode-04:19778] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f2b65d51e97]
+[gpgnode-04:19778] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f2b65d53801]
+[gpgnode-04:19778] [ 3] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x8c957)[0x7f2b663a8957]
+[gpgnode-04:19778] [ 4] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92ab6)[0x7f2b663aeab6]
+[gpgnode-04:19778] [ 5] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92af1)[0x7f2b663aeaf1]
+[gpgnode-04:19778] [ 6] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92aaa)[0x7f2b663aeaaa]
+[gpgnode-04:19778] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionINS_9exceptionEEEvRKT_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_l+0x73)[0x7f2b6696d873]
+[gpgnode-04:19778] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionENS_5errorERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_l+0x5e)[0x7f2b669b683e]
+[gpgnode-04:19778] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset8policies3tcp18connection_handler6do_runEv+0xd9f)[0x7f2b67045b3f]
+[gpgnode-04:19778] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset15parcelport_implINS0_8policies3tcp18connection_handlerEE3runEb+0x29)[0x7f2b6704c349]
+[gpgnode-04:19778] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset13parcelhandler10initializeERNS_4agas18addressing_serviceEPNS_7applier7applierE+0x63)[0x7f2b66cfe1d3]
+[gpgnode-04:19778] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_implC2ERNS_4util21runtime_configurationE+0x515)[0x7f2b669a6075]
+[gpgnode-04:19778] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x26f)[0x7f2b6697bd5f]
+[gpgnode-04:19778] [14] ./build/install/bin/NS-hivert(+0x10c833)[0x55daa703f833]
+[gpgnode-04:19778] [15] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f2b65d34b97]
+[gpgnode-04:19778] [16] ./build/install/bin/NS-hivert(+0x111a5a)[0x55daa7044a5a]
+[gpgnode-04:19778] *** End of error message ***
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 19778 RUNNING AT gpgnode-04
+=   EXIT CODE: 134
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+YOUR APPLICATION TERMINATED WITH THE EXIT STRING: Aborted (signal 6)
+This typically refers to a problem with your application.
+Please see the FAQ page for debugging suggestions
