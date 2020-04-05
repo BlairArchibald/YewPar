@@ -238,13 +238,3 @@ Solution found: false
 cpu = 79578
 Solution found: false
 cpu = 80058
-[mpiexec@gpgnode-18] Sending Ctrl-C to processes as requested
-[mpiexec@gpgnode-18] Press Ctrl-C again to force abort
-[mpiexec@gpgnode-18] Sending Ctrl-C to processes as requested
-[mpiexec@gpgnode-18] Press Ctrl-C again to force abort
-[mpiexec@gpgnode-18] Sending Ctrl-C to processes as requested
-[mpiexec@gpgnode-18] Press Ctrl-C again to force abort
-[mpiexec@gpgnode-18] Sending Ctrl-C to processes as requested
-[mpiexec@gpgnode-18] Press Ctrl-C again to force abort
-[mpiexec@gpgnode-18] Sending Ctrl-C to processes as requested
-[mpiexec@gpgnode-18] Press Ctrl-C again to force abort

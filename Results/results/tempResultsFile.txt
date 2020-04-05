@@ -1,0 +1,37 @@
+Depthbounded Depth = 10, MaxClique brock200_1.clq
+=================================================
+CPU Time (Before collecting metrics) 181
+Accumulated time at depth 1 6s
+Accumulated time at depth 2 186s
+Accumulated time at depth 3 954s
+Accumulated time at depth 4 1430s
+Accumulated time at depth 5 595s
+Accumulated time at depth 6 48s
+Accumulated time at depth 7 3s
+Accumulated time at depth 9 1s
+Accumulated time at depth 10 1s
+Accumulated time at depth 11 8s
+Total number of Prunes: 0
+Total number of Nodes: 722990
+Total number of Backtracks: 361485
+MaxClique Size = 21
+cpu = 187851
+
+Command run with:
+mpiexec -n 16 ./build/install/bin/maxclique-16 -f test/brock200_1.clq --skel depthbounded -d 10
+
+Depthbounded Depth = 4, MaxClique brock200_1.clq
+===============================================
+CPU Time (Before collecting metrics) 44
+Accumulated time at depth 1 6s
+Accumulated time at depth 2 13s
+Accumulated time at depth 3 13s
+Accumulated time at depth 4 10s
+Total number of Prunes: 0
+Total number of Nodes: 913712
+Total number of Backtracks: 456842
+MaxClique Size = 21
+cpu = 45714
+
+Command run with:
+mpiexec -n 4 ./build/install/bin/maxclique-16 -f test/brock200_1.clq --skel depthbounded -d 4
