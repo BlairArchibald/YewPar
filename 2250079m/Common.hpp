@@ -57,10 +57,6 @@ static auto printNodeCounts() {
   printMetric<GetNodeCountAct>("Nodes");
 }
 
-static auto printPrunes() {
-  printMetric<GetPrunesAct>("Prunes");
-}
-
 static auto printBacktracks() {
   printMetric<GetBacktracksAct>("Backtracks");
 }

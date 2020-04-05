@@ -52,10 +52,6 @@ struct DepthBounded {
   static constexpr unsigned verbose = Verbose::value;
  
   // EXTENSION
-  typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
-  static constexpr unsigned verbose = Verbose::value;
-  
-  // EXTENSION
   typedef typename parameter::value_type<args, API::tag::NodeCounts_, std::integral_constant<unsigned, 0> >::type NodeCounts;
   static constexpr unsigned nodeCounts = NodeCounts::value;
 
@@ -164,22 +160,20 @@ struct DepthBounded {
 
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
-
+			// EXTENSION
       if constexpr(nodeCounts) {
         nodeCount++;
       }
+			// END EXTENSION
       auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
       if (pn == ProcessNodeRet::Exit) { return; }
-      else if (pn == ProcessNodeRet::Prune) {
-        if constexpr(countPrunes) {
-          prunes++;
-        }
-        continue;
-      }
+      else if (pn == ProcessNodeRet::Prune) { continue; }
       else if (pn == ProcessNodeRet::Break) {
+				// EXTENSION
         if constexpr(countBacktracks) {
           backtracks++;
         }
+				// END EXTENSNION
         break;
       }
 
@@ -314,10 +308,6 @@ struct DepthBounded {
       for (const auto & l : hpx::find_all_localities()) {
         hpx::async<PrintTimesAct>(l);
       }
-    }
-
-    if constexpr(countPrunes) {
-      printPrunes();
     }
 
     if constexpr(nodeCounts || countBacktracks) {
