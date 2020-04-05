@@ -165,7 +165,6 @@ struct GetTotalTasksAct : hpx::actions::make_direct_action<
 
 }
 
-
 namespace hpx { namespace traits {
 
 template <>
