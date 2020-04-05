@@ -685,33 +685,62 @@ int hpx_main(boost::program_options::variables_map & opts) {
                                              Workstealing::Policies::Workpool>,
                                            YewPar::Skeletons::API::MoreVerbose>
           ::search(m, root, searchParameters);
-    } else {
-      if (opts.count("metrics")) {
+		} else {
+			// EXTENSION
+      if (opts.count("nodes")) {
         sol = YewPar::Skeletons::DepthBounded<GenNode<NWORDS>,
                                              YewPar::Skeletons::API::Decision,
                                              YewPar::Skeletons::API::DepthBoundedPoolPolicy<
                                                Workstealing::Policies::DepthPoolPolicy>,
-                                             YewPar::Skeletons::API::Metrics,
+                                             YewPar::Skeletons::API::NodeCounts,
                                              YewPar::Skeletons::API::MoreVerbose>
           ::search(m, root, searchParameters);
-      } else {
+      } else if (opts.count("backtracks")) {
+				sol = YewPar::Skeletons::DepthBounded<GenNode<NWORDS>,
+                                             YewPar::Skeletons::API::Decision,
+                                             YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                                               Workstealing::Policies::DepthPoolPolicy>,
+                                             YewPar::Skeletons::API::Backtracks,
+                                             YewPar::Skeletons::API::MoreVerbose>
+          ::search(m, root, searchParameters);
+			} else if (opts.count("regularity")) { 
+				sol = YewPar::Skeletons::DepthBounded<GenNode<NWORDS>,
+                                             YewPar::Skeletons::API::Decision,
+                                             YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                                               Workstealing::Policies::DepthPoolPolicy>,
+                                             YewPar::Skeletons::API::Regularity,
+                                             YewPar::Skeletons::API::MoreVerbose>
+          ::search(m, root, searchParameters);
+			} else {
         sol = YewPar::Skeletons::DepthBounded<GenNode<NWORDS>,
                                              YewPar::Skeletons::API::Decision,
                                              YewPar::Skeletons::API::DepthBoundedPoolPolicy<
                                                Workstealing::Policies::DepthPoolPolicy>,
                                              YewPar::Skeletons::API::MoreVerbose>
           ::search(m, root, searchParameters);
-      }
-    }
+			}
+		}
   } else if (skeleton ==  "stacksteal") {
     searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
-    if (opts.count("metrics")) {
+    if (opts.count("nodes")) {
       sol = YewPar::Skeletons::StackStealing<GenNode<NWORDS>,
                                          YewPar::Skeletons::API::Decision,
                                          YewPar::Skeletons::API::MoreVerbose,
-                                         YewPar::Skeletons::API::Metrics>
+                                         YewPar::Skeletons::API::NodeCounts>
         ::search(m, root, searchParameters);
-    } else {
+    } else if (opts.count("backtracks")) {
+			sol = YewPar::Skeletons::StackStealing<GenNode<NWORDS>,
+                                         YewPar::Skeletons::API::Decision,
+                                         YewPar::Skeletons::API::MoreVerbose,
+                                         YewPar::Skeletons::API::Backtracks>
+        ::search(m, root, searchParameters);
+		} else if (opts.count("regualrity")) {
+			sol = YewPar::Skeletons::StackStealing<GenNode<NWORDS>,
+                                         YewPar::Skeletons::API::Decision,
+                                         YewPar::Skeletons::API::MoreVerbose,
+                                         YewPar::Skeletons::API::Regularity>
+        ::search(m, root, searchParameters);
+		} else {
       sol = YewPar::Skeletons::StackStealing<GenNode<NWORDS>,
                                          YewPar::Skeletons::API::Decision,
                                          YewPar::Skeletons::API::MoreVerbose>
@@ -719,13 +748,25 @@ int hpx_main(boost::program_options::variables_map & opts) {
     }
   } else if (skeleton ==  "budget") {
     searchParameters.backtrackBudget = opts["backtrack-budget"].as<std::uint64_t>();
-    if (opts.count("metrics")) {
+    if (opts.count("nodes")) {
       sol = YewPar::Skeletons::Budget<GenNode<NWORDS>,
                                     YewPar::Skeletons::API::Decision,
-                                    YewPar::Skeletons::API::Metrics,
+                                    YewPar::Skeletons::API::NodeCounts,
                                     YewPar::Skeletons::API::MoreVerbose>
         ::search(m, root, searchParameters);
-    } else {
+    } else if (opts.count("backtracks")) {
+			sol = YewPar::Skeletons::Budget<GenNode<NWORDS>,
+                                    YewPar::Skeletons::API::Decision,
+                                    YewPar::Skeletons::API::Backtracks,
+                                    YewPar::Skeletons::API::MoreVerbose>
+        ::search(m, root, searchParameters);
+		} else if (opts.count("regularity")) {
+			sol = YewPar::Skeletons::Budget<GenNode<NWORDS>,
+                                    YewPar::Skeletons::API::Decision,
+                                    YewPar::Skeletons::API::Regularity,
+                                    YewPar::Skeletons::API::MoreVerbose>
+        ::search(m, root, searchParameters);
+		} else {
       sol = YewPar::Skeletons::Budget<GenNode<NWORDS>,
                                     YewPar::Skeletons::API::Decision,
                                     YewPar::Skeletons::API::MoreVerbose>
@@ -803,7 +844,9 @@ int main (int argc, char* argv[]) {
       boost::program_options::value<std::string>()->required(),
       "Specify the target file (LAD format)"
       )
-      ("metrics", "Collect the regularity, backtracks");
+      ("nodes", "Collect the node throughput info")
+			("backtracks", "Collect backtracking info")
+			("regularity", "Collect regularity info");
 
   YewPar::registerPerformanceCounters();
 

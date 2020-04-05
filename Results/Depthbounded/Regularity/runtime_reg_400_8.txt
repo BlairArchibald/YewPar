@@ -1,0 +1,169 @@
+[gpgnode-04:32433] *** Process received signal ***
+[gpgnode-04:32433] Signal: Aborted (6)
+[gpgnode-04:32433] Signal code:  (-6)
+[gpgnode-04:32433] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7fdae7a8b890]
+[gpgnode-04:32433] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7fdae522ee97]
+[gpgnode-04:32433] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7fdae5230801]
+[gpgnode-04:32433] [ 3] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x8c957)[0x7fdae5885957]
+[gpgnode-04:32433] [ 4] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92ab6)[0x7fdae588bab6]
+[gpgnode-04:32433] [ 5] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92af1)[0x7fdae588baf1]
+[gpgnode-04:32433] [ 6] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92aaa)[0x7fdae588baaa]
+[gpgnode-04:32433] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionINS_9exceptionEEEvRKT_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_l+0x73)[0x7fdae5e4a873]
+[gpgnode-04:32433] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionENS_5errorERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_l+0x5e)[0x7fdae5e9383e]
+[gpgnode-04:32433] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset8policies3tcp18connection_handler6do_runEv+0xd9f)[0x7fdae6522b3f]
+[gpgnode-04:32433] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset15parcelport_implINS0_8policies3tcp18connection_handlerEE3runEb+0x29)[0x7fdae6529349]
+[gpgnode-04:32433] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset13parcelhandler10initializeERNS_4agas18addressing_serviceEPNS_7applier7applierE+0x63)[0x7fdae61db1d3]
+[gpgnode-04:32433] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_implC2ERNS_4util21runtime_configurationE+0x515)[0x7fdae5e83075]
+[gpgnode-04:32433] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x26f)[0x7fdae5e58d5f]
+[gpgnode-04:32433] [14] ./build/install/bin/maxclique-16(+0x17c12a)[0x55cc9955812a]
+[gpgnode-04:32433] [15] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7fdae5211b97]
+[gpgnode-04:32433] [16] ./build/install/bin/maxclique-16(+0x18164a)[0x55cc9955d64a]
+[gpgnode-04:32433] *** End of error message ***
+[gpgnode-04:32429] *** Process received signal ***
+[gpgnode-04:32429] Signal: Aborted (6)
+[gpgnode-04:32429] Signal code:  (-6)
+[gpgnode-04:32430] *** Process received signal ***
+[gpgnode-04:32430] Signal: Aborted (6)
+[gpgnode-04:32430] Signal code:  (-6)
+[gpgnode-04:32429] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f9a06ce0890]
+[gpgnode-04:32429] [ 1] [gpgnode-04:32430] [ 0] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f9a04483e97]
+[gpgnode-04:32429] [ 2] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f8aabf4f890]
+[gpgnode-04:32430] [ 1] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f9a04485801]
+[gpgnode-04:32429] [ 3] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f8aa96f2e97]
+[gpgnode-04:32430] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f8aa96f4801]
+[gpgnode-04:32430] [ 3] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x8c957)[0x7f9a04ada957]
+[gpgnode-04:32429] [ 4] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x8c957)[0x7f8aa9d49957]
+[gpgnode-04:32430] [ 4] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92ab6)[0x7f9a04ae0ab6]
+[gpgnode-04:32429] [ 5] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92af1)[0x7f9a04ae0af1]
+[gpgnode-04:32429] [ 6] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92ab6)[0x7f8aa9d4fab6]
+[gpgnode-04:32430] [ 5] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92aaa)[0x7f9a04ae0aaa]
+[gpgnode-04:32429] [ 7] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92af1)[0x7f8aa9d4faf1]
+[gpgnode-04:32430] [ 6] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92aaa)[0x7f8aa9d4faaa]
+[gpgnode-04:32430] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionINS_9exceptionEEEvRKT_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_l+0x73)[0x7f9a0509f873]
+[gpgnode-04:32429] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionINS_9exceptionEEEvRKT_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_l+0x73)[0x7f8aaa30e873]
+[gpgnode-04:32430] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionENS_5errorERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_l+0x5e)[0x7f9a050e883e]
+[gpgnode-04:32429] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionENS_5errorERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_l+0x5e)[0x7f8aaa35783e]
+[gpgnode-04:32430] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset8policies3tcp18connection_handler6do_runEv+0xd9f)[0x7f9a05777b3f]
+[gpgnode-04:32429] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset8policies3tcp18connection_handler6do_runEv+0xd9f)[0x7f8aaa9e6b3f]
+[gpgnode-04:32430] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset15parcelport_implINS0_8policies3tcp18connection_handlerEE3runEb+0x29)[0x7f9a0577e349]
+[gpgnode-04:32429] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset15parcelport_implINS0_8policies3tcp18connection_handlerEE3runEb+0x29)[0x7f8aaa9ed349]
+[gpgnode-04:32430] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset13parcelhandler10initializeERNS_4agas18addressing_serviceEPNS_7applier7applierE+0x63)[0x7f9a054301d3]
+[gpgnode-04:32429] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset13parcelhandler10initializeERNS_4agas18addressing_serviceEPNS_7applier7applierE+0x63)[0x7f8aaa69f1d3]
+[gpgnode-04:32430] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_implC2ERNS_4util21runtime_configurationE+0x515)[0x7f9a050d8075]
+[gpgnode-04:32429] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_implC2ERNS_4util21runtime_configurationE+0x515)[0x7f8aaa347075]
+[gpgnode-04:32430] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x26f)[0x7f9a050add5f]
+[gpgnode-04:32429] [14] ./build/install/bin/maxclique-16(+0x17c12a)[0x5652a481112a]
+[gpgnode-04:32429] [15] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f9a04466b97]
+[gpgnode-04:32429] [16] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x26f)[0x7f8aaa31cd5f]
+[gpgnode-04:32430] [14] ./build/install/bin/maxclique-16(+0x18164a)[0x5652a481664a]
+[gpgnode-04:32429] *** End of error message ***
+./build/install/bin/maxclique-16(+0x17c12a)[0x55a05487e12a]
+[gpgnode-04:32430] [15] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f8aa96d5b97]
+[gpgnode-04:32430] [16] ./build/install/bin/maxclique-16(+0x18164a)[0x55a05488364a]
+[gpgnode-04:32430] *** End of error message ***
+[gpgnode-04:32432] *** Process received signal ***
+[gpgnode-04:32432] Signal: Aborted (6)
+[gpgnode-04:32432] Signal code:  (-6)
+[gpgnode-04:32432] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f908eecd890]
+[gpgnode-04:32432] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f908c670e97]
+[gpgnode-04:32432] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f908c672801]
+[gpgnode-04:32432] [ 3] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x8c957)[0x7f908ccc7957]
+[gpgnode-04:32432] [ 4] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92ab6)[0x7f908cccdab6]
+[gpgnode-04:32432] [ 5] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92af1)[0x7f908cccdaf1]
+[gpgnode-04:32432] [ 6] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92aaa)[0x7f908cccdaaa]
+[gpgnode-04:32432] [ 7] [gpgnode-04:32434] *** Process received signal ***
+[gpgnode-04:32434] Signal: Aborted (6)
+[gpgnode-04:32434] Signal code:  (-6)
+/users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionINS_9exceptionEEEvRKT_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_l+0x73)[0x7f908d28c873]
+[gpgnode-04:32432] [ 8] [gpgnode-04:32434] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f5767215890]
+[gpgnode-04:32434] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f57649b8e97]
+[gpgnode-04:32434] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f57649ba801]
+[gpgnode-04:32434] [ 3] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionENS_5errorERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_l+0x5e)[0x7f908d2d583e]
+[gpgnode-04:32432] [ 9] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x8c957)[0x7f576500f957]
+[gpgnode-04:32434] [ 4] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92ab6)[0x7f5765015ab6]
+[gpgnode-04:32434] [ 5] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92af1)[0x7f5765015af1]
+[gpgnode-04:32434] [ 6] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset8policies3tcp18connection_handler6do_runEv+0xd9f)[0x7f908d964b3f]
+[gpgnode-04:32432] [10] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92aaa)[0x7f5765015aaa]
+[gpgnode-04:32434] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionINS_9exceptionEEEvRKT_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_l+0x73)[0x7f57655d4873]
+[gpgnode-04:32434] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset15parcelport_implINS0_8policies3tcp18connection_handlerEE3runEb+0x29)[0x7f908d96b349]
+[gpgnode-04:32432] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionENS_5errorERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_l+0x5e)[0x7f576561d83e]
+[gpgnode-04:32434] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset13parcelhandler10initializeERNS_4agas18addressing_serviceEPNS_7applier7applierE+0x63)[0x7f908d61d1d3]
+[gpgnode-04:32432] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset8policies3tcp18connection_handler6do_runEv+0xd9f)[0x7f5765cacb3f]
+[gpgnode-04:32434] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_implC2ERNS_4util21runtime_configurationE+0x515)[0x7f908d2c5075]
+[gpgnode-04:32432] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x26f)[0x7f908d29ad5f]
+[gpgnode-04:32432] [14] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset15parcelport_implINS0_8policies3tcp18connection_handlerEE3runEb+0x29)[0x7f5765cb3349]
+[gpgnode-04:32434] [11] ./build/install/bin/maxclique-16(+0x17c12a)[0x55ac407df12a]
+[gpgnode-04:32432] [15] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f908c653b97]
+[gpgnode-04:32432] [16] ./build/install/bin/maxclique-16(+0x18164a)[0x55ac407e464a]
+[gpgnode-04:32432] *** End of error message ***
+/users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset13parcelhandler10initializeERNS_4agas18addressing_serviceEPNS_7applier7applierE+0x63)[0x7f57659651d3]
+[gpgnode-04:32434] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_implC2ERNS_4util21runtime_configurationE+0x515)[0x7f576560d075]
+[gpgnode-04:32434] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x26f)[0x7f57655e2d5f]
+[gpgnode-04:32434] [14] ./build/install/bin/maxclique-16(+0x17c12a)[0x55d06ba3212a]
+[gpgnode-04:32434] [15] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f576499bb97]
+[gpgnode-04:32434] [16] ./build/install/bin/maxclique-16(+0x18164a)[0x55d06ba3764a]
+[gpgnode-04:32434] *** End of error message ***
+[gpgnode-04:32435] *** Process received signal ***
+[gpgnode-04:32435] Signal: Aborted (6)
+[gpgnode-04:32435] Signal code:  (-6)
+[gpgnode-04:32435] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f1e8d3b3890]
+[gpgnode-04:32435] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7f1e8ab56e97]
+[gpgnode-04:32435] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7f1e8ab58801]
+[gpgnode-04:32435] [ 3] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x8c957)[0x7f1e8b1ad957]
+[gpgnode-04:32435] [ 4] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92ab6)[0x7f1e8b1b3ab6]
+[gpgnode-04:32435] [ 5] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92af1)[0x7f1e8b1b3af1]
+[gpgnode-04:32435] [ 6] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92aaa)[0x7f1e8b1b3aaa]
+[gpgnode-04:32435] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionINS_9exceptionEEEvRKT_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_l+0x73)[0x7f1e8b772873]
+[gpgnode-04:32435] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionENS_5errorERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_l+0x5e)[0x7f1e8b7bb83e]
+[gpgnode-04:32435] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset8policies3tcp18connection_handler6do_runEv+0xd9f)[0x7f1e8be4ab3f]
+[gpgnode-04:32435] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset15parcelport_implINS0_8policies3tcp18connection_handlerEE3runEb+0x29)[0x7f1e8be51349]
+[gpgnode-04:32435] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset13parcelhandler10initializeERNS_4agas18addressing_serviceEPNS_7applier7applierE+0x63)[0x7f1e8bb031d3]
+[gpgnode-04:32435] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_implC2ERNS_4util21runtime_configurationE+0x515)[0x7f1e8b7ab075]
+[gpgnode-04:32435] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x26f)[0x7f1e8b780d5f]
+[gpgnode-04:32435] [14] ./build/install/bin/maxclique-16(+0x17c12a)[0x5584c58b912a]
+[gpgnode-04:32435] [15] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7f1e8ab39b97]
+[gpgnode-04:32435] [16] ./build/install/bin/maxclique-16(+0x18164a)[0x5584c58be64a]
+[gpgnode-04:32435] *** End of error message ***
+[gpgnode-04:32431] *** Process received signal ***
+[gpgnode-04:32431] Signal: Aborted (6)
+[gpgnode-04:32431] Signal code:  (-6)
+[gpgnode-04:32431] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7ff3ced38890]
+[gpgnode-04:32431] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7ff3cc4dbe97]
+[gpgnode-04:32431] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7ff3cc4dd801]
+[gpgnode-04:32431] [ 3] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x8c957)[0x7ff3ccb32957]
+[gpgnode-04:32431] [ 4] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92ab6)[0x7ff3ccb38ab6]
+[gpgnode-04:32431] [ 5] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92af1)[0x7ff3ccb38af1]
+[gpgnode-04:32431] [ 6] /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0x92aaa)[0x7ff3ccb38aaa]
+[gpgnode-04:32431] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionINS_9exceptionEEEvRKT_RKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_l+0x73)[0x7ff3cd0f7873]
+[gpgnode-04:32431] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail15throw_exceptionENS_5errorERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES9_S9_l+0x5e)[0x7ff3cd14083e]
+[gpgnode-04:32431] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset8policies3tcp18connection_handler6do_runEv+0xd9f)[0x7ff3cd7cfb3f]
+[gpgnode-04:32431] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset15parcelport_implINS0_8policies3tcp18connection_handlerEE3runEb+0x29)[0x7ff3cd7d6349]
+[gpgnode-04:32431] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx9parcelset13parcelhandler10initializeERNS_4agas18addressing_serviceEPNS_7applier7applierE+0x63)[0x7ff3cd4881d3]
+[gpgnode-04:32431] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_implC2ERNS_4util21runtime_configurationE+0x515)[0x7ff3cd130075]
+[gpgnode-04:32431] [13] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x26f)[0x7ff3cd105d5f]
+[gpgnode-04:32431] [14] ./build/install/bin/maxclique-16(+0x17c12a)[0x55568567b12a]
+[gpgnode-04:32431] [15] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7ff3cc4beb97]
+[gpgnode-04:32431] [16] ./build/install/bin/maxclique-16(+0x18164a)[0x55568568064a]
+[gpgnode-04:32431] *** End of error message ***
+[mpiexec@gpgnode-04] Sending Ctrl-C to processes as requested
+[mpiexec@gpgnode-04] Press Ctrl-C again to force abort
+[gpgnode-04:32428] *** Process received signal ***
+[gpgnode-04:32428] Signal: Aborted (6)
+[gpgnode-04:32428] Signal code:  (-6)
+[gpgnode-04:32428] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7fc75cb7e890]
+[gpgnode-04:32428] [ 1] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0xc7)[0x7fc75a321e97]
+[gpgnode-04:32428] [ 2] /lib/x86_64-linux-gnu/libc.so.6(abort+0x141)[0x7fc75a323801]
+[gpgnode-04:32428] [ 3] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx19termination_handlerEi+0x1bd)[0x7fc75af6d3ed]
+[gpgnode-04:32428] [ 4] /lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7fc75cb7e890]
+[gpgnode-04:32428] [ 5] /lib/x86_64-linux-gnu/libpthread.so.0(pthread_cond_wait+0x243)[0x7fc75cb799f3]
+[gpgnode-04:32428] [ 6] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN5boost4asio6detail9scheduler3runERNS_6system10error_codeE+0x29c)[0x7fc75b2fcbcc]
+[gpgnode-04:32428] [ 7] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx4util15io_service_pool10thread_runEmPNS_6compat7barrierE+0xca)[0x7fc75b4ccc0a]
+[gpgnode-04:32428] [ 8] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl4waitEv+0x1de)[0x7fc75af737ee]
+[gpgnode-04:32428] [ 9] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx12runtime_impl3runERKNS_4util8functionIFivELb0EEE+0x15)[0x7fc75af713b5]
+[gpgnode-04:32428] [10] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6805)[0x7fc75af4b805]
+[gpgnode-04:32428] [11] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(+0x2d6a36)[0x7fc75af4ba36]
+[gpgnode-04:32428] [12] /users/level4/2250079m/sandbox/YewParInstall/hpx-1.2.1/build/install/lib/libhpx.so.1(_ZN3hpx6detail12run_or_startERKNS_4util8functionIFiRN5boost15program_options13variables_mapEELb0EEERKNS4_19options_descriptionEiPPcOSt6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaISM_EENS1_15unique_functionIFvvELb0EEESS_NS_12runtime_modeEb+0x327)[0x7fc75af4be17]
+[gpgnode-04:32428] [13] ./build/install/bin/maxclique-16(+0x17c12a)[0x55e3f9e8d12a]
+[gpgnode-04:32428] [14] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe7)[0x7fc75a304b97]
+[gpgnode-04:32428] [15] ./build/install/bin/maxclique-16(+0x18164a)[0x55e3f9e9264a]
+[gpgnode-04:32428] *** End of error message ***

@@ -45,10 +45,6 @@ struct StackStealing {
   static constexpr unsigned verbose = Verbose::value;
  
   // EXTENSION
-  typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
-  static constexpr unsigned verbose = Verbose::value;
-  
-  // EXTENSION
   typedef typename parameter::value_type<args, API::tag::NodeCounts_, std::integral_constant<unsigned, 0> >::type NodeCounts;
   static constexpr unsigned nodeCounts = NodeCounts::value;
 
@@ -493,7 +489,7 @@ struct StackStealing {
         hpx::find_all_localities(), space, root, params));
 
     // EXTENSION
-    if constexpr(nodeCounts || countBacktracks || countPrunes || regularity) {
+    if constexpr(nodeCounts || countBacktracks || regularity) {
       hpx::wait_all(hpx::lcos::broadcast<InitMetricStoreAct>(hpx::find_all_localities()));
     }
     // END EXTENSION

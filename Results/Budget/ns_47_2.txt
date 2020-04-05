@@ -1,0 +1,588 @@
+CPU Time (Before collecting metrics) 136630
+Backtracks Depth 1:10000049
+Backtracks Depth 3:45
+Backtracks Depth 4:20000389
+Backtracks Depth 5:20003314
+Backtracks Depth 6:60012048
+Backtracks Depth 7:50062650
+Backtracks Depth 8:160158044
+Backtracks Depth 9:70561563
+Backtracks Depth 10:61238589
+Backtracks Depth 11:73244050
+Backtracks Depth 12:45992247
+Backtracks Depth 13:110021353
+Backtracks Depth 14:300121641
+Backtracks Depth 15:390347763
+Backtracks Depth 16:491102057
+Backtracks Depth 17:642065250
+Backtracks Depth 18:756281261
+Backtracks Depth 19:1120475023
+Backtracks Depth 20:1445375404
+Backtracks Depth 21:1452232298
+Backtracks Depth 22:2140563158
+Backtracks Depth 23:3381231169
+Backtracks Depth 24:4237483806
+Backtracks Depth 25:5790620470
+Backtracks Depth 26:8217903507
+Backtracks Depth 27:11184889551
+Backtracks Depth 28:14399734578
+Backtracks Depth 29:18940605088
+Backtracks Depth 30:28033249344
+Backtracks Depth 31:36431960887
+Backtracks Depth 32:51482347509
+Backtracks Depth 33:66670425870
+Backtracks Depth 34:89618939727
+Backtracks Depth 35:118192052069
+Backtracks Depth 36:147471455087
+Backtracks Depth 37:171161652445
+Backtracks Depth 38:183864945883
+Backtracks Depth 39:173232071540
+Backtracks Depth 40:148337441304
+Backtracks Depth 41:124360993113
+Backtracks Depth 42:102272298975
+Backtracks Depth 43:81253201025
+Backtracks Depth 44:59910431247
+Backtracks Depth 45:35680062521
+Backtracks Depth 46:14790007352
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+=====
+cpu = 136635
+CPU Time (Before collecting metrics) 137160
+Backtracks Depth 1:10000049
+Backtracks Depth 3:45
+Backtracks Depth 4:10000389
+Backtracks Depth 5:40003314
+Backtracks Depth 6:30012048
+Backtracks Depth 7:60062650
+Backtracks Depth 8:158044
+Backtracks Depth 9:50561563
+Backtracks Depth 10:121238589
+Backtracks Depth 11:133244050
+Backtracks Depth 12:165992247
+Backtracks Depth 13:120021353
+Backtracks Depth 14:340121641
+Backtracks Depth 15:360347763
+Backtracks Depth 16:571102057
+Backtracks Depth 17:672065250
+Backtracks Depth 18:976281261
+Backtracks Depth 19:1030475023
+Backtracks Depth 20:1345375404
+Backtracks Depth 21:1382232298
+Backtracks Depth 22:2150563158
+Backtracks Depth 23:3061231169
+Backtracks Depth 24:4297483806
+Backtracks Depth 25:5280620470
+Backtracks Depth 26:7907903507
+Backtracks Depth 27:9424889551
+Backtracks Depth 28:13429734578
+Backtracks Depth 29:17960605088
+Backtracks Depth 30:25163249344
+Backtracks Depth 31:34381960887
+Backtracks Depth 32:47712347509
+Backtracks Depth 33:64490425870
+Backtracks Depth 34:88738939727
+Backtracks Depth 35:116022052069
+Backtracks Depth 36:143521455087
+Backtracks Depth 37:167311652445
+Backtracks Depth 38:178584945883
+Backtracks Depth 39:166062071540
+Backtracks Depth 40:148607441304
+Backtracks Depth 41:124810993113
+Backtracks Depth 42:102992298975
+Backtracks Depth 43:77843201025
+Backtracks Depth 44:56310431247
+Backtracks Depth 45:33280062521
+Backtracks Depth 46:15450007352
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+=====
+cpu = 137165
+CPU Time (Before collecting metrics) 136529
+Backtracks Depth 1:10000049
+Backtracks Depth 3:45
+Backtracks Depth 4:50000389
+Backtracks Depth 5:70003314
+Backtracks Depth 6:90012048
+Backtracks Depth 7:30062650
+Backtracks Depth 8:20158044
+Backtracks Depth 9:110561563
+Backtracks Depth 10:111238589
+Backtracks Depth 11:123244050
+Backtracks Depth 12:185992247
+Backtracks Depth 13:60021353
+Backtracks Depth 14:180121641
+Backtracks Depth 15:490347763
+Backtracks Depth 16:591102057
+Backtracks Depth 17:772065250
+Backtracks Depth 18:1006281261
+Backtracks Depth 19:1180475023
+Backtracks Depth 20:1505375404
+Backtracks Depth 21:1512232298
+Backtracks Depth 22:1990563158
+Backtracks Depth 23:3051231169
+Backtracks Depth 24:4977483806
+Backtracks Depth 25:6500620470
+Backtracks Depth 26:8437903507
+Backtracks Depth 27:11354889551
+Backtracks Depth 28:15059734578
+Backtracks Depth 29:20110605088
+Backtracks Depth 30:28573249344
+Backtracks Depth 31:39481960887
+Backtracks Depth 32:54602347509
+Backtracks Depth 33:73460425870
+Backtracks Depth 34:97798939727
+Backtracks Depth 35:125262052069
+Backtracks Depth 36:160551455087
+Backtracks Depth 37:182201652445
+Backtracks Depth 38:193164945883
+Backtracks Depth 39:182522071540
+Backtracks Depth 40:165397441304
+Backtracks Depth 41:136530993113
+Backtracks Depth 42:113212298975
+Backtracks Depth 43:86913201025
+Backtracks Depth 44:63630431247
+Backtracks Depth 45:37830062521
+Backtracks Depth 46:16250007352
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+=====
+cpu = 136534
+CPU Time (Before collecting metrics) 137530
+Backtracks Depth 1:10000049
+Backtracks Depth 3:10000045
+Backtracks Depth 4:40000389
+Backtracks Depth 5:40003314
+Backtracks Depth 6:70012048
+Backtracks Depth 7:20062650
+Backtracks Depth 8:90158044
+Backtracks Depth 9:70561563
+Backtracks Depth 10:91238589
+Backtracks Depth 11:33244050
+Backtracks Depth 12:105992247
+Backtracks Depth 13:220021353
+Backtracks Depth 14:370121641
+Backtracks Depth 15:400347763
+Backtracks Depth 16:571102057
+Backtracks Depth 17:802065250
+Backtracks Depth 18:936281261
+Backtracks Depth 19:1430475023
+Backtracks Depth 20:1635375404
+Backtracks Depth 21:1972232298
+Backtracks Depth 22:2290563158
+Backtracks Depth 23:3321231169
+Backtracks Depth 24:4987483806
+Backtracks Depth 25:6420620470
+Backtracks Depth 26:9187903507
+Backtracks Depth 27:12354889551
+Backtracks Depth 28:15979734578
+Backtracks Depth 29:20780605088
+Backtracks Depth 30:28373249344
+Backtracks Depth 31:37071960887
+Backtracks Depth 32:52552347509
+Backtracks Depth 33:71080425870
+Backtracks Depth 34:93298939727
+Backtracks Depth 35:123012052069
+Backtracks Depth 36:156041455087
+Backtracks Depth 37:179121652445
+Backtracks Depth 38:188474945883
+Backtracks Depth 39:176452071540
+Backtracks Depth 40:156237441304
+Backtracks Depth 41:132030993113
+Backtracks Depth 42:109302298975
+Backtracks Depth 43:81623201025
+Backtracks Depth 44:58900431247
+Backtracks Depth 45:36340062521
+Backtracks Depth 46:15580007352
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+=====
+cpu = 137536
+CPU Time (Before collecting metrics) 136213
+Backtracks Depth 1:10000049
+Backtracks Depth 3:20000045
+Backtracks Depth 4:20000389
+Backtracks Depth 5:40003314
+Backtracks Depth 6:50012048
+Backtracks Depth 7:70062650
+Backtracks Depth 8:60158044
+Backtracks Depth 9:130561563
+Backtracks Depth 10:61238589
+Backtracks Depth 11:163244050
+Backtracks Depth 12:105992247
+Backtracks Depth 13:180021353
+Backtracks Depth 14:280121641
+Backtracks Depth 15:790347763
+Backtracks Depth 16:661102057
+Backtracks Depth 17:782065250
+Backtracks Depth 18:1216281261
+Backtracks Depth 19:1490475023
+Backtracks Depth 20:1665375404
+Backtracks Depth 21:1922232298
+Backtracks Depth 22:2280563158
+Backtracks Depth 23:3731231169
+Backtracks Depth 24:5167483806
+Backtracks Depth 25:7370620470
+Backtracks Depth 26:9037903507
+Backtracks Depth 27:12684889551
+Backtracks Depth 28:16309734578
+Backtracks Depth 29:22430605088
+Backtracks Depth 30:29743249344
+Backtracks Depth 31:41401960887
+Backtracks Depth 32:55992347509
+Backtracks Depth 33:73060425870
+Backtracks Depth 34:97068939727
+Backtracks Depth 35:124992052069
+Backtracks Depth 36:157491455087
+Backtracks Depth 37:179191652445
+Backtracks Depth 38:192434945883
+Backtracks Depth 39:181372071540
+Backtracks Depth 40:159777441304
+Backtracks Depth 41:135220993113
+Backtracks Depth 42:109222298975
+Backtracks Depth 43:82253201025
+Backtracks Depth 44:59450431247
+Backtracks Depth 45:35160062521
+Backtracks Depth 46:15670007352
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+=====
+cpu = 136218
+CPU Time (Before collecting metrics) 137293
+Backtracks Depth 1:10000049
+Backtracks Depth 3:20000045
+Backtracks Depth 4:20000389
+Backtracks Depth 5:3314
+Backtracks Depth 6:30012048
+Backtracks Depth 7:50062650
+Backtracks Depth 8:150158044
+Backtracks Depth 9:60561563
+Backtracks Depth 10:121238589
+Backtracks Depth 11:143244050
+Backtracks Depth 12:135992247
+Backtracks Depth 13:160021353
+Backtracks Depth 14:210121641
+Backtracks Depth 15:350347763
+Backtracks Depth 16:621102057
+Backtracks Depth 17:652065250
+Backtracks Depth 18:986281261
+Backtracks Depth 19:1570475023
+Backtracks Depth 20:1525375404
+Backtracks Depth 21:1672232298
+Backtracks Depth 22:2400563158
+Backtracks Depth 23:3781231169
+Backtracks Depth 24:5177483806
+Backtracks Depth 25:7820620470
+Backtracks Depth 26:9067903507
+Backtracks Depth 27:11954889551
+Backtracks Depth 28:16979734578
+Backtracks Depth 29:22820605088
+Backtracks Depth 30:32953249344
+Backtracks Depth 31:43761960887
+Backtracks Depth 32:63472347509
+Backtracks Depth 33:80080425870
+Backtracks Depth 34:103708939727
+Backtracks Depth 35:138962052069
+Backtracks Depth 36:170261455087
+Backtracks Depth 37:193921652445
+Backtracks Depth 38:203724945883
+Backtracks Depth 39:196492071540
+Backtracks Depth 40:169177441304
+Backtracks Depth 41:139490993113
+Backtracks Depth 42:118192298975
+Backtracks Depth 43:92673201025
+Backtracks Depth 44:63940431247
+Backtracks Depth 45:40010062521
+Backtracks Depth 46:15710007352
+
+Results Table: 
+0: 1
+1: 1
+2: 2
+3: 4
+4: 7
+5: 12
+6: 23
+7: 39
+8: 67
+9: 118
+10: 204
+11: 343
+12: 592
+13: 1001
+14: 1693
+15: 2857
+16: 4806
+17: 8045
+18: 13467
+19: 22464
+20: 37396
+21: 62194
+22: 103246
+23: 170963
+24: 282828
+25: 467224
+26: 770832
+27: 1270267
+28: 2091030
+29: 3437839
+30: 5646773
+31: 9266788
+32: 15195070
+33: 24896206
+34: 40761087
+35: 66687201
+36: 109032500
+37: 178158289
+38: 290939807
+39: 474851445
+40: 774614284
+41: 1262992840
+42: 2058356522
+43: 3353191846
+44: 5460401576
+45: 8888486816
+46: 14463633648
+47: 23527845502
+=====
+cpu = 137299

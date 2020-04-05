@@ -1,7 +1,6 @@
 // Contains the MetricStore class used to cache runtime meta data throughout a search
 #pragma once
 
-#include <array>
 #include <atomic>
 #include <algorithm>
 #include <memory>
@@ -19,24 +18,24 @@ namespace YewPar {
 struct MetricStore {
   static MetricStore* store;
 
-  using MetricsArrayPtr = std::unique_ptr<std::array<std::atomic<std::uint64_t>, DEF_SIZE> >;
-  using MetricsArrayAtomic = std::array<std::atomic<std::uint64_t>, DEF_SIZE >;
-  using MetricsArray = std::array<std::uint64_t, DEF_SIZE>;
+  using MetricsVecPtr = std::unique_ptr<std::vector<std::atomic<std::uint64_t>> >;
+  using MetricsVecAtomic = std::vector<std::atomic<std::uint64_t> >;
+  using MetricsVec = std::vector<std::uint64_t>;
   using TimesVecPtr = std::unique_ptr<std::vector<std::forward_list<std::uint64_t> > >;
   using TimesVec = std::vector<std::forward_list<std::uint64_t> >;
 
   // Regularity Metrics
   TimesVecPtr taskTimes;
-	MetricsArrayPtr tasks;	
+	MetricsVecPtr tasks;	
 
   // For node throughput
-  MetricsArrayPtr nodesVisited;
+  MetricsVecPtr nodesVisited;
 
   // For Backtracking budget
-  MetricsArrayPtr backtracks;
+  MetricsVecPtr backtracks;
 	
   // Counting pruning
-  MetricsArrayPtr prunes;
+  MetricsVecPtr prunes;
 	
 	static const unsigned DEF_SIZE = 100;
 
@@ -44,9 +43,9 @@ struct MetricStore {
 
   void init() {
     taskTimes = std::make_unique<TimesVec>(DEF_SIZE);
-    backtracks = std::make_unique<MetricsArrayAtomic>(DEF_SIZE);
-		nodesVisited = std::make_unique<MetricsArrayAtomic>(DEF_SIZE);
-		tasks = std::make_unique<MetricsArrayAtomic>(DEF_SIZE);
+    backtracks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
+		nodesVisited = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
+		tasks = std::make_unique<MetricsVecAtomic>(DEF_SIZE);
   }
 
   /* For conveniance */
@@ -61,7 +60,7 @@ struct MetricStore {
 
   void updateTimes(const unsigned depth, std::uint64_t time) {
 		if (time >= 1) {
-			const auto depthIdx = depth < taskTimes->size() ? depth : taskTimes->size()-1;
+			const auto depthIdx = depth < DEF_SIZE ? depth : DEF_SIZE-1;
       (*taskTimes)[depthIdx].push_front(time);
 			(*tasks)[depthIdx]++;
    	}
@@ -79,19 +78,19 @@ struct MetricStore {
     updateMetric(*backtracks, b, depth);
   }
 
-  MetricsArray getNodeCount() const {
+  MetricsVec getNodeCount() const {
     return transformVec(*nodesVisited);
   }
 
-  MetricsArray getBacktracks() const {
+  MetricsVec getBacktracks() const {
     return transformVec(*backtracks);
 	}
 
-  MetricsArray getPrunes() const {
+  MetricsVec getPrunes() const {
     return transformVec(*prunes);
   }
 
-  MetricsArray getTotalTasks () const {
+  MetricsVec getTotalTasks () const {
 		return transformVec(*tasks);
   }
 
@@ -111,13 +110,13 @@ struct MetricStore {
 
 private:
 
-  inline void updateMetric(MetricsArrayAtomic & ms, const std::uint64_t & m, const unsigned depth) {
-		auto depthIdx = depth < ms.size() ? depth : ms.size()-1;
+  inline void updateMetric(MetricsVecAtomic & ms, const std::uint64_t & m, const unsigned depth) {
+		auto depthIdx = depth < DEF_SIZE ? depth : DEF_SIZE-1;
     ms[depthIdx] += m;
   }
 
-  inline MetricsArray transformVec(const MetricsArrayAtomic & vec) const {
-    MetricsArray res;
+  inline MetricsVec transformVec(const MetricsVecAtomic & vec) const {
+    MetricsVec res;
     std::transform(vec.begin(), vec.end(), std::back_inserter(res),
     [](const auto & c) { return c.load(); });
     return res;
@@ -133,23 +132,17 @@ void initMetricStore() {
 struct InitMetricStoreAct : hpx::actions::make_direct_action<
   decltype(&initMetricStore), &initMetricStore, InitMetricStoreAct>::type {};
 
-std::array<std::uint64_t> getNodeCount() {
+std::vector<std::uint64_t> getNodeCount() {
   return MetricStore::store->getNodeCount();
 }
 struct GetNodeCountAct : hpx::actions::make_direct_action<
   decltype(&getNodeCount), &getNodeCount, GetNodeCountAct>::type {};
 
-std::array<std::uint64_t> getBacktracks() {
+std::vector<std::uint64_t> getBacktracks() {
   return MetricStore::store->getBacktracks();
 }
 struct GetBacktracksAct : hpx::actions::make_direct_action<
   decltype(&getBacktracks), &getBacktracks, GetBacktracksAct>::type {};
-
-std::array<std::uint64_t> getPrunes() {
-  return MetricStore::store->getPrunes();
-}
-struct GetPrunesAct : hpx::actions::make_direct_action<
-  decltype(&getPrunes), &getPrunes, GetPrunesAct>::type {};
 
 void printTimes() {
 	MetricStore::store->printTimes();
@@ -180,11 +173,6 @@ struct action_stacksize<YewPar::GetNodeCountAct> {
 
 template <>
 struct action_stacksize<YewPar::GetBacktracksAct> {
-  enum { value = threads::thread_stacksize_huge };
-};
-
-template <>
-struct action_stacksize<YewPar::GetPrunesAct> {
   enum { value = threads::thread_stacksize_huge };
 };
 

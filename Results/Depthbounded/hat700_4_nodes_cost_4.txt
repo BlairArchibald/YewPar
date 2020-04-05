@@ -1,0 +1,84 @@
+CPU Time (Before collecting metrics) 102147
+Nodes Depth 1:483
+Nodes Depth 2:567324125
+Nodes Depth 3:58216848361
+
+MaxClique Size = 62
+cpu = 102152
+CPU Time (Before collecting metrics) 99831
+Nodes Depth 1:487
+Nodes Depth 2:613596124
+Nodes Depth 3:59694674655
+
+MaxClique Size = 62
+cpu = 99837
+CPU Time (Before collecting metrics) 99425
+Nodes Depth 1:498
+Nodes Depth 2:519200389
+Nodes Depth 3:55277664192
+
+MaxClique Size = 62
+cpu = 99431
+CPU Time (Before collecting metrics) 102557
+Nodes Depth 1:487
+Nodes Depth 2:560607168
+Nodes Depth 3:60466406767
+
+MaxClique Size = 62
+cpu = 102562
+CPU Time (Before collecting metrics) 91801
+Nodes Depth 1:498
+Nodes Depth 2:556042470
+Nodes Depth 3:55108545286
+
+MaxClique Size = 62
+cpu = 91806
+CPU Time (Before collecting metrics) 98562
+Nodes Depth 1:483
+Nodes Depth 2:560025108
+Nodes Depth 3:56572406830
+
+MaxClique Size = 62
+cpu = 98568
+CPU Time (Before collecting metrics) 101150
+Nodes Depth 1:498
+Nodes Depth 2:624435540
+Nodes Depth 3:55655702240
+
+MaxClique Size = 62
+cpu = 101155
+CPU Time (Before collecting metrics) 104794
+Nodes Depth 1:487
+Nodes Depth 2:587900935
+Nodes Depth 3:61149201970
+
+MaxClique Size = 62
+cpu = 104799
+CPU Time (Before collecting metrics) 102126
+Nodes Depth 1:492
+Nodes Depth 2:655141906
+Nodes Depth 3:60687962775
+
+MaxClique Size = 62
+cpu = 102131
+CPU Time (Before collecting metrics) 99516
+Nodes Depth 1:492
+Nodes Depth 2:669808407
+Nodes Depth 3:59505415225
+
+MaxClique Size = 62
+cpu = 99521
+CPU Time (Before collecting metrics) 100469
+Nodes Depth 1:492
+Nodes Depth 2:559910643
+Nodes Depth 3:54257410930
+
+MaxClique Size = 62
+cpu = 100474
+CPU Time (Before collecting metrics) 103761
+Nodes Depth 1:492
+Nodes Depth 2:607055914
+Nodes Depth 3:62867848718
+
+MaxClique Size = 62
+cpu = 103767

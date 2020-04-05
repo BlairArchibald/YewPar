@@ -1,0 +1,12 @@
+MaxClique Size = 26
+cpu = 114398
+MaxClique Size = 26
+cpu = 116141
+MaxClique Size = 26
+cpu = 129921
+MaxClique Size = 26
+cpu = 136693
+MaxClique Size = 26
+cpu = 122619
+MaxClique Size = 26
+cpu = 107026
