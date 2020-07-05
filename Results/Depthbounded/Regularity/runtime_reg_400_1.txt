@@ -1,2 +1,0 @@
-MaxClique Size = 27
-cpu = 24713
