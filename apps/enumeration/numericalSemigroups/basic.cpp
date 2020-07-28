@@ -100,6 +100,21 @@ struct NodeGen : YewPar::NodeGenerator<SemiGroup, Empty> {
   }
 };
 
+struct CountNodes : YewPar::Enumerator<SemiGroup, std::uint64_t> {
+  std::uint64_t count;
+  CountNodes() = default;
+
+  void accumulate(const SemiGroup & n) override {
+    count++;
+  }
+
+  void combine(const std::uint64_t & other) override {
+    count += other;
+  }
+
+  std::uint64_t get() override { return count; }
+};
+
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto maxDepth   = opts["until-depth"].as<unsigned>();
@@ -108,15 +123,13 @@ int hpx_main(boost::program_options::variables_map & opts) {
   searchParameters.maxDepth   = maxDepth;
   searchParameters.spawnDepth = spawnDepth;
 
-  auto counts = YewPar::Skeletons::DepthBounded<NodeGen,
-                                               YewPar::Skeletons::API::CountNodes,
+  auto count = YewPar::Skeletons::DepthBounded<NodeGen,
+                                               YewPar::Skeletons::API::Enumeration,
+                                               YewPar::Skeletons::API::Enumerator<CountNodes>,
                                                YewPar::Skeletons::API::DepthLimited>
                 ::search(Empty(), SemiGroup(), searchParameters);
 
-  std::cout << "Results Table: " << std::endl;
-  for (auto i = 0; i <= maxDepth; ++i) {
-    std::cout << i << ": " << counts[i] << std::endl;
-  }
+  std::cout << "Total nodes: " << count << std::endl;
   std::cout << "=====" << std::endl;
 
   return hpx::finalize();

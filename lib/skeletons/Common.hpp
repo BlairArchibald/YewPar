@@ -3,12 +3,13 @@
 
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
+#include "util/Enumerator.hpp"
 
 namespace YewPar { namespace Skeletons {
 
-template<typename Space, typename Node, typename Bound, typename Cmp, typename Verbose>
+template<typename Space, typename Node, typename Bound, typename Enum, typename Cmp, typename Verbose>
 static void initIncumbent(const Node & node, const Bound & bnd) {
-  auto reg = Registry<Space, Node, Bound>::gReg;
+  auto reg = Registry<Space, Node, Bound, Enum>::gReg;
 
   typedef typename Incumbent::InitComponentAct<Node, Bound, Cmp, Verbose> initComp;
   hpx::async<initComp>(reg->globalIncumbent).get();
@@ -17,31 +18,28 @@ static void initIncumbent(const Node & node, const Bound & bnd) {
   hpx::async<initVals>(reg->globalIncumbent, node, bnd).get();
 }
 
-template<typename Space, typename Node, typename Bound, typename Cmp, typename Verbose>
+template<typename Space, typename Node, typename Bound, typename Enumerator, typename Cmp, typename Verbose>
 static void updateIncumbent(const Node & node, const Bound & bnd) {
-  auto reg = Registry<Space, Node, Bound>::gReg;
+  auto reg = Registry<Space, Node, Bound, Enumerator>::gReg;
 
   (*reg).template updateRegistryBound<Cmp>(bnd);
-  hpx::lcos::broadcast<UpdateRegistryBoundAct<Space, Node, Bound, Cmp> >(
+  hpx::lcos::broadcast<UpdateRegistryBoundAct<Space, Node, Bound, Enumerator, Cmp> >(
       hpx::find_all_localities(), bnd);
 
   typedef typename Incumbent::UpdateIncumbentAct<Node, Bound, Cmp, Verbose> act;
   hpx::async<act>(reg->globalIncumbent, node).get();
 }
 
-template<typename Space, typename Node, typename Bound>
-static std::vector<std::uint64_t> totalNodeCounts(const unsigned maxDepth) {
-  auto cntList = hpx::lcos::broadcast<GetCountsAct<Space, Node, Bound> >(
-      hpx::find_all_localities()).get();
+template<typename Space, typename Node, typename Bound, typename Enum>
+static typename Enum::ResT combineEnumerators() {
+  auto vals = hpx::lcos::broadcast<GetEnumeratorValAct<Space, Node, Bound, Enum> >(
+    hpx::find_all_localities()).get();
 
-  std::vector<std::uint64_t> res(maxDepth + 1);
-  for (auto i = 0; i <= maxDepth; ++i) {
-    for (const auto & cnt : cntList) {
-      res[i] += cnt[i];
-    }
+  Enum res;
+  for (const auto v : vals) {
+    res.combine(v);
   }
-  res[0] = 1; //Account for root node
-  return res;
+  return res.get();
 }
 
 template <typename Generator>
@@ -68,6 +66,7 @@ struct ProcessNode {
 
   static constexpr bool isOptimisation = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool isEnumeration = parameter::value_type<args, API::tag::Enumeration_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool pruneLevel = parameter::value_type<args, API::tag::PruneLevel_, std::integral_constant<bool, false> >::type::value;
 
   typedef typename parameter::value_type<args, API::tag::Verbose_, std::integral_constant<unsigned, 0> >::type Verbose;
@@ -76,13 +75,22 @@ struct ProcessNode {
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
 
+  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Node>>::type Enumerator;
+
   static ProcessNodeRet processNode(const API::Params<Bound> & params,
                                     const Space & space,
-                                    const Node & c) {
+                                    const Node & c,
+                                    Enumerator & acc) {
+
+    if constexpr(isEnumeration) {
+        acc.accumulate(c);
+        return ProcessNodeRet::Continue;
+    }
+
     if constexpr(isDecision) {
         if (c.getObj() == params.expectedObjective) {
-          updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(c, c.getObj());
-          hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound> >(hpx::find_all_localities());
+          updateIncumbent<Space, Node, Bound, Enumerator, Objcmp, Verbose>(c, c.getObj());
+          hpx::lcos::broadcast<SetStopFlagAct<Space, Node, Bound, Enumerator> >(hpx::find_all_localities());
           return ProcessNodeRet::Exit;
         }
       }
@@ -100,7 +108,7 @@ struct ProcessNode {
             }
             // B&B Case
           } else {
-          auto reg = Registry<Space, Node, Bound>::gReg;
+          auto reg = Registry<Space, Node, Bound, Enumerator>::gReg;
           auto best = reg->localBound.load();
           if (!cmp(bnd, best)) {
             if constexpr(pruneLevel) {
@@ -113,12 +121,12 @@ struct ProcessNode {
       }
 
     if constexpr(isOptimisation) {
-        auto reg = Registry<Space, Node, Bound>::gReg;
+        auto reg = Registry<Space, Node, Bound, Enumerator>::gReg;
         auto best = reg->localBound.load();
 
         Objcmp cmp;
         if (cmp(c.getObj(),best)) {
-          updateIncumbent<Space, Node, Bound, Objcmp, Verbose>(c, c.getObj());
+          updateIncumbent<Space, Node, Bound, Enumerator, Objcmp, Verbose>(c, c.getObj());
         }
     }
     return ProcessNodeRet::Continue;

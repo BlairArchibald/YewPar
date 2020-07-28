@@ -10,14 +10,16 @@
 
 #include <hpx/runtime/actions/basic_action.hpp>
 #include <hpx/traits/action_stacksize.hpp>
+#include <hpx/lcos/local/mutex.hpp>
 
 #include "skeletons/API.hpp"
+#include "Enumerator.hpp"
 
 namespace YewPar {
 
-template <typename Space, typename Node, typename Bound>
+template <typename Space, typename Node, typename Bound, typename Enumerator>
 struct Registry {
-  static Registry<Space, Node, Bound>* gReg;
+  static Registry<Space, Node, Bound, Enumerator>* gReg;
 
   // General parameters
   Space space;
@@ -34,8 +36,11 @@ struct Registry {
   hpx::naming::id_type foundPromiseId;
 
   // Counting Nodes
-  using countMapT = std::vector<std::atomic<std::uint64_t> >;
-  std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
+  Enumerator acc;
+  using MutexT = hpx::lcos::local::mutex;
+  MutexT mtx;
+  // using countMapT = std::vector<std::atomic<std::uint64_t> >;
+  // std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
 
   // We construct this object globally at compile time (see below) so this can't
   // happen in the constructor and should instead be called as an action on each
@@ -45,22 +50,18 @@ struct Registry {
     this->root = root;
     this->params = params;
     this->localBound = params.initialBound;
-    counts = std::make_unique<std::vector<std::atomic<std::uint64_t> > >(params.maxDepth + 1);
+    this->acc = Enumerator();
   }
 
   // Counting
-  void updateCounts(std::vector<std::uint64_t> & cntMap) {
-    for (auto i = 0; i <= params.maxDepth ; ++i) {
-      // Addition happens atomically
-      (*counts)[i] += cntMap[i];
-    }
+  void updateEnumerator(Enumerator & e) {
+    std::lock_guard<MutexT> l(mtx);
+    acc.combine(e.get());
   }
 
-  std::vector<std::uint64_t> getCounts() {
-    // Convert std::atomic<std::uint64_t> -> uint64_t by loading it
-    std::vector<std::uint64_t> res;
-    std::transform(counts->begin(), counts->end(), std::back_inserter(res), [](const auto & c) { return c.load(); });
-    return res;
+  using ResT = typename Enumerator::ResT;
+  ResT getEnumeratorVal() {
+    return acc.get();
   }
 
   // BNB
@@ -85,89 +86,89 @@ struct Registry {
 
 };
 
-template<typename Space, typename Node, typename Bound>
-Registry<Space, Node, Bound>* Registry<Space, Node, Bound>::gReg = new Registry<Space, Node, Bound>;
+template<typename Space, typename Node, typename Bound, typename Enumerator>
+Registry<Space, Node, Bound, Enumerator>* Registry<Space, Node, Bound, Enumerator>::gReg = new Registry<Space, Node, Bound, Enumerator>;
 
 // Easy calling
-template <typename Space, typename Node, typename Bound>
+template <typename Space, typename Node, typename Bound, typename Enumerator>
 void initialiseRegistry(Space space, Node root, YewPar::Skeletons::API::Params<Bound> params) {
-  Registry<Space, Node, Bound>::gReg->initialise(space, root, params);
+  Registry<Space, Node, Bound, Enumerator>::gReg->initialise(space, root, params);
 }
-template <typename Space, typename Node, typename Bound>
+template <typename Space, typename Node, typename Bound, typename Enumerator>
 struct InitRegistryAct : hpx::actions::make_direct_action<
-  decltype(&initialiseRegistry<Space, Node, Bound>), &initialiseRegistry<Space, Node, Bound>, InitRegistryAct<Space, Node, Bound> >::type {};
+  decltype(&initialiseRegistry<Space, Node, Bound, Enumerator>), &initialiseRegistry<Space, Node, Bound, Enumerator>, InitRegistryAct<Space, Node, Bound, Enumerator> >::type {};
 
-template <typename Space, typename Node, typename Bound>
-std::vector<std::uint64_t> getCounts() {
-  return Registry<Space, Node, Bound>::gReg->getCounts();
+template <typename Space, typename Node, typename Bound, typename Enumerator>
+typename Enumerator::ResT getEnumeratorVal() {
+  return Registry<Space, Node, Bound, Enumerator>::gReg->getEnumeratorVal();
 }
-template <typename Space, typename Node, typename Bound>
-struct GetCountsAct : hpx::actions::make_direct_action<
-  decltype(&getCounts<Space, Node, Bound>), &getCounts<Space, Node, Bound>, GetCountsAct<Space, Node, Bound> >::type {};
+template <typename Space, typename Node, typename Bound, typename Enumerator>
+struct GetEnumeratorValAct : hpx::actions::make_direct_action<
+  decltype(&getEnumeratorVal<Space, Node, Bound, Enumerator>), &getEnumeratorVal<Space, Node, Bound, Enumerator>, GetEnumeratorValAct<Space, Node, Bound, Enumerator> >::type {};
 
-template <typename Space, typename Node, typename Bound>
+template <typename Space, typename Node, typename Bound, typename Enumerator>
 void setStopSearchFlag() {
-  Registry<Space, Node, Bound>::gReg->setStopSearchFlag();
+  Registry<Space, Node, Bound, Enumerator>::gReg->setStopSearchFlag();
 }
-template <typename Space, typename Node, typename Bound>
+template <typename Space, typename Node, typename Bound, typename Enumerator>
 struct SetStopFlagAct : hpx::actions::make_direct_action<
-  decltype(&setStopSearchFlag<Space, Node, Bound>), &setStopSearchFlag<Space, Node, Bound>, SetStopFlagAct<Space, Node, Bound> >::type {};
+  decltype(&setStopSearchFlag<Space, Node, Bound, Enumerator>), &setStopSearchFlag<Space, Node, Bound, Enumerator>, SetStopFlagAct<Space, Node, Bound, Enumerator> >::type {};
 
-template <typename Space, typename Node, typename Bound, typename Cmp>
+template <typename Space, typename Node, typename Bound, typename Enumerator, typename Cmp>
 void updateRegistryBound(Bound bnd) {
-  auto reg = Registry<Space, Node, Bound>::gReg;
+  auto reg = Registry<Space, Node, Bound, Enumerator>::gReg;
   (*reg).template updateRegistryBound<Cmp>(bnd);
 }
-template <typename Space, typename Node, typename Bound, typename Cmp>
+template <typename Space, typename Node, typename Bound, typename Enumerator, typename Cmp>
 struct UpdateRegistryBoundAct : hpx::actions::make_direct_action<
-  decltype(&updateRegistryBound<Space, Node, Bound, Cmp>), &updateRegistryBound<Space, Node, Bound, Cmp>, UpdateRegistryBoundAct<Space, Node, Bound, Cmp> >::type {};
+  decltype(&updateRegistryBound<Space, Node, Bound, Enumerator, Cmp>), &updateRegistryBound<Space, Node, Bound, Enumerator, Cmp>, UpdateRegistryBoundAct<Space, Node, Bound, Enumerator, Cmp> >::type {};
 
-template <typename Space, typename Node, typename Bound>
+template <typename Space, typename Node, typename Bound, typename Enumerator>
 void updateGlobalIncumbent(hpx::naming::id_type inc) {
-  Registry<Space, Node, Bound>::gReg->globalIncumbent = inc;
+  Registry<Space, Node, Bound, Enumerator>::gReg->globalIncumbent = inc;
 }
-template <typename Space, typename Node, typename Bound>
+template <typename Space, typename Node, typename Bound, typename Enumerator>
 struct UpdateGlobalIncumbentAct : hpx::actions::make_direct_action<
-  decltype(&updateGlobalIncumbent<Space, Node, Bound>), &updateGlobalIncumbent<Space, Node, Bound>, UpdateGlobalIncumbentAct<Space, Node, Bound> >::type {};
+  decltype(&updateGlobalIncumbent<Space, Node, Bound, Enumerator>), &updateGlobalIncumbent<Space, Node, Bound, Enumerator>, UpdateGlobalIncumbentAct<Space, Node, Bound, Enumerator> >::type {};
 
-template <typename Space, typename Node, typename Bound>
+template <typename Space, typename Node, typename Bound, typename Enumerator>
 void setFoundPromiseId(hpx::naming::id_type id) {
-  Registry<Space, Node, Bound>::gReg->foundPromiseId = id;
+  Registry<Space, Node, Bound, Enumerator>::gReg->foundPromiseId = id;
 }
-template <typename Space, typename Node, typename Bound>
+template <typename Space, typename Node, typename Bound, typename Enumerator>
 struct SetFoundPromiseIdAct : hpx::actions::make_direct_action<
-  decltype(&setFoundPromiseId<Space, Node, Bound>), &setFoundPromiseId<Space, Node, Bound>, SetFoundPromiseIdAct<Space, Node, Bound> >::type {};
+  decltype(&setFoundPromiseId<Space, Node, Bound, Enumerator>), &setFoundPromiseId<Space, Node, Bound, Enumerator>, SetFoundPromiseIdAct<Space, Node, Bound, Enumerator> >::type {};
 
 } // YewPar
 
 namespace hpx { namespace traits {
-template <typename Space, typename Node, typename Bound>
-struct action_stacksize<YewPar::InitRegistryAct<Space, Node, Bound> > {
+template <typename Space, typename Node, typename Bound, typename Enumerator>
+struct action_stacksize<YewPar::InitRegistryAct<Space, Node, Bound, Enumerator> > {
   enum { value = threads::thread_stacksize_huge };
 };
 
-template <typename Space, typename Node, typename Bound>
-struct action_stacksize<YewPar::SetFoundPromiseIdAct<Space, Node, Bound> > {
+template <typename Space, typename Node, typename Bound, typename Enumerator>
+struct action_stacksize<YewPar::SetFoundPromiseIdAct<Space, Node, Bound, Enumerator> > {
   enum { value = threads::thread_stacksize_huge };
 };
 
-template <typename Space, typename Node, typename Bound>
-struct action_stacksize<YewPar::UpdateGlobalIncumbentAct<Space, Node, Bound> > {
+template <typename Space, typename Node, typename Bound, typename Enumerator>
+struct action_stacksize<YewPar::UpdateGlobalIncumbentAct<Space, Node, Bound, Enumerator> > {
   enum { value = threads::thread_stacksize_huge };
 };
 
-template <typename Space, typename Node, typename Bound, typename Cmp>
-struct action_stacksize<YewPar::UpdateRegistryBoundAct<Space, Node, Bound, Cmp> > {
+template <typename Space, typename Node, typename Bound, typename Enumerator, typename Cmp>
+struct action_stacksize<YewPar::UpdateRegistryBoundAct<Space, Node, Bound, Enumerator, Cmp> > {
   enum { value = threads::thread_stacksize_huge };
 };
 
-template <typename Space, typename Node, typename Bound>
-struct action_stacksize<YewPar::SetStopFlagAct<Space, Node, Bound> > {
+template <typename Space, typename Node, typename Bound, typename Enumerator>
+struct action_stacksize<YewPar::SetStopFlagAct<Space, Node, Bound, Enumerator> > {
   enum { value = threads::thread_stacksize_huge };
 };
 
-template <typename Space, typename Node, typename Bound>
-struct action_stacksize<YewPar::GetCountsAct<Space, Node, Bound> > {
+template <typename Space, typename Node, typename Bound, typename Enumerator>
+struct action_stacksize<YewPar::GetEnumeratorValAct<Space, Node, Bound, Enumerator> > {
   enum { value = threads::thread_stacksize_huge };
 };
 

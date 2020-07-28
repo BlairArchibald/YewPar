@@ -1,4 +1,4 @@
-set(YEWPAR_BUILD_ENUMERATION_APPS_NS_BASIC "ON" CACHE BOOL "Build Basic Numerical Semigroups Enumeration")
+set(YEWPAR_BUILD_ENUMERATION_APPS_NS_BASIC "OFF" CACHE BOOL "Build Basic Numerical Semigroups Enumeration")
 set(YEWPAR_BUILD_ENUMERATION_APPS_NS_HIVERT "ON" CACHE BOOL "Build Hivert's Numerical Semigroups Enumeration")
 set(YEWPAR_BUILD_ENUMERATION_APPS_NS_HIVERT_MAXGENUS 50 CACHE INT "Max Depth/Genus for Hivert's Numerical Semigroups Enumeration")
 

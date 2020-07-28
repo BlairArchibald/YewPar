@@ -40,7 +40,7 @@ struct DepthBounded {
 
   typedef typename API::skeleton_signature::bind<Args...>::type args;
 
-  static constexpr bool isCountNodes = parameter::value_type<args, API::tag::CountNodes_, std::integral_constant<bool, false> >::type::value;
+  static constexpr bool isEnumeration = parameter::value_type<args, API::tag::Enumeration_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isOptimisation = parameter::value_type<args, API::tag::Optimisation_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDecision = parameter::value_type<args, API::tag::Decision_, std::integral_constant<bool, false> >::type::value;
   static constexpr bool isDepthLimited = parameter::value_type<args, API::tag::DepthLimited_, std::integral_constant<bool, false> >::type::value;
@@ -52,13 +52,14 @@ struct DepthBounded {
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
+  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Node>>::type Enum;
 
   typedef typename parameter::value_type<args, API::tag::DepthBoundedPoolPolicy, Workstealing::Policies::DepthPoolPolicy>::type Policy;
 
   static void printSkeletonDetails(const API::Params<Bound> & params) {
     hpx::cout << "Skeleton Type: DepthBounded\n";
     hpx::cout << "d_cutoff: " << params.spawnDepth << "\n";
-    hpx::cout << "CountNodes : " << std::boolalpha << isCountNodes << "\n";
+    hpx::cout << "Enumeration : " << std::boolalpha << isEnumeration << "\n";
     hpx::cout << "Optimisation: " << std::boolalpha << isOptimisation << "\n";
     hpx::cout << "Decision: " << std::boolalpha << isDecision << "\n";
     hpx::cout << "DepthLimited: " << std::boolalpha << isDepthLimited << "\n";
@@ -79,14 +80,10 @@ struct DepthBounded {
   static void expandWithSpawns(const Space & space,
                                const Node & n,
                                const API::Params<Bound> & params,
-                               std::vector<uint64_t> & counts,
+                               Enum & acc,
                                std::vector<hpx::future<void> > & childFutures,
                                const unsigned childDepth) {
     Generator newCands = Generator(space, n);
-
-    if constexpr(isCountNodes) {
-        counts[childDepth] += newCands.numChildren;
-    }
 
     if constexpr(isDepthLimited) {
         if (childDepth == params.maxDepth) {
@@ -97,7 +94,7 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
+      auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c, acc);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Break) { break; }
       //default continue
@@ -110,9 +107,9 @@ struct DepthBounded {
   static void expandNoSpawns(const Space & space,
                              const Node & n,
                              const API::Params<Bound> & params,
-                             std::vector<uint64_t> & counts,
+                             Enum & acc,
                              const unsigned childDepth) {
-    auto reg = Registry<Space, Node, Bound>::gReg;
+    auto reg = Registry<Space, Node, Bound, Enum>::gReg;
     Generator newCands = Generator(space, n);
 
     if constexpr(isDecision) {
@@ -120,10 +117,6 @@ struct DepthBounded {
           return;
         }
       }
-
-    if constexpr(isCountNodes) {
-        counts[childDepth] += newCands.numChildren;
-    }
 
     if constexpr(isDepthLimited) {
         if (childDepth == params.maxDepth) {
@@ -134,36 +127,32 @@ struct DepthBounded {
     for (auto i = 0; i < newCands.numChildren; ++i) {
       auto c = newCands.next();
 
-      auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c);
+      auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, c, acc);
       if (pn == ProcessNodeRet::Exit) { return; }
       else if (pn == ProcessNodeRet::Prune) { continue; }
       else if (pn == ProcessNodeRet::Break) { break; }
 
-      expandNoSpawns(space, c, params, counts, childDepth + 1);
+      expandNoSpawns(space, c, params, acc, childDepth + 1);
     }
   }
 
   static void subtreeTask(const Node taskRoot,
                           const unsigned childDepth,
                           const hpx::naming::id_type donePromiseId) {
-    auto reg = Registry<Space, Node, Bound>::gReg;
+    auto reg = Registry<Space, Node, Bound, Enum>::gReg;
 
-    std::vector<std::uint64_t> countMap;
-    if constexpr(isCountNodes) {
-        countMap.resize(reg->params.maxDepth + 1);
-    }
-
+    Enum acc;
     std::vector<hpx::future<void> > childFutures;
 
     if (childDepth <= reg->params.spawnDepth) {
-      expandWithSpawns(reg->space, taskRoot, reg->params, countMap, childFutures, childDepth);
+      expandWithSpawns(reg->space, taskRoot, reg->params, acc, childFutures, childDepth);
     } else {
-      expandNoSpawns(reg->space, taskRoot, reg->params, countMap, childDepth);
+      expandNoSpawns(reg->space, taskRoot, reg->params, acc, childDepth);
     }
 
-    // Atomically updates the (process) local counter
-    if constexpr (isCountNodes) {
-      reg->updateCounts(countMap);
+    // Atomically updates the (process) local enumerator
+    if constexpr (isEnumeration) {
+      reg->updateEnumerator(acc);
     }
 
     hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
@@ -199,7 +188,7 @@ struct DepthBounded {
         printSkeletonDetails(params);
     }
 
-    hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound> >(
+    hpx::wait_all(hpx::lcos::broadcast<InitRegistryAct<Space, Node, Bound, Enum> >(
         hpx::find_all_localities(), space, root, params));
 
     Policy::initPolicy();
@@ -210,27 +199,33 @@ struct DepthBounded {
 
     if constexpr(isOptimisation || isDecision) {
       auto inc = hpx::new_<Incumbent>(hpx::find_here()).get();
-      hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound> >(
+      hpx::wait_all(hpx::lcos::broadcast<UpdateGlobalIncumbentAct<Space, Node, Bound, Enum> >(
           hpx::find_all_localities(), inc));
-      initIncumbent<Space, Node, Bound, Objcmp, Verbose>(root, params.initialBound);
+      initIncumbent<Space, Node, Bound, Enum, Objcmp, Verbose>(root, params.initialBound);
     }
 
-    // Issue is updateCounts by the looks of things. Something probably isn't initialised correctly.
+    // Ensure the root node is accumulated if required
+    if constexpr(isEnumeration) {
+        Enum acc;
+        acc.accumulate(root);
+        Registry<Space, Node, Bound, Enum>::gReg->updateEnumerator(acc);
+    }
+
     createTask(1, root).get();
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
     // Return the right thing
-    if constexpr(isCountNodes) {
-      return totalNodeCounts<Space, Node, Bound>(params.maxDepth);
+    if constexpr(isEnumeration) {
+      return combineEnumerators<Space, Node, Bound, Enum>();
     } else if constexpr(isOptimisation || isDecision) {
-      auto reg = Registry<Space, Node, Bound>::gReg;
+      auto reg = Registry<Space, Node, Bound, Enum>::gReg;
 
       typedef typename Incumbent::GetIncumbentAct<Node, Bound, Objcmp, Verbose> getInc;
       return hpx::async<getInc>(reg->globalIncumbent).get();
     } else {
-      static_assert(isCountNodes || isOptimisation || isDecision, "Please provide a supported search type: CountNodes, Optimisation, Decision");
+      static_assert(isEnumeration || isOptimisation || isDecision, "Please provide a supported search type: Enumeration, Optimisation, Decision");
     }
   }
 };

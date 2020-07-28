@@ -69,6 +69,21 @@ struct NodeGen : YewPar::NodeGenerator<Node, Empty> {
   }
 };
 
+struct CountSols : YewPar::Enumerator<Node, std::uint64_t> {
+  std::uint64_t count;
+  CountSols() : count(0) {};
+
+  void accumulate(const Node & n) override {
+    if (n.cols == n.all) { count++; }
+  }
+
+  void combine(const std::uint64_t & other) override {
+    count += other;
+  }
+
+  std::uint64_t get() override { return count; }
+};
+
 int hpx_main(boost::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto size = opts["size"].as<unsigned>();
@@ -79,32 +94,36 @@ int hpx_main(boost::program_options::variables_map & opts) {
 
   auto start_time = std::chrono::steady_clock::now();
 
-  std::vector<std::uint64_t> counts;
+  std::uint64_t count;
   if (skeleton == "seq") {
     YewPar::Skeletons::API::Params<> searchParameters;
-    counts = YewPar::Skeletons::Seq<NodeGen,
-                                    YewPar::Skeletons::API::CountNodes,
+    count = YewPar::Skeletons::Seq<NodeGen,
+                                    YewPar::Skeletons::API::Enumeration,
+                                    YewPar::Skeletons::API::Enumerator<CountSols>,
                                     YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), root, searchParameters);
   } else if (skeleton == "depthbounded") {
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.spawnDepth = spawnDepth;
-    counts = YewPar::Skeletons::DepthBounded<NodeGen,
-                                            YewPar::Skeletons::API::CountNodes,
-                                            YewPar::Skeletons::API::DepthLimited>
+    count = YewPar::Skeletons::DepthBounded<NodeGen,
+                                              YewPar::Skeletons::API::Enumeration,
+                                              YewPar::Skeletons::API::Enumerator<CountSols>,
+                                              YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), root, searchParameters);
   } else if (skeleton == "stacksteal"){
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
-    counts = YewPar::Skeletons::StackStealing<NodeGen,
-                                              YewPar::Skeletons::API::CountNodes,
+    count = YewPar::Skeletons::StackStealing<NodeGen,
+                                              YewPar::Skeletons::API::Enumeration,
+                                              YewPar::Skeletons::API::Enumerator<CountSols>,
                                               YewPar::Skeletons::API::DepthLimited>
              ::search(Empty(), root, searchParameters);
   } else if (skeleton == "budget"){
     YewPar::Skeletons::API::Params<> searchParameters;
     searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
-    counts = YewPar::Skeletons::Budget<NodeGen,
-                                       YewPar::Skeletons::API::CountNodes,
+    count = YewPar::Skeletons::Budget<NodeGen,
+                                       YewPar::Skeletons::API::Enumeration,
+                                       YewPar::Skeletons::API::Enumerator<CountSols>,
                                        YewPar::Skeletons::API::DepthLimited>
         ::search(Empty(), root, searchParameters);
   } else {
@@ -115,16 +134,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
                       (std::chrono::steady_clock::now() - start_time);
 
-  auto res = 0;
-  for (auto i = 0; i <= counts.size(); ++i) {
-    if (counts[i] == 0) {
-        break;
-    }
-    res = counts[i];
-    // hpx::cout << i << ": " << counts[i] << hpx::endl;
-  }
-  hpx::cout << "Warning results are incorrect for boards with 0 solutions (due to how nodes are currently counted)" << hpx::endl;
-  hpx::cout << "Solution for n = " << size <<  ": " << res << hpx::endl;
+  hpx::cout << "Solution for n = " << size <<  ": " << count << hpx::endl;
 
   hpx::cout << "=====" << hpx::endl;
   hpx::cout << "cpu = " << overall_time.count() << hpx::endl;
