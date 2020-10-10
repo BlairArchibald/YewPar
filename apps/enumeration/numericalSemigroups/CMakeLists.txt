@@ -5,7 +5,7 @@ set(YEWPAR_BUILD_ENUMERATION_APPS_NS_HIVERT_MAXGENUS 50 CACHE INT "Max Depth/Gen
 if (YEWPAR_BUILD_ENUMERATION_APPS_NS_BASIC)
 add_hpx_executable(NS-basic
   SOURCES basic.cpp
-  DEPENDENCIES YewPar_lib)
+  DEPENDENCIES YewPar)
 
 if (YEWPAR_BUILD_TEST_APPS)
   add_test(NS_BASIC_DIST_1T NS-basic -d 30 -s 10 --hpx:threads 1)
@@ -20,7 +20,7 @@ if (YEWPAR_BUILD_ENUMERATION_APPS_NS_HIVERT)
 add_hpx_executable(NS-hivert
   SOURCES hivert.cpp monoid.cpp
   COMPILE_FLAGS "-DMAX_GENUS=${YEWPAR_BUILD_ENUMERATION_APPS_NS_HIVERT_MAXGENUS} -mssse3 -mpopcnt"
-  DEPENDENCIES YewPar_lib)
+  DEPENDENCIES YewPar)
 
 if (YEWPAR_BUILD_TEST_APPS)
   add_test(NS_HIVERT_SEQ_1T NS-hivert --skeleton seq -d 30 --hpx:threads 1)

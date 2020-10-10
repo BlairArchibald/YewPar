@@ -155,10 +155,8 @@ struct DepthBounded {
       reg->updateEnumerator(acc);
     }
 
-    hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
-          hpx::wait_all(futs);
-          hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
-        }, std::move(childFutures)));
+    termination_wait_act act;
+    hpx::apply(act, hpx::find_here(), std::move(childFutures), donePromiseId);
   }
 
   static hpx::future<void> createTask(const unsigned childDepth,

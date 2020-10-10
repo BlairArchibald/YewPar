@@ -260,10 +260,8 @@ struct StackStealing {
 
     std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
 
-    hpx::apply(hpx::util::bind([=](std::vector<hpx::future<void> > & futs) {
-          hpx::wait_all(futs);
-          hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromise, true);
-        }, std::move(futures)));
+    termination_wait_act act;
+    hpx::apply(act, hpx::find_here(), std::move(futures), donePromise);
   }
 
 

@@ -5,5 +5,5 @@ if(YEWPAR_BUILD_APPS_SIP)
 add_hpx_executable(sip
   SOURCES main.cpp lad.cc graph.cc graph_file_error.cc fixed_bit_set.cc
   COMPILE_FLAGS "-DNWORDS=${YEWPAR_BUILD_APPS_SIP_NWORDS}"
-  DEPENDENCIES YewPar_lib)
+  DEPENDENCIES YewPar)
 endif(YEWPAR_BUILD_APPS_SIP)
