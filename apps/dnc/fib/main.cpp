@@ -34,7 +34,7 @@ YEWPAR_CREATE_DNC_PAR_ACTION(fib_par_act, std::uint64_t, fib_divide_action, fib_
 YEWPAR_CREATE_DNC_DIST_ACTION(fib_dist_act, std::uint64_t, fib_divide_action, fib_conquer_action, fib_trivial_action, fib_action)
 
 
-int hpx_main(boost::program_options::variables_map & opts) {
+int hpx_main(hpx::program_options::variables_map & opts) {
   const std::vector<std::string> skeletonTypes = {"seq", "par", "dist" };
 
   auto skeletonType = opts["skeleton"].as<std::string>();
@@ -70,16 +70,16 @@ int hpx_main(boost::program_options::variables_map & opts) {
 }
 
 int main(int argc, char* argv[]) {
-  boost::program_options::options_description
+  hpx::program_options::options_description
     desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
     ( "n",
-      boost::program_options::value<std::uint64_t>()->default_value(30),
+      hpx::program_options::value<std::uint64_t>()->default_value(30),
       "Value to calculate fib for"
       )
     ( "skeleton",
-      boost::program_options::value<std::string>()->default_value("seq"),
+      hpx::program_options::value<std::string>()->default_value("seq"),
       "Type of skeleton to use: seq, par, dist"
       );
 

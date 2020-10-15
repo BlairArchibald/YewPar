@@ -196,7 +196,7 @@ int upperBound(const BitGraph<NWORDS> & space, const MCNode & n) {
 typedef func<decltype(&upperBound), &upperBound> upperBound_func;
 
 
-int hpx_main(boost::program_options::variables_map & opts) {
+int hpx_main(hpx::program_options::variables_map & opts) {
   /*
   if (!opts.count("input-file")) {
     std::cerr << "You must provide an DIMACS input file with \n";
@@ -205,7 +205,7 @@ int hpx_main(boost::program_options::variables_map & opts) {
   }
   */
 
-  //boost::program_options::notify(opts);
+  //hpx::program_options::notify(opts);
 
   auto inputFile = opts["input-file"].as<std::string>();
 
@@ -352,33 +352,33 @@ int hpx_main(boost::program_options::variables_map & opts) {
 }
 
 int main (int argc, char* argv[]) {
-  boost::program_options::options_description
+  hpx::program_options::options_description
     desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
     ( "skeleton",
-      boost::program_options::value<std::string>()->default_value("seq"),
+      hpx::program_options::value<std::string>()->default_value("seq"),
       "Which skeleton to use: seq, depthbound, stacksteal, budget, or ordered"
       )
     ( "spawn-depth,d",
-      boost::program_options::value<std::uint64_t>()->default_value(0),
+      hpx::program_options::value<std::uint64_t>()->default_value(0),
       "Depth in the tree to spawn at"
       )
     ( "backtrack-budget,b",
-      boost::program_options::value<unsigned>()->default_value(50),
+      hpx::program_options::value<unsigned>()->default_value(50),
       "Number of backtracks before spawning work"
       )
     ( "input-file,f",
-      boost::program_options::value<std::string>()->required(),
+      hpx::program_options::value<std::string>()->required(),
       "DIMACS formatted input graph"
       )
     ("discrepancyOrder", "Use discrepancy order for the ordered skeleton")
     ("chunked", "Use chunking with stack stealing")
     ("poolType",
-     boost::program_options::value<std::string>()->default_value("depthpool"),
+     hpx::program_options::value<std::string>()->default_value("depthpool"),
      "Pool type for depthbounded skeleton")
     ( "decisionBound",
-    boost::program_options::value<int>()->default_value(0),
+    hpx::program_options::value<int>()->default_value(0),
     "For Decision Skeletons. Size of the clique to search for"
     );
 

@@ -27,7 +27,7 @@
 #include "fixed_bit_set.hh"
 
 #include <hpx/hpx_init.hpp>
-#include <hpx/util/tuple.hpp>
+#include <hpx/datastructures/tuple.hpp>
 #include <hpx/include/iostreams.hpp>
 
 #ifndef NWORDS
@@ -638,7 +638,7 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
   }
 };
 
-int hpx_main(boost::program_options::variables_map & opts) {
+int hpx_main(hpx::program_options::variables_map & opts) {
   hpx::cout << "Using pattern file: " << opts["pattern"].as<std::string>() << hpx::endl;
   hpx::cout << "Using target file: " << opts["target"].as<std::string>() << hpx::endl;
   auto patternG = read_lad(opts["pattern"].as<std::string>());
@@ -748,33 +748,33 @@ int hpx_main(boost::program_options::variables_map & opts) {
 }
 
 int main (int argc, char* argv[]) {
-  boost::program_options::options_description
+  hpx::program_options::options_description
       desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
       ( "skeleton",
-        boost::program_options::value<std::string>()->default_value("seq"),
+        hpx::program_options::value<std::string>()->default_value("seq"),
         "Which skeleton to use: seq, depthbound, stacksteal, budget, or ordered"
       )
       ( "spawn-depth,d",
-        boost::program_options::value<std::uint64_t>()->default_value(0),
+        hpx::program_options::value<std::uint64_t>()->default_value(0),
         "Depth in the tree to spawn at"
       )
       ( "backtrack-budget,b",
-        boost::program_options::value<std::uint64_t>()->default_value(0),
+        hpx::program_options::value<std::uint64_t>()->default_value(0),
         "Backtrack budget for budget skeleton"
       )
       ("poolType",
-       boost::program_options::value<std::string>()->default_value("depthpool"),
+       hpx::program_options::value<std::string>()->default_value("depthpool"),
        "Pool type for depthbounded skeleton")
       ("discrepancyOrder", "Use discrepancy order for the ordered skeleton")
       ("chunked", "Use chunking with stack stealing")
       ("pattern",
-      boost::program_options::value<std::string>()->required(),
+      hpx::program_options::value<std::string>()->required(),
       "Specify the pattern file (LAD format)"
       )
       ("target",
-      boost::program_options::value<std::string>()->required(),
+      hpx::program_options::value<std::string>()->required(),
       "Specify the target file (LAD format)"
       );
 

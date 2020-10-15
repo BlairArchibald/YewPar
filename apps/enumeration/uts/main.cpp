@@ -182,7 +182,7 @@ struct CountNodes : YewPar::Enumerator<UTSNode, std::uint64_t> {
 
 std::vector<std::string> treeTypes = {"binomial", "geometric"};
 
-int hpx_main(boost::program_options::variables_map & opts) {
+int hpx_main(hpx::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto maxDepth   = opts["until-depth"].as<unsigned>();
   auto skeleton   = opts["skeleton"].as<std::string>();
@@ -286,36 +286,36 @@ int hpx_main(boost::program_options::variables_map & opts) {
 }
 
 int main(int argc, char* argv[]) {
-  boost::program_options::options_description
+  hpx::program_options::options_description
       desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
       ( "skeleton",
-        boost::program_options::value<std::string>()->default_value("seq"),
+        hpx::program_options::value<std::string>()->default_value("seq"),
         "Which skeleton to use: seq, depthbound, stacksteal, or budget"
         )
       ( "spawn-depth,s",
-        boost::program_options::value<unsigned>()->default_value(0),
+        hpx::program_options::value<unsigned>()->default_value(0),
         "Depth in the tree to spawn until (for parallel skeletons only)"
         )
       ( "until-depth,d",
-        boost::program_options::value<unsigned>()->default_value(0),
+        hpx::program_options::value<unsigned>()->default_value(0),
         "Depth in the tree to count until"
         )
       ( "backtrack-budget,b",
-        boost::program_options::value<unsigned>()->default_value(500),
+        hpx::program_options::value<unsigned>()->default_value(500),
         "Number of backtracks before spawning work"
         )
       ("chunked", "Use chunking with stack stealing")
       // UTS Options
       //LINEAR, CYCLIC, FIXED, EXPDEC
-      ( "uts-t", boost::program_options::value<std::string>()->default_value("binomial"), "Which tree type to use" )
-      ( "uts-b", boost::program_options::value<double>()->default_value(4.0), "Root branching factor" )
-      ( "uts-q", boost::program_options::value<double>()->default_value(15.0 / 64.0), "BIN: Probability of non-leaf node" )
-      ( "uts-m", boost::program_options::value<double>()->default_value(4.0), "BIN: Number of children for non-leaf node" )
-      ( "uts-r", boost::program_options::value<int>()->default_value(0), "root seed" )
-      ( "uts-d", boost::program_options::value<int>()->default_value(6), "GEO: Tree Depth" )
-      ( "uts-a", boost::program_options::value<int>()->default_value(0), "GEO: Tree shape function (0: LINEAR, 1: CYCLIC, 2: FIXED, 3: EXPDEC)" )
+      ( "uts-t", hpx::program_options::value<std::string>()->default_value("binomial"), "Which tree type to use" )
+      ( "uts-b", hpx::program_options::value<double>()->default_value(4.0), "Root branching factor" )
+      ( "uts-q", hpx::program_options::value<double>()->default_value(15.0 / 64.0), "BIN: Probability of non-leaf node" )
+      ( "uts-m", hpx::program_options::value<double>()->default_value(4.0), "BIN: Number of children for non-leaf node" )
+      ( "uts-r", hpx::program_options::value<int>()->default_value(0), "root seed" )
+      ( "uts-d", hpx::program_options::value<int>()->default_value(6), "GEO: Tree Depth" )
+      ( "uts-a", hpx::program_options::value<int>()->default_value(0), "GEO: Tree shape function (0: LINEAR, 1: CYCLIC, 2: FIXED, 3: EXPDEC)" )
       ;
 
   YewPar::registerPerformanceCounters();

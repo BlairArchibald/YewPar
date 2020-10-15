@@ -51,7 +51,7 @@ struct CountNodes : YewPar::Enumerator<std::uint64_t, std::uint64_t> {
 #define MAX_DEPTH 50
 
 
-int hpx_main(boost::program_options::variables_map & opts) {
+int hpx_main(hpx::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto maxDepth   = opts["until-depth"].as<unsigned>();
   auto skeleton   = opts["skeleton-type"].as<std::string>();
@@ -97,20 +97,20 @@ int hpx_main(boost::program_options::variables_map & opts) {
 }
 
 int main(int argc, char* argv[]) {
-  boost::program_options::options_description
+  hpx::program_options::options_description
       desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
       ( "skeleton-type",
-        boost::program_options::value<std::string>()->default_value("seq"),
+        hpx::program_options::value<std::string>()->default_value("seq"),
         "Which skeleton to use"
         )
       ( "spawn-depth,s",
-        boost::program_options::value<unsigned>()->default_value(0),
+        hpx::program_options::value<unsigned>()->default_value(0),
         "Depth in the tree to spawn until (for parallel skeletons only)"
         )
       ( "until-depth,d",
-        boost::program_options::value<unsigned>()->default_value(0),
+        hpx::program_options::value<unsigned>()->default_value(0),
         "Depth in the tree to count until"
         );
 

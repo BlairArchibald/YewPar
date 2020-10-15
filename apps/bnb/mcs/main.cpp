@@ -217,7 +217,7 @@ typedef func<decltype(&upperBound), &upperBound> upperBound_func;
 // using cfunc  = ss_skel::SubTreeTask;
 // REGISTER_SEARCHMANAGER(MCNode, cfunc);
 
-int hpx_main(boost::program_options::variables_map & opts) {
+int hpx_main(hpx::program_options::variables_map & opts) {
   auto patternF = opts["pattern-file"].as<std::string>();
   auto targetF  = opts["target-file"].as<std::string>();
 
@@ -301,20 +301,20 @@ int hpx_main(boost::program_options::variables_map & opts) {
 }
 
 int main (int argc, char* argv[]) {
-  boost::program_options::options_description
+  hpx::program_options::options_description
     desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
     ( "spawn-depth,d",
-      boost::program_options::value<std::uint64_t>()->default_value(0),
+      hpx::program_options::value<std::uint64_t>()->default_value(0),
       "Depth in the tree to spawn at"
       )
     ( "pattern-file",
-      boost::program_options::value<std::string>(),
+      hpx::program_options::value<std::string>(),
       "VF formatted input graph"
       )
     ( "target-file",
-      boost::program_options::value<std::string>(),
+      hpx::program_options::value<std::string>(),
       "VF formatted input graph"
     )
     ("unlabelled", "Make the graph unlabelled")

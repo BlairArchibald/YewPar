@@ -115,7 +115,7 @@ struct CountNodes : YewPar::Enumerator<SemiGroup, std::uint64_t> {
   std::uint64_t get() override { return count; }
 };
 
-int hpx_main(boost::program_options::variables_map & opts) {
+int hpx_main(hpx::program_options::variables_map & opts) {
   auto spawnDepth = opts["spawn-depth"].as<unsigned>();
   auto maxDepth   = opts["until-depth"].as<unsigned>();
 
@@ -136,16 +136,16 @@ int hpx_main(boost::program_options::variables_map & opts) {
 }
 
 int main(int argc, char* argv[]) {
-  boost::program_options::options_description
+  hpx::program_options::options_description
     desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
     ( "spawn-depth,s",
-      boost::program_options::value<unsigned>()->default_value(0),
+      hpx::program_options::value<unsigned>()->default_value(0),
       "Depth in the tree to spawn until (for parallel skeletons only)"
     )
     ( "until-depth,d",
-      boost::program_options::value<unsigned>()->default_value(0),
+      hpx::program_options::value<unsigned>()->default_value(0),
       "Depth in the tree to count until"
     );
   return hpx::init(desc_commandline, argc, argv);

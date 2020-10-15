@@ -5,7 +5,7 @@
 
 #include <hpx/hpx_init.hpp>
 #include <hpx/include/iostreams.hpp>
-#include <hpx/runtime/serialization/bitset.hpp>
+#include <hpx/serialization/bitset.hpp>
 
 #include "parser.hpp"
 #include "YewPar.hpp"
@@ -62,12 +62,13 @@ struct TSPNode {
 
 
 template <std::size_t words_>
-static unsigned next_set(const std::bitset<words_> & bs, unsigned max, unsigned last_set) {
+static int next_set(const std::bitset<words_> & bs, unsigned max, unsigned last_set) {
   for (auto i = last_set + 1; i <= max; ++i) {
     if (bs.test(i)) {
       return i;
     }
   }
+  return -1; // Error
 }
 
 struct NodeGen : YewPar::NodeGenerator<TSPNode, TSPSpace> {
@@ -202,7 +203,7 @@ unsigned calculateTourLength(const DistanceMatrix<MAX_CITIES> & distances,
   return l;
 }
 
-int hpx_main(boost::program_options::variables_map & opts) {
+int hpx_main(hpx::program_options::variables_map & opts) {
   auto inputFile = opts["input-file"].as<std::string>();
 
   TSPFromFile inputData;
@@ -308,26 +309,26 @@ int hpx_main(boost::program_options::variables_map & opts) {
 }
 
 int main(int argc, char* argv[]) {
-  boost::program_options::options_description
+  hpx::program_options::options_description
       desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
 
   desc_commandline.add_options()
       ( "skeleton",
-        boost::program_options::value<std::string>()->default_value("seq"),
+        hpx::program_options::value<std::string>()->default_value("seq"),
         "Which skeleton to use: seq, depthbound, stacksteal, budget, or ordered"
         )
       ( "input-file,f",
-        boost::program_options::value<std::string>()->required(),
+        hpx::program_options::value<std::string>()->required(),
         "Input problem"
         )
       ( "backtrack-budget,b",
-        boost::program_options::value<unsigned>()->default_value(500),
+        hpx::program_options::value<unsigned>()->default_value(500),
         "Number of backtracks before spawning work"
         )
        ("discrepancyOrder", "Use discrepancy order for the ordered skeleton")
        ("chunked", "Use chunking with stack stealing")
        ( "spawn-depth,d",
-        boost::program_options::value<unsigned>()->default_value(0),
+        hpx::program_options::value<unsigned>()->default_value(0),
         "Depth in the tree to spawn until (for parallel skeletons only)"
         );
 
