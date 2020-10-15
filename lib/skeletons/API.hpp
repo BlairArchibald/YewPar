@@ -72,8 +72,7 @@ struct Params {
   bool stealAll = false;
 
   // Budget
-  // FIXME: How to determine a good value for this?
-  unsigned backtrackBudget = 200;
+  unsigned backtrackBudget = 100000;
 
   // Needed to push to registries on all nodes
   template <class Archive>
