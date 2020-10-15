@@ -1,6 +1,6 @@
 #include "DepthPoolPolicy.hpp"
 
-#include <hpx/util/function.hpp>
+#include <hpx/functional/function.hpp>
 #include <hpx/runtime/find_here.hpp>
 #include <hpx/performance_counters/manage_counter_type.hpp>
 

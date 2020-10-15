@@ -1,10 +1,7 @@
 #ifndef YEWPAR_POLICY_PRIORITYORDERED_HPP
 #define YEWPAR_POLICY_PRIORITYORDERED_HPP
 
-#include <hpx/include/components.hpp>
-#include <hpx/lcos/async.hpp>
-#include <hpx/lcos/broadcast.hpp>
-#include <hpx/lcos/local/mutex.hpp>
+#include <hpx/collectives/broadcast.hpp>
 
 #include "Policy.hpp"
 #include "workstealing/PriorityWorkqueue.hpp"

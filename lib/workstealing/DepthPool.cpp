@@ -1,7 +1,5 @@
 #include "DepthPool.hpp"
 
-#include <hpx/include/components.hpp>
-
 namespace workstealing {
 
 DepthPool::fnType DepthPool::steal() {

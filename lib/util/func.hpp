@@ -1,6 +1,8 @@
 #ifndef YEWPAR_FUNCVIEW_HPP
 #define YEWPAR_FUNCVIEW_HPP
 
+#include <utility>
+
 // TODO: Put into YewPar namespace
 
 // Simple wrapping of function pointers to pass as (local only) template parameters
@@ -22,7 +24,7 @@ struct func<Ret(*)(Args...), F> {
   }
 };
 
-static bool null__() {};
+static bool null__() { return false; };
 typedef func<decltype(&null__), &null__> nullFn__;
 
 #endif

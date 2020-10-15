@@ -2,6 +2,7 @@
 #define SKELETONS_BUDGET_HPP
 
 #include <hpx/include/iostreams.hpp>
+#include <hpx/collectives/broadcast.hpp>
 
 #include <boost/format.hpp>
 

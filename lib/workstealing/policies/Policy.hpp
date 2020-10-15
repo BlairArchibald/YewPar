@@ -1,7 +1,7 @@
 #ifndef YEWPAR_POLICY_HPP
 #define YEWPAR_POLICY_HPP
 
-#include <hpx/util/function.hpp>
+#include <hpx/functional/function.hpp>
 
 class Policy {
  public:

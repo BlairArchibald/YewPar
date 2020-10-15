@@ -1,10 +1,7 @@
-#include "hpx/apply.hpp"
-#include "hpx/runtime/actions/plain_action.hpp"
-#include "hpx/runtime/naming/id_type.hpp"
-#include "hpx/runtime/threads/executors/default_executor.hpp"
-
 #include "Scheduler.hpp"
 #include "ExponentialBackoff.hpp"
+
+#include <hpx/runtime/threads/executors/default_executor.hpp>
 
 namespace Workstealing { namespace Scheduler {
 

@@ -3,8 +3,6 @@
 
 namespace YewPar {
 
-#include <hpx/util/tuple.hpp>
-
 template <typename NodeType, typename Space>
 struct NodeGenerator {
   using Nodetype  = NodeType;

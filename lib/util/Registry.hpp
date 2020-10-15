@@ -10,7 +10,7 @@
 
 #include <hpx/runtime/actions/basic_action.hpp>
 #include <hpx/traits/action_stacksize.hpp>
-#include <hpx/lcos/local/mutex.hpp>
+#include <hpx/synchronization/mutex.hpp>
 
 #include "skeletons/API.hpp"
 #include "Enumerator.hpp"

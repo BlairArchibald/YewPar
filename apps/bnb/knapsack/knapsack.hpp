@@ -8,7 +8,7 @@
 #include <hpx/config.hpp>
 #include <boost/serialization/access.hpp>
 
-#include <hpx/util/tuple.hpp>
+#include <hpx/datastructures/tuple.hpp>
 
 #include "util/NodeGenerator.hpp"
 

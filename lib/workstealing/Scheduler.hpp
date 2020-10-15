@@ -2,10 +2,12 @@
 #define YEWPAR_SCHEDULER_HPP
 
 #include <atomic>
-#include "hpx/runtime/actions/plain_action.hpp"
+
+#include <hpx/runtime/actions/plain_action.hpp>
+#include <hpx/synchronization/mutex.hpp>
+#include <hpx/synchronization/condition_variable.hpp>
+
 #include "policies/Policy.hpp"
-#include "hpx/lcos/local/mutex.hpp"
-#include "hpx/lcos/local/condition_variable.hpp"
 
 namespace Workstealing { namespace Scheduler {
 

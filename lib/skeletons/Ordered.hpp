@@ -5,7 +5,7 @@
 #include <vector>
 #include <cstdint>
 
-#include <hpx/lcos/broadcast.hpp>
+#include <hpx/collectives/broadcast.hpp>
 #include <hpx/include/iostreams.hpp>
 
 #include <boost/format.hpp>

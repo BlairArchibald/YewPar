@@ -4,10 +4,7 @@
 #include <queue>
 
 #include <hpx/include/components.hpp>
-#include <hpx/util/lockfree/deque.hpp>
-#include <hpx/runtime/actions/basic_action.hpp>
-#include <hpx/runtime/actions/component_action.hpp>
-#include <hpx/util/function.hpp>
+#include <hpx/functional/function.hpp>
 namespace hpx { namespace naming { struct id_type; } }
 
 namespace workstealing {

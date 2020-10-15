@@ -4,13 +4,7 @@
 #include "Policy.hpp"
 
 #include <hpx/include/components.hpp>
-
-#include <hpx/lcos/async.hpp>
-#include <hpx/lcos/broadcast.hpp>
-#include <hpx/lcos/local/mutex.hpp>
-#include <hpx/util/function.hpp>
-#include <hpx/runtime/actions/plain_action.hpp>
-#include <hpx/runtime/actions/basic_action.hpp>
+#include <hpx/collectives/broadcast.hpp>
 
 #include "workstealing/Workqueue.hpp"
 

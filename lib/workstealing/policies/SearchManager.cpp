@@ -1,6 +1,4 @@
 #include "SearchManager.hpp"
-#include "hpx/runtime/components/component_factory_base.hpp"  // for HPX_REG...
-#include "hpx/runtime/components/static_factory_data.hpp"     // for static_...
 
 #include <hpx/include/iostreams.hpp>
 #include <boost/format.hpp>

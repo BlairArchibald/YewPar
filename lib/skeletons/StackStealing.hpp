@@ -7,8 +7,9 @@
 
 #include "API.hpp"
 
-#include <hpx/lcos/broadcast.hpp>
+#include <hpx/collectives/broadcast.hpp>
 #include <hpx/include/iostreams.hpp>
+#include <hpx/runtime/threads/executors/default_executor.hpp>
 
 #include <boost/format.hpp>
 
