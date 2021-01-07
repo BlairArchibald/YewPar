@@ -97,7 +97,7 @@ struct StackStealing {
   using Response    = typename Policy::Response_t;
   using SharedState = typename Policy::SharedState_t;
 
-  // Find the required depth<Generator> to create "totalThreads" tasks
+  // Find the (approx) required depth<Generator> to create "totalThreads" tasks
   static unsigned getRequiredSpawnDepth(const Space & space,
                                         const Node & root,
                                         const YewPar::Skeletons::API::Params<Bound> params,
@@ -107,13 +107,14 @@ struct StackStealing {
     while (depthRequired <= params.maxDepth) {
       auto localParams = params;
       localParams.maxDepth = depthRequired;
-      auto numNodes = YewPar::Skeletons::Seq<Generator,
+      std::uint64_t numNodes = YewPar::Skeletons::Seq<Generator,
                                              YewPar::Skeletons::API::Enumeration,
+                                             YewPar::Skeletons::API::Enumerator<CountNodesEnumerator<Node>>,
                                              YewPar::Skeletons::API::BoundFunction<boundFn>,
                                              YewPar::Skeletons::API::ObjectiveComparison<Objcmp>,
                                              YewPar::Skeletons::API::DepthLimited>
                       ::search(space, root, localParams);
-      if (numNodes[depthRequired] >= totalThreads) {
+      if (numNodes >= totalThreads) {
         break;
       }
       ++depthRequired;
