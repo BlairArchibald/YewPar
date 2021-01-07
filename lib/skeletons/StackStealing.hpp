@@ -291,6 +291,8 @@ struct StackStealing {
                                GeneratorStack<Generator> & generatorStack,
                                Enum & acc,
                                std::vector<hpx::future<void> > & futures){
+
+    auto reg = Registry<Space, Node, Bound, Enum>::gReg;
     auto localities = util::findOtherLocalities();
     localities.push_back(hpx::find_here());
 
@@ -329,6 +331,15 @@ struct StackStealing {
             break;
           }
         } else {
+          // Need to process nodes we don't spawn to ensure correct enumeration etc
+          auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child, acc);
+          if (pn == ProcessNodeRet::Exit) { return; }
+          else if (pn == ProcessNodeRet::Prune) { continue; }
+          else if (pn == ProcessNodeRet::Break) {
+            stackDepth--;
+            depth--;
+            continue;
+          }
           // Get the child's generator
           const auto childGen = Generator(space, child);
           generatorStack[stackDepth].seen = 0;
