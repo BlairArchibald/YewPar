@@ -5,22 +5,21 @@
 #include <hpx/concurrency/deque.hpp>
 #include <hpx/functional/function.hpp>
 
-namespace hpx { namespace naming { struct id_type; } }
-
 namespace workstealing
 {
   class Workqueue : public hpx::components::component_base<Workqueue> {
-    private:
-      using funcType = hpx::util::function<void(hpx::naming::id_type)>;
-      boost::lockfree::deque<funcType> tasks; // From HPX
-
     public:
+      using funcType = hpx::distributed::function<void(hpx::id_type)>;
+
       funcType getLocal();
       HPX_DEFINE_COMPONENT_ACTION(Workqueue, getLocal);
       funcType steal();
       HPX_DEFINE_COMPONENT_ACTION(Workqueue, steal);
       void addWork(funcType task);
       HPX_DEFINE_COMPONENT_ACTION(Workqueue, addWork);
+
+    private:
+      boost::lockfree::deque<funcType> tasks; // From HPX
     };
 }
 

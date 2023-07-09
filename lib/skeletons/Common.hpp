@@ -1,6 +1,9 @@
 #ifndef SKELETONS_COMMON_HPP
 #define SKELETONS_COMMON_HPP
 
+#include <hpx/runtime_distributed/find_all_localities.hpp>
+#include <hpx/modules/collectives.hpp>
+
 #include "util/Registry.hpp"
 #include "util/Incumbent.hpp"
 #include "util/Enumerator.hpp"
@@ -133,7 +136,7 @@ struct ProcessNode {
   }
 };
 
-  void termination_wait(std::vector<hpx::future<void>> && futs, hpx::naming::id_type donePromiseId) {
+  void termination_wait(std::vector<hpx::future<void>> && futs, hpx::id_type donePromiseId) {
         hpx::wait_all(futs);
         hpx::async<hpx::lcos::base_lco_with_value<void>::set_value_action>(donePromiseId, true);
   }

@@ -3,7 +3,7 @@
  */
 
 #include <hpx/hpx_init.hpp>
-#include <hpx/include/iostreams.hpp>
+#include <hpx/iostream.hpp>
 
 #include <vector>
 #include <chrono>
@@ -105,19 +105,19 @@ int hpx_main(hpx::program_options::variables_map & opts) {
                                        YewPar::Skeletons::API::DepthLimited>
         ::search(Empty(), root, searchParameters);
   } else {
-    hpx::cout << "Invalid skeleton type: " << skeleton << hpx::endl;
+    hpx::cout << "Invalid skeleton type: " << skeleton << std::endl;
     return hpx::finalize();
   }
 
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
                       (std::chrono::steady_clock::now() - start_time);
 
-  hpx::cout << "Results Table: " << hpx::endl;
+  hpx::cout << "Results Table: " << std::endl;
   for (auto i = 0; i <= maxDepth; ++i) {
-    hpx::cout << i << ": " << counts[i] << hpx::endl;
+    hpx::cout << i << ": " << counts[i] << std::endl;
   }
-  hpx::cout << "=====" << hpx::endl;
-  hpx::cout << "cpu = " << overall_time.count() << hpx::endl;
+  hpx::cout << "=====" << std::endl;
+  hpx::cout << "cpu = " << overall_time.count() << std::endl;
 
   return hpx::finalize();
 }
@@ -151,5 +151,7 @@ int main(int argc, char* argv[]) {
 
   YewPar::registerPerformanceCounters();
 
-  return hpx::init(desc_commandline, argc, argv);
+  hpx::init_params args;
+  args.desc_cmdline = desc_commandline;
+  return hpx::init(argc, argv, args);
 }

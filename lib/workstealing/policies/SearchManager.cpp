@@ -1,6 +1,7 @@
 #include "SearchManager.hpp"
 
-#include <hpx/include/iostreams.hpp>
+#include <hpx/iostream.hpp>
+#include <boost/format.hpp>
 #include <boost/format.hpp>
 
 HPX_REGISTER_COMPONENT_MODULE();
@@ -52,7 +53,7 @@ void printDistributedStealsList() {
             % static_cast<std::int64_t>(hpx::get_locality_id())
             % static_cast<std::int64_t>(hpx::naming::get_locality_id_from_id(p.first))
             % p.second)
-        << hpx::endl;
+        << std::endl;
   }
 }
 
@@ -62,7 +63,7 @@ void printChunkSizeList() {
         << (boost::format("%1% Stole Chunk of Size %2%")
             % static_cast<std::int64_t>(hpx::get_locality_id())
             % c)
-        << hpx::endl;
+        << std::endl;
   }
 }
 

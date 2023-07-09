@@ -8,8 +8,7 @@
 #include "API.hpp"
 
 #include <hpx/collectives/broadcast.hpp>
-#include <hpx/include/iostreams.hpp>
-#include <hpx/runtime/threads/executors/default_executor.hpp>
+#include <hpx/iostream.hpp>
 
 #include <boost/format.hpp>
 
@@ -64,12 +63,12 @@ struct StackStealing {
       hpx::cout << "Using Bounding: false\n";
     }
     hpx::cout << "Chunking Enabled: " << std::boolalpha << params.stealAll << "\n";
-    hpx::cout << hpx::flush;
+    hpx::cout << std::flush;
   }
 
   static void subTreeTask(const Node initNode,
                           const unsigned depth,
-                          const hpx::naming::id_type donePromise) {
+                          const hpx::id_type donePromise) {
     auto reg = Registry<Space, Node, Bound, Enum>::gReg;
     Enum acc;
 
@@ -133,7 +132,7 @@ struct StackStealing {
                            int stackDepth = 0,
                            int depth = -1) {
     auto reg = Registry<Space, Node, Bound, Enum>::gReg;
-    std::vector<hpx::promise<void> > promises;
+    std::vector<hpx::distributed::promise<void> > promises;
 
     // We do this because arguments can't default initialise to themselves
     if (depth == -1) {
@@ -166,7 +165,7 @@ struct StackStealing {
                 futures.push_back(prom.get_future());
 
                 const auto stolenSol = generatorStack[i].gen.next();
-                res.emplace_back(hpx::util::make_tuple(stolenSol, startingDepth + i + 1, prom.get_id()));
+                res.emplace_back(hpx::make_tuple(stolenSol, startingDepth + i + 1, prom.get_id()));
               }
 
               std::get<1>(*stealRequest).set(res);
@@ -182,7 +181,7 @@ struct StackStealing {
               futures.push_back(prom.get_future());
 
               const auto stolenSol = generatorStack[i].gen.next();
-              Response res {hpx::util::make_tuple(stolenSol, startingDepth + i + 1, prom.get_id())};
+              Response res {hpx::make_tuple(stolenSol, startingDepth + i + 1, prom.get_id())};
               std::get<1>(*stealRequest).set(res);
 
               responded = true;
@@ -246,7 +245,7 @@ struct StackStealing {
                                 GeneratorStack<Generator> & generatorStack,
                                 const std::shared_ptr<SharedState> stealRequest,
                                 Enum & acc,
-                                const hpx::naming::id_type donePromise,
+                                const hpx::id_type donePromise,
                                 const unsigned searchManagerId,
                                 const int stackDepth = 0,
                                 const int depth = -1) {
@@ -271,12 +270,12 @@ struct StackStealing {
   // (for setting initial work distribution)
   static void addWork (const Node initNode,
                        const unsigned depth,
-                       const hpx::naming::id_type donePromise) {
-    hpx::threads::executors::default_executor exe(hpx::threads::thread_priority_critical,
-                                                  hpx::threads::thread_stacksize_huge);
-    hpx::util::function<void(),false> fn = hpx::util::bind(SubTreeTask::fn_ptr(), initNode, depth, donePromise);
-    auto f = hpx::util::bind(&Workstealing::Scheduler::scheduler, fn);
-    exe.add(f);
+                       const hpx::id_type donePromise) {
+    hpx::execution::parallel_executor exe(hpx::threads::thread_priority::critical,
+                                          hpx::threads::thread_stacksize::huge);
+    hpx::function<void(),false> fn = hpx::bind(SubTreeTask::fn_ptr(), initNode, depth, donePromise);
+    auto f = hpx::bind(&Workstealing::Scheduler::scheduler, fn);
+    hpx::async(exe, f);
   }
   struct addWorkAct : hpx::actions::make_action<
     decltype(&StackStealing<Generator, Args...>::addWork),
@@ -313,7 +312,7 @@ struct StackStealing {
 
         // Push anything at this depth as a task
         if (stackDepth == depthRequired) {
-          hpx::promise<void> prom;
+          hpx::distributed::promise<void> prom;
           auto f = prom.get_future();
           auto pid = prom.get_id();
           futures.push_back(std::move(f));
@@ -376,17 +375,19 @@ struct StackStealing {
     auto depth = 1;
 
     std::vector<hpx::future<void> > futures;
+    // FIXME: Disabling to help debug
+    /*
     if (totalThreads > 1) {
       auto depthRequired = getRequiredSpawnDepth(space, root, params, totalThreads);
       spawnInitialWork(depthRequired, totalThreads - 1, stackDepth, depth, space, genStack, acc, futures);
-    }
+    } */
 
     // Register the rest of the work from the main thread with the search manager
     auto searchMgrInfo = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->registerThread();
     auto stealRequest  = std::get<0>(searchMgrInfo);
 
     // Continue the actual work
-    hpx::promise<void> prom;
+    hpx::distributed::promise<void> prom;
     auto f = prom.get_future();
     auto pid = prom.get_id();
 
@@ -394,11 +395,11 @@ struct StackStealing {
     if (totalThreads == 1) {
       runTaskFromStack(1, space, genStack, stealRequest, acc, pid, std::get<1>(searchMgrInfo), stackDepth, depth);
     } else {
-      hpx::threads::executors::default_executor exe(hpx::threads::thread_priority_critical,
-                                                    hpx::threads::thread_stacksize_huge);
-      hpx::util::function<void(), false> fn = hpx::util::bind(&runTaskFromStack, 1, space, genStack, stealRequest, acc, pid, std::get<1>(searchMgrInfo), stackDepth, depth);
-      auto f = hpx::util::bind(&Workstealing::Scheduler::scheduler, fn);
-      exe.add(f);
+      hpx::execution::parallel_executor exe(hpx::threads::thread_priority::critical,
+                                            hpx::threads::thread_stacksize::huge);
+      hpx::function<void(), false> fn = hpx::bind(&runTaskFromStack, 1, space, genStack, stealRequest, acc, pid, std::get<1>(searchMgrInfo), stackDepth, depth);
+      auto f = hpx::bind(&Workstealing::Scheduler::scheduler, fn);
+      hpx::async(exe, f);
     }
 
     futures.push_back(std::move(f));
@@ -429,7 +430,7 @@ struct StackStealing {
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
 
-    hpx::cout << hpx::flush;
+    hpx::cout << std::flush;
 
     if (verbose >= 3) {
       for (const auto &l : hpx::find_all_localities()) {

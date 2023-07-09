@@ -4,7 +4,7 @@
 #include <bitset>
 
 #include <hpx/hpx_init.hpp>
-#include <hpx/include/iostreams.hpp>
+#include <hpx/iostream.hpp>
 #include <hpx/serialization/bitset.hpp>
 
 #include "parser.hpp"
@@ -210,7 +210,7 @@ int hpx_main(hpx::program_options::variables_map & opts) {
   try {
     inputData = parseFile(inputFile);
   } catch (SomethingWentWrong & e) {
-    std::cerr << e.what() << hpx::endl;
+    std::cerr << e.what() << std::endl;
     hpx::finalize();
   }
 
@@ -300,10 +300,10 @@ int hpx_main(hpx::program_options::variables_map & opts) {
   for (const auto c : sol.sol.cities) {
     hpx::cout << c << ",";
   }
-  hpx::cout << hpx::endl;
+  hpx::cout << std::endl;
   hpx::cout << "Optimal tour length: " << sol.sol.tourLength << "\n";
 
-  hpx::cout << "cpu = " << overall_time.count() << hpx::endl;
+  hpx::cout << "cpu = " << overall_time.count() << std::endl;
 
   return hpx::finalize();
 }
@@ -334,5 +334,7 @@ int main(int argc, char* argv[]) {
 
   YewPar::registerPerformanceCounters();
 
-  return hpx::init(desc_commandline, argc, argv);
+  hpx::init_params args;
+  args.desc_cmdline = desc_commandline;
+  return hpx::init(argc, argv, args);
 }

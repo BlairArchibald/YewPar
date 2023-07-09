@@ -7,7 +7,7 @@
 #include <chrono>
 
 #include <hpx/hpx_init.hpp>
-#include <hpx/include/iostreams.hpp>
+#include <hpx/iostream.hpp>
 
 #include "knapsack.hpp"
 
@@ -74,7 +74,7 @@ int hpx_main(hpx::program_options::variables_map & opts) {
   try {
     problem = read_knapsack(inputFile);
   } catch (std::string e) {
-    hpx::cout << "Error in file parsing" << hpx::endl;
+    hpx::cout << "Error in file parsing" << std::endl;
     hpx::finalize();
     return EXIT_FAILURE;
   }
@@ -117,7 +117,7 @@ int hpx_main(hpx::program_options::variables_map & opts) {
     auto x = (double) profits[i + 1] / (double) weights[i + 1];
     auto y = (double) profits[i] / (double) weights[i];
     if (x > y) {
-      hpx::cout << "Input not in profit density ordering" << hpx::endl;
+      hpx::cout << "Input not in profit density ordering" << std::endl;
       hpx::finalize();
       return EXIT_FAILURE;
     }
@@ -137,6 +137,7 @@ int hpx_main(hpx::program_options::variables_map & opts) {
   auto sol = root;
   auto skeletonType = opts["skeleton"].as<std::string>();
   if (skeletonType == "seq") {
+    //YewPar::Skeletons::API::Params<int> params;
     sol = YewPar::Skeletons::Seq<GenNode<NUMITEMS>,
                                  YewPar::Skeletons::API::Optimisation,
                                  YewPar::Skeletons::API::PruneLevel,
@@ -186,16 +187,16 @@ int hpx_main(hpx::program_options::variables_map & opts) {
                       (std::chrono::steady_clock::now() - start_time);
 
   auto finalSol = sol.sol;
-  hpx::cout << "Final Profit: " << finalSol.profit << hpx::endl;
-  hpx::cout << "Final Weight: " << finalSol.weight << hpx::endl;
-  hpx::cout << "Expected Result: " << std::boolalpha << (finalSol.profit == problem.expectedResult) << hpx::endl;
+  hpx::cout << "Final Profit: " << finalSol.profit << std::endl;
+  hpx::cout << "Final Weight: " << finalSol.weight << std::endl;
+  hpx::cout << "Expected Result: " << std::boolalpha << (finalSol.profit == problem.expectedResult) << std::endl;
   hpx::cout << "Items: ";
   for (auto const & i : finalSol.items) {
     hpx::cout << i << " ";
   }
-  hpx::cout << hpx::endl;
+  hpx::cout << std::endl;
 
-  hpx::cout << "cpu = " << overall_time.count() << hpx::endl;
+  hpx::cout << "cpu = " << overall_time.count() << std::endl;
 
   return hpx::finalize();
 }
@@ -225,5 +226,7 @@ int main(int argc, char* argv[]) {
 
   YewPar::registerPerformanceCounters();
 
-  return hpx::init(desc_commandline, argc, argv);
+  hpx::init_params args;
+  args.desc_cmdline = desc_commandline;
+  return hpx::init(argc, argv, args);
 }

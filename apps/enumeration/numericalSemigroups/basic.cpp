@@ -148,5 +148,7 @@ int main(int argc, char* argv[]) {
       hpx::program_options::value<unsigned>()->default_value(0),
       "Depth in the tree to count until"
     );
-  return hpx::init(desc_commandline, argc, argv);
+  hpx::init_params args;
+  args.desc_cmdline = desc_commandline;
+  return hpx::init(argc, argv, args);
 }

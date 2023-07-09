@@ -1,11 +1,11 @@
 #include "Scheduler.hpp"
 #include "ExponentialBackoff.hpp"
 
-#include <hpx/runtime/threads/executors/default_executor.hpp>
+#include <hpx/execution.hpp>
 
 namespace Workstealing { namespace Scheduler {
 
-void scheduler(hpx::util::function<void(), false> initialTask) {
+void scheduler(hpx::function<void(), false> initialTask) {
   workstealing::ExponentialBackoff backoff;
 
   if (!local_policy) {
@@ -14,7 +14,7 @@ void scheduler(hpx::util::function<void(), false> initialTask) {
   }
 
   {
-    std::unique_lock<hpx::lcos::local::mutex> l(mtx);
+    std::unique_lock<hpx::mutex> l(mtx);
     numRunningSchedulers++;
   }
 
@@ -41,7 +41,7 @@ void scheduler(hpx::util::function<void(), false> initialTask) {
 
   {
     // Signal exit
-    std::unique_lock<hpx::lcos::local::mutex> l(mtx);
+    std::unique_lock<hpx::mutex> l(mtx);
     numRunningSchedulers--;
     exit_cv.notify_all();
   }
@@ -51,7 +51,7 @@ void stopSchedulers() {
   running.store(false);
   {
     // Block until all schedulers have finished
-    std::unique_lock<hpx::lcos::local::mutex> l(mtx);
+    std::unique_lock<hpx::mutex> l(mtx);
     while (numRunningSchedulers > 0) {
       exit_cv.wait(l);
     }
@@ -59,11 +59,12 @@ void stopSchedulers() {
 }
 
 void startSchedulers(unsigned n) {
-  hpx::threads::executors::default_executor exe(hpx::threads::thread_priority_critical,
-                                                hpx::threads::thread_stacksize_huge);
+  hpx::execution::parallel_executor exe(hpx::threads::thread_priority::critical,
+                                        hpx::threads::thread_stacksize::huge);
 
   for (auto i = 0; i < n; ++i) {
-    exe.add(hpx::util::bind(&scheduler, nullptr));
+    //exe.add(hpx::bind(&scheduler, nullptr));
+    hpx::async(exe, &scheduler, nullptr);
   }
 }
 

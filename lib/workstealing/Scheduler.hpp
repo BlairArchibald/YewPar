@@ -3,7 +3,7 @@
 
 #include <atomic>
 
-#include <hpx/runtime/actions/plain_action.hpp>
+#include <hpx/modules/actions_base.hpp>
 #include <hpx/synchronization/mutex.hpp>
 #include <hpx/synchronization/condition_variable.hpp>
 
@@ -14,8 +14,8 @@ namespace Workstealing { namespace Scheduler {
 // Used to stop all schedulers
 std::atomic<bool> running(true);
 
-hpx::lcos::local::mutex mtx;
-hpx::lcos::local::condition_variable exit_cv;
+hpx::mutex mtx;
+hpx::condition_variable exit_cv;
 unsigned numRunningSchedulers;
 
 // Implementation policy
@@ -24,7 +24,7 @@ std::shared_ptr<Policy> local_policy;
 void stopSchedulers();
 HPX_DEFINE_PLAIN_ACTION(stopSchedulers, stopSchedulers_act);
 
-void scheduler(hpx::util::function<void(), false> initialTask);
+void scheduler(hpx::function<void(), false> initialTask);
 
 // Start "n" uninitialised schedulers
 void startSchedulers(unsigned n);

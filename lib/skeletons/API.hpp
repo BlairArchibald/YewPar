@@ -4,6 +4,9 @@
 #include <boost/parameter.hpp>
 #include <boost/serialization/access.hpp>
 
+#include <string>
+#include <sstream>
+
 namespace YewPar { namespace Skeletons {
 
 namespace parameter = boost::parameter;
@@ -50,8 +53,20 @@ struct MoreVerbose : Verbose_<std::integral_constant<unsigned, 2> > {};
 struct EvenMoreVerbose : Verbose_<std::integral_constant<unsigned, 3> > {};
 
 // Signature, everything is optional since the generators are explicitly passed as arg 1 on each skeleton
-BOOST_PARAMETER_TEMPLATE_KEYWORD(null)
-typedef parameter::parameters<parameter::optional<tag::null> > skeleton_signature;
+typedef parameter::parameters<
+    parameter::optional<tag::Enumeration_>
+  , parameter::optional<tag::Optimisation_>
+  , parameter::optional<tag::Decision_>
+  , parameter::optional<tag::DepthLimited_>
+  , parameter::optional<tag::BoundFunction>
+  , parameter::optional<tag::ObjectiveComparison>
+  , parameter::optional<tag::MaxStackDepth>
+  , parameter::optional<tag::Enumerator>
+  , parameter::optional<tag::PruneLevel_>
+  , parameter::optional<tag::DepthBoundedPoolPolicy>
+  , parameter::optional<tag::DiscrepancySearch_>
+  , parameter::optional<tag::Verbose_>
+  > skeleton_signature;
 
 template <typename Obj = bool>
 struct Params {
@@ -83,6 +98,17 @@ struct Params {
     ar & spawnDepth;
     ar & stealAll;
     ar & backtrackBudget;
+  }
+
+  std::string toString() const {
+    std::stringstream ss;
+    ss << "Max Depth" << maxDepth << std::endl;
+    ss << "expectedObjective" << expectedObjective << std::endl;
+    ss << "initialBound" << initialBound << std::endl;
+    ss << "spawnDepth" << spawnDepth << std::endl;
+    ss << "stealAll" << stealAll << std::endl;
+    ss << "backtrack Budget" << backtrackBudget << std::endl;
+    return ss.str();
   }
 };
 

@@ -5,7 +5,6 @@
 
 #include <hpx/include/components.hpp>
 #include <hpx/functional/function.hpp>
-namespace hpx { namespace naming { struct id_type; } }
 
 namespace workstealing {
 
@@ -16,7 +15,7 @@ namespace workstealing {
 class DepthPool : public hpx::components::locking_hook<
   hpx::components::component_base<DepthPool>> {
  private:
-  using fnType = hpx::util::function<void(hpx::naming::id_type)>;
+  using fnType = hpx::distributed::function<void(hpx::id_type)>;
 
   std::vector< std::queue<fnType> > pools;
 

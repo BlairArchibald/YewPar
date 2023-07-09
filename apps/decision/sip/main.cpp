@@ -28,7 +28,7 @@
 
 #include <hpx/hpx_init.hpp>
 #include <hpx/datastructures/tuple.hpp>
-#include <hpx/include/iostreams.hpp>
+#include <hpx/iostream.hpp>
 
 #ifndef NWORDS
 #define NWORDS 64
@@ -56,7 +56,7 @@ using std::uniform_int_distribution;
 using std::uniform_real_distribution;
 using std::vector;
 
-using hpx::util::tuple;
+using hpx::tuple;
 
 using std::chrono::duration_cast;
 using std::chrono::milliseconds;
@@ -349,7 +349,7 @@ auto propagate(
 
     // ok, make the assignment
     branch_domain->fixed = true;
-    assignments.values.push_back(hpx::util::make_tuple(current_assignment, false));
+    assignments.values.push_back(hpx::make_tuple(current_assignment, false));
     //assignments.values.push_back({ current_assignment.variable, current_assignment.value}, false });
 
     // propagate simple all different and adjacency
@@ -624,7 +624,7 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
     // We need to do the copy in case we are running in parallel
     auto newAssignments = parent.get().assignments;
     Assignment a {branch_domain->v, branch_v[f_v]};
-    newAssignments.values.push_back(hpx::util::make_tuple(std::move(a), true));
+    newAssignments.values.push_back(hpx::make_tuple(std::move(a), true));
 
     auto dom = parent.get().domains;
     auto new_domains = copy_domains_and_assign(dom, branch_domain->v, branch_v[f_v]);
@@ -639,8 +639,8 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
 };
 
 int hpx_main(hpx::program_options::variables_map & opts) {
-  hpx::cout << "Using pattern file: " << opts["pattern"].as<std::string>() << hpx::endl;
-  hpx::cout << "Using target file: " << opts["target"].as<std::string>() << hpx::endl;
+  hpx::cout << "Using pattern file: " << opts["pattern"].as<std::string>() << std::endl;
+  hpx::cout << "Using target file: " << opts["target"].as<std::string>() << std::endl;
   auto patternG = read_lad(opts["pattern"].as<std::string>());
   auto targetG  = read_lad(opts["target"].as<std::string>());
 
@@ -734,15 +734,15 @@ int hpx_main(hpx::program_options::variables_map & opts) {
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
       (std::chrono::steady_clock::now() - start_time);
 
-  hpx::cout << "Solution found: " << std::boolalpha << !res_isomorphism.empty() << hpx::endl;
+  hpx::cout << "Solution found: " << std::boolalpha << !res_isomorphism.empty() << std::endl;
   if (!res_isomorphism.empty()) {
     hpx::cout << "mapping = ";
     for (auto v : res_isomorphism)
       hpx::cout << "(" << v.first << " -> " << v.second << ") ";
-    hpx::cout << hpx::endl;
+    hpx::cout << std::endl;
   }
 
-  hpx::cout << "cpu = " << overall_time.count() << hpx::endl;
+  hpx::cout << "cpu = " << overall_time.count() << std::endl;
 
   return hpx::finalize();
 }
@@ -780,5 +780,7 @@ int main (int argc, char* argv[]) {
 
   YewPar::registerPerformanceCounters();
 
-  return hpx::init(desc_commandline, argc, argv);
+  hpx::init_params args;
+  args.desc_cmdline = desc_commandline;
+  return hpx::init(argc, argv, args);
 }

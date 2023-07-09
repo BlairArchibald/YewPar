@@ -6,7 +6,7 @@
 class Policy {
  public:
   // Scheduler hook point
-  virtual hpx::util::function<void(), false> getWork() = 0;
+  virtual hpx::function<void(), false> getWork() = 0;
 };
 
 #endif

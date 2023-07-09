@@ -8,8 +8,7 @@
 #include <memory>
 #include <vector>
 
-#include <hpx/runtime/actions/basic_action.hpp>
-#include <hpx/traits/action_stacksize.hpp>
+#include <hpx/modules/actions_base.hpp>
 #include <hpx/synchronization/mutex.hpp>
 
 #include "skeletons/API.hpp"
@@ -29,15 +28,15 @@ struct Registry {
 
   // BNB
   std::atomic<Bound> localBound;
-  hpx::naming::id_type globalIncumbent;
+  hpx::id_type globalIncumbent;
 
   // Decision problems
   std::atomic<bool> stopSearch {false};
-  hpx::naming::id_type foundPromiseId;
+  hpx::id_type foundPromiseId;
 
   // Counting Nodes
   Enumerator acc;
-  using MutexT = hpx::lcos::local::mutex;
+  using MutexT = hpx::mutex;
   MutexT mtx;
   // using countMapT = std::vector<std::atomic<std::uint64_t> >;
   // std::unique_ptr<std::vector<std::atomic<std::uint64_t> > > counts;
@@ -124,7 +123,7 @@ struct UpdateRegistryBoundAct : hpx::actions::make_direct_action<
   decltype(&updateRegistryBound<Space, Node, Bound, Enumerator, Cmp>), &updateRegistryBound<Space, Node, Bound, Enumerator, Cmp>, UpdateRegistryBoundAct<Space, Node, Bound, Enumerator, Cmp> >::type {};
 
 template <typename Space, typename Node, typename Bound, typename Enumerator>
-void updateGlobalIncumbent(hpx::naming::id_type inc) {
+void updateGlobalIncumbent(hpx::id_type inc) {
   Registry<Space, Node, Bound, Enumerator>::gReg->globalIncumbent = inc;
 }
 template <typename Space, typename Node, typename Bound, typename Enumerator>
@@ -132,7 +131,7 @@ struct UpdateGlobalIncumbentAct : hpx::actions::make_direct_action<
   decltype(&updateGlobalIncumbent<Space, Node, Bound, Enumerator>), &updateGlobalIncumbent<Space, Node, Bound, Enumerator>, UpdateGlobalIncumbentAct<Space, Node, Bound, Enumerator> >::type {};
 
 template <typename Space, typename Node, typename Bound, typename Enumerator>
-void setFoundPromiseId(hpx::naming::id_type id) {
+void setFoundPromiseId(hpx::id_type id) {
   Registry<Space, Node, Bound, Enumerator>::gReg->foundPromiseId = id;
 }
 template <typename Space, typename Node, typename Bound, typename Enumerator>
@@ -144,32 +143,32 @@ struct SetFoundPromiseIdAct : hpx::actions::make_direct_action<
 namespace hpx { namespace traits {
 template <typename Space, typename Node, typename Bound, typename Enumerator>
 struct action_stacksize<YewPar::InitRegistryAct<Space, Node, Bound, Enumerator> > {
-  enum { value = threads::thread_stacksize_huge };
+  static constexpr threads::thread_stacksize value = threads::thread_stacksize::medium;
 };
 
 template <typename Space, typename Node, typename Bound, typename Enumerator>
 struct action_stacksize<YewPar::SetFoundPromiseIdAct<Space, Node, Bound, Enumerator> > {
-  enum { value = threads::thread_stacksize_huge };
+  static constexpr threads::thread_stacksize value = threads::thread_stacksize::medium;
 };
 
 template <typename Space, typename Node, typename Bound, typename Enumerator>
 struct action_stacksize<YewPar::UpdateGlobalIncumbentAct<Space, Node, Bound, Enumerator> > {
-  enum { value = threads::thread_stacksize_huge };
+  static constexpr threads::thread_stacksize value = threads::thread_stacksize::medium;
 };
 
 template <typename Space, typename Node, typename Bound, typename Enumerator, typename Cmp>
 struct action_stacksize<YewPar::UpdateRegistryBoundAct<Space, Node, Bound, Enumerator, Cmp> > {
-  enum { value = threads::thread_stacksize_huge };
+  static constexpr threads::thread_stacksize value = threads::thread_stacksize::medium;
 };
 
 template <typename Space, typename Node, typename Bound, typename Enumerator>
 struct action_stacksize<YewPar::SetStopFlagAct<Space, Node, Bound, Enumerator> > {
-  enum { value = threads::thread_stacksize_huge };
+  static constexpr threads::thread_stacksize value = threads::thread_stacksize::medium;
 };
 
 template <typename Space, typename Node, typename Bound, typename Enumerator>
 struct action_stacksize<YewPar::GetEnumeratorValAct<Space, Node, Bound, Enumerator> > {
-  enum { value = threads::thread_stacksize_huge };
+  static constexpr threads::thread_stacksize value = threads::thread_stacksize::medium;
 };
 
 }}

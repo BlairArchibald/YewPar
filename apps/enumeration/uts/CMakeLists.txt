@@ -5,7 +5,8 @@ include_directories(uts-rng)
 
 add_hpx_executable(uts
   SOURCES main.cpp uts-rng/brg_sha1.c
-  DEPENDENCIES YewPar)
+  DEPENDENCIES YewPar
+)
 endif(YEWPAR_BUILD_ENUMERATION_APPS_UTS)
 
 if (YEWPAR_BUILD_TEST_APPS)

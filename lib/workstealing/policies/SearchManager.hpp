@@ -13,7 +13,7 @@
 #include <hpx/include/components.hpp>
 
 #include <hpx/performance_counters/manage_counter_type.hpp>
-#include <hpx/local_lcos/channel.hpp>
+#include <hpx/lcos_local/channel.hpp>
 #include <hpx/concurrency/deque.hpp>
 
 #include "Policy.hpp"
@@ -30,7 +30,7 @@ std::atomic<std::uint64_t> perf_distributedSteals(0);
 std::atomic<std::uint64_t> perf_failedLocalSteals(0);
 std::atomic<std::uint64_t> perf_failedDistributedSteals(0);
 
-std::vector<std::pair<hpx::naming::id_type, bool> > distributedStealsList;
+std::vector<std::pair<hpx::id_type, bool> > distributedStealsList;
 
 std::vector<std::uint32_t> chunkSizeList;
 
@@ -78,7 +78,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
    private:
 
     // Information returned on a steal from a thread
-    using Task = hpx::util::tuple<SearchInfo, int, hpx::naming::id_type>;
+    using Task = hpx::tuple<SearchInfo, int, hpx::id_type>;
 
     // We return an empty vector here to signal no tasks
     using Response = std::vector<Task>;
@@ -87,7 +87,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
     using SharedState = std::tuple<std::atomic<bool>, hpx::lcos::local::one_element_channel<Response>, bool>;
 
     // Lock to protect the component
-    using MutexT = hpx::lcos::local::mutex;
+    using MutexT = hpx::mutex;
     MutexT mtx;
 
     // (internal) Id's of currently running threads, for managing the active map
@@ -100,7 +100,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
     std::unordered_map<unsigned, std::shared_ptr<SharedState> > inactive;
 
     // Pointers to SearchManagers on other localities
-    std::vector<hpx::naming::id_type> distributedSearchManagers;
+    std::vector<hpx::id_type> distributedSearchManagers;
 
     // random number generator
     std::mt19937 randGenerator;
@@ -112,7 +112,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
     boost::lockfree::deque<Task> taskBuffer;
 
     // Last steal optimisation
-    hpx::naming::id_type last_remote;
+    hpx::id_type last_remote;
 
     // Try to steal from a thread on another (random) locality
     Response tryDistributedSteal(std::unique_lock<MutexT> & l) {
@@ -125,7 +125,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
       isStealingDistributed = true;
 
       // Last steal optimisation
-      hpx::naming::id_type victim;
+      hpx::id_type victim;
       if (last_remote != hpx::find_here()) {
         victim = last_remote;
       } else {
@@ -167,7 +167,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
     }
 
     // Notify this search manager of the globalId's of potential steal victims
-    void registerDistributedManagers(std::vector<hpx::naming::id_type> distributedSearchMgrs) {
+    void registerDistributedManagers(std::vector<hpx::id_type> distributedSearchMgrs) {
       std::lock_guard<MutexT> l(mtx);
       distributedSearchManagers = distributedSearchMgrs;
       distributedSearchManagers.erase(
@@ -210,7 +210,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
       l.lock();
 
       // -1 depth signals that the thread we tried to steal from has finished it's search
-      if (!res.empty() && hpx::util::get<1>(res[0]) == -1) {
+      if (!res.empty() && hpx::get<1>(res[0]) == -1) {
         return {};
       }
 
@@ -221,15 +221,15 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
     }
 
     // Called by the scheduler to ask the searchManager to add more work
-    hpx::util::function<void(), false> getWork() override {
+    hpx::function<void(), false> getWork() override {
       std::unique_lock<MutexT> l(mtx);
 
       // Return from task buffer first if anything exists
       Task task;
       if (taskBuffer.pop_right(task)) {
-        SearchInfo searchInfo; int depth; hpx::naming::id_type prom;
-        hpx::util::tie(searchInfo, depth, prom) = task;
-        return hpx::util::bind(FuncToCall::fn_ptr(), searchInfo, depth, prom);
+        SearchInfo searchInfo; int depth; hpx::id_type prom;
+        hpx::tie(searchInfo, depth, prom) = task;
+        return hpx::bind(FuncToCall::fn_ptr(), searchInfo, depth, prom);
       }
 
       Response maybeStolen;
@@ -262,8 +262,8 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
 
         // Take off the first task and queue up anything else that was returned
         auto first = maybeStolen[0];
-        SearchInfo searchInfo; int depth; hpx::naming::id_type prom;
-        hpx::util::tie(searchInfo, depth, prom) = first;
+        SearchInfo searchInfo; int depth; hpx::id_type prom;
+        hpx::tie(searchInfo, depth, prom) = first;
 
         auto itr = maybeStolen.begin();
         ++itr;
@@ -271,7 +271,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
           taskBuffer.push_left(std::move(*itr));
         }
 
-        return hpx::util::bind(FuncToCall::fn_ptr(), searchInfo, depth, prom);
+        return hpx::bind(FuncToCall::fn_ptr(), searchInfo, depth, prom);
       }
 
       return nullptr;
@@ -286,7 +286,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
         // A steal must be in progress on this id so cancel it before finishing
         // Canceled steals (-1 flag) are already removed from active
         auto & state = inactive[activeId];
-        std::vector<Task> noSteal {hpx::util::make_tuple(SearchInfo(), -1, hpx::find_here())};
+        std::vector<Task> noSteal {hpx::make_tuple(SearchInfo(), -1, hpx::find_here())};
         std::get<1>(*state).set(noSteal);
         inactive.erase(activeId);
       }
@@ -304,9 +304,9 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
       return std::make_pair(shared_state, nextId);
     }
 
-    std::vector<hpx::naming::id_type> getAllSearchManagers() {
+    std::vector<hpx::id_type> getAllSearchManagers() {
       std::lock_guard<MutexT> l(mtx);
-      std::vector<hpx::naming::id_type> res(distributedSearchManagers);
+      std::vector<hpx::id_type> res(distributedSearchManagers);
       res.push_back(this->get_id());
       return res;
     }
@@ -316,7 +316,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
 
     // Helper function to setup the components/policies on each node and register required information
     static void initPolicy() {
-      std::vector<hpx::naming::id_type> searchManagers;
+      std::vector<hpx::id_type> searchManagers;
       for (auto const& loc : hpx::find_all_localities()) {
         auto searchManager = hpx::new_<SearchManager>(loc).get();
         hpx::async<InitComponentAct<SearchInfo, FuncToCall, Args...> >(searchManager).get();
@@ -333,7 +333,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
 
   // Public component API (managing the types as required)
   template <typename SearchInfo, typename FuncToCall, typename ...Args>
-  void registerDistributedManagers(std::vector<hpx::naming::id_type> distributedSearchMgrs) {
+  void registerDistributedManagers(std::vector<hpx::id_type> distributedSearchMgrs) {
     auto sm = std::static_pointer_cast<SearchManagerComp<SearchInfo, FuncToCall, Args...>>
       (Workstealing::Scheduler::local_policy);
     sm->registerDistributedManagers(distributedSearchMgrs);

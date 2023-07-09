@@ -2,7 +2,8 @@
 
 namespace workstealing
 {
-  using funcType = hpx::util::function<void(hpx::naming::id_type)>;
+  using funcType = Workqueue::funcType;
+
   funcType Workqueue::steal() {
     funcType task;
     if (!tasks.pop_right(task)) {

@@ -4,8 +4,7 @@
 #include <functional>
 #include <memory>
 
-#include <hpx/include/components.hpp>
-#include <hpx/include/iostreams.hpp>
+#include <hpx/iostream.hpp>
 
 #include <boost/format.hpp>
 
@@ -57,7 +56,7 @@ struct Incumbent : public hpx::components::locking_hook<
         incumbentNode = incumbent;
         bnd = incumbent.getObj();
         if constexpr(verbose >= 1) {
-          hpx::cout << (boost::format("New Incumbent Bound: %1%\n") % incumbentNode.getObj()) << hpx::flush;
+          hpx::cout << (boost::format("New Incumbent Bound: %1%\n") % incumbentNode.getObj()) << std::flush;
         }
       }
     }

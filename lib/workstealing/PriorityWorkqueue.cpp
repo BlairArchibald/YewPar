@@ -2,18 +2,18 @@
 
 namespace workstealing {
 
-using funcType = hpx::util::function<void(hpx::naming::id_type)>;
-funcType PriorityWorkqueue::steal() {
+
+PriorityWorkqueue::funcType PriorityWorkqueue::steal() {
   if (!tasks.empty()) {
     auto task = tasks.top();
     tasks.pop();
-    return hpx::util::get<1>(task);
+    return hpx::get<1>(task);
   }
   return nullptr;
 }
 
-void PriorityWorkqueue::addWork(int priority, funcType task) {
-  tasks.push(hpx::util::make_tuple(priority, std::move(task)));
+void PriorityWorkqueue::addWork(int priority, PriorityWorkqueue::funcType task) {
+  tasks.push(hpx::make_tuple(priority, std::move(task)));
 }
 
 bool PriorityWorkqueue::workRemaining() {

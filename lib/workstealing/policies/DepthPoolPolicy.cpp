@@ -1,7 +1,7 @@
 #include "DepthPoolPolicy.hpp"
 
 #include <hpx/functional/function.hpp>
-#include <hpx/runtime/find_here.hpp>
+#include <hpx/modules/runtime_distributed.hpp>
 #include <hpx/performance_counters/manage_counter_type.hpp>
 
 #include <memory>
@@ -64,7 +64,7 @@ void registerPerformanceCounters() {
 
 }
 
-DepthPoolPolicy::DepthPoolPolicy(hpx::naming::id_type workpool) {
+DepthPoolPolicy::DepthPoolPolicy(hpx::id_type workpool) {
   local_workpool = workpool;
   last_remote = hpx::find_here();
 
@@ -72,15 +72,15 @@ DepthPoolPolicy::DepthPoolPolicy(hpx::naming::id_type workpool) {
   randGenerator.seed(rd());
 }
 
-hpx::util::function<void(), false> DepthPoolPolicy::getWork() {
+hpx::function<void(), false> DepthPoolPolicy::getWork() {
   std::unique_lock<mutex_t> l(mtx);
 
-  hpx::util::function<void(hpx::naming::id_type)> task;
+  hpx::distributed::function<void(hpx::id_type)> task;
   task = hpx::async<workstealing::DepthPool::getLocal_action>(local_workpool).get();
 
   if (task) {
     DepthPoolPolicyPerf::perf_localSteals++;
-    return hpx::util::bind(task, hpx::find_here());
+    return hpx::bind(task, hpx::find_here());
   } else {
     DepthPoolPolicyPerf::perf_failedLocalSteals++;
   }
@@ -91,7 +91,7 @@ hpx::util::function<void(), false> DepthPoolPolicy::getWork() {
       task = hpx::async<workstealing::DepthPool::steal_action>(last_remote).get();
       if (task) {
         DepthPoolPolicyPerf::perf_distributedSteals++;
-        return hpx::util::bind(task, hpx::find_here());
+        return hpx::bind(task, hpx::find_here());
       } else {
         DepthPoolPolicyPerf::perf_failedDistributedSteals++;
         last_remote = hpx::find_here();
@@ -107,7 +107,7 @@ hpx::util::function<void(), false> DepthPoolPolicy::getWork() {
     if (task) {
       last_remote = *victim;
       DepthPoolPolicyPerf::perf_distributedSteals++;
-      return hpx::util::bind(task, hpx::find_here());
+      return hpx::bind(task, hpx::find_here());
     } else {
       DepthPoolPolicyPerf::perf_failedDistributedSteals++;
     }
@@ -116,13 +116,13 @@ hpx::util::function<void(), false> DepthPoolPolicy::getWork() {
   return nullptr;
 }
 
-void DepthPoolPolicy::addwork(hpx::util::function<void(hpx::naming::id_type)> task, unsigned depth) {
+void DepthPoolPolicy::addwork(hpx::distributed::function<void(hpx::id_type)> task, unsigned depth) {
   std::unique_lock<mutex_t> l(mtx);
   DepthPoolPolicyPerf::perf_spawns++;
   hpx::apply<workstealing::DepthPool::addWork_action>(local_workpool, task, depth);
 }
 
-void DepthPoolPolicy::registerDistributedDepthPools(std::vector<hpx::naming::id_type> workpools) {
+void DepthPoolPolicy::registerDistributedDepthPools(std::vector<hpx::id_type> workpools) {
   std::unique_lock<mutex_t> l(mtx);
   distributed_workpools = workpools;
   distributed_workpools .erase(

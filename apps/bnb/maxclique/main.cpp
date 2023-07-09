@@ -8,7 +8,7 @@
 #include <typeinfo>
 
 #include <hpx/hpx_init.hpp>
-#include <hpx/include/iostreams.hpp>
+#include <hpx/iostream.hpp>
 
 #include <boost/serialization/access.hpp>
 
@@ -337,7 +337,7 @@ int hpx_main(hpx::program_options::variables_map & opts) {
           ::search(graph, root, searchParameters);
     }
   } else {
-    hpx::cout << "Invalid skeleton type option. Should be: seq, depthbound, stacksteal or ordered" << hpx::endl;
+    hpx::cout << "Invalid skeleton type option. Should be: seq, depthbound, stacksteal or ordered" << std::endl;
     hpx::finalize();
     return EXIT_FAILURE;
   }
@@ -345,8 +345,8 @@ int hpx_main(hpx::program_options::variables_map & opts) {
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
     (std::chrono::steady_clock::now() - start_time);
 
-  hpx::cout << "MaxClique Size = " << sol.size << hpx::endl;
-  hpx::cout << "cpu = " << overall_time.count() << hpx::endl;
+  hpx::cout << "MaxClique Size = " << sol.size << std::endl;
+  hpx::cout << "cpu = " << overall_time.count() << std::endl;
 
   return hpx::finalize();
 }
@@ -384,5 +384,7 @@ int main (int argc, char* argv[]) {
 
   YewPar::registerPerformanceCounters();
 
-  return hpx::init(desc_commandline, argc, argv);
+  hpx::init_params args;
+  args.desc_cmdline = desc_commandline;
+  return hpx::init(argc, argv, args);
 }

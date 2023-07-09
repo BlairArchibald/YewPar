@@ -1,5 +1,5 @@
 #include <hpx/hpx_init.hpp>
-#include <hpx/include/iostreams.hpp>
+#include <hpx/iostream.hpp>
 
 // We just use the default RNG for simplicity
 #define BRG_RNG
@@ -277,10 +277,10 @@ int hpx_main(hpx::program_options::variables_map & opts) {
   auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>
                       (std::chrono::steady_clock::now() - start_time);
 
-  hpx::cout << "Total Nodes: " << count << hpx::endl;
+  hpx::cout << "Total Nodes: " << count << std::endl;
 
-  hpx::cout << "=====" << hpx::endl;
-  hpx::cout << "cpu = " << overall_time.count() << hpx::endl;
+  hpx::cout << "=====" << std::endl;
+  hpx::cout << "cpu = " << overall_time.count() << std::endl;
 
   return hpx::finalize();
 }
@@ -320,5 +320,7 @@ int main(int argc, char* argv[]) {
 
   YewPar::registerPerformanceCounters();
 
-  return hpx::init(desc_commandline, argc, argv);
+  hpx::init_params args;
+  args.desc_cmdline = desc_commandline;
+  return hpx::init(argc, argv, args);
 }

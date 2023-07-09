@@ -1,14 +1,17 @@
-with import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/20.03.tar.gz") {};
+with import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/23.05.tar.gz") {};
+let
+  boostpkg = boost179;
+in
 stdenv.mkDerivation rec {
   name = "YewPar";
   version = "0.0.2";
 
-  buildInputs = [ boost mpich2 hpx gperftools hwloc ];
+  buildInputs = [ boostpkg mpich hpx gperftools hwloc ];
   nativeBuildInputs = [ cmake ];
 
   src =
     let
-      inDir = path : dir : stdenv.lib.hasPrefix (toString dir) (toString path);
+      inDir = path : dir : pkgs.lib.hasPrefix (toString dir) (toString path);
       filter = path : type : baseNameOf path == "CMakeLists.txt"
         || inDir path ./apps
         || inDir path ./lib;

@@ -1,8 +1,7 @@
 # Require a recent version of cmake
 cmake_minimum_required(VERSION 3.8.0 FATAL_ERROR)
 
-# This project is C++ based.
-project(YewPar CXX)
+project(YewPar)
 
 # Instruct cmake to find the HPX settings
 find_package(HPX)

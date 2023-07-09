@@ -4,7 +4,8 @@
 #include "Policy.hpp"
 
 #include <hpx/include/components.hpp>
-#include <hpx/collectives/broadcast.hpp>
+#include <hpx/modules/collectives.hpp>
+#include <hpx/runtime_distributed/find_all_localities.hpp>
 
 #include "../DepthPool.hpp"
 
@@ -24,27 +25,27 @@ void registerPerformanceCounters();
 class DepthPoolPolicy : public Policy {
 
  private:
-  hpx::naming::id_type local_workpool;
-  hpx::naming::id_type last_remote;
-  std::vector<hpx::naming::id_type> distributed_workpools;
+  hpx::id_type local_workpool;
+  hpx::id_type last_remote;
+  std::vector<hpx::id_type> distributed_workpools;
 
   // random number generator
   std::mt19937 randGenerator;
 
-  using mutex_t = hpx::lcos::local::mutex;
+  using mutex_t = hpx::mutex;
   mutex_t mtx;
 
  public:
-  DepthPoolPolicy(hpx::naming::id_type workpool);
+  DepthPoolPolicy(hpx::id_type workpool);
   ~DepthPoolPolicy() = default;
 
-  hpx::util::function<void(), false> getWork() override;
+  hpx::function<void(), false> getWork() override;
 
-  void addwork(hpx::util::function<void(hpx::naming::id_type)> task, unsigned depth);
+  void addwork(hpx::distributed::function<void(hpx::id_type)> task, unsigned depth);
 
-  void registerDistributedDepthPools(std::vector<hpx::naming::id_type> workpools);
+  void registerDistributedDepthPools(std::vector<hpx::id_type> workpools);
 
-  static void setDepthPool(hpx::naming::id_type localworkpool) {
+  static void setDepthPool(hpx::id_type localworkpool) {
     Workstealing::Scheduler::local_policy = std::make_shared<DepthPoolPolicy>(localworkpool);
   }
   struct setDepthPool_act : hpx::actions::make_action<
@@ -52,7 +53,7 @@ class DepthPoolPolicy : public Policy {
     &DepthPoolPolicy::setDepthPool,
     setDepthPool_act>::type {};
 
-  static void setDistributedDepthPools(std::vector<hpx::naming::id_type> workpools) {
+  static void setDistributedDepthPools(std::vector<hpx::id_type> workpools) {
     std::static_pointer_cast<Workstealing::Policies::DepthPoolPolicy>(Workstealing::Scheduler::local_policy)->registerDistributedDepthPools(workpools);
   }
   struct setDistributedDepthPools_act : hpx::actions::make_action<
@@ -62,7 +63,7 @@ class DepthPoolPolicy : public Policy {
 
   static void initPolicy() {
     std::vector<hpx::future<void> > futs;
-    std::vector<hpx::naming::id_type> pools;
+    std::vector<hpx::id_type> pools;
     for (auto const& loc : hpx::find_all_localities()) {
       auto depthpool = hpx::new_<workstealing::DepthPool>(loc).get();
       futs.push_back(hpx::async<setDepthPool_act>(loc, depthpool));

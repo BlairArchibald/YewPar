@@ -6,7 +6,7 @@
 #include <cstdint>
 
 #include <hpx/collectives/broadcast.hpp>
-#include <hpx/include/iostreams.hpp>
+#include <hpx/iostream.hpp>
 
 #include <boost/format.hpp>
 
@@ -64,7 +64,7 @@ struct Ordered {
       } else {
       hpx::cout << "Using Bounding: false\n";
     }
-    hpx::cout << hpx::flush;
+    hpx::cout << std::flush;
   }
 
   struct OrderedTask {
@@ -73,7 +73,7 @@ struct Ordered {
     };
     const Node node;
     unsigned priority;
-    hpx::naming::id_type startedFlag;
+    hpx::id_type startedFlag;
   };
 
   // Spawn tasks in a discrepancy search fashion
@@ -122,7 +122,7 @@ struct Ordered {
     if (verbose > 1) {
       hpx::cout <<
           (boost::format("Ordered Skeleton Spawned %1% Tasks\n") % tasks.size())
-                << hpx::flush;
+                << std::flush;
     }
 
     return tasks;
@@ -183,8 +183,8 @@ struct Ordered {
     auto tasks = prioritiseTasks(space, params.spawnDepth, root);
     for (auto const & t : tasks) {
       Ordered_::SubtreeTask<Generator, Args...> child;
-      hpx::util::function<void(hpx::naming::id_type)> task;
-      task = hpx::util::bind(child, hpx::util::placeholders::_1, t.node, t.startedFlag);
+      hpx::distributed::function<void(hpx::id_type)> task;
+      task = hpx::bind(child, hpx::placeholders::_1, t.node, t.startedFlag);
       std::static_pointer_cast<Workstealing::Policies::PriorityOrderedPolicy>
           (Workstealing::Scheduler::local_policy)->addwork(t.priority, std::move(task));
     }
@@ -194,7 +194,7 @@ struct Ordered {
           (std::chrono::steady_clock::now() - spawn_start_time);
       hpx::cout <<
           (boost::format("Ordered Skeleton, time to spawn tasks: %1% ms\n") % spawn_time.count())
-                << hpx::flush;
+                << std::flush;
     }
 
     // We need to start 1 less thread on the master locality than everywhere
@@ -251,7 +251,7 @@ struct Ordered {
   }
 
   static void subtreeTask(const Node taskRoot,
-                          const hpx::naming::id_type started) {
+                          const hpx::id_type started) {
     // Don't bother checking if the sequential thread has done this task since we are stopping anyway
     auto reg = Registry<Space, Node, Bound, Enum>::gReg;
     if constexpr (isDecision) {
@@ -293,7 +293,7 @@ namespace hpx { namespace traits {
 
 template <typename Generator, typename ...Args>
 struct action_stacksize<YewPar::Skeletons::Ordered_::SubtreeTask<Generator, Args...> > {
-  enum { value = threads::thread_stacksize_huge };
+  static constexpr threads::thread_stacksize value = threads::thread_stacksize::huge;
 };
 
 }}

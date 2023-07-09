@@ -3,8 +3,8 @@
 
 #include "Policy.hpp"
 
-#include <hpx/include/components.hpp>
-#include <hpx/collectives/broadcast.hpp>
+#include <hpx/runtime_distributed/find_all_localities.hpp>
+#include <hpx/modules/collectives.hpp>
 
 #include "workstealing/Workqueue.hpp"
 
@@ -23,28 +23,28 @@ class Workpool : public Policy {
 
  private:
   // TODO: Pointer to local_workqueue instead of calling actions from the local version
-  hpx::naming::id_type local_workqueue;
-  hpx::naming::id_type last_remote;
-  std::vector<hpx::naming::id_type> distributed_workqueues;
+  hpx::id_type local_workqueue;
+  hpx::id_type last_remote;
+  std::vector<hpx::id_type> distributed_workqueues;
 
   // random number generator
   std::mt19937 randGenerator;
 
   // Policies must be thread safe (TODO: Push to PolicyBase?)
-  using mutex_t = hpx::lcos::local::mutex;
+  using mutex_t = hpx::mutex;
   mutex_t mtx;
 
  public:
-  Workpool(hpx::naming::id_type localQueue);
+  Workpool(hpx::id_type localQueue);
   ~Workpool() = default;
 
-  hpx::util::function<void(), false> getWork() override;
+  hpx::function<void(), false> getWork() override;
 
-  void addwork(hpx::util::function<void(hpx::naming::id_type)> task);
+  void addwork(hpx::distributed::function<void(hpx::id_type)> task);
 
-  void registerDistributedWorkqueues(std::vector<hpx::naming::id_type> workqueues);
+  void registerDistributedWorkqueues(std::vector<hpx::id_type> workqueues);
 
-  static void setWorkqueue(hpx::naming::id_type localWorkqueue) {
+  static void setWorkqueue(hpx::id_type localWorkqueue) {
     Workstealing::Scheduler::local_policy = std::make_shared<Workpool>(localWorkqueue);
   }
   struct setWorkqueue_act : hpx::actions::make_action<
@@ -52,7 +52,7 @@ class Workpool : public Policy {
     &Workpool::setWorkqueue,
     setWorkqueue_act>::type {};
 
-  static void setDistributedWorkqueues(std::vector<hpx::naming::id_type> workqueues) {
+  static void setDistributedWorkqueues(std::vector<hpx::id_type> workqueues) {
     std::static_pointer_cast<Workstealing::Policies::Workpool>(Workstealing::Scheduler::local_policy)->registerDistributedWorkqueues(workqueues);
   }
   struct setDistributedWorkqueues_act : hpx::actions::make_action<
@@ -62,7 +62,7 @@ class Workpool : public Policy {
 
   static void initPolicy() {
     std::vector<hpx::future<void> > futs;
-    std::vector<hpx::naming::id_type> workqueues;
+    std::vector<hpx::id_type> workqueues;
     for (auto const& loc : hpx::find_all_localities()) {
       auto workqueue = hpx::new_<workstealing::Workqueue>(loc).get();
       futs.push_back(hpx::async<setWorkqueue_act>(loc, workqueue));

@@ -10,7 +10,7 @@
 #include "API.hpp"
 
 #include <hpx/collectives/broadcast.hpp>
-#include <hpx/include/iostreams.hpp>
+#include <hpx/iostream.hpp>
 
 #include "util/NodeGenerator.hpp"
 #include "util/Registry.hpp"
@@ -74,7 +74,7 @@ struct DepthBounded {
     } else {
       hpx::cout << "Workpool: DepthPool\n";
     }
-    hpx::cout << hpx::flush;
+    hpx::cout << std::flush;
   }
 
   static void expandWithSpawns(const Space & space,
@@ -138,7 +138,7 @@ struct DepthBounded {
 
   static void subtreeTask(const Node taskRoot,
                           const unsigned childDepth,
-                          const hpx::naming::id_type donePromiseId) {
+                          const hpx::id_type donePromiseId) {
     auto reg = Registry<Space, Node, Bound, Enum>::gReg;
 
     Enum acc;
@@ -161,13 +161,13 @@ struct DepthBounded {
 
   static hpx::future<void> createTask(const unsigned childDepth,
                                       const Node & taskRoot) {
-    hpx::lcos::promise<void> prom;
+    hpx::distributed::promise<void> prom;
     auto pfut = prom.get_future();
     auto pid  = prom.get_id();
 
     DepthBounded_::SubtreeTask<Generator, Args...> t;
-    hpx::util::function<void(hpx::naming::id_type)> task;
-    task = hpx::util::bind(t, hpx::util::placeholders::_1, taskRoot, childDepth, pid);
+    hpx::distributed::function<void(hpx::id_type)> task;
+    task = hpx::bind(t, hpx::placeholders::_1, taskRoot, childDepth, pid);
 
     auto workPool = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy);
     if constexpr (std::is_same<Policy, Workstealing::Policies::Workpool>::value) {
@@ -244,7 +244,7 @@ namespace hpx { namespace traits {
 
 template <typename Generator, typename ...Args>
 struct action_stacksize<YewPar::Skeletons::DepthBounded_::SubtreeTask<Generator, Args...> > {
-  enum { value = threads::thread_stacksize_huge };
+  static constexpr threads::thread_stacksize value = threads::thread_stacksize::huge;
 };
 
 }}

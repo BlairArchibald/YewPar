@@ -1,7 +1,7 @@
 #ifndef SKELETONS_SEQ_HPP
 #define SKELETONS_SEQ_HPP
 
-#include <hpx/include/iostreams.hpp>
+#include <hpx/iostream.hpp>
 #include <vector>
 #include <cstdint>
 
@@ -44,7 +44,7 @@ struct Seq {
     } else {
       hpx::cout << "Using Bounding: false\n";
     }
-    hpx::cout << hpx::flush;
+    hpx::cout << std::flush;
   }
 
   static bool expand(const Space & space,
@@ -75,7 +75,7 @@ struct Seq {
             hpx::cout <<
               (boost::format("Found solution on: %1%\n")
               % static_cast<std::int64_t>(hpx::get_locality_id()))
-                      << hpx::flush;
+                      << std::flush;
           }
           return true;
         }
@@ -112,7 +112,7 @@ struct Seq {
           std::get<0>(incumbent) = c;
           std::get<1>(incumbent) = c.getObj();
           if constexpr(verbose >= 1) {
-            hpx::cout << (boost::format("New Incumbent: %1%\n") % c.getObj()) << hpx::flush;
+            hpx::cout << (boost::format("New Incumbent: %1%\n") % c.getObj()) << std::flush;
           }
         }
       }
@@ -140,6 +140,16 @@ struct Seq {
     Enumerator acc;
 
     std::pair<Node, Bound> incumbent = std::make_pair(root, params.initialBound);
+
+    // This is the null function for some reason so param is broken
+    boundFn f;
+    std::cout << typeid(f).name() << std::endl;
+    std::cout << std::flush;
+
+    // Why isn't this calling? Params is messed up I think, lets pass it explicitly
+    std::cout << params.toString() << std::endl;
+    std::cout << std::flush;
+
     expand(space, root, params, incumbent, 1, acc);
 
     if constexpr(isBnB || isDecision) {

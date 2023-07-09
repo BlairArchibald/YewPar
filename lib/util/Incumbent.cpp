@@ -1,5 +1,4 @@
 #include "Incumbent.hpp"
-#include "hpx/runtime/components/component_factory_base.hpp"  // for HPX_REG...
-#include "hpx/runtime/components/static_factory_data.hpp"     // for static_...
+#include <hpx/modules/runtime_configuration.hpp>
 
 HPX_REGISTER_COMPONENT_MODULE();

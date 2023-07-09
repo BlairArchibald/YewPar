@@ -1,7 +1,8 @@
 #ifndef YEWPAR_POLICY_PRIORITYORDERED_HPP
 #define YEWPAR_POLICY_PRIORITYORDERED_HPP
 
-#include <hpx/collectives/broadcast.hpp>
+#include <hpx/modules/collectives.hpp>
+#include <hpx/runtime_distributed/find_all_localities.hpp>
 
 #include "Policy.hpp"
 #include "workstealing/PriorityWorkqueue.hpp"
@@ -23,30 +24,30 @@ void registerPerformanceCounters();
 
 class PriorityOrderedPolicy : public Policy {
  private:
-  hpx::naming::id_type globalWorkqueue;
+  hpx::id_type globalWorkqueue;
 
-  using mutex_t = hpx::lcos::local::mutex;
+  using mutex_t = hpx::mutex;
   mutex_t mtx;
 
  public:
-  PriorityOrderedPolicy (hpx::naming::id_type gWorkqueue) : globalWorkqueue(gWorkqueue) {};
+  PriorityOrderedPolicy (hpx::id_type gWorkqueue) : globalWorkqueue(gWorkqueue) {};
 
   // Priority Ordered policy just forwards requests to the global workqueue
-  hpx::util::function<void(), false> getWork() override {
+  hpx::function<void(), false> getWork() override {
     std::unique_lock<mutex_t> l(mtx);
 
-    hpx::util::function<void(hpx::naming::id_type)> task;
+    hpx::distributed::function<void(hpx::id_type)> task;
     task = hpx::async<workstealing::PriorityWorkqueue::steal_action>(globalWorkqueue).get();
     if (task) {
       PriorityOrderedPerf::perf_steals++;
-      return hpx::util::bind(task, hpx::find_here());
+      return hpx::bind(task, hpx::find_here());
     }
 
     PriorityOrderedPerf::perf_failedSteals++;
     return nullptr;
   }
 
-  void addwork(int priority, hpx::util::function<void(hpx::naming::id_type)> task) {
+  void addwork(int priority, hpx::distributed::function<void(hpx::id_type)> task) {
     std::unique_lock<mutex_t> l(mtx);
     PriorityOrderedPerf::perf_spawns++;
     hpx::apply<workstealing::PriorityWorkqueue::addWork_action>(globalWorkqueue, priority, task);
@@ -58,7 +59,7 @@ class PriorityOrderedPolicy : public Policy {
   }
 
   // Policy initialiser
-  static void setPriorityWorkqueuePolicy(hpx::naming::id_type globalWorkqueue) {
+  static void setPriorityWorkqueuePolicy(hpx::id_type globalWorkqueue) {
     Workstealing::Scheduler::local_policy = std::make_shared<PriorityOrderedPolicy>(globalWorkqueue);
   }
   struct setPriorityWorkqueuePolicy_act : hpx::actions::make_action<
