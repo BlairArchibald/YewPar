@@ -141,15 +141,6 @@ struct Seq {
 
     std::pair<Node, Bound> incumbent = std::make_pair(root, params.initialBound);
 
-    // This is the null function for some reason so param is broken
-    boundFn f;
-    std::cout << typeid(f).name() << std::endl;
-    std::cout << std::flush;
-
-    // Why isn't this calling? Params is messed up I think, lets pass it explicitly
-    std::cout << params.toString() << std::endl;
-    std::cout << std::flush;
-
     expand(space, root, params, incumbent, 1, acc);
 
     if constexpr(isBnB || isDecision) {
