@@ -2,7 +2,7 @@
 
 std::vector<CNFClause> parse(std::string filename)
 {
-    int n_vars, n_clauses;
+    int n_vars, n_clauses, current_variable;
     std::string p, cnf;
     std::ifstream file(filename);
     std::vector<CNFClause> clauses;
@@ -18,15 +18,29 @@ std::vector<CNFClause> parse(std::string filename)
         {
             continue;
         }
+        std::istringstream split_element(line);
+        // Handle header line
         if (!header && line[0] == 'p')
         {
-            std::istringstream tokenStream(line);
-            tokenStream >> p >> cnf >> n_vars >> n_clauses;
-            bool ps, cnfs;
-            ps = (p == "p");
-            cnfs = (cnf == "cnf");
-            std::cout << "p = 'p' == " << ps << " and cnf = 'cnf' == " << cnfs << std::endl;
+            split_element >> p >> cnf >> n_vars >> n_clauses;
+            if (cnf != "cnf")
+            {
+                throw std::runtime_error("Invalid CNF file format: Header line missing 'cnf'");
+            }
+            header = true;
+            continue;
         }
+        if (line[0] == 'p')
+        {
+            throw std::runtime_error("Invalid CNF file format: Multiple header lines");
+        }
+        // Handle clauses
+        CNFClause c;
+        while (split_element >> current_variable && current_variable != 0)
+        {
+            c.variables.push_back(current_variable);
+        }
+        clauses.push_back(c);
     }
     return clauses;
 }
