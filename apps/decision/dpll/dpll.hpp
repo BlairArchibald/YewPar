@@ -11,6 +11,6 @@ struct CNFClause
     std::vector<int> variables;
 };
 
-std::vector<CNFClause> parse(std::string filename);
+std::vector<CNFClause> parse(std::string filename, int *n_vars);
 
 #endif

@@ -1,8 +1,8 @@
 #include "dpll.hpp"
 
-std::vector<CNFClause> parse(std::string filename)
+std::vector<CNFClause> parse(std::string filename, int *n_vars)
 {
-    int n_vars, n_clauses, current_variable;
+    int n_clauses, current_variable;
     std::string p, cnf;
     std::ifstream file(filename);
     std::vector<CNFClause> clauses;
@@ -22,7 +22,7 @@ std::vector<CNFClause> parse(std::string filename)
         // Handle header line
         if (!header && line[0] == 'p')
         {
-            split_element >> p >> cnf >> n_vars >> n_clauses;
+            split_element >> p >> cnf >> *n_vars >> n_clauses;
             if (cnf != "cnf")
             {
                 throw std::runtime_error("Invalid CNF file format: Header line missing 'cnf'");
@@ -41,6 +41,10 @@ std::vector<CNFClause> parse(std::string filename)
             c.variables.push_back(current_variable);
         }
         clauses.push_back(c);
+    }
+    if (header && clauses.size() != n_clauses)
+    {
+        throw std::runtime_error("Error: Number of clauses stated in the header line does not match the file content");
     }
     return clauses;
 }

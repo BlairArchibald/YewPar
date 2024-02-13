@@ -19,7 +19,9 @@
 int hpx_main(hpx::program_options::variables_map &opts)
 {
     auto inputFile = opts["satfile"].as<std::string>();
-    std::vector<CNFClause> clauses = parse(inputFile);
+    int n_vars;
+    std::vector<CNFClause> clauses = parse(inputFile, &n_vars);
+    std::cout << "CNF formula with " << clauses.size() << " clauses and " << n_vars << " variables" << std::endl;
 
     auto start_time = std::chrono::steady_clock::now();
     /*
