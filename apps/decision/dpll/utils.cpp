@@ -2,9 +2,10 @@
 
 std::vector<CNFClause> parse(std::string filename)
 {
-    int vars, clauses;
+    int n_vars, n_clauses;
     std::string p, cnf;
     std::ifstream file(filename);
+    std::vector<CNFClause> clauses;
     if (!file.is_open())
     {
         throw std::runtime_error("Failed to open file");
@@ -20,11 +21,12 @@ std::vector<CNFClause> parse(std::string filename)
         if (!header && line[0] == 'p')
         {
             std::istringstream tokenStream(line);
-            tokenStream >> p >> cnf >> vars >> clauses;
+            tokenStream >> p >> cnf >> n_vars >> n_clauses;
             bool ps, cnfs;
             ps = (p == "p");
             cnfs = (cnf == "cnf");
             std::cout << "p = 'p' == " << ps << " and cnf = 'cnf' == " << cnfs << std::endl;
         }
     }
+    return clauses;
 }

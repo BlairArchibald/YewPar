@@ -19,8 +19,9 @@
 int hpx_main(hpx::program_options::variables_map &opts)
 {
     auto inputFile = opts["satfile"].as<std::string>();
-    std::vector<CNFClause> = parse(inputFile);
+    std::vector<CNFClause> clauses = parse(inputFile);
 
+    auto start_time = std::chrono::steady_clock::now();
     /*
       Main body
     */
