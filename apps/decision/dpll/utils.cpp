@@ -1,6 +1,6 @@
 #include "dpll.hpp"
 
-std::vector<CNFClause> parse(std::string filename, int *n_vars)
+CNFFormula parse(std::string filename, int *n_vars)
 {
     int n_clauses, current_variable;
     std::string p, cnf;

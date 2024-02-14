@@ -11,6 +11,10 @@ struct CNFClause
     std::vector<int> variables;
 };
 
-std::vector<CNFClause> parse(std::string filename, int *n_vars);
+struct CNFFormula
+{
+    std::vector<CNFClause> formula;
+};
+CNFFormula parse(std::string filename, int *n_vars);
 
 #endif
