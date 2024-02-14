@@ -65,7 +65,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
     auto inputFile = opts["satfile"].as<std::string>();
     int n_vars;
     CNFFormula formula = parse(inputFile, &n_vars);
-    std::cout << "CNF formula with " << clauses.size() << " clauses and " << n_vars << " variables" << std::endl;
+    std::cout << "CNF formula with " << formula.size() << " clauses and " << n_vars << " variables" << std::endl;
 
     auto start_time = std::chrono::steady_clock::now();
     /*
@@ -78,9 +78,10 @@ int hpx_main(hpx::program_options::variables_map &opts)
     YewPar::Skeletons::API::Params<bool> searchParameters;
     searchParameters.expectedObjective = true;
     auto skeleton = opts["skeleton"].as<std::string>();
+    auto sol = root;
     if (skeleton == "seq")
     {
-        sol = YewPar::Skeletons::Seq<GenNode<NWORDS>,
+        sol = YewPar::Skeletons::Seq<GenNode,
                                      YewPar::Skeletons::API::Decision,
                                      YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
     }
@@ -92,7 +93,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
     auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
 
     std::cout << "CNF formula is";
-    if (!sol)
+    if (!sol.satisfied)
         std::cout << "not ";
     std::cout << "satisfiable" << std::endl;
     hpx::cout << "cpu = " << overall_time.count() << std::endl;
