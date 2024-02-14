@@ -19,6 +19,11 @@ struct CNFFormula
     {
         return formula.size();
     }
+
+    void insertClause(CNFClause clause)
+    {
+        formula.push_back(clause);
+    }
 };
 CNFFormula parse(std::string filename, int *n_vars);
 

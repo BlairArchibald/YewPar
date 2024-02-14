@@ -5,7 +5,7 @@ CNFFormula parse(std::string filename, int *n_vars)
     int n_clauses, current_variable;
     std::string p, cnf;
     std::ifstream file(filename);
-    std::vector<CNFClause> clauses;
+    CNFFormula formula;
     if (!file.is_open())
     {
         throw std::runtime_error("Failed to open file");
@@ -40,11 +40,11 @@ CNFFormula parse(std::string filename, int *n_vars)
         {
             c.variables.push_back(current_variable);
         }
-        clauses.push_back(c);
+        formula.insertClause(c);
     }
-    if (header && clauses.size() != n_clauses)
+    if (header && formula.size() != n_clauses)
     {
         throw std::runtime_error("Error: Number of clauses stated in the header line does not match the file content");
     }
-    return clauses;
+    return formula;
 }
