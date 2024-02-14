@@ -14,6 +14,11 @@ struct CNFClause
 struct CNFFormula
 {
     std::vector<CNFClause> formula;
+
+    int size()
+    {
+        return formula.size();
+    }
 };
 CNFFormula parse(std::string filename, int *n_vars);
 
