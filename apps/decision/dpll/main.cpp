@@ -56,19 +56,28 @@ struct GenNode : YewPar::NodeGenerator<DPLLNode, Empty>
         new_formula = node.formula.deepcopy();
         // unit propagation
         int var;
-        for (auto it = new_formula.clauses.begin(); it != new_formula.clauses.end();)
+        bool there_was_a_unit_clause;
+        std::vector<int> unit_vars;
+        do
         {
-            if (it->isUnitClause())
+            unit_vars.clear();
+            there_was_a_unit_clause = false;
+            for (auto it = new_formula.clauses.begin(); it != new_formula.clauses.end();)
             {
-                var = it->getUnitElement();
-                new_formula.eraseClauseAt(it);
+                if (it->isUnitClause())
+                {
+                    there_was_a_unit_clause = true;
+                    var = it->getUnitElement();
+                    it = new_formula.eraseClauseAt(it);
+                }
+                else
+                {
+                    ++it;
+                }
+            }
+            for (int var : unit_vars)
                 new_formula.propagate(var);
-            }
-            else
-            {
-                ++it;
-            }
-        }
+        } while (there_was_a_unit_clause);
         // pure literal elimination
         new_formula.pureLiteralElimination();
         // stopping conditions
