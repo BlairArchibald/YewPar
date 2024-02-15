@@ -45,7 +45,6 @@ struct GenNode : YewPar::NodeGenerator<DPLLNode, Empty>
 {
     bool sat;
     CNFFormula new_formula, copy_of_new_formula;
-    std::vector<CNFClause> phi;
     int chosen_literal;
     bool first;
 
@@ -57,10 +56,8 @@ struct GenNode : YewPar::NodeGenerator<DPLLNode, Empty>
         // unit propagation
         int var;
         bool there_was_a_unit_clause;
-        std::vector<int> unit_vars;
         do
         {
-            unit_vars.clear();
             there_was_a_unit_clause = false;
             for (auto it = new_formula.clauses.begin(); it != new_formula.clauses.end();)
             {
@@ -69,14 +66,13 @@ struct GenNode : YewPar::NodeGenerator<DPLLNode, Empty>
                     there_was_a_unit_clause = true;
                     var = it->getUnitElement();
                     it = new_formula.eraseClauseAt(it);
+                    new_formula.propagate(var);
                 }
                 else
                 {
                     ++it;
                 }
             }
-            for (int var : unit_vars)
-                new_formula.propagate(var);
         } while (there_was_a_unit_clause);
         // pure literal elimination
         new_formula.pureLiteralElimination();
@@ -88,8 +84,7 @@ struct GenNode : YewPar::NodeGenerator<DPLLNode, Empty>
         }
         else if (new_formula.containsEmptyClause())
         {
-            sat = false;
-            numChildren = 1;
+            numChildren = 0;
         }
         else
         {
