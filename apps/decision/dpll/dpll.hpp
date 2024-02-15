@@ -15,7 +15,7 @@ struct CNFClause
 
     bool isEmpty()
     {
-        variables.empty();
+        return variables.empty();
     }
 
     bool isUnitClause()
