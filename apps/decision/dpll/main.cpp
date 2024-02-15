@@ -44,10 +44,24 @@ struct DPLLNode
 struct GenNode : YewPar::NodeGenerator<DPLLNode, Empty>
 {
     bool sat;
+    CNFFormula new_formula;
+    std::vector<CNFClause> phi;
     GenNode(const Empty &, const DPLLNode &node)
     {
-        sat = true;
-        numChildren = 1;
+        phi.assign(node.formula.clauses.begin(), node.formula.clauses.end());
+        new_formula.clauses = phi;
+        // unit propagation
+        for (auto it = phi.begin(); it != phi.end();)
+        {
+            if (it->isUnitClause())
+            {
+                new_formula.unitPropagate(*it);
+            }
+            else
+            {
+                ++it;
+            }
+        }
     }
 
     DPLLNode next() override
@@ -92,7 +106,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
     }
     auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
 
-    std::cout << "CNF formula is";
+    std::cout << "CNF formula is ";
     if (!sol.satisfied)
         std::cout << "not ";
     std::cout << "satisfiable" << std::endl;
