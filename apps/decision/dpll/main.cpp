@@ -56,7 +56,7 @@ struct GenNode : YewPar::NodeGenerator<DPLLNode, Empty>
         new_formula = node.formula.deepcopy();
         // unit propagation
         int var;
-        for (auto it = phi.begin(); it != phi.end();)
+        for (auto it = new_formula.clauses.begin(); it != new_formula.clauses.end();)
         {
             if (it->isUnitClause())
             {
@@ -86,7 +86,7 @@ struct GenNode : YewPar::NodeGenerator<DPLLNode, Empty>
         {
             // choose literal - choose the maximum occurring variable
             // This is stored in new_formula.max_occur_var during pure literal elimination
-            chosen_literal = new_formula.max_occur_var;
+            chosen_literal = new_formula.max_var;
             numChildren = 2;
             copy_of_new_formula = new_formula.deepcopy();
             new_formula.propagate(chosen_literal);

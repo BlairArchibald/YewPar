@@ -58,7 +58,7 @@ struct CNFClause
 struct CNFFormula
 {
     std::vector<CNFClause> clauses;
-    int max_occur_var;
+    int max_var;
 
     int size()
     {
@@ -168,10 +168,12 @@ struct CNFFormula
             for (auto &var_occurrence : occurrences)
             {
                 if (var_occurrence.second > max_val)
+                {
                     max_val = var_occurrence.second;
+                    max_var = var_occurrence.first;
+                }
             }
         }
-        max_occur_var = max_val;
     }
 
     CNFFormula deepcopy() const
