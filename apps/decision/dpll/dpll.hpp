@@ -40,6 +40,8 @@ struct CNFClause
         variables.erase(std::find(variables.begin(), variables.end(), var));
     }
 
+    CNFClause() : variables() {}
+
     CNFClause(const CNFClause &copied) : variables(copied.variables) {}
 
     CNFClause &operator=(const CNFClause &copied)

@@ -53,9 +53,7 @@ struct GenNode : YewPar::NodeGenerator<DPLLNode, Empty>
     {
         first = true;
         sat = false;
-        std::cout << node.formula << std::endl;
         new_formula = node.formula.deepcopy();
-        std::cout << new_formula << std::endl;
         // unit propagation
         int var;
         for (auto it = phi.begin(); it != phi.end();)
