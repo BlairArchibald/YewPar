@@ -51,7 +51,7 @@ struct CNFFormula
         return clauses.size();
     }
 
-    void eraseClauseAt(auto i)
+    void eraseClauseAt(std::vector<CNFClause>::iterator i)
     {
         clauses.erase(i);
     }
@@ -68,6 +68,7 @@ struct CNFFormula
             if (c.isEmpty())
                 return true;
         }
+        return false;
     }
 
     void insertClause(CNFClause clause)
