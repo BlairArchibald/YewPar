@@ -23,7 +23,7 @@ struct CNFClause
         return variables.size() == 1;
     }
 
-    int getLast()
+    int getUnitElement()
     {
         int last = variables.back();
         variables.pop_back();
@@ -44,10 +44,30 @@ struct CNFClause
 struct CNFFormula
 {
     std::vector<CNFClause> clauses;
+    int max_occur_var;
 
     int size()
     {
         return clauses.size();
+    }
+
+    void eraseClauseAt(auto i)
+    {
+        clauses.erase(i);
+    }
+
+    bool isEmpty()
+    {
+        return clauses.empty();
+    }
+
+    bool containsEmptyClause()
+    {
+        for (auto &c : clauses)
+        {
+            if (c.isEmpty())
+                return true;
+        }
     }
 
     void insertClause(CNFClause clause)
@@ -55,15 +75,14 @@ struct CNFFormula
         clauses.push_back(clause);
     }
 
-    void unitPropagate(CNFClause clause)
+    void propagate(int var)
     {
-        int var = clause.getLast();
         for (int i = clauses.size() - 1; i >= 0; i--)
         {
             if (clauses[i].contains(var))
             {
                 // clause satisfied
-                clauses.erase(clauses.begin() + i);
+                eraseClauseAt(clauses.begin() + i);
                 continue;
             }
             if (clauses[i].contains(-var))
@@ -77,6 +96,7 @@ struct CNFFormula
     void pureLiteralElimination()
     {
         std::map<int, bool> pure, not_pure;
+        std::map<int, int> occurrences;
         // Note(kubajj): not_pure does not really need a value
         std::map<int, bool>::iterator it;
         int absvar;
@@ -90,6 +110,7 @@ struct CNFFormula
                 if (it != not_pure.end())
                 {
                     // not pure
+                    occurrences[absvar]++;
                     continue;
                 }
                 it = pure.find(absvar);
@@ -101,11 +122,12 @@ struct CNFFormula
                     {
                         // not pure
                         pure.erase(it);
-                        not_pure.insert(std::pair<int, bool>(absvar, true));
+                        not_pure.emplace(absvar, true);
+                        occurrences.emplace(absvar, 2);
                     }
                     continue;
                 }
-                pure.insert(std::pair<int, bool>(absvar, value));
+                pure.emplace(absvar, value);
             }
         }
         int var;
@@ -120,11 +142,21 @@ struct CNFFormula
                 if (clauses[i].contains(var))
                 {
                     // clause satisfied
-                    clauses.erase(clauses.begin() + i);
+                    eraseClauseAt(clauses.begin() + i);
                     continue;
                 }
             }
         }
+        int max_val = 0;
+        if (!occurrences.empty())
+        {
+            for (auto &var_occurrence : occurrences)
+            {
+                if (var_occurrence.second > max_val)
+                    max_val = var_occurrence.second;
+            }
+        }
+        max_occur_var = max_val;
     }
 };
 CNFFormula parse(std::string filename, int *n_vars);

@@ -44,23 +44,55 @@ struct DPLLNode
 struct GenNode : YewPar::NodeGenerator<DPLLNode, Empty>
 {
     bool sat;
-    CNFFormula new_formula;
+    CNFFormula new_formula, copy_of_new_formula;
     std::vector<CNFClause> phi;
+    int chosen_literal;
+    bool first;
+
     GenNode(const Empty &, const DPLLNode &node)
     {
+        first = true;
+        sat = false;
         phi.assign(node.formula.clauses.begin(), node.formula.clauses.end());
         new_formula.clauses = phi;
         // unit propagation
+        int var;
         for (auto it = phi.begin(); it != phi.end();)
         {
             if (it->isUnitClause())
             {
-                new_formula.unitPropagate(*it);
+                var = it->getUnitElement();
+                new_formula.eraseClauseAt(it);
+                new_formula.propagate(var);
             }
             else
             {
                 ++it;
             }
+        }
+        // pure literal elimination
+        new_formula.pureLiteralElimination();
+        // stopping conditions
+        if (new_formula.isEmpty())
+        {
+            sat = true;
+            numChildren = 1;
+        }
+        else if (new_formula.containsEmptyClause())
+        {
+            sat = false;
+            numChildren = 1;
+        }
+        else
+        {
+            // choose literal - choose the maximum occurring variable
+            // This is stored in new_formula.max_occur_var during pure literal elimination
+            chosen_literal = new_formula.max_occur_var;
+            numChildren = 2;
+            phi.assign(new_formula.clauses.begin(), new_formula.clauses.end());
+            copy_of_new_formula.clauses = phi;
+            new_formula.propagate(chosen_literal);
+            copy_of_new_formula.propagate(-chosen_literal);
         }
     }
 
@@ -68,8 +100,15 @@ struct GenNode : YewPar::NodeGenerator<DPLLNode, Empty>
     {
         DPLLNode node;
         node.satisfied = sat;
-        CNFFormula form;
-        node.formula = form;
+        if (first)
+        {
+            node.formula = new_formula;
+            first = false;
+        }
+        else
+        {
+            node.formula = copy_of_new_formula;
+        }
         return node;
     }
 };
