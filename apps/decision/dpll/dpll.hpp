@@ -39,6 +39,18 @@ struct CNFClause
     {
         variables.erase(std::find(variables.begin(), variables.end(), var));
     }
+
+    CNFClause(const CNFClause &copied) : variables(copied.variables) {}
+
+    CNFClause &operator=(const CNFClause &copied)
+    {
+        if (this != &copied)
+        {
+            variables = copied.variables;
+        }
+
+        return *this;
+    }
 };
 
 struct CNFFormula
@@ -158,6 +170,16 @@ struct CNFFormula
             }
         }
         max_occur_var = max_val;
+    }
+
+    CNFFormula deepcopy() const
+    {
+        CNFFormula newFormula;
+        for (const CNFClause &clause : clauses)
+        {
+            newFormula.clauses.push_back(clause);
+        }
+        return newFormula;
     }
 };
 CNFFormula parse(std::string filename, int *n_vars);
