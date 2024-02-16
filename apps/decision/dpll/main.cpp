@@ -116,7 +116,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
     auto inputFile = opts["satfile"].as<std::string>();
     int n_vars;
     CNFFormula formula = parse(inputFile, &n_vars);
-    std::cout << "CNF formula with " << formula.size() << " clauses and " << n_vars << " variables" << std::endl;
+    std::cout << "CNF formula " << inputFile << " has " << formula.size() << " clauses and " << n_vars << " variables" << std::endl;
 
     auto start_time = std::chrono::steady_clock::now();
     /*
@@ -133,8 +133,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
     if (skeleton == "seq")
     {
         sol = YewPar::Skeletons::Seq<GenNode,
-                                     YewPar::Skeletons::API::Decision,
-                                     YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+                                     YewPar::Skeletons::API::Decision>::search(empty, root, searchParameters);
     }
     else
     {
