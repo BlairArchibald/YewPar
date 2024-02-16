@@ -14,7 +14,7 @@ CNFFormula parse(std::string filename, int *n_vars)
     bool header = false;
     while (std::getline(file, line))
     {
-        if (line.empty() || line[0] == 'c')
+        if (line.empty() || line[0] == 'c' || line[0] == '%' || line[0] == '0')
         {
             continue;
         }
