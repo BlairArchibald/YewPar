@@ -65,9 +65,9 @@ struct CNFFormula
         return clauses.size();
     }
 
-    std::vector<CNFClause>::iterator eraseClauseAt(std::vector<CNFClause>::iterator i)
+    void eraseClauseAt(int i)
     {
-        return clauses.erase(i);
+        clauses.erase(clauses.begin() + i);
     }
 
     bool isEmpty()
@@ -97,7 +97,7 @@ struct CNFFormula
             if (clauses[i].contains(var))
             {
                 // clause satisfied
-                eraseClauseAt(clauses.begin() + i);
+                eraseClauseAt(i);
                 continue;
             }
             if (clauses[i].contains(-var))
@@ -157,7 +157,7 @@ struct CNFFormula
                 if (clauses[i].contains(var))
                 {
                     // clause satisfied
-                    eraseClauseAt(clauses.begin() + i);
+                    eraseClauseAt(i);
                     continue;
                 }
             }

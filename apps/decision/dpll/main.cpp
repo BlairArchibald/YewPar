@@ -59,18 +59,14 @@ struct GenNode : YewPar::NodeGenerator<DPLLNode, Empty>
         do
         {
             there_was_a_unit_clause = false;
-            for (auto it = new_formula.clauses.begin(); it != new_formula.clauses.end();)
+            for (int i = 0; i < new_formula.size(); i++)
             {
-                if (it->isUnitClause())
+                if (new_formula.clauses[i].isUnitClause())
                 {
                     there_was_a_unit_clause = true;
-                    var = it->getUnitElement();
-                    it = new_formula.eraseClauseAt(it);
+                    var = new_formula.clauses[i].getUnitElement();
+                    new_formula.eraseClauseAt(i);
                     new_formula.propagate(var);
-                }
-                else
-                {
-                    ++it;
                 }
             }
         } while (there_was_a_unit_clause);
