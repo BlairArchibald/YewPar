@@ -135,6 +135,11 @@ int hpx_main(hpx::program_options::variables_map &opts)
         sol = YewPar::Skeletons::Seq<GenNode,
                                      YewPar::Skeletons::API::Decision>::search(empty, root, searchParameters);
     }
+    else if (skeleton == "stacksteal")
+    {
+        sol = YewPar::Skeletons::StackStealing<GenNode,
+                                               YewPar::Skeletons::API::Decision>::search(empty, root, searchParameters);
+    }
     else
     {
         std::cerr << "Invalid skeleton type\n";
@@ -160,7 +165,7 @@ int main(int argc, char *argv[])
     desc_commandline.add_options()
       ( "skeleton",
         hpx::program_options::value<std::string>()->default_value("seq"),
-        "Which skeleton to use: only seq possible for now"
+        "Which skeleton to use: seq, stacksteal"
         )
       ( "satfile",
         hpx::program_options::value<std::string>()->required(),
