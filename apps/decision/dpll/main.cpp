@@ -384,7 +384,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
         if (poolType == "deque")
         {
             sol = YewPar::Skeletons::DepthBounded<
-                GenNode<NWORDS>,
+                GenNode,
                 YewPar::Skeletons::API::Decision,
                 YewPar::Skeletons::API::DepthBoundedPoolPolicy<
                     Workstealing::Policies::Workpool>,
@@ -393,7 +393,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
         else
         {
             sol = YewPar::Skeletons::DepthBounded<
-                GenNode<NWORDS>,
+                GenNode,
                 YewPar::Skeletons::API::Decision,
                 YewPar::Skeletons::API::DepthBoundedPoolPolicy<
                     Workstealing::Policies::DepthPoolPolicy>,
@@ -412,7 +412,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
     {
         searchParameters.backtrackBudget = opts["backtrack-budget"].as<std::uint64_t>();
         sol = YewPar::Skeletons::Budget<
-            GenNode<NWORDS>,
+            GenNode,
             YewPar::Skeletons::API::Decision,
             YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
     }
@@ -422,7 +422,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
         if (opts.count("discrepancyOrder"))
         {
             sol = YewPar::Skeletons::Ordered<
-                GenNode<NWORDS>,
+                GenNode,
                 YewPar::Skeletons::API::Decision,
                 YewPar::Skeletons::API::DiscrepancySearch,
                 YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
@@ -430,7 +430,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
         else
         {
             sol = YewPar::Skeletons::Ordered<
-                GenNode<NWORDS>,
+                GenNode,
                 YewPar::Skeletons::API::Decision,
                 YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
         }
