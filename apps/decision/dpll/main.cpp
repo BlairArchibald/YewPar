@@ -14,7 +14,241 @@
 #include "util/func.hpp"
 #include "util/NodeGenerator.hpp"
 
-#include "dpll.hpp"
+#include <stdlib.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+#include <map>
+
+struct CNFClause
+{
+    std::vector<int> variables;
+
+    bool isEmpty()
+    {
+        return variables.empty();
+    }
+
+    bool isUnitClause()
+    {
+        return variables.size() == 1;
+    }
+
+    int getUnitElement()
+    {
+        int last = variables.back();
+        variables.pop_back();
+        return last;
+    }
+
+    bool contains(int var)
+    {
+        return std::find(variables.begin(), variables.end(), var) != variables.end();
+    }
+
+    void remove(int var)
+    {
+        variables.erase(std::find(variables.begin(), variables.end(), var));
+    }
+
+    CNFClause() : variables() {}
+
+    CNFClause(const CNFClause &copied) : variables(copied.variables) {}
+
+    CNFClause &operator=(const CNFClause &copied)
+    {
+        if (this != &copied)
+        {
+            variables = copied.variables;
+        }
+
+        return *this;
+    }
+};
+
+struct CNFFormula
+{
+    std::vector<CNFClause> clauses;
+    int max_var;
+
+    int size()
+    {
+        return clauses.size();
+    }
+
+    void eraseClauseAt(int i)
+    {
+        clauses.erase(clauses.begin() + i);
+    }
+
+    bool isEmpty()
+    {
+        return clauses.empty();
+    }
+
+    bool containsEmptyClause()
+    {
+        for (auto &c : clauses)
+        {
+            if (c.isEmpty())
+                return true;
+        }
+        return false;
+    }
+
+    void insertClause(CNFClause clause)
+    {
+        clauses.push_back(clause);
+    }
+
+    void propagate(int var)
+    {
+        for (int i = clauses.size() - 1; i >= 0; i--)
+        {
+            if (clauses[i].contains(var))
+            {
+                // clause satisfied
+                eraseClauseAt(i);
+                continue;
+            }
+            if (clauses[i].contains(-var))
+            {
+                // variable var cannot satisfy clause c, remove -var from c
+                clauses[i].remove(-var);
+            }
+        }
+    }
+
+    void pureLiteralElimination()
+    {
+        std::map<int, bool> pure, not_pure;
+        std::map<int, int> occurrences;
+        // Note(kubajj): not_pure does not really need a value
+        std::map<int, bool>::iterator it;
+        int absvar;
+        bool value;
+        for (auto &c : clauses)
+        {
+            for (auto &var : c.variables)
+            {
+                absvar = abs(var);
+                it = not_pure.find(absvar);
+                if (it != not_pure.end())
+                {
+                    // not pure
+                    occurrences[absvar]++;
+                    continue;
+                }
+                it = pure.find(absvar);
+                value = (var > 0);
+                if (it != pure.end())
+                {
+                    // check the value
+                    if (it->second != value)
+                    {
+                        // not pure
+                        pure.erase(it);
+                        not_pure.emplace(absvar, true);
+                        occurrences.emplace(absvar, 2);
+                    }
+                    continue;
+                }
+                pure.emplace(absvar, value);
+            }
+        }
+        int var;
+        for (auto it = pure.begin(); it != pure.end(); ++it)
+        {
+            var = it->first;
+            value = it->second;
+            if (!value)
+                var = -var;
+            for (int i = clauses.size() - 1; i >= 0; i--)
+            {
+                if (clauses[i].contains(var))
+                {
+                    // clause satisfied
+                    eraseClauseAt(i);
+                    continue;
+                }
+            }
+        }
+        int max_val = 0;
+        if (!occurrences.empty())
+        {
+            for (auto &var_occurrence : occurrences)
+            {
+                if (var_occurrence.second > max_val)
+                {
+                    max_val = var_occurrence.second;
+                    max_var = var_occurrence.first;
+                }
+            }
+        }
+    }
+
+    CNFFormula deepcopy() const
+    {
+        CNFFormula newFormula;
+        for (const CNFClause &clause : clauses)
+        {
+            newFormula.clauses.push_back(clause);
+        }
+        return newFormula;
+    }
+};
+
+CNFFormula parse(std::string filename, int *n_vars)
+{
+    int n_clauses, current_variable;
+    std::string p, cnf;
+    std::ifstream file(filename);
+    CNFFormula formula;
+    if (!file.is_open())
+    {
+        throw std::runtime_error("Failed to open file");
+    }
+    std::string line;
+    bool header = false;
+    while (std::getline(file, line))
+    {
+        if (line.empty() || line[0] == 'c' || line[0] == '%' || line[0] == '0')
+        {
+            continue;
+        }
+        std::istringstream split_element(line);
+        // Handle header line
+        if (!header && line[0] == 'p')
+        {
+            split_element >> p >> cnf >> *n_vars >> n_clauses;
+            if (cnf != "cnf")
+            {
+                throw std::runtime_error("Invalid CNF file format: Header line missing 'cnf'");
+            }
+            header = true;
+            continue;
+        }
+        if (line[0] == 'p')
+        {
+            throw std::runtime_error("Invalid CNF file format: Multiple header lines");
+        }
+        // Handle clauses
+        CNFClause c;
+        while (split_element >> current_variable && current_variable != 0)
+        {
+            c.variables.push_back(current_variable);
+        }
+        formula.insertClause(c);
+    }
+    if (header && formula.size() != n_clauses)
+    {
+        throw std::runtime_error("Error: Number of clauses stated in the header line does not match the file content");
+    }
+    return formula;
+}
 
 // DPLL does not need a space
 struct Empty

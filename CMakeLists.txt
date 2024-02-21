@@ -9,6 +9,7 @@ find_package(HPX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # Variables to allow toggling of example apps
 set(YEWPAR_LIBRARY_ONLY "OFF" CACHE BOOL "Build YewPar without any applications")
