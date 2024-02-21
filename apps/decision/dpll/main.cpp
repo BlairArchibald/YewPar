@@ -372,13 +372,68 @@ int hpx_main(hpx::program_options::variables_map &opts)
     auto sol = root;
     if (skeleton == "seq")
     {
-        sol = YewPar::Skeletons::Seq<GenNode,
-                                     YewPar::Skeletons::API::Decision>::search(empty, root, searchParameters);
+        sol = YewPar::Skeletons::Seq<
+            GenNode,
+            YewPar::Skeletons::API::Decision,
+            YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+    }
+    else if (skeleton == "depthbounded")
+    {
+        searchParameters.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
+        auto poolType = opts["poolType"].as<std::string>();
+        if (poolType == "deque")
+        {
+            sol = YewPar::Skeletons::DepthBounded<
+                GenNode<NWORDS>,
+                YewPar::Skeletons::API::Decision,
+                YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                    Workstealing::Policies::Workpool>,
+                YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+        }
+        else
+        {
+            sol = YewPar::Skeletons::DepthBounded<
+                GenNode<NWORDS>,
+                YewPar::Skeletons::API::Decision,
+                YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                    Workstealing::Policies::DepthPoolPolicy>,
+                YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+        }
     }
     else if (skeleton == "stacksteal")
     {
-        sol = YewPar::Skeletons::StackStealing<GenNode,
-                                               YewPar::Skeletons::API::Decision>::search(empty, root, searchParameters);
+        searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
+        sol = YewPar::Skeletons::StackStealing<
+            GenNode,
+            YewPar::Skeletons::API::Decision,
+            YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+    }
+    else if (skeleton == "budget")
+    {
+        searchParameters.backtrackBudget = opts["backtrack-budget"].as<std::uint64_t>();
+        sol = YewPar::Skeletons::Budget<
+            GenNode<NWORDS>,
+            YewPar::Skeletons::API::Decision,
+            YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+    }
+    else if (skeleton == "ordered")
+    {
+        searchParameters.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
+        if (opts.count("discrepancyOrder"))
+        {
+            sol = YewPar::Skeletons::Ordered<
+                GenNode<NWORDS>,
+                YewPar::Skeletons::API::Decision,
+                YewPar::Skeletons::API::DiscrepancySearch,
+                YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+        }
+        else
+        {
+            sol = YewPar::Skeletons::Ordered<
+                GenNode<NWORDS>,
+                YewPar::Skeletons::API::Decision,
+                YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+        }
     }
     else
     {
@@ -403,14 +458,23 @@ int main(int argc, char *argv[])
 
     // clang-format off
     desc_commandline.add_options()
-      ( "skeleton",
+      ("skeleton",
         hpx::program_options::value<std::string>()->default_value("seq"),
-        "Which skeleton to use: seq, stacksteal"
-        )
-      ( "satfile",
+        "Which skeleton to use: seq, depthbound, stacksteal, budget, or ordered")
+      ("spawn-depth,d",
+        hpx::program_options::value<std::uint64_t>()->default_value(0),
+        "Depth in the tree to spawn at")
+      ("backtrack-budget,b",
+        hpx::program_options::value<std::uint64_t>()->default_value(0),
+        "Backtrack budget for budget skeleton")
+      ("poolType",
+       hpx::program_options::value<std::string>()->default_value("depthpool"),
+       "Pool type for depthbounded skeleton")
+      ("discrepancyOrder", "Use discrepancy order for the ordered skeleton")
+      ("chunked", "Use chunking with stack stealing")
+      ("satfile",
         hpx::program_options::value<std::string>()->required(),
-        "Where to find the SAT file which contains the clause"
-      );
+        "Where to find the SAT file which contains the clause");
     // clang-format on
 
     YewPar::registerPerformanceCounters();
