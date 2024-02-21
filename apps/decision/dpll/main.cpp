@@ -67,6 +67,12 @@ struct CNFClause
 
         return *this;
     }
+
+    template <class Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        ar & variables;
+    }
 };
 
 struct CNFFormula
