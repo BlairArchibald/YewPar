@@ -375,12 +375,10 @@ struct StackStealing {
     auto depth = 1;
 
     std::vector<hpx::future<void> > futures;
-    // FIXME: Disabling to help debug
-    /*
     if (totalThreads > 1) {
       auto depthRequired = getRequiredSpawnDepth(space, root, params, totalThreads);
       spawnInitialWork(depthRequired, totalThreads - 1, stackDepth, depth, space, genStack, acc, futures);
-    } */
+    }
 
     // Register the rest of the work from the main thread with the search manager
     auto searchMgrInfo = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->registerThread();
@@ -395,6 +393,7 @@ struct StackStealing {
     if (totalThreads == 1) {
       runTaskFromStack(1, space, genStack, stealRequest, acc, pid, std::get<1>(searchMgrInfo), stackDepth, depth);
     } else {
+      // Not clear this is executing?
       hpx::execution::parallel_executor exe(hpx::threads::thread_priority::critical,
                                             hpx::threads::thread_stacksize::huge);
       hpx::function<void(), false> fn = hpx::bind(&runTaskFromStack, 1, space, genStack, stealRequest, acc, pid, std::get<1>(searchMgrInfo), stackDepth, depth);
