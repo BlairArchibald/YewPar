@@ -363,7 +363,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
         size_t last_slash = inputFile.find_last_of('/');
         if (last_slash != std::string::npos)
         {
-            just_filename = str.substr(last_slash + 1);
+            just_filename = inputFile.substr(last_slash + 1);
         }
         else
         {
