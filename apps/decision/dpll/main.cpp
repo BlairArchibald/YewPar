@@ -370,12 +370,22 @@ int hpx_main(hpx::program_options::variables_map &opts)
     searchParameters.expectedObjective = true;
     auto skeleton = opts["skeleton"].as<std::string>();
     auto sol = root;
+    bool verbose = static_cast<bool>(opts.count("verbose"));
     if (skeleton == "seq")
     {
-        sol = YewPar::Skeletons::Seq<
-            GenNode,
-            YewPar::Skeletons::API::Decision,
-            YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+        if (verbose)
+        {
+            sol = YewPar::Skeletons::Seq<
+                GenNode,
+                YewPar::Skeletons::API::Decision,
+                YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+        }
+        else
+        {
+            sol = YewPar::Skeletons::Seq<
+                GenNode,
+                YewPar::Skeletons::API::Decision>::search(empty, root, searchParameters);
+        }
     }
     else if (skeleton == "depthbounded")
     {
@@ -472,6 +482,7 @@ int main(int argc, char *argv[])
        "Pool type for depthbounded skeleton")
       ("discrepancyOrder", "Use discrepancy order for the ordered skeleton")
       ("chunked", "Use chunking with stack stealing")
+      ("verbose", "Use MoreVerbose")
       ("satfile",
         hpx::program_options::value<std::string>()->required(),
         "Where to find the SAT file which contains the clause");
