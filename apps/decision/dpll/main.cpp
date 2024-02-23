@@ -356,7 +356,25 @@ int hpx_main(hpx::program_options::variables_map &opts)
     auto inputFile = opts["satfile"].as<std::string>();
     int n_vars;
     CNFFormula formula = parse(inputFile, &n_vars);
-    std::cout << "CNF formula " << inputFile << " has " << formula.size() << " clauses and " << n_vars << " variables" << std::endl;
+    bool csv = static_cast<bool>(opts.count("csv"));
+    if (csv)
+    {
+        std::string just_filename;
+        size_t last_slash = inputFile.find_last_of('/');
+        if (last_slash != std::string::npos)
+        {
+            just_filename = str.substr(last_slash + 1);
+        }
+        else
+        {
+            just_filename = inputFile;
+        }
+        std::cout << just_filename << "," << formula.size() << "," << n_vars << ",";
+    }
+    else
+    {
+        std::cout << "CNF formula " << inputFile << " has " << formula.size() << " clauses and " << n_vars << " variables" << std::endl;
+    }
 
     auto start_time = std::chrono::steady_clock::now();
     /*
@@ -452,11 +470,18 @@ int hpx_main(hpx::program_options::variables_map &opts)
     }
     auto overall_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
 
-    std::cout << "CNF formula is ";
-    if (!sol.satisfied)
-        std::cout << "not ";
-    std::cout << "satisfiable" << std::endl;
-    hpx::cout << "cpu = " << overall_time.count() << std::endl;
+    if (csv)
+    {
+        std::cout << (sol.satisfied ? 1 : 0) << "," << overall_time.count() << std::endl;
+    }
+    else
+    {
+        std::cout << "CNF formula is ";
+        if (!sol.satisfied)
+            std::cout << "not ";
+        std::cout << "satisfiable" << std::endl;
+        hpx::cout << "cpu = " << overall_time.count() << std::endl;
+    }
 
     return hpx::finalize();
 }
@@ -483,6 +508,7 @@ int main(int argc, char *argv[])
       ("discrepancyOrder", "Use discrepancy order for the ordered skeleton")
       ("chunked", "Use chunking with stack stealing")
       ("verbose", "Use MoreVerbose")
+      ("csv", "Output in CSV format")
       ("satfile",
         hpx::program_options::value<std::string>()->required(),
         "Where to find the SAT file which contains the clause");
