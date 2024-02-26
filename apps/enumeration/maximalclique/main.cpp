@@ -50,6 +50,12 @@ struct BKNode
 struct SearchSpace
 {
     std::map<int, std::set<int>> graph;
+
+    template <class Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        ar & graph;
+    }
 };
 
 struct GenNode : YewPar::NodeGenerator<BKNode, SearchSpace>
@@ -60,7 +66,7 @@ struct GenNode : YewPar::NodeGenerator<BKNode, SearchSpace>
     std::reference_wrapper<const SearchSpace> space;
 
     // constructor
-    GenNode(const dimacs::SearchSpace &space, const BKNode &node) : space(std::cref(space))
+    GenNode(const SearchSpace &space, const BKNode &node) : space(std::cref(space))
     {
         // Body
         if (node.P.empty() && node.X.empty())
@@ -96,7 +102,29 @@ struct GenNode : YewPar::NodeGenerator<BKNode, SearchSpace>
         std::set_intersection(X.begin(), X.end(), neighbourSet.begin(), neighbourSet.end(), std::inserter(newNode.X, newNode.X.begin()));
         iter = P.erase(iter);
         X.insert(v);
+        return newNode;
     }
+};
+
+struct CountSols : YewPar::Enumerator<Node, std::uint64_t>
+{
+    std::uint64_t count;
+    CountSols() : count(0){};
+
+    void accumulate(const BKNode &n) override
+    {
+        if (n.P.empty() && n.X.empty())
+        {
+            count++;
+        }
+    }
+
+    void combine(const std::uint64_t &other) override
+    {
+        count += other;
+    }
+
+    std::uint64_t get() override { return count; }
 };
 
 int hpx_main(hpx::program_options::variables_map &opts)
