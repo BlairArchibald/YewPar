@@ -144,7 +144,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
     auto start_time = std::chrono::steady_clock::now();
 
     std::uint64_t count;
-    auto skeletonType = opts["skeleton"].as<std::string>();
+    auto skeleton = opts["skeleton"].as<std::string>();
     if (skeleton == "seq")
     {
         YewPar::Skeletons::API::Params<> searchParameters;
