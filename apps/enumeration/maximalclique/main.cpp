@@ -106,7 +106,7 @@ struct GenNode : YewPar::NodeGenerator<BKNode, SearchSpace>
     }
 };
 
-struct CountSols : YewPar::Enumerator<Node, std::uint64_t>
+struct CountSols : YewPar::Enumerator<BKNode, std::uint64_t>
 {
     std::uint64_t count;
     CountSols() : count(0){};
@@ -144,6 +144,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
     auto start_time = std::chrono::steady_clock::now();
 
     std::uint64_t count;
+    auto skeletonType = opts["skeleton"].as<std::string>();
     if (skeleton == "seq")
     {
         YewPar::Skeletons::API::Params<> searchParameters;
