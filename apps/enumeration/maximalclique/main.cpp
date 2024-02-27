@@ -216,7 +216,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
 
     auto overall_time = std::chrono::duration_cast<
         std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
-    hpx::cout << "Number of Maximal Cliques = " << size << ": " << count << std::endl;
+    hpx::cout << "Number of Maximal Cliques = " << count << std::endl;
     hpx::cout << "cpu = " << overall_time.count() << std::endl;
 
     return hpx::finalize();
