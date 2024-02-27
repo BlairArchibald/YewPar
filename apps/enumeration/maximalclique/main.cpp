@@ -1,6 +1,6 @@
 /*
 
-Simple application adapting the Bron-Kerbosh algoprithm to enumerate Maximal Cliques
+Application adapting the Bron-Kerbosh algorithm with pivoting by Tomita et al. to enumerate Maximal Cliques
 
 */
 
@@ -50,17 +50,62 @@ struct BKNode
 struct SearchSpace
 {
     std::map<int, std::set<int>> graph;
+    unsigned n_vertices;
 
     template <class Archive>
     void serialize(Archive &ar, const unsigned int version)
     {
         ar & graph;
+        ar & n_vertices;
+    }
+
+    int findIntersectionSize(const std::set<int> &set_of_graph, const std::set<int> &P) const
+    {
+        int count = 0;
+        std::set<int>::iterator iter1 = set_of_graph.begin();
+        std::set<int>::iterator iter2 = P.begin();
+
+        while (iter1 != set_of_graph.end() && iter2 != P.end())
+        {
+            if (*iter1 < *iter2)
+            {
+                ++iter1;
+            }
+            else if (*iter2 < *iter1)
+            {
+                ++iter2;
+            }
+            else
+            {
+                ++count;
+                ++iter1;
+                ++iter2;
+            }
+        }
+        return count;
+    }
+
+    int findPivot(const std::set<int> &PuX, const std::set<int> &P) const
+    {
+        int max_degree = 0;
+        int max_vertex = -1;
+        int current;
+        for (int neighbours_of : PuX)
+        {
+            current = findIntersectionSize(graph.find(neighbours_of)->second, P);
+            if (current > max_degree)
+            {
+                max_vertex = neighbours_of;
+                max_degree = current;
+            }
+        }
+        return max_vertex;
     }
 };
 
 struct GenNode : YewPar::NodeGenerator<BKNode, SearchSpace>
 {
-    std::set<int> R, P, X;
+    std::set<int> R, P, P_minus_N_pivot, X;
     int i, v;
     std::set<int>::iterator iter;
     std::reference_wrapper<const SearchSpace> space;
@@ -78,7 +123,15 @@ struct GenNode : YewPar::NodeGenerator<BKNode, SearchSpace>
         {
             R = node.R;
             P = node.P;
+            P_minus_N_pivot = node.P;
             X = node.X;
+            std::set<int> PuX;
+            std::set_union(P.begin(), P.end(), X.begin(), X.end(), std::inserter(PuX, PuX.begin()));
+            int pivot = space.findPivot(PuX, P);
+            for (int neighbour_of_pivot : space.graph.find(pivot)->second)
+            {
+                P_minus_N_pivot.erase(neighbour_of_pivot);
+            }
             numChildren = P.size();
             i = 0;
             iter = P.begin();
@@ -88,9 +141,9 @@ struct GenNode : YewPar::NodeGenerator<BKNode, SearchSpace>
     // Return the next BKNode to look into
     BKNode next() override
     {
-        if (iter == P.end())
+        if (iter == P_minus_N_pivot.end())
         {
-            std::cerr << "Wrong number of children or wrong iterator" << std::endl;
+            std::cerr << "Error: Reached the end of P\\N(pivot)" << std::endl;
         }
         v = *iter;
         BKNode newNode;
@@ -99,8 +152,9 @@ struct GenNode : YewPar::NodeGenerator<BKNode, SearchSpace>
         std::set_union(R.begin(), R.end(), vSet.begin(), vSet.end(), std::inserter(newNode.R, newNode.R.begin()));
         std::set_intersection(P.begin(), P.end(), neighbourSet.begin(), neighbourSet.end(), std::inserter(newNode.P, newNode.P.begin()));
         std::set_intersection(X.begin(), X.end(), neighbourSet.begin(), neighbourSet.end(), std::inserter(newNode.X, newNode.X.begin()));
-        iter = P.erase(iter);
+        P.erase(v);
         X.insert(v);
+        iter++;
         return newNode;
     }
 };
@@ -134,6 +188,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
 
     SearchSpace space;
     space.graph = gFile.second;
+    space.n_vertices = gFile.first;
     BKNode root;
     for (unsigned i = 0; i < gFile.first; ++i)
     {
