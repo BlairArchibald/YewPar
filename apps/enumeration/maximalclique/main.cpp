@@ -88,18 +88,32 @@ struct SearchSpace
     int findPivot(const std::set<int> &PuX, const std::set<int> &P) const
     {
         int max_degree = 0;
-        int max_vertex = -1;
+        int pivot_vertex = -1;
         int current;
+        int lowest_degree_in_PuX = -1;
         for (int neighbours_of : PuX)
         {
             current = findIntersectionSize(graph.find(neighbours_of)->second, P);
             if (current > max_degree)
             {
-                max_vertex = neighbours_of;
+                pivot_vertex = neighbours_of;
                 max_degree = current;
             }
         }
-        return max_vertex;
+        // No pivot found, choose vertex with the lowest degree in PuX
+        if (pivot_vertex == -1)
+        {
+            for (int vertex_in_PuX : PuX)
+            {
+                current = graph.find(vertex_in_PuX)->second.size();
+                if (lowest_degree_in_PuX == -1 || current < lowest_degree_in_PuX)
+                {
+                    lowest_degree_in_PuX = current;
+                    pivot_vertex = vertex_in_PuX;
+                }
+            }
+        }
+        return pivot_vertex;
     }
 };
 
