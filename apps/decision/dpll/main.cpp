@@ -409,58 +409,117 @@ int hpx_main(hpx::program_options::variables_map &opts)
     {
         searchParameters.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
         auto poolType = opts["poolType"].as<std::string>();
-        if (poolType == "deque")
+        if (verbose)
         {
-            sol = YewPar::Skeletons::DepthBounded<
-                GenNode,
-                YewPar::Skeletons::API::Decision,
-                YewPar::Skeletons::API::DepthBoundedPoolPolicy<
-                    Workstealing::Policies::Workpool>,
-                YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+            if (poolType == "deque")
+            {
+                sol = YewPar::Skeletons::DepthBounded<
+                    GenNode,
+                    YewPar::Skeletons::API::Decision,
+                    YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                        Workstealing::Policies::Workpool>,
+                    YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+            }
+            else
+            {
+                sol = YewPar::Skeletons::DepthBounded<
+                    GenNode,
+                    YewPar::Skeletons::API::Decision,
+                    YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                        Workstealing::Policies::DepthPoolPolicy>,
+                    YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+            }
         }
         else
         {
-            sol = YewPar::Skeletons::DepthBounded<
-                GenNode,
-                YewPar::Skeletons::API::Decision,
-                YewPar::Skeletons::API::DepthBoundedPoolPolicy<
-                    Workstealing::Policies::DepthPoolPolicy>,
-                YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+            if (poolType == "deque")
+            {
+                sol = YewPar::Skeletons::DepthBounded<
+                    GenNode,
+                    YewPar::Skeletons::API::Decision,
+                    YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                        Workstealing::Policies::Workpool>>::search(empty, root, searchParameters);
+            }
+            else
+            {
+                sol = YewPar::Skeletons::DepthBounded<
+                    GenNode,
+                    YewPar::Skeletons::API::Decision,
+                    YewPar::Skeletons::API::DepthBoundedPoolPolicy<
+                        Workstealing::Policies::DepthPoolPolicy>>::search(empty, root, searchParameters);
+            }
         }
     }
     else if (skeleton == "stacksteal")
     {
         searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
-        sol = YewPar::Skeletons::StackStealing<
-            GenNode,
-            YewPar::Skeletons::API::Decision,
-            YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
-    }
-    else if (skeleton == "budget")
-    {
-        searchParameters.backtrackBudget = opts["backtrack-budget"].as<std::uint64_t>();
-        sol = YewPar::Skeletons::Budget<
-            GenNode,
-            YewPar::Skeletons::API::Decision,
-            YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
-    }
-    else if (skeleton == "ordered")
-    {
-        searchParameters.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
-        if (opts.count("discrepancyOrder"))
+        if (verbose)
         {
-            sol = YewPar::Skeletons::Ordered<
+            sol = YewPar::Skeletons::StackStealing<
                 GenNode,
                 YewPar::Skeletons::API::Decision,
-                YewPar::Skeletons::API::DiscrepancySearch,
                 YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
         }
         else
         {
-            sol = YewPar::Skeletons::Ordered<
+            sol = YewPar::Skeletons::StackStealing<
+                GenNode,
+                YewPar::Skeletons::API::Decision>::search(empty, root, searchParameters);
+        }
+    }
+    else if (skeleton == "budget")
+    {
+        searchParameters.backtrackBudget = opts["backtrack-budget"].as<std::uint64_t>();
+        if (verbose)
+        {
+            sol = YewPar::Skeletons::Budget<
                 GenNode,
                 YewPar::Skeletons::API::Decision,
                 YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+        }
+        else
+        {
+            sol = YewPar::Skeletons::Budget<
+                GenNode,
+                YewPar::Skeletons::API::Decision>::search(empty, root, searchParameters);
+        }
+    }
+    else if (skeleton == "ordered")
+    {
+        searchParameters.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
+        if (verbose)
+        {
+            if (opts.count("discrepancyOrder"))
+            {
+                sol = YewPar::Skeletons::Ordered<
+                    GenNode,
+                    YewPar::Skeletons::API::Decision,
+                    YewPar::Skeletons::API::DiscrepancySearch,
+                    YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+            }
+            else
+            {
+                sol = YewPar::Skeletons::Ordered<
+                    GenNode,
+                    YewPar::Skeletons::API::Decision,
+                    YewPar::Skeletons::API::MoreVerbose>::search(empty, root, searchParameters);
+            }
+        }
+        else
+        {
+            if (opts.count("discrepancyOrder"))
+            {
+                sol = YewPar::Skeletons::Ordered<
+                    GenNode,
+                    YewPar::Skeletons::API::Decision,
+                    YewPar::Skeletons::API::DiscrepancySearch>::search(empty, root, searchParameters);
+            }
+            else
+            {
+                sol = YewPar::Skeletons::Ordered<
+                    GenNode,
+                    YewPar::Skeletons::API::Decision>::search(empty, root, searchParameters);
+            }
         }
     }
     else
