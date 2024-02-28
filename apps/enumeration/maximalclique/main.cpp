@@ -50,68 +50,47 @@ struct BKNode
 struct SearchSpace
 {
     std::map<int, std::set<int>> graph;
-    unsigned n_vertices;
 
     template <class Archive>
     void serialize(Archive &ar, const unsigned int version)
     {
         ar & graph;
-        ar & n_vertices;
     }
 
     int findIntersectionSize(const std::set<int> &set_of_graph, const std::set<int> &P) const
     {
-        int count = 0;
-        std::set<int>::iterator iter1 = set_of_graph.begin();
-        std::set<int>::iterator iter2 = P.begin();
-
-        while (iter1 != set_of_graph.end() && iter2 != P.end())
-        {
-            if (*iter1 < *iter2)
-            {
-                ++iter1;
-            }
-            else if (*iter2 < *iter1)
-            {
-                ++iter2;
-            }
-            else
-            {
-                ++count;
-                ++iter1;
-                ++iter2;
-            }
-        }
-        return count;
+        std::set<int> intersection;
+        std::set_intersection(P.begin(), P.end(), set_of_graph.begin(), set_of_graph.end(), std::inserter(intersection, intersection.begin()));
+        return intersection.size();
     }
 
     int findPivot(const std::set<int> &PuX, const std::set<int> &P) const
     {
+        int max_cardinality = 0;
         int max_degree = 0;
         int pivot_vertex = -1;
-        int current;
-        int lowest_degree_in_PuX = -1;
-        for (int neighbours_of : PuX)
+        int max_degree_vertex = -1;
+        int current_intersection_cardinality;
+        int current_degree;
+        for (int current_vertex : PuX)
         {
-            current = findIntersectionSize(graph.find(neighbours_of)->second, P);
-            if (current > max_degree)
+            current_degree = graph.find(current_vertex)->second.size();
+            current_intersection_cardinality = findIntersectionSize(graph.find(current_vertex)->second, P);
+            if (current_intersection_cardinality > max_cardinality)
             {
-                pivot_vertex = neighbours_of;
-                max_degree = current;
+                pivot_vertex = current_vertex;
+                max_cardinality = current_intersection_cardinality;
+            }
+            else if (current_degree > max_degree)
+            {
+                max_degree = current_degree;
+                max_degree_vertex = current_vertex;
             }
         }
-        // No pivot found, choose vertex with the lowest degree in PuX
+        // No pivot found, choose vertex with the largest degree in PuX
         if (pivot_vertex == -1)
         {
-            for (int vertex_in_PuX : PuX)
-            {
-                current = graph.find(vertex_in_PuX)->second.size();
-                if (lowest_degree_in_PuX == -1 || current < lowest_degree_in_PuX)
-                {
-                    lowest_degree_in_PuX = current;
-                    pivot_vertex = vertex_in_PuX;
-                }
-            }
+            pivot_vertex = max_degree_vertex;
         }
         return pivot_vertex;
     }
@@ -120,7 +99,7 @@ struct SearchSpace
 struct GenNode : YewPar::NodeGenerator<BKNode, SearchSpace>
 {
     std::set<int> R, P, P_minus_N_pivot, X;
-    int i, v;
+    int v;
     std::set<int>::iterator iter;
     std::reference_wrapper<const SearchSpace> space;
 
@@ -146,9 +125,8 @@ struct GenNode : YewPar::NodeGenerator<BKNode, SearchSpace>
             {
                 P_minus_N_pivot.erase(neighbour_of_pivot);
             }
-            numChildren = P.size();
-            i = 0;
-            iter = P.begin();
+            numChildren = P_minus_N_pivot.size();
+            iter = P_minus_N_pivot.begin();
         }
     }
 
@@ -202,7 +180,6 @@ int hpx_main(hpx::program_options::variables_map &opts)
 
     SearchSpace space;
     space.graph = gFile.second;
-    space.n_vertices = gFile.first;
     BKNode root;
     for (unsigned i = 0; i < gFile.first; ++i)
     {
