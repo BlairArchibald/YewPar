@@ -191,6 +191,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
 
     std::uint64_t count;
     auto skeleton = opts["skeleton"].as<std::string>();
+    bool verbose = static_cast<bool>(opts.count("verbose"));
     if (skeleton == "seq")
     {
         YewPar::Skeletons::API::Params<> searchParameters;
