@@ -46,7 +46,7 @@ namespace dimacs
         if (0 != result.first)
           throw SomethingWentWrong{"multiple 'p' lines encountered"};
         result.first = std::stoi(match.str(2));
-        edges = std::stoi(match.str(2));
+        edges = std::stoi(match.str(3));
         for (unsigned i = 0; i < result.first; ++i)
           result.second[i];
       }
