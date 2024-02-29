@@ -176,12 +176,13 @@ int hpx_main(hpx::program_options::variables_map &opts)
 {
     auto inputFile = opts["input-file"].as<std::string>();
 
-    auto gFile = dimacs::read_dimacs(inputFile);
-
+    int n_vertices, n_edges;
+    auto gFile = dimacs::read_dimacs(inputFile, n_edges);
+    n_vertices = gFile.first;
     SearchSpace space;
     space.graph = gFile.second;
     BKNode root;
-    for (unsigned i = 0; i < gFile.first; ++i)
+    for (unsigned i = 0; i < n_vertices; ++i)
     {
         root.P.insert(i);
     }
