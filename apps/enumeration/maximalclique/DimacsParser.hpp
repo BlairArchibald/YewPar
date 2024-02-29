@@ -22,7 +22,7 @@ public:
 namespace dimacs
 {
   using GraphFromFile = std::pair<unsigned, std::map<int, std::set<int>>>;
-  auto read_dimacs(const std::string &filename) -> GraphFromFile;
+  auto read_dimacs(const std::string &filename, int &n_edges) -> GraphFromFile;
 }
 
 #endif
