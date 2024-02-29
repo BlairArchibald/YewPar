@@ -216,6 +216,7 @@ int hpx_main(hpx::program_options::variables_map &opts)
     else if (skeleton == "depthbounded")
     {
         YewPar::Skeletons::API::Params<> searchParameters;
+        auto spawnDepth = opts["spawn-depth"].as<unsigned>();
         searchParameters.spawnDepth = spawnDepth;
         if (verbose)
         {
