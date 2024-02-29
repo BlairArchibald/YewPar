@@ -213,6 +213,72 @@ int hpx_main(hpx::program_options::variables_map &opts)
                 YewPar::Skeletons::API::DepthLimited>::search(space, root, searchParameters);
         }
     }
+    else if (skeleton == "depthbounded")
+    {
+        YewPar::Skeletons::API::Params<> searchParameters;
+        searchParameters.spawnDepth = spawnDepth;
+        if (verbose)
+        {
+            count = YewPar::Skeletons::DepthBounded<
+                GenNode,
+                YewPar::Skeletons::API::Enumeration,
+                YewPar::Skeletons::API::Enumerator<CountSols>,
+                YewPar::Skeletons::API::DepthLimited,
+                YewPar::Skeletons::API::MoreVerbose>::search(space, root, searchParameters);
+        }
+        else
+        {
+            count = YewPar::Skeletons::DepthBounded<
+                GenNode,
+                YewPar::Skeletons::API::Enumeration,
+                YewPar::Skeletons::API::Enumerator<CountSols>,
+                YewPar::Skeletons::API::DepthLimited>::search(space, root, searchParameters);
+        }
+    }
+    else if (skeleton == "stacksteal")
+    {
+        YewPar::Skeletons::API::Params<> searchParameters;
+        searchParameters.stealAll = static_cast<bool>(opts.count("chunked"));
+        if (verbose)
+        {
+            count = YewPar::Skeletons::StackStealing<
+                GenNode,
+                YewPar::Skeletons::API::Enumeration,
+                YewPar::Skeletons::API::Enumerator<CountSols>,
+                YewPar::Skeletons::API::DepthLimited,
+                YewPar::Skeletons::API::MoreVerbose>::search(space, root, searchParameters);
+        }
+        else
+        {
+            count = YewPar::Skeletons::StackStealing<
+                GenNode,
+                YewPar::Skeletons::API::Enumeration,
+                YewPar::Skeletons::API::Enumerator<CountSols>,
+                YewPar::Skeletons::API::DepthLimited>::search(space, root, searchParameters);
+        }
+    }
+    else if (skeleton == "budget")
+    {
+        YewPar::Skeletons::API::Params<> searchParameters;
+        searchParameters.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
+        if (verbose)
+        {
+            count = YewPar::Skeletons::Budget<
+                GenNode,
+                YewPar::Skeletons::API::Enumeration,
+                YewPar::Skeletons::API::Enumerator<CountSols>,
+                YewPar::Skeletons::API::DepthLimited,
+                YewPar::Skeletons::API::MoreVerbose>::search(space, root, searchParameters);
+        }
+        else
+        {
+            count = YewPar::Skeletons::Budget<
+                GenNode,
+                YewPar::Skeletons::API::Enumeration,
+                YewPar::Skeletons::API::Enumerator<CountSols>,
+                YewPar::Skeletons::API::DepthLimited>::search(space, root, searchParameters);
+        }
+    }
     else
     {
         hpx::cout << "Invalid skeleton type: " << skeleton << std::endl;
