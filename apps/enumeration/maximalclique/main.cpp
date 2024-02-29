@@ -194,11 +194,23 @@ int hpx_main(hpx::program_options::variables_map &opts)
     if (skeleton == "seq")
     {
         YewPar::Skeletons::API::Params<> searchParameters;
-        count = YewPar::Skeletons::Seq<
-            GenNode,
-            YewPar::Skeletons::API::Enumeration,
-            YewPar::Skeletons::API::Enumerator<CountSols>,
-            YewPar::Skeletons::API::DepthLimited>::search(space, root, searchParameters);
+        if (verbose)
+        {
+            count = YewPar::Skeletons::Seq<
+                GenNode,
+                YewPar::Skeletons::API::Enumeration,
+                YewPar::Skeletons::API::Enumerator<CountSols>,
+                YewPar::Skeletons::API::DepthLimited,
+                YewPar::Skeletons::API::MoreVerbose>::search(space, root, searchParameters);
+        }
+        else
+        {
+            count = YewPar::Skeletons::Seq<
+                GenNode,
+                YewPar::Skeletons::API::Enumeration,
+                YewPar::Skeletons::API::Enumerator<CountSols>,
+                YewPar::Skeletons::API::DepthLimited>::search(space, root, searchParameters);
+        }
     }
     else
     {
@@ -208,8 +220,26 @@ int hpx_main(hpx::program_options::variables_map &opts)
 
     auto overall_time = std::chrono::duration_cast<
         std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
-    hpx::cout << "Number of Maximal Cliques = " << count << std::endl;
-    hpx::cout << "cpu = " << overall_time.count() << std::endl;
+    bool csv = static_cast<bool>(opts.count("csv"));
+    if (csv)
+    {
+        std::string just_filename;
+        size_t last_slash = inputFile.find_last_of('/');
+        if (last_slash != std::string::npos)
+        {
+            just_filename = inputFile.substr(last_slash + 1);
+        }
+        else
+        {
+            just_filename = inputFile;
+        }
+        std::cout << just_filename << "," << n_vertices << "," << n_edges << "," << count << "," << overall_time.count() << std::endl;
+    }
+    else
+    {
+        hpx::cout << "Number of Maximal Cliques = " << count << std::endl;
+        hpx::cout << "cpu = " << overall_time.count() << std::endl;
+    }
 
     return hpx::finalize();
 }
@@ -238,6 +268,8 @@ int main(int argc, char *argv[])
       )
     ("discrepancyOrder", "Use discrepancy order for the ordered skeleton")
     ("chunked", "Use chunking with stack stealing")
+    ("verbose", "Use MoreVerbose")
+    ("csv", "Output in CSV format")
     ("poolType",
      hpx::program_options::value<std::string>()->default_value("depthpool"),
      "Pool type for depthbounded skeleton");
