@@ -100,7 +100,6 @@ struct GenNode : YewPar::NodeGenerator<BKNode, SearchSpace>
 {
     std::set<int> R, P, P_minus_N_pivot, X;
     int v;
-    std::set<int>::iterator iter;
     std::reference_wrapper<const SearchSpace> space;
 
     // constructor
@@ -126,18 +125,14 @@ struct GenNode : YewPar::NodeGenerator<BKNode, SearchSpace>
                 P_minus_N_pivot.erase(neighbour_of_pivot);
             }
             numChildren = P_minus_N_pivot.size();
-            iter = P_minus_N_pivot.begin();
         }
     }
 
     // Return the next BKNode to look into
     BKNode next() override
     {
-        if (iter == P_minus_N_pivot.end())
-        {
-            std::cerr << "Error: Reached the end of P\\N(pivot)" << std::endl;
-        }
-        v = *iter;
+        v = *(P_minus_N_pivot.begin());
+        P_minus_N_pivot.erase(v);
         BKNode newNode;
         std::set<int> vSet = {v};
         auto neighbourSet = space.get().graph.find(v)->second;
@@ -146,7 +141,6 @@ struct GenNode : YewPar::NodeGenerator<BKNode, SearchSpace>
         std::set_intersection(X.begin(), X.end(), neighbourSet.begin(), neighbourSet.end(), std::inserter(newNode.X, newNode.X.begin()));
         P.erase(v);
         X.insert(v);
-        iter++;
         return newNode;
     }
 };
