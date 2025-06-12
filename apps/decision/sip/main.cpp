@@ -588,17 +588,17 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
 
   bool sat = false;
 
-  std::reference_wrapper<const Model<n_words_> > model;
-  std::reference_wrapper<const SIPNode<n_words_> > parent;
+  const Model<n_words_>  &model;
+  const SIPNode<n_words_> &parent;
 
   GenNode(const Model<n_words_> & m, const SIPNode<n_words_> & n) :
-    model(std::cref(m)), parent(std::cref(n)) {
+    model(m), parent(n) {
 
-    if (!parent.get().propagationSuccess) {
+    if (!parent.propagationSuccess) {
       this->numChildren = 0;
     } else {
       // If we have no more domains then we are done so give a single SAT child
-      branch_domain = find_branch_domain(model.get(), parent.get().domains);
+      branch_domain = find_branch_domain(model, parent.domains);
       if (!branch_domain) {
         this->numChildren = 1;
         sat = true;
@@ -619,17 +619,17 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
 
   // Get the next value
   SIPNode<n_words_> next() override {
-    if (sat) { return SIPNode<n_words_>(parent.get().assignments, true); }
+    if (sat) { return SIPNode<n_words_>(parent.assignments, true); }
 
     // We need to do the copy in case we are running in parallel
-    auto newAssignments = parent.get().assignments;
+    auto newAssignments = parent.assignments;
     Assignment a {branch_domain->v, branch_v[f_v]};
     newAssignments.values.push_back(hpx::make_tuple(std::move(a), true));
 
-    auto dom = parent.get().domains;
+    auto dom = parent.domains;
     auto new_domains = copy_domains_and_assign(dom, branch_domain->v, branch_v[f_v]);
 
-    auto prop = propagate(model.get(), new_domains, newAssignments);
+    auto prop = propagate(model, new_domains, newAssignments);
 
     ++f_v;
 

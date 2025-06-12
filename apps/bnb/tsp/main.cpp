@@ -74,36 +74,36 @@ static int next_set(const std::bitset<words_> & bs, unsigned max, unsigned last_
 struct NodeGen : YewPar::NodeGenerator<TSPNode, TSPSpace> {
   unsigned lastCity;
 
-  std::reference_wrapper<const TSPSpace> space;
-  std::reference_wrapper<const TSPNode> parent;
+  const TSPSpace &space;
+  const TSPNode &parent;
 
   unsigned nextToVisit;
 
   NodeGen(const TSPSpace & space, const TSPNode & n) :
-      space(std::cref(space)), parent(std::cref(n)) {
+      space(space), parent(n) {
     lastCity = n.sol.cities.back();
     numChildren = n.unvisited.count();
-    const auto & bs = parent.get().unvisited;
-    nextToVisit = next_set<MAX_CITIES>(bs, this->space.get().numCities, 0);
+    const auto & bs = parent.unvisited;
+    nextToVisit = next_set<MAX_CITIES>(bs, this->space.numCities, 0);
   }
 
   TSPNode next() override {
     auto nextCity = nextToVisit;
-    nextToVisit = next_set<MAX_CITIES>(parent.get().unvisited, space.get().numCities, nextToVisit);
+    nextToVisit = next_set<MAX_CITIES>(parent.unvisited, space.numCities, nextToVisit);
 
     // Not quite right since partial tours don't have a length
-    auto newSol = parent.get().sol;
+    auto newSol = parent.sol;
     newSol.cities.push_back(nextCity);
-    newSol.tourLength += space.get().distances[lastCity][nextCity];
+    newSol.tourLength += space.distances[lastCity][nextCity];
 
-    auto newUnvisited = parent.get().unvisited;
+    auto newUnvisited = parent.unvisited;
     newUnvisited.reset(nextCity);
 
     // Link back to the start if we have a complete tour
     if (newUnvisited.none()) {
       auto start = newSol.cities.front();
       newSol.cities.push_back(start);
-      newSol.tourLength += space.get().distances[nextCity][start];
+      newSol.tourLength += space.distances[nextCity][start];
     }
 
     return TSPNode { newSol, newUnvisited };
