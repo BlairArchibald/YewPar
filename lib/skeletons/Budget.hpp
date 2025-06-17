@@ -161,7 +161,7 @@ struct Budget {
     }
 
     termination_wait_act act;
-    hpx::apply(act, hpx::find_here(), std::move(childFutures), donePromiseId);
+    hpx::post(act, hpx::find_here(), std::move(childFutures), donePromiseId);
   }
 
   static hpx::future<void> createTask(const unsigned childDepth,

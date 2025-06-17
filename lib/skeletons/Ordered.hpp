@@ -200,10 +200,13 @@ struct Ordered {
     // We need to start 1 less thread on the master locality than everywhere
     // else to handle the sequential order
     auto allLocs = hpx::find_all_localities();
-    allLocs.erase(std::remove(allLocs.begin(), allLocs.end(), hpx::find_here()), allLocs.end());
 
-    auto threadCount = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 1;
-    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(allLocs, threadCount));
+    if (!allLocs.size() > 1) {
+      // Start schedulers everywhere but here
+      allLocs.erase(std::remove(allLocs.begin(), allLocs.end(), hpx::find_here()), allLocs.end());
+      auto threadCount = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 1;
+      hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(allLocs, threadCount));
+    }
 
     auto threadCountLocal = hpx::get_os_thread_count() <= 2 ? 0 : hpx::get_os_thread_count() - 2;
     Workstealing::Scheduler::startSchedulers(threadCountLocal);

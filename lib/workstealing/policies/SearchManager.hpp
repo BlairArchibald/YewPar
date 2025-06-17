@@ -109,7 +109,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
     bool isStealingDistributed = false;
 
     // Task Buffer for chunking
-    boost::lockfree::deque<Task> taskBuffer;
+    hpx::lockfree::deque<Task> taskBuffer;
 
     // Last steal optimisation
     hpx::id_type last_remote;

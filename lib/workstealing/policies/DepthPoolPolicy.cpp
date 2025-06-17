@@ -119,7 +119,7 @@ hpx::function<void(), false> DepthPoolPolicy::getWork() {
 void DepthPoolPolicy::addwork(hpx::distributed::function<void(hpx::id_type)> task, unsigned depth) {
   std::unique_lock<mutex_t> l(mtx);
   DepthPoolPolicyPerf::perf_spawns++;
-  hpx::apply<workstealing::DepthPool::addWork_action>(local_workpool, task, depth);
+  hpx::post<workstealing::DepthPool::addWork_action>(local_workpool, task, depth);
 }
 
 void DepthPoolPolicy::registerDistributedDepthPools(std::vector<hpx::id_type> workpools) {

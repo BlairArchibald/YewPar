@@ -19,7 +19,7 @@ namespace workstealing
       HPX_DEFINE_COMPONENT_ACTION(Workqueue, addWork);
 
     private:
-      boost::lockfree::deque<funcType> tasks; // From HPX
+      hpx::lockfree::deque<funcType> tasks; // From HPX
     };
 }
 

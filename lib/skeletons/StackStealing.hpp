@@ -255,7 +255,7 @@ struct StackStealing {
     std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
 
     termination_wait_act act;
-    hpx::apply(act, hpx::find_here(), std::move(futures), donePromise);
+    hpx::post(act, hpx::find_here(), std::move(futures), donePromise);
   }
 
 

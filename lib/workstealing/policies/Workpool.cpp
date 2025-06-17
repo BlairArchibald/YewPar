@@ -120,7 +120,7 @@ hpx::function<void(), false> Workpool::getWork() {
 void Workpool::addwork(hpx::distributed::function<void(hpx::id_type)> task) {
   std::unique_lock<mutex_t> l(mtx);
   WorkpoolPerf::perf_spawns++;
-  hpx::apply<workstealing::Workqueue::addWork_action>(local_workqueue, task);
+  hpx::post<workstealing::Workqueue::addWork_action>(local_workqueue, task);
 }
 
 void Workpool::registerDistributedWorkqueues(std::vector<hpx::id_type> workqueues) {

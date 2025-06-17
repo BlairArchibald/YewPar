@@ -1,4 +1,4 @@
-with import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/23.05.tar.gz") {};
+with import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/24.05.tar.gz") {};
 let
   boostpkg = boost179;
 in
