@@ -26,9 +26,10 @@
 #include "util/NodeGenerator.hpp"
 #include <limits>
 
-// 1e9 to ensure all objective values are positive to avoid unwanted behaviour with negative values
-// OBJ_BASE - (size of cover) means smaller cover size will result in a greater bound value
-constexpr int OBJ_BASE = 1000000000; 
+// 1e9 (1BLN) to ensure all objective values are positive to avoid unwanted behaviour with negative values
+// YewPar's objective function aims to maximise the value, the vertex cover problem is aims for the minimal value
+// having this OBJ_BASE value means smaller vertex covers will yield a larger value from the objective function
+constexpr long long OBJ_BASE = 1'000'000'000'000LL;
 
 // Number of Words to use in our bitset representation
 #ifndef NWORDS
@@ -43,7 +44,7 @@ auto orderGraphFromFile(const dimacs::GraphFromFile & gf) -> std::pair<BitGraph<
   g.resize(n);
 
   std::vector<std::pair<int,int>> edges;
-  edges.reserve(n);
+  edges.reserve(n); // set minimum capacity of the vector to the first member of the graph
 
   for (auto &kv : gf.second) {
     int u = kv.first;   
@@ -73,9 +74,9 @@ struct VCNode {
   int size = 0;                           
 
   // 
-  int getObj() const {
+  long long getObj() const {
     if (!uncoveredEdges.empty()) {
-      return std::numeric_limits<int>::min() / 4; 
+      return std::numeric_limits<long long>::min() / 4; 
     }
     return OBJ_BASE - size; 
   }
@@ -92,34 +93,20 @@ struct VCNode {
   }
 };
 
-// bound function: ceil((uncovered edges in subtree) / (max subtree degree)) on residual graph 
-static int vcBound(const BitGraph<NWORDS> & g, const VCNode & n) {
-  const int subtreeUncoveredEdges = static_cast<int>(n.uncoveredEdges.size());
-
-  if (subtreeUncoveredEdges == 0) {
-    // if all edges in the subtree are covered, return new potential max bound
-    return OBJ_BASE - n.size;
-  }
-
-  // find max degree of subtree edges
+// bound function - number of nodes covered + number of remaining nodes uncovered
+static long long vcBound(const BitGraph<NWORDS> & g, const VCNode & n) {
+  const int uncoveredEdges = n.uncoveredEdges.size();
   std::vector<int> deg(g.size(), 0);
   int delta = 0;
   for (auto &e : n.uncoveredEdges) {
-    int d1 = ++deg[e.first];
-    int d2 = ++deg[e.second];
-    if (d1 > delta) {
-      delta = d1;
-    } 
-    if (d2 > delta) {
-      delta = d2;
-    } 
+      int d1 = ++deg[e.first];
+      int d2 = ++deg[e.second];
+      if (d1 > delta) delta = d1;
+      if (d2 > delta) delta = d2;
   }
-
-  const int minExtraVerticesRequired = (delta == 0) ? 0 : ((subtreeUncoveredEdges + delta - 1) / delta);
-
-  return OBJ_BASE - (n.size + minExtraVerticesRequired);
+  const int extraEdgesRequired = (delta == 0) ? 0 : ( (uncoveredEdges + delta - 1) / delta );
+  return OBJ_BASE - (n.size + extraEdgesRequired);
 }
-
 
 typedef func<decltype(&vcBound), &vcBound> vcBound_func;
 
@@ -173,7 +160,7 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
   VCNode next() override {
     // serve prebuilt children up to numChildren
     if (!has_children || next_child >= this->numChildren) {
-      return parent; // YewPar should not use this; guard anyway
+      return parent; 
     }
     VCNode out = (next_child == 0) ? child0 : child1;
     ++next_child;
@@ -205,7 +192,7 @@ int hpx_main(hpx::program_options::variables_map& opts) {
   const bool chunked     = static_cast<bool>(opts.count("chunked"));
   const auto poolType    = opts.count("poolType") ? opts["poolType"].as<std::string>() : std::string("depthpool");
 
-  YewPar::Skeletons::API::Params<int> P;
+  YewPar::Skeletons::API::Params<long long> P;
   if (decisionK != 0)  {
     P.expectedObjective = -decisionK; // maximise -|C| ≤ -K
   }
