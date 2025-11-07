@@ -26,15 +26,14 @@
 #include "util/NodeGenerator.hpp"
 #include <limits>
 
-// 1e9 (1BLN) to ensure all objective values are positive to avoid unwanted behaviour with negative values
-// YewPar's objective function aims to maximise the value, the vertex cover problem is aims for the minimal value
-// having this OBJ_BASE value means smaller vertex covers will yield a larger value from the objective function
-constexpr long long OBJ_BASE = 1'000'000'000'000LL;
 
 // Number of Words to use in our bitset representation
 #ifndef NWORDS
 #define NWORDS 8
 #endif
+
+// size of graph used in bounding 
+static long long GRAPH_SIZE = 0;
 
 // build dimacs graph
 template<unsigned n_words_>
@@ -44,7 +43,8 @@ auto orderGraphFromFile(const dimacs::GraphFromFile & gf) -> std::pair<BitGraph<
   g.resize(n);
 
   std::vector<std::pair<int,int>> edges;
-  edges.reserve(n); // set minimum capacity of the vector to the first member of the graph
+  // set minimum capacity of the vector to the first member of the graph
+  edges.reserve(n); 
 
   for (auto &kv : gf.second) {
     int u = kv.first;   
@@ -55,6 +55,7 @@ auto orderGraphFromFile(const dimacs::GraphFromFile & gf) -> std::pair<BitGraph<
       }
     }
   }
+  GRAPH_SIZE = g.size();
   return {g, edges};
 }
 
@@ -73,12 +74,10 @@ struct VCNode {
   std::vector<std::pair<int,int>> uncoveredEdges; 
   int size = 0;                           
 
-  // 
   long long getObj() const {
-    if (!uncoveredEdges.empty()) {
-      return std::numeric_limits<long long>::min() / 4; 
-    }
-    return OBJ_BASE - size; 
+    if (!uncoveredEdges.empty())
+      return std::numeric_limits<long long>::min() / 4; // non-solution
+    return GRAPH_SIZE - size; // solution: |V| - |C|
   }
 
   template <class Archive>
@@ -93,19 +92,21 @@ struct VCNode {
   }
 };
 
-// bound function - number of nodes covered + number of remaining nodes uncovered
+// bound: UB = |V| - ( |C| + ceil(m / delta) )
 static long long vcBound(const BitGraph<NWORDS> & g, const VCNode & n) {
-  const int uncoveredEdges = n.uncoveredEdges.size();
+  const int m = (int)n.uncoveredEdges.size();
+  if (m == 0) return GRAPH_SIZE - n.size;
+
   std::vector<int> deg(g.size(), 0);
-  int delta = 0;
+  int Delta = 0;
   for (auto &e : n.uncoveredEdges) {
-      int d1 = ++deg[e.first];
-      int d2 = ++deg[e.second];
-      if (d1 > delta) delta = d1;
-      if (d2 > delta) delta = d2;
+    int d1 = ++deg[e.first];
+    int d2 = ++deg[e.second];
+    if (d1 > Delta) Delta = d1;
+    if (d2 > Delta) Delta = d2;
   }
-  const int extraEdgesRequired = (delta == 0) ? 0 : ( (uncoveredEdges + delta - 1) / delta );
-  return OBJ_BASE - (n.size + extraEdgesRequired);
+  const int LB = (Delta == 0) ? 0 : ( (m + Delta - 1) / Delta ); // ceil(m / delta)
+  return GRAPH_SIZE - (n.size + LB);
 }
 
 typedef func<decltype(&vcBound), &vcBound> vcBound_func;
