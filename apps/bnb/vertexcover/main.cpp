@@ -74,10 +74,13 @@ struct VCNode {
   std::vector<std::pair<int,int>> uncoveredEdges; 
   int size = 0;                           
 
-  long long getObj() const {
-    if (!uncoveredEdges.empty())
-      return std::numeric_limits<long long>::min() / 4; // non-solution
-    return GRAPH_SIZE - size; // solution: |V| - |C|
+  unsigned getObj() const {
+    // if graph has uncovered edges, return bad value objective 
+    if (!uncoveredEdges.empty()){
+      return std::numeric_limits<unsigned>::max();
+    }
+    // if graph is covered, return the cover size
+    return static_cast<unsigned>(size);
   }
 
   template <class Archive>
@@ -92,10 +95,10 @@ struct VCNode {
   }
 };
 
-// bound: UB = |V| - ( |C| + ceil(m / delta) )
-static long long vcBound(const BitGraph<NWORDS> & g, const VCNode & n) {
+// bound: LB = |V| - ( |C| + ceil(m / delta) )
+static unsigned vcBound(const BitGraph<NWORDS>& g, const VCNode& n) {
   const int m = (int)n.uncoveredEdges.size();
-  if (m == 0) return GRAPH_SIZE - n.size;
+  if (m == 0) return (unsigned)n.size;
 
   std::vector<int> deg(g.size(), 0);
   int Delta = 0;
@@ -105,8 +108,8 @@ static long long vcBound(const BitGraph<NWORDS> & g, const VCNode & n) {
     if (d1 > Delta) Delta = d1;
     if (d2 > Delta) Delta = d2;
   }
-  const int LB = (Delta == 0) ? 0 : ( (m + Delta - 1) / Delta ); // ceil(m / delta)
-  return GRAPH_SIZE - (n.size + LB);
+  const int lbExtra = (Delta == 0) ? 0 : ((m + Delta - 1) / Delta);
+  return (unsigned)(n.size + lbExtra);
 }
 
 typedef func<decltype(&vcBound), &vcBound> vcBound_func;
@@ -148,9 +151,9 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
 
   VCNode make_child_add_vertex(int w) const {
     VCNode child = parent; // start from parent
-    // IDs must be valid
+    // check validity of vertex before adding
     if (w < 0 || w >= (int)graph.size()) {
-      return parent; // safe fallback
+      return parent; 
     }
     child.sol.vertices.push_back(w);
     child.size = parent.size + 1;
@@ -159,7 +162,7 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
   }
 
   VCNode next() override {
-    // serve prebuilt children up to numChildren
+    // serve children to numChildren
     if (!has_children || next_child >= this->numChildren) {
       return parent; 
     }
@@ -178,113 +181,98 @@ int hpx_main(hpx::program_options::variables_map& opts) {
   auto gf = dimacs::read_dimacs(inputFile);
   auto [graph, allEdges] = orderGraphFromFile<NWORDS>(gf);
 
-  const auto spawnDepth  = opts["spawn-depth"].as<std::uint64_t>();
-  const auto decisionK   = opts["decisionBound"].as<int>();
-
   auto start_time = std::chrono::steady_clock::now();
   
   // initialise root node and solution state
   VCSol vcsol; 
   VCNode root{ vcsol, allEdges, 0 };
   auto sol = root;
-          
+  
+  const auto spawnDepth  = opts["spawn-depth"].as<std::uint64_t>();
+  const auto decisionK   = opts["decisionBound"].as<int>();
+  
   const auto skeleton    = opts["skeleton"].as<std::string>();
   const auto backBudget  = opts["backtrack-budget"].as<unsigned>();
   const bool chunked     = static_cast<bool>(opts.count("chunked"));
   const auto poolType    = opts.count("poolType") ? opts["poolType"].as<std::string>() : std::string("depthpool");
 
-  YewPar::Skeletons::API::Params<long long> P;
-  if (decisionK != 0)  {
-    P.expectedObjective = -decisionK; // maximise -|C| ≤ -K
+  // functions used in skeletons
+  using MinCmp  = YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>;
+  using BoundT  = YewPar::Skeletons::API::BoundFunction<vcBound_func>;
+  using OptTag  = YewPar::Skeletons::API::Optimisation;
+  using DecTag  = YewPar::Skeletons::API::Decision;
+  using Prune   = YewPar::Skeletons::API::PruneLevel;
+
+  // yewpar skeleton parameter initialised 
+  YewPar::Skeletons::API::Params<unsigned> P;
+  P.initialBound = std::numeric_limits<unsigned>::max();
+
+  if (decisionK != 0) {
+    P.expectedObjective = static_cast<unsigned>(decisionK);   // minimise |C| ≤ K
+  } else {
+    P.expectedObjective = std::numeric_limits<unsigned>::max(); // no solution yet
   }
 
   if (skeleton == "seq") {
     if (decisionK != 0) {
-      sol = YewPar::Skeletons::Seq<VCGenNode,
-      YewPar::Skeletons::API::Decision,
-      YewPar::Skeletons::API::BoundFunction<vcBound_func>,
-      YewPar::Skeletons::API::PruneLevel>::search(graph, root, P);
-    } 
-    else {
-      sol = YewPar::Skeletons::Seq<VCGenNode,
-      YewPar::Skeletons::API::Optimisation,
-      YewPar::Skeletons::API::BoundFunction<vcBound_func>,
-      YewPar::Skeletons::API::PruneLevel>::search(graph, root);
+      sol = YewPar::Skeletons::Seq<VCGenNode, DecTag, BoundT, MinCmp, Prune>
+              ::search(graph, root, P);
+    } else {
+      sol = YewPar::Skeletons::Seq<VCGenNode, OptTag, BoundT, MinCmp, Prune>
+              ::search(graph, root, P);
     }
-  } 
+  }
   else if (skeleton == "depthbounded") {
     P.spawnDepth = spawnDepth;
     if (decisionK != 0) {
-      sol = YewPar::Skeletons::DepthBounded<VCGenNode,
-      YewPar::Skeletons::API::Decision,
-      YewPar::Skeletons::API::BoundFunction<vcBound_func>,
-      YewPar::Skeletons::API::PruneLevel>::search(graph, root, P);
-    } 
-    else {
+      sol = YewPar::Skeletons::DepthBounded<VCGenNode, DecTag, BoundT, MinCmp, Prune>
+              ::search(graph, root, P);
+    } else {
       if (poolType == "deque") {
-        sol = YewPar::Skeletons::DepthBounded<VCGenNode,
-        YewPar::Skeletons::API::Optimisation,
-        YewPar::Skeletons::API::BoundFunction<vcBound_func>,
-        YewPar::Skeletons::API::PruneLevel,
-        YewPar::Skeletons::API::DepthBoundedPoolPolicy<
-        Workstealing::Policies::Workpool>>::search(graph, root, P);
-      } 
-      else {
-        sol = YewPar::Skeletons::DepthBounded<VCGenNode,
-        YewPar::Skeletons::API::Optimisation,
-        YewPar::Skeletons::API::BoundFunction<vcBound_func>,
-        YewPar::Skeletons::API::PruneLevel,
-        YewPar::Skeletons::API::DepthBoundedPoolPolicy<
-        Workstealing::Policies::DepthPoolPolicy>>::search(graph, root, P);
+        sol = YewPar::Skeletons::DepthBounded<
+                VCGenNode, OptTag, BoundT, MinCmp, Prune,
+                YewPar::Skeletons::API::DepthBoundedPoolPolicy<Workstealing::Policies::Workpool>
+              >::search(graph, root, P);
+      } else {
+        sol = YewPar::Skeletons::DepthBounded<
+                VCGenNode, OptTag, BoundT, MinCmp, Prune,
+                YewPar::Skeletons::API::DepthBoundedPoolPolicy<Workstealing::Policies::DepthPoolPolicy>
+              >::search(graph, root, P);
       }
     }
-  } 
+  }
   else if (skeleton == "stacksteal") {
     P.stealAll = chunked;
     if (decisionK != 0) {
-      sol = YewPar::Skeletons::StackStealing<VCGenNode,
-      YewPar::Skeletons::API::Decision,
-      YewPar::Skeletons::API::BoundFunction<vcBound_func>,
-      YewPar::Skeletons::API::PruneLevel>::search(graph, root, P);
-    } 
-    else {
-      sol = YewPar::Skeletons::StackStealing<VCGenNode,
-      YewPar::Skeletons::API::Optimisation,
-      YewPar::Skeletons::API::BoundFunction<vcBound_func>,
-      YewPar::Skeletons::API::PruneLevel>::search(graph, root, P);
+      sol = YewPar::Skeletons::StackStealing<VCGenNode, DecTag, BoundT, MinCmp, Prune>
+              ::search(graph, root, P);
+    } else {
+      sol = YewPar::Skeletons::StackStealing<VCGenNode, OptTag, BoundT, MinCmp, Prune>
+              ::search(graph, root, P);
     }
-  } 
+  }
   else if (skeleton == "ordered") {
     P.spawnDepth = spawnDepth;
     if (opts.count("discrepancyOrder")) {
-      sol = YewPar::Skeletons::Ordered<VCGenNode,
-      YewPar::Skeletons::API::Optimisation,
-      YewPar::Skeletons::API::BoundFunction<vcBound_func>,
-      YewPar::Skeletons::API::DiscrepancySearch,
-      YewPar::Skeletons::API::PruneLevel>::search(graph, root, P);
-    } 
-    else {
-      sol = YewPar::Skeletons::Ordered<VCGenNode,
-      YewPar::Skeletons::API::Optimisation,
-      YewPar::Skeletons::API::BoundFunction<vcBound_func>,
-      YewPar::Skeletons::API::PruneLevel>::search(graph, root, P);
+      sol = YewPar::Skeletons::Ordered<
+              VCGenNode, OptTag, BoundT, MinCmp,
+              YewPar::Skeletons::API::DiscrepancySearch, Prune
+            >::search(graph, root, P);
+    } else {
+      sol = YewPar::Skeletons::Ordered<VCGenNode, OptTag, BoundT, MinCmp, Prune>
+              ::search(graph, root, P);
     }
-  } 
+  }
   else if (skeleton == "budget") {
     P.backtrackBudget = backBudget;
     if (decisionK != 0) {
-      sol = YewPar::Skeletons::Budget<VCGenNode,
-      YewPar::Skeletons::API::BoundFunction<vcBound_func>,
-      YewPar::Skeletons::API::Decision,
-      YewPar::Skeletons::API::PruneLevel>::search(graph, root, P);
-    } 
-    else {
-      sol = YewPar::Skeletons::Budget<VCGenNode,
-      YewPar::Skeletons::API::Optimisation,
-      YewPar::Skeletons::API::BoundFunction<vcBound_func>,
-      YewPar::Skeletons::API::PruneLevel>::search(graph, root, P);
+      sol = YewPar::Skeletons::Budget<VCGenNode, BoundT, DecTag, MinCmp, Prune>
+              ::search(graph, root, P);
+    } else {
+      sol = YewPar::Skeletons::Budget<VCGenNode, OptTag, BoundT, MinCmp, Prune>
+              ::search(graph, root, P);
     }
-  } 
+  }
   else {
     hpx::cout << "Invalid skeleton type option. Use: seq, depthbounded, stacksteal, budget, ordered\n";
     hpx::finalize();
