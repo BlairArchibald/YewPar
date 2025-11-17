@@ -31,19 +31,38 @@
 
 // Build BitGraph from DIMACS 
 template<unsigned n_words_>
-auto buildGraphFromFile(const dimacs::GraphFromFile &g) -> BitGraph<n_words_> {
-  BitGraph<n_words_> graph;
-  graph.resize(g.first);
+BitGraph<n_words_> buildGraphFromFile(const dimacs::GraphFromFile &g) {
+    int N = g.first;
 
-  for (auto &kv : g.second) {
-    int u = kv.first;
-    for (int v : kv.second) {
-      if (u != v) {
-        graph.add_edge(u, v);
-      }
+    // Build original graph (clique instance)
+    BitGraph<n_words_> original;
+    original.resize(N);
+
+    for (auto &kv : g.second) {
+        int u = kv.first;
+        for (int v : kv.second) {
+            if (u != v) {
+                original.add_edge(u, v);
+            }
+        }
     }
-  }
-  return graph;
+
+    // Build complement graph manually
+    BitGraph<n_words_> comp;
+    comp.resize(N);
+
+    for (int u = 0; u < N; ++u) {
+        for (int v = u + 1; v < N; ++v) {
+
+            // If (u,v) is *not* an edge in the original graph, add it to the complement
+            if (!original.adjacent(u, v)) {
+                comp.add_edge(u, v);
+            }
+
+            // If it's an edge, don't add anything (complement omits it)
+        }
+    }
+    return comp;
 }
 
 // Vertex Cover node and solution state
@@ -140,7 +159,7 @@ static bool apply_reductions(const BitGraph<NWORDS> &g, VCNode &n) {
           nbrs.unset(v);
 
       if (nbrs.empty()) {
-        // u has no uncovered edges → can be removed from active
+        // u has no uncovered edges, then can be removed from active
         n.active.unset(u);
         undecided.unset(u);
         localChange = true;
@@ -205,7 +224,7 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
   VCGenNode(const BitGraph<NWORDS> &g, const VCNode &node)
       : graph(g), parent(node), next_child(0), branchVertex(-1) {
 
-    // If parent is already a full cover or there are no active vertices, stop.
+    // If parent is already a full cover or there are no active vertices, stop
     if (parent.isCover || parent.active.empty()) {
       numChildren = 0;
       return;
@@ -236,7 +255,7 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
     }
 
     if (bestV == -1) {
-      // No vertex to branch on. Either it's a cover or something degenerated.
+      // No vertex to branch on. Either it's a cover or something degenerated
       parent.isCover = check_is_cover(graph, parent);
       numChildren = 0;
       return;
@@ -263,7 +282,7 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
     int N = graph.size();
 
     // If we exclude v from the cover, then for every neighbor u of v
-    // that is still active and not already in cover, we must include u.
+    // that is still active and not already in cover, we must include u
     BitSet<NWORDS> nbrs = child.active;
     graph.intersect_with_row(v, nbrs);
 
@@ -305,8 +324,8 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
 int hpx_main(hpx::program_options::variables_map &opts) {
 
   auto inputFile = opts["input-file"].as<std::string>();
-  auto gFile     = dimacs::read_dimacs(inputFile);
-  auto graph     = buildGraphFromFile<NWORDS>(gFile);
+  auto gFile = dimacs::read_dimacs(inputFile);
+  auto graph = buildGraphFromFile<NWORDS>(gFile);
 
   auto start_time = std::chrono::steady_clock::now();
 
