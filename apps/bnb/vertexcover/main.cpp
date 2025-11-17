@@ -2,17 +2,17 @@
 #include <numeric>
 #include <algorithm>
 #include <vector>
-#include <map>
 #include <chrono>
+#include <limits>
 
 #include <hpx/hpx_init.hpp>
 #include <hpx/iostream.hpp>
 
 #include <boost/serialization/access.hpp>
 
+#include "../maxclique/DimacsParser.hpp"
 #include "../maxclique/BitGraph.hpp"
 #include "../maxclique/BitSet.hpp"
-#include "../maxclique/DimacsParser.hpp"
 
 #include "YewPar.hpp"
 
@@ -24,301 +24,403 @@
 
 #include "util/func.hpp"
 #include "util/NodeGenerator.hpp"
-#include <limits>
 
-
-// Number of Words to use in our bitset representation
 #ifndef NWORDS
-#define NWORDS 8
+#define NWORDS 16
 #endif
 
-// size of graph used in bounding 
-static long long GRAPH_SIZE = 0;
-
-// build dimacs graph
+// Build BitGraph from DIMACS 
 template<unsigned n_words_>
-auto orderGraphFromFile(const dimacs::GraphFromFile & gf) -> std::pair<BitGraph<n_words_>, std::vector<std::pair<int,int>>> {
-  const int n = gf.first;
-  BitGraph<n_words_> g;
-  g.resize(n);
+auto buildGraphFromFile(const dimacs::GraphFromFile &g) -> BitGraph<n_words_> {
+  BitGraph<n_words_> graph;
+  graph.resize(g.first);
 
-  std::vector<std::pair<int,int>> edges;
-  // set minimum capacity of the vector to the first member of the graph
-  edges.reserve(n); 
-
-  for (auto &kv : gf.second) {
-    int u = kv.first;   
+  for (auto &kv : g.second) {
+    int u = kv.first;
     for (int v : kv.second) {
-      if (u < v) {
-        g.add_edge(u, v);
-        edges.emplace_back(u, v);
+      if (u != v) {
+        graph.add_edge(u, v);
       }
     }
   }
-  GRAPH_SIZE = g.size();
-  return {g, edges};
+  return graph;
 }
 
-// vertex cover solution state + serialization
+// Vertex Cover node and solution state
 struct VCSol {
-  std::vector<int> vertices; 
+  std::vector<int> cover;
+
   template <class Archive>
-  void serialize(Archive & ar, const unsigned int) { 
-    ar & vertices; 
+  void serialize(Archive &ar, const unsigned int) {
+    ar & cover;
   }
 };
+
 struct VCNode {
   friend class boost::serialization::access;
 
   VCSol sol;
-  std::vector<std::pair<int,int>> uncoveredEdges; 
-  int size = 0;                           
+  int size;                  
+  BitSet<NWORDS> inCover;    
+  BitSet<NWORDS> active;     
+  bool isCover;              
 
-  unsigned getObj() const {
-    // if graph has uncovered edges, return bad value objective 
-    if (!uncoveredEdges.empty()){
-      return std::numeric_limits<unsigned>::max();
-    }
-    // if graph is covered, return the cover size
-    return static_cast<unsigned>(size);
+  int getObj() const {
+    if (!isCover)
+      return std::numeric_limits<int>::max();
+    return size;
   }
 
   template <class Archive>
-  void serialize(Archive & ar, const unsigned int) {
+  void serialize(Archive &ar, const unsigned int) {
     ar & sol;
-    ar & uncoveredEdges;
     ar & size;
-  }
-
-  bool isSolution() const {
-    return uncoveredEdges.empty();
+    ar & inCover;
+    ar & active;
+    ar & isCover;
   }
 };
 
-// bound: LB = |V| - ( |C| + ceil(m / delta) )
-static unsigned vcBound(const BitGraph<NWORDS>& g, const VCNode& n) {
-  const int m = (int)n.uncoveredEdges.size();
-  if (m == 0) return (unsigned)n.size;
+// Helpers: degrees, coverage check, etc, over BitGraph + node state
 
-  std::vector<int> deg(g.size(), 0);
-  int Delta = 0;
-  for (auto &e : n.uncoveredEdges) {
-    int d1 = ++deg[e.first];
-    int d2 = ++deg[e.second];
-    if (d1 > Delta) Delta = d1;
-    if (d2 > Delta) Delta = d2;
+// Compute degree of a vertex u in the residual graph (active vertices only)
+static int residual_degree(const BitGraph<NWORDS> &g, const VCNode &n, int u) {
+  if (!n.active.test(u)) return 0;
+  BitSet<NWORDS> nbrs = n.active;
+  g.intersect_with_row(u, nbrs);
+  return (int)nbrs.popcount();
+}
+
+// Check whether all edges induced by active are covered by inCover
+static bool check_is_cover(const BitGraph<NWORDS> &g, const VCNode &n) {
+  int N = g.size();
+
+  // vertices not in cover but still active
+  BitSet<NWORDS> notInCover = n.active;
+  for (int i = 0; i < N; ++i)
+    if (n.inCover.test(i))
+      notInCover.unset(i);
+
+  for (int u = 0; u < N; ++u) {
+    if (!notInCover.test(u)) continue;
+
+    BitSet<NWORDS> nbrs = notInCover;
+    g.intersect_with_row(u, nbrs);
+    if (!nbrs.empty()) {
+      // found an edge (u,v) with neither in cover
+      return false;
+    }
   }
-  const int lbExtra = (Delta == 0) ? 0 : ((m + Delta - 1) / Delta);
-  return (unsigned)(n.size + lbExtra);
+  return true;
+}
+
+// Reduction rules (R1 + R2) applied to a VCNode
+static bool apply_reductions(const BitGraph<NWORDS> &g, VCNode &n) {
+  bool changed = false;
+  int N = g.size();
+
+  while (true) {
+    bool localChange = false;
+
+    // recompute "not in cover & active"
+    BitSet<NWORDS> undecided = n.active;
+    for (int i = 0; i < N; ++i)
+      if (n.inCover.test(i))
+        undecided.unset(i);
+
+    // Degree-0 rule: remove isolated vertices (in residual)
+    for (int u = 0; u < N; ++u) {
+      if (!undecided.test(u)) continue;
+
+      BitSet<NWORDS> nbrs = n.active;
+      g.intersect_with_row(u, nbrs);
+      // remove neighbours already in cover (edges to them are already covered)
+      for (int v = 0; v < N; ++v)
+        if (nbrs.test(v) && n.inCover.test(v))
+          nbrs.unset(v);
+
+      if (nbrs.empty()) {
+        // u has no uncovered edges → can be removed from active
+        n.active.unset(u);
+        undecided.unset(u);
+        localChange = true;
+      }
+    }
+    changed = changed || localChange;
+    if (!localChange) break;
+  }
+  n.isCover = check_is_cover(g, n);
+  return changed;
+}
+
+// Matching-based lower bound on remaining cover size
+// LB = |C| + size of a greedy maximal matching on uncovered residual edges
+int vcBound(const BitGraph<NWORDS> &g, const VCNode &n) {
+  int N = g.size();
+
+  // Build set of vertices that can participate in uncovered edges:
+  BitSet<NWORDS> avail = n.active;
+  for (int i = 0; i < N; ++i)
+    if (n.inCover.test(i))
+      avail.unset(i);
+
+  std::vector<bool> used(N, false);
+  int matchingSize = 0;
+
+  for (int u = 0; u < N; ++u) {
+    if (!avail.test(u) || used[u]) continue;
+
+    BitSet<NWORDS> nbrs = avail;
+    g.intersect_with_row(u, nbrs);
+
+    // filter out used vertices
+    for (int v = 0; v < N; ++v)
+      if (nbrs.test(v) && used[v])
+        nbrs.unset(v);
+
+    int v = nbrs.first_set_bit();
+    if (v != -1) {
+      // match (u,v)
+      used[u] = used[v] = true;
+      avail.unset(u);
+      avail.unset(v);
+      matchingSize++;
+    } else {
+      avail.unset(u);
+    }
+  }
+  return n.size + matchingSize;
 }
 
 typedef func<decltype(&vcBound), &vcBound> vcBound_func;
 
-// lazy node generation - branch on first uncovered edge (u,v)
+// NodeGenerator: pick a high-degree vertex and branch on “in cover / not in cover”
 struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
+
   const BitGraph<NWORDS> &graph;
   VCNode parent;
-  int next_child = 0;
-  bool has_children = false;
-  VCNode child0, child1; 
+  int next_child;
+  int branchVertex;  // vertex v we branch on
 
-  VCGenNode(const BitGraph<NWORDS> & g, const VCNode & node) : graph(g), parent(node) {
-    if (!parent.uncoveredEdges.empty()) {
-      auto uv = parent.uncoveredEdges[0];
-      int u = uv.first;
-      int v = uv.second;
+  VCGenNode(const BitGraph<NWORDS> &g, const VCNode &node)
+      : graph(g), parent(node), next_child(0), branchVertex(-1) {
 
-      child0 = make_child_add_vertex(u);
-      child1 = make_child_add_vertex(v);
-
-      this->numChildren = 2;
-      has_children = true;
-    } else {
-      this->numChildren = 0;
-      has_children = false;
-      next_child = 0;
+    // If parent is already a full cover or there are no active vertices, stop.
+    if (parent.isCover || parent.active.empty()) {
+      numChildren = 0;
+      return;
     }
+
+    int N = graph.size();
+
+    // Choose branching vertex: active, not in cover, with maximum residual degree
+    int bestDeg = -1;
+    int bestV = -1;
+
+    for (int u = 0; u < N; ++u) {
+      if (!parent.active.test(u)) continue;
+      if (parent.inCover.test(u)) continue;
+
+      BitSet<NWORDS> nbrs = parent.active;
+      graph.intersect_with_row(u, nbrs);
+      // remove neighbors already in cover (edges already covered)
+      for (int v = 0; v < N; ++v)
+        if (nbrs.test(v) && parent.inCover.test(v))
+          nbrs.unset(v);
+
+      int d = (int)nbrs.popcount();
+      if (d > bestDeg) {
+        bestDeg = d;
+        bestV = u;
+      }
+    }
+
+    if (bestV == -1) {
+      // No vertex to branch on. Either it's a cover or something degenerated.
+      parent.isCover = check_is_cover(graph, parent);
+      numChildren = 0;
+      return;
+    }
+
+    branchVertex = bestV;
+    numChildren = 2;
   }
 
-  static std::vector<std::pair<int,int>> remove_incident(const std::vector<std::pair<int,int>> &edges, int w) {
-    std::vector<std::pair<int,int>> out;
-    out.reserve(edges.size());
-    for (auto &e : edges) {
-      if (e.first != w && e.second != w) out.push_back(e);
+  VCNode include_vertex(int v) const {
+    VCNode child = parent;
+    if (!child.inCover.test(v)) {
+      child.inCover.set(v);
+      child.sol.cover.push_back(v);
+      child.size += 1;
     }
-    return out;
+    // v stays active; edges incident to v are covered, but other vertices still matter
+    apply_reductions(graph, child);
+    return child;
   }
 
-  VCNode make_child_add_vertex(int w) const {
-    VCNode child = parent; // start from parent
-    // check validity of vertex before adding
-    if (w < 0 || w >= (int)graph.size()) {
-      return parent; 
+  VCNode exclude_vertex(int v) const {
+    VCNode child = parent;
+    int N = graph.size();
+
+    // If we exclude v from the cover, then for every neighbor u of v
+    // that is still active and not already in cover, we must include u.
+    BitSet<NWORDS> nbrs = child.active;
+    graph.intersect_with_row(v, nbrs);
+
+    for (int u = 0; u < N; ++u) {
+      if (!nbrs.test(u)) continue;
+      if (!child.inCover.test(u)) {
+        child.inCover.set(u);
+        child.sol.cover.push_back(u);
+        child.size += 1;
+      }
     }
-    child.sol.vertices.push_back(w);
-    child.size = parent.size + 1;
-    child.uncoveredEdges = remove_incident(parent.uncoveredEdges, w);
+
+    // v itself can be removed from active; it will never enter the cover
+    child.active.unset(v);
+
+    apply_reductions(graph, child);
     return child;
   }
 
   VCNode next() override {
-    // serve children to numChildren
-    if (!has_children || next_child >= this->numChildren) {
-      return parent; 
+    if (next_child >= numChildren)
+      return parent; // won't be used
+
+    VCNode out;
+    if (next_child == 0) {
+      // Branch 1: include branchVertex
+      out = include_vertex(branchVertex);
+    } else {
+      // Branch 2: exclude branchVertex (so all its neighbors go to cover)
+      out = exclude_vertex(branchVertex);
     }
-    VCNode out = (next_child == 0) ? child0 : child1;
+
     ++next_child;
     return out;
   }
-
 };
 
 // HPX main
-int hpx_main(hpx::program_options::variables_map& opts) {
-  const auto inputFile   = opts["input-file"].as<std::string>();
+int hpx_main(hpx::program_options::variables_map &opts) {
 
-  // read in DIMACS graph file
-  auto gf = dimacs::read_dimacs(inputFile);
-  auto [graph, allEdges] = orderGraphFromFile<NWORDS>(gf);
+  auto inputFile = opts["input-file"].as<std::string>();
+  auto gFile     = dimacs::read_dimacs(inputFile);
+  auto graph     = buildGraphFromFile<NWORDS>(gFile);
 
   auto start_time = std::chrono::steady_clock::now();
-  
-  // initialise root node and solution state
-  VCSol vcsol; 
-  VCNode root{ vcsol, allEdges, 0 };
-  auto sol = root;
-  
-  const auto spawnDepth  = opts["spawn-depth"].as<std::uint64_t>();
-  const auto decisionK   = opts["decisionBound"].as<int>();
-  
-  const auto skeleton    = opts["skeleton"].as<std::string>();
-  const auto backBudget  = opts["backtrack-budget"].as<unsigned>();
-  const bool chunked     = static_cast<bool>(opts.count("chunked"));
-  const auto poolType    = opts.count("poolType") ? opts["poolType"].as<std::string>() : std::string("depthpool");
 
-  // functions used in skeletons
-  using MinCmp  = YewPar::Skeletons::API::ObjectiveComparison<std::less<unsigned>>;
-  using BoundT  = YewPar::Skeletons::API::BoundFunction<vcBound_func>;
-  using OptTag  = YewPar::Skeletons::API::Optimisation;
-  using DecTag  = YewPar::Skeletons::API::Decision;
-  using Prune   = YewPar::Skeletons::API::PruneLevel;
+  // Root node: no vertices chosen, all active
+  VCNode root;
+  root.size = 0;
+  root.sol.cover.clear();
+  root.inCover.resize(graph.size());
+  root.inCover.reset_all();
+  root.active.resize(graph.size());
+  root.active.set_all();
+  root.isCover = check_is_cover(graph, root);
 
-  // yewpar skeleton parameter initialised 
-  YewPar::Skeletons::API::Params<unsigned> P;
-  P.initialBound = std::numeric_limits<unsigned>::max();
+  // Apply reductions once at the root
+  apply_reductions(graph, root);
 
-  if (decisionK != 0) {
-    P.expectedObjective = static_cast<unsigned>(decisionK);   // minimise |C| ≤ K
-  } else {
-    P.expectedObjective = std::numeric_limits<unsigned>::max(); // no solution yet
-  }
+  VCNode sol = root;
 
-  if (skeleton == "seq") {
-    if (decisionK != 0) {
-      sol = YewPar::Skeletons::Seq<VCGenNode, DecTag, BoundT, MinCmp, Prune>
-              ::search(graph, root, P);
-    } else {
-      sol = YewPar::Skeletons::Seq<VCGenNode, OptTag, BoundT, MinCmp, Prune>
-              ::search(graph, root, P);
-    }
-  }
-  else if (skeleton == "depthbounded") {
+  auto skeletonType = opts["skeleton"].as<std::string>();
+  auto spawnDepth   = opts["spawn-depth"].as<std::uint64_t>();
+
+  using OptTag = YewPar::Skeletons::API::Optimisation;
+  using BoundT = YewPar::Skeletons::API::BoundFunction<vcBound_func>;
+  using MinCmp = YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>;
+
+  YewPar::Skeletons::API::Params<int> P;
+  P.initialBound = graph.size(); // worst-case cover size ≤ |V|
+
+  if (skeletonType == "seq") {
+    sol = YewPar::Skeletons::Seq<VCGenNode,
+                                 OptTag,
+                                 BoundT,
+                                 MinCmp>
+            ::search(graph, root, P);
+
+  } else if (skeletonType == "depthbounded") {
     P.spawnDepth = spawnDepth;
-    if (decisionK != 0) {
-      sol = YewPar::Skeletons::DepthBounded<VCGenNode, DecTag, BoundT, MinCmp, Prune>
-              ::search(graph, root, P);
-    } else {
-      if (poolType == "deque") {
-        sol = YewPar::Skeletons::DepthBounded<
-                VCGenNode, OptTag, BoundT, MinCmp, Prune,
-                YewPar::Skeletons::API::DepthBoundedPoolPolicy<Workstealing::Policies::Workpool>
-              >::search(graph, root, P);
-      } else {
-        sol = YewPar::Skeletons::DepthBounded<
-                VCGenNode, OptTag, BoundT, MinCmp, Prune,
-                YewPar::Skeletons::API::DepthBoundedPoolPolicy<Workstealing::Policies::DepthPoolPolicy>
-              >::search(graph, root, P);
-      }
-    }
-  }
-  else if (skeleton == "stacksteal") {
-    P.stealAll = chunked;
-    if (decisionK != 0) {
-      sol = YewPar::Skeletons::StackStealing<VCGenNode, DecTag, BoundT, MinCmp, Prune>
-              ::search(graph, root, P);
-    } else {
-      sol = YewPar::Skeletons::StackStealing<VCGenNode, OptTag, BoundT, MinCmp, Prune>
-              ::search(graph, root, P);
-    }
-  }
-  else if (skeleton == "ordered") {
+    sol = YewPar::Skeletons::DepthBounded<VCGenNode,
+                                          OptTag,
+                                          BoundT,
+                                          MinCmp>
+            ::search(graph, root, P);
+
+  } else if (skeletonType == "stacksteal") {
+    P.stealAll = static_cast<bool>(opts.count("chunked"));
+    sol = YewPar::Skeletons::StackStealing<VCGenNode,
+                                           OptTag,
+                                           BoundT,
+                                           MinCmp>
+            ::search(graph, root, P);
+
+  } else if (skeletonType == "ordered") {
     P.spawnDepth = spawnDepth;
     if (opts.count("discrepancyOrder")) {
-      sol = YewPar::Skeletons::Ordered<
-              VCGenNode, OptTag, BoundT, MinCmp,
-              YewPar::Skeletons::API::DiscrepancySearch, Prune
-            >::search(graph, root, P);
-    } else {
-      sol = YewPar::Skeletons::Ordered<VCGenNode, OptTag, BoundT, MinCmp, Prune>
-              ::search(graph, root, P);
-    }
-  }
-  else if (skeleton == "budget") {
-    P.backtrackBudget = backBudget;
-    if (decisionK != 0) {
-      sol = YewPar::Skeletons::Budget<VCGenNode, BoundT, DecTag, MinCmp, Prune>
+      sol = YewPar::Skeletons::Ordered<VCGenNode,
+                                       OptTag,
+                                       BoundT,
+                                       MinCmp,
+                                       YewPar::Skeletons::API::DiscrepancySearch>
               ::search(graph, root, P);
     } else {
-      sol = YewPar::Skeletons::Budget<VCGenNode, OptTag, BoundT, MinCmp, Prune>
+      sol = YewPar::Skeletons::Ordered<VCGenNode,
+                                       OptTag,
+                                       BoundT,
+                                       MinCmp>
               ::search(graph, root, P);
     }
-  }
-  else {
-    hpx::cout << "Invalid skeleton type option. Use: seq, depthbounded, stacksteal, budget, ordered\n";
-    hpx::finalize();
-    return EXIT_FAILURE;
+
+  } else if (skeletonType == "budget") {
+    P.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
+    sol = YewPar::Skeletons::Budget<VCGenNode,
+                                    OptTag,
+                                    BoundT,
+                                    MinCmp>
+            ::search(graph, root, P);
+
+  } else {
+    hpx::cout << "Invalid skeleton type\n";
+    return hpx::finalize();
   }
 
-  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
+  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+              std::chrono::steady_clock::now() - start_time);
 
   hpx::cout << "Minimum Vertex Cover Size = " << sol.size << "\n";
-  hpx::cout << "Vertices: ";
   hpx::cout << "cpu = " << ms.count() << " ms\n";
 
   return hpx::finalize();
 }
 
-// main
-int main(int argc, char* argv[]) {
+// CLI 
+int main(int argc, char *argv[]) {
   hpx::program_options::options_description
-    desc_commandline("Usage: " HPX_APPLICATION_STRING " [options]");
+      desc("Vertex Cover — YewPar");
 
-  desc_commandline.add_options()
+  desc.add_options()
     ("skeleton",
       hpx::program_options::value<std::string>()->default_value("seq"),
-      "Which skeleton: seq, depthbounded, stacksteal, budget, ordered")
+      "Skeleton: seq, depthbounded, stacksteal, budget, ordered")
     ("spawn-depth,d",
       hpx::program_options::value<std::uint64_t>()->default_value(0),
-      "Depth in the tree to spawn at")
+      "Spawn depth for parallel skeletons")
     ("backtrack-budget,b",
       hpx::program_options::value<unsigned>()->default_value(50),
-      "Backtracks before spawning work (budget skeleton)")
+      "Backtrack budget for budget skeleton")
     ("input-file,f",
       hpx::program_options::value<std::string>()->required(),
-      "DIMACS formatted input graph")
-    ("discrepancyOrder", "Use discrepancy order with the ordered skeleton")
-    ("chunked", "Use chunking with stack stealing")
-    ("poolType",
-      hpx::program_options::value<std::string>()->default_value("depthpool"),
-      "Pool type for depthbounded skeleton: depthpool or deque")
-    ("decisionBound",
-      hpx::program_options::value<int>()->default_value(0),
-      "Decision mode: search for a cover of size <= K")
-  ;
+      "DIMACS graph")
+    ("chunked", "Use chunking for stacksteal skeleton")
+    ("discrepancyOrder", "Use discrepancy search in ordered skeleton");
 
   YewPar::registerPerformanceCounters();
 
   hpx::init_params args;
-  args.desc_cmdline = desc_commandline;
+  args.desc_cmdline = desc;
   return hpx::init(argc, argv, args);
 }
