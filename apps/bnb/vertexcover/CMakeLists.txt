@@ -1,5 +1,5 @@
 set(YEWPAR_BUILD_BNB_APPS_VERTEXCOVER "ON" CACHE BOOL "Build Branch and Bound Vertex Cover")
-set(YEWPAR_BUILD_BNB_APPS_VERTEXCOVER_NWORDS 8 CACHE INT "Number of Words in Branch and Bound Vertex Cover BitSets")
+set(YEWPAR_BUILD_BNB_APPS_VERTEXCOVER_NWORDS 16 CACHE INT "Number of Words in Branch and Bound Vertex Cover BitSets")
 
 if(YEWPAR_BUILD_BNB_APPS_VERTEXCOVER)
 add_hpx_executable(vertexcover-${YEWPAR_BUILD_BNB_APPS_VERTEXCOVER_NWORDS}
