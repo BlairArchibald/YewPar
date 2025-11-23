@@ -1,3 +1,27 @@
+// - Basic branch-and-reduce framework inspired by:
+//     * T. Fahle (2002), "Simple and fast branch-and-bound for the Maximum
+//       Clique Problem" – provides the classical include/exclude branching
+//       pattern used here for Vertex Cover via graph complement.
+
+// - Reduction rules implemented:
+//     * Degree-0 and Degree-1 rules following the simplified kernelisation
+//       described in:
+//       * T. Akiba & Y. Iwata (2016), "Branch-and-Reduce Exponential/FPT
+//         Algorithms in Practice". (We only use the simplest reduction rules
+//         suitable for undergraduate-level implementation.)
+
+// - Lower bound (maximal matching bound):
+//     * Classical matching-based VC lower bound described in:
+//       * Niedermeier, "Invitation to Fixed-Parameter Algorithms" (2006).
+//       * Also used in variations in Abu-Khzam et al., Kernelisation papers.
+ 
+// - Use of complement graph for DIMACS .clq instances:
+//     * Standard reduction MaxClique(G) ↔ MinVertexCover(G^c), e.g. described in:
+//       * Garey & Johnson (1979), "Computers and Intractability".
+
+// - Branching heuristic (highest-degree endpoint of uncovered edge) based on:
+//     * Tomita et al. (2003–2010) Max Clique heuristics, adapted for VC.
+
 #include <iostream>
 #include <numeric>
 #include <algorithm>
