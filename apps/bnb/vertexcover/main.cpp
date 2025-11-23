@@ -1,27 +1,3 @@
-// - Basic branch-and-reduce framework inspired by:
-//     * T. Fahle (2002), "Simple and fast branch-and-bound for the Maximum
-//       Clique Problem" – provides the classical include/exclude branching
-//       pattern used here for Vertex Cover via graph complement.
-
-// - Reduction rules implemented:
-//     * Degree-0 and Degree-1 rules following the simplified kernelisation
-//       described in:
-//       * T. Akiba & Y. Iwata (2016), "Branch-and-Reduce Exponential/FPT
-//         Algorithms in Practice". (We only use the simplest reduction rules
-//         suitable for undergraduate-level implementation.)
-
-// - Lower bound (maximal matching bound):
-//     * Classical matching-based VC lower bound described in:
-//       * Niedermeier, "Invitation to Fixed-Parameter Algorithms" (2006).
-//       * Also used in variations in Abu-Khzam et al., Kernelisation papers.
- 
-// - Use of complement graph for DIMACS .clq instances:
-//     * Standard reduction MaxClique(G) ↔ MinVertexCover(G^c), e.g. described in:
-//       * Garey & Johnson (1979), "Computers and Intractability".
-
-// - Branching heuristic (highest-degree endpoint of uncovered edge) based on:
-//     * Tomita et al. (2003–2010) Max Clique heuristics, adapted for VC.
-
 #include <iostream>
 #include <numeric>
 #include <algorithm>
@@ -77,13 +53,11 @@ BitGraph<n_words_> buildGraphFromFile(const dimacs::GraphFromFile &g) {
 
     for (int u = 0; u < N; ++u) {
         for (int v = u + 1; v < N; ++v) {
-
-            // If (u,v) is *not* an edge in the original graph, add it to the complement
+            // If (u,v) is not an edge in the original graph, add it to the complement
             if (!original.adjacent(u, v)) {
                 comp.add_edge(u, v);
             }
-
-            // If it's an edge, don't add anything (complement omits it)
+            // If it's an edge, don't add anything
         }
     }
     return comp;
@@ -109,8 +83,9 @@ struct VCNode {
   bool isCover;              
 
   int getObj() const {
-    if (!isCover)
+    if (!isCover) {
       return std::numeric_limits<int>::max();
+    }
     return size;
   }
 
@@ -123,8 +98,6 @@ struct VCNode {
     ar & isCover;
   }
 };
-
-// Helpers: degrees, coverage check, etc, over BitGraph + node state
 
 // Compute degree of a vertex u in the residual graph (active vertices only)
 static int residual_degree(const BitGraph<NWORDS> &g, const VCNode &n, int u) {
@@ -140,13 +113,14 @@ static bool check_is_cover(const BitGraph<NWORDS> &g, const VCNode &n) {
 
   // vertices not in cover but still active
   BitSet<NWORDS> notInCover = n.active;
-  for (int i = 0; i < N; ++i)
-    if (n.inCover.test(i))
+  for (int i = 0; i < N; ++i) {
+    if (n.inCover.test(i)) {
       notInCover.unset(i);
+    }
+  }
 
   for (int u = 0; u < N; ++u) {
     if (!notInCover.test(u)) continue;
-
     BitSet<NWORDS> nbrs = notInCover;
     g.intersect_with_row(u, nbrs);
     if (!nbrs.empty()) {
@@ -157,7 +131,7 @@ static bool check_is_cover(const BitGraph<NWORDS> &g, const VCNode &n) {
   return true;
 }
 
-// Reduction rules (R1 + R2) applied to a VCNode
+// Reduction rules (R1 + R2) applied to VCNode
 static bool apply_reductions(const BitGraph<NWORDS> &g, VCNode &n) {
   bool changed = false;
   int N = g.size();
@@ -165,25 +139,24 @@ static bool apply_reductions(const BitGraph<NWORDS> &g, VCNode &n) {
   while (true) {
     bool localChange = false;
 
-    // recompute "not in cover & active"
+    // recompute not in cover & active
     BitSet<NWORDS> undecided = n.active;
     for (int i = 0; i < N; ++i)
       if (n.inCover.test(i))
         undecided.unset(i);
 
-    // Degree-0 rule: remove isolated vertices (in residual)
+    // Degree-0 rule: remove isolated vertices
     for (int u = 0; u < N; ++u) {
       if (!undecided.test(u)) continue;
-
       BitSet<NWORDS> nbrs = n.active;
       g.intersect_with_row(u, nbrs);
-      // remove neighbours already in cover (edges to them are already covered)
+      // remove neighbours already in cover 
       for (int v = 0; v < N; ++v)
         if (nbrs.test(v) && n.inCover.test(v))
           nbrs.unset(v);
 
+      // if u has no uncovered edges, then it can be removed from active
       if (nbrs.empty()) {
-        // u has no uncovered edges, then can be removed from active
         n.active.unset(u);
         undecided.unset(u);
         localChange = true;
@@ -201,11 +174,13 @@ static bool apply_reductions(const BitGraph<NWORDS> &g, VCNode &n) {
 int vcBound(const BitGraph<NWORDS> &g, const VCNode &n) {
   int N = g.size();
 
-  // Build set of vertices that can participate in uncovered edges:
+  // Build set of vertices that can participate in uncovered edges
   BitSet<NWORDS> avail = n.active;
-  for (int i = 0; i < N; ++i)
-    if (n.inCover.test(i))
+  for (int i = 0; i < N; ++i) {
+    if (n.inCover.test(i)) {
       avail.unset(i);
+    }
+  }
 
   std::vector<bool> used(N, false);
   int matchingSize = 0;
@@ -217,9 +192,11 @@ int vcBound(const BitGraph<NWORDS> &g, const VCNode &n) {
     g.intersect_with_row(u, nbrs);
 
     // filter out used vertices
-    for (int v = 0; v < N; ++v)
-      if (nbrs.test(v) && used[v])
+    for (int v = 0; v < N; ++v) {
+      if (nbrs.test(v) && used[v]) {
         nbrs.unset(v);
+      }
+    }
 
     int v = nbrs.first_set_bit();
     if (v != -1) {
@@ -228,7 +205,8 @@ int vcBound(const BitGraph<NWORDS> &g, const VCNode &n) {
       avail.unset(u);
       avail.unset(v);
       matchingSize++;
-    } else {
+    } 
+    else {
       avail.unset(u);
     }
   }
@@ -237,7 +215,7 @@ int vcBound(const BitGraph<NWORDS> &g, const VCNode &n) {
 
 typedef func<decltype(&vcBound), &vcBound> vcBound_func;
 
-// NodeGenerator: pick a high-degree vertex and branch on “in cover / not in cover”
+// NodeGenerator: pick a high-degree vertex and branch on in cover/not in cover
 struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
 
   const BitGraph<NWORDS> &graph;
@@ -279,12 +257,11 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
     }
 
     if (bestV == -1) {
-      // No vertex to branch on. Either it's a cover or something degenerated
+      // if no vertex to branch on, either it's a cover or something degenerated
       parent.isCover = check_is_cover(graph, parent);
       numChildren = 0;
       return;
     }
-
     branchVertex = bestV;
     numChildren = 2;
   }
@@ -296,7 +273,7 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
       child.sol.cover.push_back(v);
       child.size += 1;
     }
-    // v stays active; edges incident to v are covered, but other vertices still matter
+    // v stays active, edges incident to v are covered, but other vertices still matter
     apply_reductions(graph, child);
     return child;
   }
@@ -319,7 +296,7 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
       }
     }
 
-    // v itself can be removed from active; it will never enter the cover
+    // v itself can be removed from active, it will never enter the cover
     child.active.unset(v);
 
     apply_reductions(graph, child);
@@ -332,13 +309,12 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
 
     VCNode out;
     if (next_child == 0) {
-      // Branch 1: include branchVertex
+      // Branch 1: include branch vertex
       out = include_vertex(branchVertex);
     } else {
-      // Branch 2: exclude branchVertex (so all its neighbors go to cover)
+      // Branch 2: exclude branch vertex (all its neighbors go to cover)
       out = exclude_vertex(branchVertex);
     }
-
     ++next_child;
     return out;
   }
