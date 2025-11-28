@@ -71,9 +71,8 @@ struct Budget {
     auto backtracks = 0;
 
     // Init the stack
-    GeneratorStack<Generator> genStack;
-    genStack.reserve(maxStackDepth);
-    genStack.emplace_back(StackElem<Generator>(space, n));
+    StackElem<Generator> initElem(space, n);
+    GeneratorStack<Generator> genStack(maxStackDepth, initElem);
 
     // Count the initial element
     if (isEnumeration) {
@@ -105,14 +104,15 @@ struct Budget {
 
       // If there's still children at this stackDepth we move into them
       if (genStack[stackDepth].seen < genStack[stackDepth].gen.numChildren) {
-        const auto child = genStack[stackDepth].gen.next();
+        genStack[stackDepth + 1].node = genStack[stackDepth].gen.next();
+        const auto & child = genStack[stackDepth + 1].node;
+
         genStack[stackDepth].seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, child, acc);
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) { continue; }
         else if (pn == ProcessNodeRet::Break) {
-          genStack.pop_back();
           stackDepth--;
           depth--;
           backtracks++;
@@ -120,15 +120,14 @@ struct Budget {
         }
 
         // Going down
+        const auto childGen = Generator(space, child);
         stackDepth++;
         depth++;
-        genStack.emplace_back(space, child);
 
         // TODO: This only works correctly for countNodes where we can count without going into a node
         // It wouldn't work for a depthBounded optimisation problem for example.
         if constexpr(isDepthBounded) {
           if (depth == reg->params.maxDepth) {
-            genStack.pop_back();
             stackDepth--;
             depth--;
             backtracks++;
@@ -136,8 +135,9 @@ struct Budget {
           }
         }
 
+        genStack[stackDepth].seen = 0;
+        genStack[stackDepth].gen = childGen;
       } else {
-        genStack.pop_back();
         stackDepth--;
         depth--;
         backtracks++;
