@@ -62,27 +62,27 @@ struct GenNode : YewPar::NodeGenerator<KPNode, KPSpace<numItems> > {
   std::vector<int> items;
   int pos;
 
-  std::reference_wrapper<const KPSpace<numItems> > space;
-  std::reference_wrapper<const KPNode> n;
+  const KPSpace<numItems> &space;
+  const KPNode &n;
 
   GenNode (const KPSpace<numItems> & space, const KPNode & n) :
-      pos(0), space(std::cref(space)), n(std::cref(n)) {
+      pos(0), space(space), n(n) {
     this->numChildren = n.rem.size();
   }
 
   KPNode next() override {
-    auto i = n.get().rem[pos];
-    auto newSol = n.get().sol;
+    auto i = n.rem[pos];
+    auto newSol = n.sol;
     newSol.items.push_back(i);
-    newSol.profit += space.get().profits[i];
-    newSol.weight += space.get().weights[i];
+    newSol.profit += space.profits[i];
+    newSol.weight += space.weights[i];
 
     ++pos;
 
     std::vector<int> newRem;
-    std::copy_if(n.get().rem.begin() + pos, n.get().rem.end(), std::back_inserter(newRem),
+    std::copy_if(n.rem.begin() + pos, n.rem.end(), std::back_inserter(newRem),
                  [&](const int i) {
-                   return newSol.weight + space.get().weights[i] <= space.get().capacity;
+                   return newSol.weight + space.weights[i] <= space.capacity;
                  });
 
     return { newSol, std::move(newRem) };

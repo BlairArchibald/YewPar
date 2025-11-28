@@ -48,13 +48,13 @@ static typename Enum::ResT combineEnumerators() {
 template <typename Generator>
 struct StackElem {
   unsigned seen;
-  typename Generator::Nodetype node;
+  const typename Generator::Nodetype node;
   Generator gen;
 
-  StackElem(Generator gen) : seen(0), gen(gen) {};
+  // StackElem(Generator gen) : seen(0), gen(gen) {};
   StackElem(const typename Generator::Spacetype & s,
             const typename Generator::Nodetype & n)
-      : seen(0), node(n), gen(Generator(s, node)) {};
+      : seen(0), node(n), gen(Generator(s, n)) {};
 };
 
 template <typename Generator>

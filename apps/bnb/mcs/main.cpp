@@ -169,7 +169,7 @@ struct GenNode : YewPar::NodeGenerator<MCNode, BitGraph<NWORDS> > {
   std::array<unsigned, NWORDS * bits_per_word> p_order;
   std::array<unsigned, NWORDS * bits_per_word> colourClass;
 
-  std::reference_wrapper<const BitGraph<NWORDS> > graph;
+  const BitGraph<NWORDS> &graph;
 
   MCSol childSol;
   int childBnd;
@@ -177,7 +177,7 @@ struct GenNode : YewPar::NodeGenerator<MCNode, BitGraph<NWORDS> > {
 
   int v;
 
-  GenNode(const BitGraph<NWORDS> & graph, const MCNode & n) : graph(std::cref(graph)) {
+  GenNode(const BitGraph<NWORDS> & graph, const MCNode & n) : graph(graph) {
     colour_class_order(graph, n.remaining, p_order, colourClass);
     childSol = n.sol;
     childBnd = n.size + 1;
@@ -193,7 +193,7 @@ struct GenNode : YewPar::NodeGenerator<MCNode, BitGraph<NWORDS> > {
     sol.colours = colourClass[v] - 1;
 
     auto cands = p;
-    graph.get().intersect_with_row(p_order[v], cands);
+    graph.intersect_with_row(p_order[v], cands);
 
     // Side effectful function update
     p.unset(p_order[v]);
