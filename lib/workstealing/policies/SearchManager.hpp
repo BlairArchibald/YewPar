@@ -1,5 +1,5 @@
 #ifndef YEWPAR_SEARCHMANAGER_COMPONENT_HPP
-#define YEWPAR_SEARCHMANAGER_COMPONENT_HPP
+ #define YEWPAR_SEARCHMANAGER_COMPONENT_HPP
 
 #include <iterator>                                              // for advance
 #include <memory>                                                // for allo...
@@ -311,6 +311,12 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
       return res;
     }
 
+    // Directly add work to the search manager's internal queue
+    // Used to spawn the initial task(s)
+    void addWork(SearchInfo searchInfo, int depth, hpx::id_type prom) {
+      taskBuffer.push_left(hpx::make_tuple(searchInfo, depth, prom));
+    }
+
     typedef Response Response_t;
     typedef SharedState SharedState_t;
 
@@ -330,6 +336,7 @@ struct SearchManager : public hpx::components::component_base<SearchManager> {
     }
 
   };
+
 
   // Public component API (managing the types as required)
   template <typename SearchInfo, typename FuncToCall, typename ...Args>

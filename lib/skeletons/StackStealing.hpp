@@ -97,31 +97,6 @@ struct StackStealing {
   using Response    = typename Policy::Response_t;
   using SharedState = typename Policy::SharedState_t;
 
-  // Find the (approx) required depth<Generator> to create "totalThreads" tasks
-  static unsigned getRequiredSpawnDepth(const Space & space,
-                                        const Node & root,
-                                        const YewPar::Skeletons::API::Params<Bound> params,
-                                        const unsigned totalThreads) {
-
-    auto depthRequired = 1;
-    while (depthRequired <= params.maxDepth) {
-      auto localParams = params;
-      localParams.maxDepth = depthRequired;
-      std::uint64_t numNodes = YewPar::Skeletons::Seq<Generator,
-                                             YewPar::Skeletons::API::Enumeration,
-                                             YewPar::Skeletons::API::Enumerator<CountNodesEnumerator<Node>>,
-                                             YewPar::Skeletons::API::BoundFunction<boundFn>,
-                                             YewPar::Skeletons::API::ObjectiveComparison<Objcmp>,
-                                             YewPar::Skeletons::API::DepthLimited>
-                      ::search(space, root, localParams);
-      if (numNodes >= totalThreads) {
-        break;
-      }
-      ++depthRequired;
-    }
-    return depthRequired;
-  }
-
   // TODO: We only need the depth for counting so need to constexpr more
   static void runWithStack(const int startingDepth,
                            const Space & space,
@@ -261,140 +236,22 @@ struct StackStealing {
 
   // Action to push a new scheduler running this skeleton to a distributed node
   // (for setting initial work distribution)
-  static void addWork (const Node initNode,
-                       const unsigned depth,
-                       const hpx::id_type donePromise) {
-    hpx::execution::parallel_executor exe(hpx::threads::thread_priority::critical,
-                                          hpx::threads::thread_stacksize::huge);
-    hpx::function<void(),false> fn = hpx::bind(SubTreeTask::fn_ptr(), initNode, depth, donePromise);
-    auto f = hpx::bind(&Workstealing::Scheduler::scheduler, fn);
-    hpx::async(exe, f);
+  static hpx::future<void> addWork(const Node initNode,
+                                   const unsigned depth) {
+    hpx::distributed::promise<void> prom;
+    auto pfut = prom.get_future();
+    auto pid  = prom.get_id();
+
+    auto localSearchMgr = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy);
+    localSearchMgr->addWork(initNode, depth, pid);
+
+    return pfut;
   }
+
   struct addWorkAct : hpx::actions::make_action<
     decltype(&StackStealing<Generator, Args...>::addWork),
     &StackStealing<Generator, Args...>::addWork,
     addWorkAct>::type {};
-
-  static void spawnInitialWork(const unsigned depthRequired,
-                               const unsigned tasksRequired,
-                               int & stackDepth,
-                               int & depth,
-                               const Space & space,
-                               GeneratorStack<Generator> & generatorStack,
-                               Enum & acc,
-                               std::vector<hpx::future<void> > & futures){
-
-    auto reg = Registry<Space, Node, Bound, Enum>::gReg;
-    auto localities = util::findOtherLocalities();
-    localities.push_back(hpx::find_here());
-
-    auto tasksSpawned = 0;
-    while (stackDepth >= 0) {
-      // If there's still children at this stackDepth we move into them
-      if (generatorStack[stackDepth].seen < generatorStack[stackDepth].gen.numChildren) {
-
-        // Get the next child at this stackDepth
-        const auto child = generatorStack[stackDepth].gen.next();
-        generatorStack[stackDepth].seen++;
-
-        // Going down
-        stackDepth++;
-        depth++;
-
-        // Push anything at this depth as a task
-        if (stackDepth == depthRequired) {
-          hpx::distributed::promise<void> prom;
-          auto f = prom.get_future();
-          auto pid = prom.get_id();
-          futures.push_back(std::move(f));
-
-          // This needs to go to localities no managers now
-          auto mgr = tasksSpawned % localities.size();
-          hpx::async<addWorkAct>(localities[mgr], child, depth, pid);
-
-          stackDepth--;
-          depth--;
-          tasksSpawned++;
-
-          // We keep a spare thread for ourselves to execute as
-          if (tasksSpawned == tasksRequired) {
-            break;
-          }
-        } else {
-          // Need to process nodes we don't spawn to ensure correct enumeration etc
-          auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child, acc);
-          if (pn == ProcessNodeRet::Exit) { return; }
-          else if (pn == ProcessNodeRet::Prune) { continue; }
-          else if (pn == ProcessNodeRet::Break) {
-            stackDepth--;
-            depth--;
-            continue;
-          }
-
-          // Get the child's generator
-          generatorStack.emplace_back(space, child);
-        }
-      } else {
-        generatorStack.pop_back();
-        stackDepth--;
-        depth--;
-      }
-    }
-  }
-
-  static void doSearch(const Space & space,
-                       const Node & root,
-                       const API::Params<Bound> & params) {
-
-    // FIXME: Assumes homogeneous machines
-    unsigned totalThreads = 0;
-    if (hpx::get_os_thread_count() == 1) {
-      totalThreads = hpx::find_all_localities().size();
-    } else {
-      totalThreads = hpx::find_all_localities().size() * (hpx::get_os_thread_count() - 1);
-    }
-
-    // Master stack
-    GeneratorStack<Generator> genStack;
-    genStack.reserve(maxStackDepth);
-    genStack.emplace_back(space, root);
-
-    Enum acc;
-    acc.accumulate(root);
-
-    auto stackDepth = 0;
-    auto depth = 1;
-
-    std::vector<hpx::future<void> > futures;
-    if (totalThreads > 1) {
-      auto depthRequired = getRequiredSpawnDepth(space, root, params, totalThreads);
-      spawnInitialWork(depthRequired, totalThreads - 1, stackDepth, depth, space, genStack, acc, futures);
-    }
-
-    // Register the rest of the work from the main thread with the search manager
-    auto searchMgrInfo = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->registerThread();
-    auto stealRequest  = std::get<0>(searchMgrInfo);
-
-    // Continue the actual work
-    hpx::distributed::promise<void> prom;
-    auto f = prom.get_future();
-    auto pid = prom.get_id();
-
-    // Launch initialising thread as a new Scheduler
-    if (totalThreads == 1) {
-      runTaskFromStack(1, space, genStack, stealRequest, acc, pid, std::get<1>(searchMgrInfo), stackDepth, depth);
-    } else {
-      // Not clear this is executing?
-      hpx::execution::parallel_executor exe(hpx::threads::thread_priority::critical,
-                                            hpx::threads::thread_stacksize::huge);
-      hpx::function<void(), false> fn = hpx::bind(&runTaskFromStack, 1, space, genStack, stealRequest, acc, pid, std::get<1>(searchMgrInfo), stackDepth, depth);
-      auto f = hpx::bind(&Workstealing::Scheduler::scheduler, fn);
-      hpx::async(exe, f);
-    }
-
-    futures.push_back(std::move(f));
-    hpx::wait_all(futures);
-  }
 
   static auto search (const Space & space,
                       const Node & root,
@@ -415,7 +272,11 @@ struct StackStealing {
       initIncumbent<Space, Node, Bound, Enum, Objcmp, Verbose>(root, params.initialBound);
     }
 
-    doSearch(space, root, params);
+    auto threadCount = hpx::get_os_thread_count() == 1 ? 1 : hpx::get_os_thread_count() - 1;
+    hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::startSchedulers_act>(
+        hpx::find_all_localities(), threadCount));
+
+    addWork(root, 0).get();
 
     hpx::wait_all(hpx::lcos::broadcast<Workstealing::Scheduler::stopSchedulers_act>(
         hpx::find_all_localities()));
