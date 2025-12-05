@@ -70,23 +70,36 @@ struct StackStealing {
                           const unsigned depth,
                           const hpx::id_type donePromise) {
     auto reg = Registry<Space, Node, Bound, Enum>::gReg;
+
     Enum acc;
+
+    if constexpr(isEnumeration) {
+        acc.accumulate(initNode);
+    }
 
     // Setup the stack with root node
     GeneratorStack<Generator> genStack;
     genStack.reserve(maxStackDepth);
     genStack.emplace_back(reg->space, initNode);
 
-    if constexpr(isEnumeration) {
-        acc.accumulate(initNode);
-    }
-
     // Register with the Policy to allow stealing from this stack
     std::shared_ptr<SharedState> stealReq;
     unsigned threadId;
-    std::tie(stealReq, threadId) = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->registerThread();
+    auto searchMgr = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy);
+    std::tie(stealReq, threadId) = searchMgr->registerThread();
 
-    runTaskFromStack(depth, reg->space, genStack, stealReq, acc, donePromise, threadId);
+    std::vector<hpx::future<void> > futures;
+    runWithStack(depth, genStack, stealReq, acc, futures);
+
+    searchMgr->unregisterThread(threadId);
+
+    // Atomically updates the (process) local counter
+    if constexpr(isEnumeration) {
+        reg->updateEnumerator(acc);
+    }
+
+    termination_wait_act act;
+    hpx::post(act, hpx::find_here(), std::move(futures), donePromise);
   }
 
   using SubTreeTask = func<
@@ -99,7 +112,6 @@ struct StackStealing {
 
   // TODO: We only need the depth for counting so need to constexpr more
   static void runWithStack(const int startingDepth,
-                           const Space & space,
                            GeneratorStack<Generator> & generatorStack,
                            std::shared_ptr<SharedState> stealRequest,
                            Enum & acc,
@@ -177,7 +189,7 @@ struct StackStealing {
         const auto child = generatorStack[stackDepth].gen.next();
         generatorStack[stackDepth].seen++;
 
-        auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child, acc);
+        auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, reg->space, child, acc);
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) { continue; }
         else if (pn == ProcessNodeRet::Break) {
@@ -198,39 +210,13 @@ struct StackStealing {
         stackDepth++;
         depth++;
 
-        generatorStack.emplace_back(space, child);
+        generatorStack.emplace_back(reg->space, child);
       } else {
         generatorStack.pop_back();
         stackDepth--;
         depth--;
       }
     }
-  }
-
-
-  static void runTaskFromStack (const unsigned startingDepth,
-                                const Space & space,
-                                GeneratorStack<Generator> & generatorStack,
-                                const std::shared_ptr<SharedState> stealRequest,
-                                Enum & acc,
-                                const hpx::id_type donePromise,
-                                const unsigned searchManagerId,
-                                const int stackDepth = 0,
-                                const int depth = -1) {
-    auto reg = Registry<Space, Node, Bound, Enum>::gReg;
-    std::vector<hpx::future<void> > futures;
-
-    runWithStack(startingDepth, space, generatorStack, stealRequest, acc, futures, stackDepth, depth);
-
-    // Atomically updates the (process) local counter
-    if constexpr(isEnumeration) {
-        reg->updateEnumerator(acc);
-    }
-
-    std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->unregisterThread(searchManagerId);
-
-    termination_wait_act act;
-    hpx::post(act, hpx::find_here(), std::move(futures), donePromise);
   }
 
 
