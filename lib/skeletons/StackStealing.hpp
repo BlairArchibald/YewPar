@@ -115,19 +115,11 @@ struct StackStealing {
                            GeneratorStack<Generator> & generatorStack,
                            std::shared_ptr<SharedState> stealRequest,
                            Enum & acc,
-                           std::vector<hpx::future<void> > & futures,
-                           int stackDepth = 0,
-                           int depth = -1) {
+                           std::vector<hpx::future<void> > & futures) {
     auto reg = Registry<Space, Node, Bound, Enum>::gReg;
     std::vector<hpx::distributed::promise<void> > promises;
 
-    // We do this because arguments can't default initialise to themselves
-    if (depth == -1) {
-      depth = startingDepth;
-    }
-
-    while (stackDepth >= 0) {
-
+    while (!generatorStack.empty()) {
       if constexpr(isDecision) {
         if (reg->stopSearch) {
           return;
@@ -138,7 +130,7 @@ struct StackStealing {
       if (std::get<0>(*stealRequest)) {
         // We steal from the highest possible generator with work
         bool responded = false;
-        for (auto i = 0; i < stackDepth; ++i) {
+        for (auto i = 0; i < generatorStack.size(); ++i) {
           // Work left at this level:
           if (generatorStack[i].seen < generatorStack[i].gen.numChildren) {
             if (reg->params.stealAll) {
@@ -184,37 +176,30 @@ struct StackStealing {
       }
 
       // If there's still children at this stackDepth we move into them
-      if (generatorStack[stackDepth].seen < generatorStack[stackDepth].gen.numChildren) {
+      auto & topGen = generatorStack.back();
+      if (topGen.seen < topGen.gen.numChildren) {
         // Get the next child at this stackDepth
-        const auto child = generatorStack[stackDepth].gen.next();
-        generatorStack[stackDepth].seen++;
+        const auto child = topGen.gen.next();
+        topGen.seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, reg->space, child, acc);
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) { continue; }
         else if (pn == ProcessNodeRet::Break) {
           generatorStack.pop_back();
-          stackDepth--;
-          depth--;
           continue;
         }
 
 
         if constexpr(isDepthBounded) {
-            if (depth == reg->params.maxDepth) {
+            if (startingDepth + generatorStack.size() == reg->params.maxDepth) {
               continue;
           }
         }
 
-        // Going down
-        stackDepth++;
-        depth++;
-
         generatorStack.emplace_back(reg->space, child);
       } else {
         generatorStack.pop_back();
-        stackDepth--;
-        depth--;
       }
     }
   }

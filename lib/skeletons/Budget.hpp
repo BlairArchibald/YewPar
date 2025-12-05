@@ -67,7 +67,6 @@ struct Budget {
                      const unsigned childDepth) {
     auto reg = Registry<Space, Node, Bound, Enum>::gReg;
 
-    auto depth = childDepth;
     auto backtracks = 0;
 
     // Init the stack
@@ -80,8 +79,7 @@ struct Budget {
       acc.accumulate(n);
     }
 
-    auto stackDepth = 0;
-    while (stackDepth >= 0) {
+    while (!genStack.empty()) {
 
       if constexpr(isDecision) {
         if (reg->stopSearch) {
@@ -92,54 +90,44 @@ struct Budget {
       // We spawn when we have exhausted our backtrack budget
       if (backtracks == params.backtrackBudget) {
         // Spawn everything at the highest possible depth
-        for (auto i = 0; i < stackDepth; ++i) {
+        for (auto i = 0; i < genStack.size(); ++i) {
           if (genStack[i].seen < genStack[i].gen.numChildren) {
             while (genStack[i].seen < genStack[i].gen.numChildren) {
               genStack[i].seen++;
               childFutures.push_back(createTask(childDepth + i + 1, genStack[i].gen.next()));
             }
+            // TODO should break (make a flag to recreate previous behaviour)
           }
         }
         backtracks = 0;
       }
 
       // If there's still children at this stackDepth we move into them
-      if (genStack[stackDepth].seen < genStack[stackDepth].gen.numChildren) {
-        const auto child = genStack[stackDepth].gen.next();
-        genStack[stackDepth].seen++;
+      auto & topGen = genStack.back();
+      if (topGen.seen < topGen.gen.numChildren) {
+        const auto child = topGen.gen.next();
+        topGen.seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(params, space, child, acc);
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) { continue; }
         else if (pn == ProcessNodeRet::Break) {
           genStack.pop_back();
-          stackDepth--;
-          depth--;
           backtracks++;
           continue;
         }
 
-        // Going down
-        stackDepth++;
-        depth++;
-        genStack.emplace_back(space, child);
-
-        // TODO: This only works correctly for countNodes where we can count without going into a node
-        // It wouldn't work for a depthBounded optimisation problem for example.
         if constexpr(isDepthBounded) {
-          if (depth == reg->params.maxDepth) {
-            genStack.pop_back();
-            stackDepth--;
-            depth--;
+          if (childDepth + genStack.size() == reg->params.maxDepth) {
             backtracks++;
             continue;
           }
         }
 
+        genStack.emplace_back(space, child);
+
       } else {
         genStack.pop_back();
-        stackDepth--;
-        depth--;
         backtracks++;
       }
     }
