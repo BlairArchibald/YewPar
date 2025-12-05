@@ -589,7 +589,7 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
   bool sat = false;
 
   const Model<n_words_>  &model;
-  const SIPNode<n_words_> &parent;
+  const SIPNode<n_words_> parent;
 
   GenNode(const Model<n_words_> & m, const SIPNode<n_words_> & n) :
     model(m), parent(n) {
