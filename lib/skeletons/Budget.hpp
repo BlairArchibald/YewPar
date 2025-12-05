@@ -89,14 +89,14 @@ struct Budget {
 
       // We spawn when we have exhausted our backtrack budget
       if (backtracks == params.backtrackBudget) {
-        // Spawn everything at the highest possible depth
         for (auto i = 0; i < genStack.size(); ++i) {
           if (genStack[i].seen < genStack[i].gen.numChildren) {
             while (genStack[i].seen < genStack[i].gen.numChildren) {
               genStack[i].seen++;
               childFutures.push_back(createTask(childDepth + i + 1, genStack[i].gen.next()));
             }
-            // TODO should break (make a flag to recreate previous behaviour)
+            // Only spawn at lowest depth
+            if (!params.budgetSpawnAll) { break; }
           }
         }
         backtracks = 0;

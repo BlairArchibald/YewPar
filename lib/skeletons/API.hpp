@@ -88,6 +88,7 @@ struct Params {
 
   // Budget
   unsigned backtrackBudget = 100000;
+  bool budgetSpawnAll = true; // Original (probably incorrect) PhD thesis behaviour
 
   // Needed to push to registries on all nodes
   template <class Archive>
@@ -98,6 +99,7 @@ struct Params {
     ar & spawnDepth;
     ar & stealAll;
     ar & backtrackBudget;
+    ar & budgetSpawnAll;
   }
 
   std::string toString() const {
