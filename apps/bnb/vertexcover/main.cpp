@@ -349,7 +349,8 @@ int hpx_main(hpx::program_options::variables_map &opts) {
 
   YewPar::Skeletons::API::Params<int> P;
   P.initialBound = graph.size(); // worst-case cover size ≤ |V|
-
+  
+  auto skeletonType = opts["skeleton"].as<std::string>();
   if (skeletonType == "seq") {
     sol = YewPar::Skeletons::Seq<VCGenNode,
           YewPar::Skeletons::API::Optimisation,
