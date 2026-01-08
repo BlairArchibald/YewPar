@@ -47,7 +47,7 @@ BitGraph<n_words_> buildGraphFromFile(const dimacs::GraphFromFile &g) {
         }
     }
 
-    // Build complement graph manually
+    // Build complement graph
     BitGraph<n_words_> comp;
     comp.resize(N);
 
@@ -57,7 +57,6 @@ BitGraph<n_words_> buildGraphFromFile(const dimacs::GraphFromFile &g) {
             if (!original.adjacent(u, v)) {
                 comp.add_edge(u, v);
             }
-            // If it's an edge, don't add anything
         }
     }
     return comp;
@@ -141,9 +140,11 @@ static bool apply_reductions(const BitGraph<NWORDS> &g, VCNode &n) {
 
     // recompute not in cover & active
     BitSet<NWORDS> undecided = n.active;
-    for (int i = 0; i < N; ++i)
-      if (n.inCover.test(i))
+    for (int i = 0; i < N; ++i) {
+      if (n.inCover.test(i)) {
         undecided.unset(i);
+      }
+    }
 
     // Degree-0 rule: remove isolated vertices
     for (int u = 0; u < N; ++u) {
@@ -221,7 +222,7 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
   const BitGraph<NWORDS> &graph;
   VCNode parent;
   int next_child;
-  int branchVertex;  // vertex v we branch on
+  int branchVertex;  // branch on vertex v
 
   VCGenNode(const BitGraph<NWORDS> &g, const VCNode &node)
       : graph(g), parent(node), next_child(0), branchVertex(-1) {
@@ -304,14 +305,16 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
   }
 
   VCNode next() override {
-    if (next_child >= numChildren)
+    if (next_child >= numChildren) {
       return parent; // won't be used
+    }
 
     VCNode out;
     if (next_child == 0) {
       // Branch 1: include branch vertex
       out = include_vertex(branchVertex);
-    } else {
+    } 
+    else {
       // Branch 2: exclude branch vertex (all its neighbors go to cover)
       out = exclude_vertex(branchVertex);
     }
@@ -344,71 +347,65 @@ int hpx_main(hpx::program_options::variables_map &opts) {
 
   VCNode sol = root;
 
-  auto skeletonType = opts["skeleton"].as<std::string>();
-  auto spawnDepth   = opts["spawn-depth"].as<std::uint64_t>();
-
-  using OptTag = YewPar::Skeletons::API::Optimisation;
-  using BoundT = YewPar::Skeletons::API::BoundFunction<vcBound_func>;
-  using MinCmp = YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>;
-
   YewPar::Skeletons::API::Params<int> P;
   P.initialBound = graph.size(); // worst-case cover size ≤ |V|
 
   if (skeletonType == "seq") {
     sol = YewPar::Skeletons::Seq<VCGenNode,
-                                 OptTag,
-                                 BoundT,
-                                 MinCmp>
-            ::search(graph, root, P);
-
-  } else if (skeletonType == "depthbounded") {
-    P.spawnDepth = spawnDepth;
+          YewPar::Skeletons::API::Optimisation,
+          YewPar::Skeletons::API::BoundFunction<vcBound_func>,
+          YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>>
+          ::search(graph, root, P);
+  } 
+  else if (skeletonType == "depthbounded") {
+    P.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
     sol = YewPar::Skeletons::DepthBounded<VCGenNode,
-                                          OptTag,
-                                          BoundT,
-                                          MinCmp>
-            ::search(graph, root, P);
-
-  } else if (skeletonType == "stacksteal") {
+          YewPar::Skeletons::API::Optimisation,
+          YewPar::Skeletons::API::BoundFunction<vcBound_func>,
+          YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>>
+          ::search(graph, root, P);
+  } 
+  else if (skeletonType == "stacksteal") {
     P.stealAll = static_cast<bool>(opts.count("chunked"));
     sol = YewPar::Skeletons::StackStealing<VCGenNode,
-                                           OptTag,
-                                           BoundT,
-                                           MinCmp>
-            ::search(graph, root, P);
-
-  } else if (skeletonType == "ordered") {
-    P.spawnDepth = spawnDepth;
+          YewPar::Skeletons::API::Optimisation,
+          YewPar::Skeletons::API::BoundFunction<vcBound_func>,
+          YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>>
+          ::search(graph, root, P);
+  } 
+  else if (skeletonType == "ordered") {
+    P.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
     if (opts.count("discrepancyOrder")) {
       sol = YewPar::Skeletons::Ordered<VCGenNode,
-                                       OptTag,
-                                       BoundT,
-                                       MinCmp,
-                                       YewPar::Skeletons::API::DiscrepancySearch>
-              ::search(graph, root, P);
-    } else {
+            YewPar::Skeletons::API::Optimisation,
+            YewPar::Skeletons::API::BoundFunction<vcBound_func>,
+            YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>>
+            YewPar::Skeletons::API::DiscrepancySearch>
+            ::search(graph, root, P);
+    } 
+    else {
       sol = YewPar::Skeletons::Ordered<VCGenNode,
-                                       OptTag,
-                                       BoundT,
-                                       MinCmp>
-              ::search(graph, root, P);
+            YewPar::Skeletons::API::Optimisation,
+            YewPar::Skeletons::API::BoundFunction<vcBound_func>,
+            YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>>
+            ::search(graph, root, P);
     }
-
-  } else if (skeletonType == "budget") {
+  } 
+  else if (skeletonType == "budget") {
     P.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
     sol = YewPar::Skeletons::Budget<VCGenNode,
-                                    OptTag,
-                                    BoundT,
-                                    MinCmp>
-            ::search(graph, root, P);
-
-  } else {
+          YewPar::Skeletons::API::Optimisation,
+          YewPar::Skeletons::API::BoundFunction<vcBound_func>,
+          YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>>
+          ::search(graph, root, P);
+  } 
+  else {
     hpx::cout << "Invalid skeleton type\n";
     return hpx::finalize();
   }
 
   auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-              std::chrono::steady_clock::now() - start_time);
+    std::chrono::steady_clock::now() - start_time);
 
   hpx::cout << "Minimum Vertex Cover Size = " << sol.size << "\n";
   hpx::cout << "cpu = " << ms.count() << " ms\n";
