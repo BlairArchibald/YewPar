@@ -65,10 +65,10 @@ BitGraph<n_words_> buildGraphFromFile(const dimacs::GraphFromFile &g) {
 // Vertex Cover node and solution state
 struct VCSol {
   std::vector<int> cover;
-
+  void clear() { cover.clear(); }
   template <class Archive>
   void serialize(Archive &ar, const unsigned int) {
-    ar & cover;
+
   }
 };
 
@@ -271,7 +271,6 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
     VCNode child = parent;
     if (!child.inCover.test(v)) {
       child.inCover.set(v);
-      child.sol.cover.push_back(v);
       child.size += 1;
     }
     // v stays active, edges incident to v are covered, but other vertices still matter
@@ -292,7 +291,6 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
       if (!nbrs.test(u)) continue;
       if (!child.inCover.test(u)) {
         child.inCover.set(u);
-        child.sol.cover.push_back(u);
         child.size += 1;
       }
     }
@@ -322,6 +320,15 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
     return out;
   }
 };
+
+static void reconstruct_cover_from_bitset(const BitGraph<NWORDS> &g, VCNode &n) {
+  int N = g.size();
+  n.sol.cover.clear();
+  n.sol.cover.reserve(n.size);
+  for (int i = 0; i < N; ++i) {
+    if (n.inCover.test(i)) n.sol.cover.push_back(i);
+  }
+}
 
 // HPX main
 int hpx_main(hpx::program_options::variables_map &opts) {
