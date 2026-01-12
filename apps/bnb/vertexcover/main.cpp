@@ -380,7 +380,7 @@ int hpx_main(hpx::program_options::variables_map &opts) {
       sol = YewPar::Skeletons::Ordered<VCGenNode,
             YewPar::Skeletons::API::Optimisation,
             YewPar::Skeletons::API::BoundFunction<vcBound_func>,
-            YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>>
+            YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>,
             YewPar::Skeletons::API::DiscrepancySearch>
             ::search(graph, root, P);
     } 
