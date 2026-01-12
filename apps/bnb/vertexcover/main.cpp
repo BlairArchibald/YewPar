@@ -63,19 +63,9 @@ BitGraph<n_words_> buildGraphFromFile(const dimacs::GraphFromFile &g) {
 }
 
 // Vertex Cover node and solution state
-struct VCSol {
-  std::vector<int> cover;
-  void clear() { cover.clear(); }
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int) {
-
-  }
-};
-
 struct VCNode {
   friend class boost::serialization::access;
 
-  VCSol sol;
   int size;                  
   BitSet<NWORDS> inCover;    
   BitSet<NWORDS> active;     
@@ -90,7 +80,6 @@ struct VCNode {
 
   template <class Archive>
   void serialize(Archive &ar, const unsigned int) {
-    ar & sol;
     ar & size;
     ar & inCover;
     ar & active;
@@ -342,7 +331,6 @@ int hpx_main(hpx::program_options::variables_map &opts) {
   // Root node: no vertices chosen, all active
   VCNode root;
   root.size = 0;
-  root.sol.cover.clear();
   root.inCover.resize(graph.size());
   root.inCover.reset_all();
   root.active.resize(graph.size());
@@ -417,7 +405,7 @@ int hpx_main(hpx::program_options::variables_map &opts) {
 
   hpx::cout << "Minimum Vertex Cover Size = " << sol.size << "\n";
   hpx::cout << "cpu = " << ms.count() << " ms\n";
-
+  
   return hpx::finalize();
 }
 
