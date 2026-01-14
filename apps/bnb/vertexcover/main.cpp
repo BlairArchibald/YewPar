@@ -53,7 +53,6 @@ BitGraph<n_words_> buildGraphFromFile(const dimacs::GraphFromFile &g) {
 
     for (int u = 0; u < N; ++u) {
         for (int v = u + 1; v < N; ++v) {
-            // If (u,v) is not an edge in the original graph, add it to the complement
             if (!original.adjacent(u, v)) {
                 comp.add_edge(u, v);
             }
@@ -62,19 +61,16 @@ BitGraph<n_words_> buildGraphFromFile(const dimacs::GraphFromFile &g) {
     return comp;
 }
 
-// Vertex Cover node and solution state
 struct VCNode {
   friend class boost::serialization::access;
 
-  int size;                  
-  BitSet<NWORDS> inCover;    
-  BitSet<NWORDS> active;     
-  bool isCover;              
+  int size = 0;
+  BitSet<NWORDS> inCover;
+  BitSet<NWORDS> active;
+  bool isCover = false;
 
   int getObj() const {
-    if (!isCover) {
-      return std::numeric_limits<int>::max();
-    }
+    if (!isCover) return std::numeric_limits<int>::max();
     return size;
   }
 
@@ -87,72 +83,48 @@ struct VCNode {
   }
 };
 
-// Compute degree of a vertex u in the residual graph (active vertices only)
-static int residual_degree(const BitGraph<NWORDS> &g, const VCNode &n, int u) {
-  if (!n.active.test(u)) return 0;
-  BitSet<NWORDS> nbrs = n.active;
-  g.intersect_with_row(u, nbrs);
-  return (int)nbrs.popcount();
+// Helper: undecided vertices = active \ inCover
+static inline BitSet<NWORDS> undecided_vertices(const VCNode &n) {
+  BitSet<NWORDS> u = n.active;
+  u.intersect_with_complement(n.inCover);
+  return u;
 }
 
-// Check whether all edges induced by active are covered by inCover
+// Check whether all edges induced by undecided vertices are covered by inCover
 static bool check_is_cover(const BitGraph<NWORDS> &g, const VCNode &n) {
   int N = g.size();
-
-  // vertices not in cover but still active
-  BitSet<NWORDS> notInCover = n.active;
-  for (int i = 0; i < N; ++i) {
-    if (n.inCover.test(i)) {
-      notInCover.unset(i);
-    }
-  }
+  BitSet<NWORDS> rest = undecided_vertices(n);
 
   for (int u = 0; u < N; ++u) {
-    if (!notInCover.test(u)) continue;
-    BitSet<NWORDS> nbrs = notInCover;
-    g.intersect_with_row(u, nbrs);
-    if (!nbrs.empty()) {
-      // found an edge (u,v) with neither in cover
-      return false;
-    }
+    if (!rest.test(u)) continue;
+    BitSet<NWORDS> nbrs = rest;
+    g.intersect_with_row(u, nbrs);  
+    if (!nbrs.empty()) return false; // found uncovered edge
   }
   return true;
 }
 
-// Reduction rules (R1 + R2) applied to VCNode
+// Reduction rule: degree-0 in the undecided induced subgraph
 static bool apply_reductions(const BitGraph<NWORDS> &g, VCNode &n) {
   bool changed = false;
   int N = g.size();
 
   while (true) {
     bool localChange = false;
-
-    // recompute not in cover & active
-    BitSet<NWORDS> undecided = n.active;
-    for (int i = 0; i < N; ++i) {
-      if (n.inCover.test(i)) {
-        undecided.unset(i);
-      }
-    }
-
-    // Degree-0 rule: remove isolated vertices
+    BitSet<NWORDS> undec = undecided_vertices(n);
     for (int u = 0; u < N; ++u) {
-      if (!undecided.test(u)) continue;
-      BitSet<NWORDS> nbrs = n.active;
-      g.intersect_with_row(u, nbrs);
-      // remove neighbours already in cover 
-      for (int v = 0; v < N; ++v)
-        if (nbrs.test(v) && n.inCover.test(v))
-          nbrs.unset(v);
+      if (!undec.test(u)) continue;
 
-      // if u has no uncovered edges, then it can be removed from active
+      BitSet<NWORDS> nbrs = undec;
+      g.intersect_with_row(u, nbrs); // neighbors among undecided vertices
+
       if (nbrs.empty()) {
         n.active.unset(u);
-        undecided.unset(u);
+        undec.unset(u);
         localChange = true;
       }
     }
-    changed = changed || localChange;
+    changed |= localChange;
     if (!localChange) break;
   }
   n.isCover = check_is_cover(g, n);
@@ -160,41 +132,32 @@ static bool apply_reductions(const BitGraph<NWORDS> &g, VCNode &n) {
 }
 
 // Matching-based lower bound on remaining cover size
-// LB = |C| + size of a greedy maximal matching on uncovered residual edges
+// LB = |C| + size of a greedy maximal matching on the undecided induced subgraph
 int vcBound(const BitGraph<NWORDS> &g, const VCNode &n) {
   int N = g.size();
 
-  // Build set of vertices that can participate in uncovered edges
-  BitSet<NWORDS> avail = n.active;
-  for (int i = 0; i < N; ++i) {
-    if (n.inCover.test(i)) {
-      avail.unset(i);
-    }
-  }
+  BitSet<NWORDS> avail = undecided_vertices(n);
 
-  std::vector<bool> used(N, false);
+  BitSet<NWORDS> used;
+  used.resize(N);
+  used.reset_all();
+
   int matchingSize = 0;
 
   for (int u = 0; u < N; ++u) {
-    if (!avail.test(u) || used[u]) continue;
+    if (!avail.test(u) || used.test(u)) continue;
 
     BitSet<NWORDS> nbrs = avail;
-    g.intersect_with_row(u, nbrs);
-
-    // filter out used vertices
-    for (int v = 0; v < N; ++v) {
-      if (nbrs.test(v) && used[v]) {
-        nbrs.unset(v);
-      }
-    }
+    g.intersect_with_row(u, nbrs);        
+    nbrs.intersect_with_complement(used); 
 
     int v = nbrs.first_set_bit();
     if (v != -1) {
-      // match (u,v)
-      used[u] = used[v] = true;
+      used.set(u);
+      used.set(v);
       avail.unset(u);
       avail.unset(v);
-      matchingSize++;
+      ++matchingSize;
     } 
     else {
       avail.unset(u);
@@ -205,18 +168,16 @@ int vcBound(const BitGraph<NWORDS> &g, const VCNode &n) {
 
 typedef func<decltype(&vcBound), &vcBound> vcBound_func;
 
-// NodeGenerator: pick a high-degree vertex and branch on in cover/not in cover
+// NodeGenerator: pick a high-degree vertex and branch on in cover / not in cover
 struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
-
   const BitGraph<NWORDS> &graph;
   VCNode parent;
   int next_child;
-  int branchVertex;  // branch on vertex v
+  int branchVertex;
 
   VCGenNode(const BitGraph<NWORDS> &g, const VCNode &node)
       : graph(g), parent(node), next_child(0), branchVertex(-1) {
 
-    // If parent is already a full cover or there are no active vertices, stop
     if (parent.isCover || parent.active.empty()) {
       numChildren = 0;
       return;
@@ -224,22 +185,19 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
 
     int N = graph.size();
 
-    // Choose branching vertex: active, not in cover, with maximum residual degree
+    BitSet<NWORDS> undec = parent.active;
+    undec.intersect_with_complement(parent.inCover);
+
     int bestDeg = -1;
     int bestV = -1;
 
     for (int u = 0; u < N; ++u) {
-      if (!parent.active.test(u)) continue;
-      if (parent.inCover.test(u)) continue;
+      if (!undec.test(u)) continue;
 
-      BitSet<NWORDS> nbrs = parent.active;
+      BitSet<NWORDS> nbrs = undec;
       graph.intersect_with_row(u, nbrs);
-      // remove neighbors already in cover (edges already covered)
-      for (int v = 0; v < N; ++v)
-        if (nbrs.test(v) && parent.inCover.test(v))
-          nbrs.unset(v);
 
-      int d = (int)nbrs.popcount();
+      int d = static_cast<int>(nbrs.popcount());
       if (d > bestDeg) {
         bestDeg = d;
         bestV = u;
@@ -247,7 +205,6 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
     }
 
     if (bestV == -1) {
-      // if no vertex to branch on, either it's a cover or something degenerated
       parent.isCover = check_is_cover(graph, parent);
       numChildren = 0;
       return;
@@ -262,7 +219,6 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
       child.inCover.set(v);
       child.size += 1;
     }
-    // v stays active, edges incident to v are covered, but other vertices still matter
     apply_reductions(graph, child);
     return child;
   }
@@ -271,10 +227,8 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
     VCNode child = parent;
     int N = graph.size();
 
-    // If we exclude v from the cover, then for every neighbor u of v
-    // that is still active and not already in cover, we must include u
     BitSet<NWORDS> nbrs = child.active;
-    graph.intersect_with_row(v, nbrs);
+    graph.intersect_with_row(v, nbrs); // neighbors among active vertices
 
     for (int u = 0; u < N; ++u) {
       if (!nbrs.test(u)) continue;
@@ -284,51 +238,33 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
       }
     }
 
-    // v itself can be removed from active, it will never enter the cover
     child.active.unset(v);
-
     apply_reductions(graph, child);
     return child;
   }
 
   VCNode next() override {
     if (next_child >= numChildren) {
-      return parent; // won't be used
+      return parent; // unused
     }
 
-    VCNode out;
-    if (next_child == 0) {
-      // Branch 1: include branch vertex
-      out = include_vertex(branchVertex);
-    } 
-    else {
-      // Branch 2: exclude branch vertex (all its neighbors go to cover)
-      out = exclude_vertex(branchVertex);
-    }
+    VCNode out = (next_child == 0)
+      ? include_vertex(branchVertex)
+      : exclude_vertex(branchVertex);
+
     ++next_child;
     return out;
   }
 };
 
-static void reconstruct_cover_from_bitset(const BitGraph<NWORDS> &g, VCNode &n) {
-  int N = g.size();
-  n.sol.cover.clear();
-  n.sol.cover.reserve(n.size);
-  for (int i = 0; i < N; ++i) {
-    if (n.inCover.test(i)) n.sol.cover.push_back(i);
-  }
-}
-
 // HPX main
 int hpx_main(hpx::program_options::variables_map &opts) {
-
   auto inputFile = opts["input-file"].as<std::string>();
   auto gFile = dimacs::read_dimacs(inputFile);
   auto graph = buildGraphFromFile<NWORDS>(gFile);
 
   auto start_time = std::chrono::steady_clock::now();
 
-  // Root node: no vertices chosen, all active
   VCNode root;
   root.size = 0;
   root.inCover.resize(graph.size());
@@ -337,14 +273,13 @@ int hpx_main(hpx::program_options::variables_map &opts) {
   root.active.set_all();
   root.isCover = check_is_cover(graph, root);
 
-  // Apply reductions once at the root
   apply_reductions(graph, root);
 
   VCNode sol = root;
 
   YewPar::Skeletons::API::Params<int> P;
-  P.initialBound = graph.size(); // worst-case cover size ≤ |V|
-  
+  P.initialBound = graph.size();
+
   auto skeletonType = opts["skeleton"].as<std::string>();
   if (skeletonType == "seq") {
     sol = YewPar::Skeletons::Seq<VCGenNode,
@@ -352,7 +287,7 @@ int hpx_main(hpx::program_options::variables_map &opts) {
           YewPar::Skeletons::API::BoundFunction<vcBound_func>,
           YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>>
           ::search(graph, root, P);
-  } 
+  }
   else if (skeletonType == "depthbounded") {
     P.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
     sol = YewPar::Skeletons::DepthBounded<VCGenNode,
@@ -360,7 +295,7 @@ int hpx_main(hpx::program_options::variables_map &opts) {
           YewPar::Skeletons::API::BoundFunction<vcBound_func>,
           YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>>
           ::search(graph, root, P);
-  } 
+  }
   else if (skeletonType == "stacksteal") {
     P.stealAll = static_cast<bool>(opts.count("chunked"));
     sol = YewPar::Skeletons::StackStealing<VCGenNode,
@@ -368,7 +303,7 @@ int hpx_main(hpx::program_options::variables_map &opts) {
           YewPar::Skeletons::API::BoundFunction<vcBound_func>,
           YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>>
           ::search(graph, root, P);
-  } 
+  }
   else if (skeletonType == "ordered") {
     P.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
     if (opts.count("discrepancyOrder")) {
@@ -386,7 +321,7 @@ int hpx_main(hpx::program_options::variables_map &opts) {
             YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>>
             ::search(graph, root, P);
     }
-  } 
+  }
   else if (skeletonType == "budget") {
     P.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
     sol = YewPar::Skeletons::Budget<VCGenNode,
@@ -394,25 +329,22 @@ int hpx_main(hpx::program_options::variables_map &opts) {
           YewPar::Skeletons::API::BoundFunction<vcBound_func>,
           YewPar::Skeletons::API::ObjectiveComparison<std::less<int>>>
           ::search(graph, root, P);
-  } 
+  }
   else {
     hpx::cout << "Invalid skeleton type\n";
     return hpx::finalize();
   }
 
-  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-    std::chrono::steady_clock::now() - start_time);
+  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
 
   hpx::cout << "Minimum Vertex Cover Size = " << sol.size << "\n";
   hpx::cout << "cpu = " << ms.count() << " ms\n";
-  
+
   return hpx::finalize();
 }
 
-// CLI 
 int main(int argc, char *argv[]) {
-  hpx::program_options::options_description
-      desc("Vertex Cover — YewPar");
+  hpx::program_options::options_description desc("Vertex Cover — YewPar");
 
   desc.add_options()
     ("skeleton",
