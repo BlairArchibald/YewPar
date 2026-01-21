@@ -73,9 +73,9 @@ struct StackStealing {
     Enum acc;
 
     // Setup the stack with root node
-    GeneratorStack<Generator> genStack;
-    genStack.reserve(maxStackDepth);
-    genStack.emplace_back(StackElem<Generator>(reg->space, initNode));
+    StackElem<Generator> rootElem(reg->space, initNode);
+
+    GeneratorStack<Generator> generatorStack(maxStackDepth, rootElem);
 
     if constexpr(isEnumeration) {
         acc.accumulate(initNode);
@@ -86,7 +86,7 @@ struct StackStealing {
     unsigned threadId;
     std::tie(stealReq, threadId) = std::static_pointer_cast<Policy>(Workstealing::Scheduler::local_policy)->registerThread();
 
-    runTaskFromStack(depth, reg->space, genStack, stealReq, acc, donePromise, threadId);
+    runTaskFromStack(depth, reg->space, generatorStack, stealReq, acc, donePromise, threadId);
   }
 
   using SubTreeTask = func<
@@ -198,34 +198,41 @@ struct StackStealing {
 
       // If there's still children at this stackDepth we move into them
       if (generatorStack[stackDepth].seen < generatorStack[stackDepth].gen.numChildren) {
+
         // Get the next child at this stackDepth
-        const auto child = generatorStack[stackDepth].gen.next();
+        generatorStack[stackDepth + 1].node = generatorStack[stackDepth].gen.next();
+        auto & child = generatorStack[stackDepth + 1].node;
+
         generatorStack[stackDepth].seen++;
 
         auto pn = ProcessNode<Space, Node, Args...>::processNode(reg->params, space, child, acc);
         if (pn == ProcessNodeRet::Exit) { return; }
         else if (pn == ProcessNodeRet::Prune) { continue; }
         else if (pn == ProcessNodeRet::Break) {
-          generatorStack.pop_back();
           stackDepth--;
           depth--;
           continue;
         }
 
-
-        if constexpr(isDepthBounded) {
-            if (depth == reg->params.maxDepth) {
-              continue;
-          }
-        }
+        // Get the child's generator
+        const auto childGen = Generator(space, child);
 
         // Going down
         stackDepth++;
         depth++;
 
-        generatorStack.emplace_back(space, child);
+        if constexpr(isDepthBounded) {
+            // This doesn't look quite right to me, we want the next element at this level not the previous?
+            if (depth == reg->params.maxDepth) {
+              stackDepth--;
+              depth--;
+              continue;
+          }
+        }
+
+        generatorStack[stackDepth].seen = 0;
+        generatorStack[stackDepth].gen = childGen;
       } else {
-        generatorStack.pop_back();
         stackDepth--;
         depth--;
       }
@@ -294,7 +301,9 @@ struct StackStealing {
       if (generatorStack[stackDepth].seen < generatorStack[stackDepth].gen.numChildren) {
 
         // Get the next child at this stackDepth
-        const auto child = generatorStack[stackDepth].gen.next();
+        generatorStack[stackDepth + 1].node = generatorStack[stackDepth].gen.next();
+        auto & child = generatorStack[stackDepth + 1].node;
+
         generatorStack[stackDepth].seen++;
 
         // Going down
@@ -330,12 +339,12 @@ struct StackStealing {
             depth--;
             continue;
           }
-
           // Get the child's generator
-          generatorStack.emplace_back(space, child);
+          const auto childGen = Generator(space, child);
+          generatorStack[stackDepth].seen = 0;
+          generatorStack[stackDepth].gen = childGen;
         }
       } else {
-        generatorStack.pop_back();
         stackDepth--;
         depth--;
       }
@@ -355,9 +364,9 @@ struct StackStealing {
     }
 
     // Master stack
-    GeneratorStack<Generator> genStack;
-    genStack.reserve(maxStackDepth);
-    genStack.emplace_back(StackElem<Generator>(space, root));
+    StackElem<Generator> rootElem(space, root);
+
+    GeneratorStack<Generator> genStack(maxStackDepth, rootElem);
 
     Enum acc;
     acc.accumulate(root);
