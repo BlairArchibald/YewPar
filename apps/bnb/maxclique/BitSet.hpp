@@ -39,8 +39,8 @@ public:
   }
 
   auto reset_all() -> void {
-  for (auto &w : _bits)
-    w = 0ULL;
+    for (auto &w : _bits)
+      w = 0ULL;
   }
 
   auto test(int a) const -> bool {
