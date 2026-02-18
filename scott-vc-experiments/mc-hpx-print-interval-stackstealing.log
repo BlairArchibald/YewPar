@@ -1,0 +1,21 @@
+2705213M@fatanode-09:/cluster/YewParVCTest$ mpirun -np 8 --hostfile hosts.txt --map-by ppr:1:node --bind-to core   build/apps/bnb/maxclique/maxclique-8   --input-file test/vc-experiments/gen200_p0.9_44.clq   --skeleton stacksteal   --hpx:threads 32   --hpx:print-counter=/workstealing/Searc
+hManager/distributedSteals   --hpx:print-counter-interval=1000
+/workstealing{locality#0/total}/SearchManager/distributedSteals,1,0.060277,[s],0
+/workstealing{locality#1/total}/SearchManager/distributedSteals,1,0.060593,[s],0
+/workstealing{locality#2/total}/SearchManager/distributedSteals,1,0.060692,[s],0
+/workstealing{locality#3/total}/SearchManager/distributedSteals,1,0.060542,[s],0
+/workstealing{locality#4/total}/SearchManager/distributedSteals,1,0.060745,[s],0
+/workstealing{locality#5/total}/SearchManager/distributedSteals,1,0.060825,[s],0
+/workstealing{locality#6/total}/SearchManager/distributedSteals,1,0.060970,[s],0
+/workstealing{locality#7/total}/SearchManager/distributedSteals,1,0.060877,[s],0
+MaxClique Size = 44
+cpu = 145
+/workstealing{locality#0/total}/SearchManager/distributedSteals,2,0.238809,[s],0
+/workstealing{locality#1/total}/SearchManager/distributedSteals,2,0.239123,[s],12
+/workstealing{locality#2/total}/SearchManager/distributedSteals,2,0.239234,[s],21
+/workstealing{locality#3/total}/SearchManager/distributedSteals,2,0.239180,[s],33
+/workstealing{locality#4/total}/SearchManager/distributedSteals,2,0.239560,[s],15
+/workstealing{locality#5/total}/SearchManager/distributedSteals,2,0.239494,[s],25
+/workstealing{locality#6/total}/SearchManager/distributedSteals,2,0.239508,[s],17
+/workstealing{locality#7/total}/SearchManager/distributedSteals,2,0.239678,[s],38
+2705213M@fatanode-09:/cluster/YewParVCTest$

@@ -40,17 +40,17 @@ BitGraph<n_words_> buildGraphFromFile(const dimacs::GraphFromFile &g) {
     return comp;
 }
 
-// Vertex Cover node
-struct VCSol {
-    std::vector<int> cover;
-};
+static BitSet<NWORDS> undecided_set(const BitSet<NWORDS>& active, const BitSet<NWORDS>& inCover, int /*N*/) {
+    BitSet<NWORDS> undec = active;
+    undec.intersect_with_complement(inCover); // active \ inCover
+    return undec;
+}
 
 struct VCNode {
-    VCSol sol;
-    int size;
+    int size = 0;
     BitSet<NWORDS> inCover;
     BitSet<NWORDS> active;
-    bool isCover;
+    bool isCover = false;
 
     int getObj() const {
         if (!isCover) return std::numeric_limits<int>::max();
@@ -58,122 +58,99 @@ struct VCNode {
     }
 };
 
-// Check uncovered edges
-bool check_is_cover(const BitGraph<NWORDS> &g, const VCNode &n) {
+static bool check_is_cover(const BitGraph<NWORDS> &g, const VCNode &n) {
     int N = g.size();
-    BitSet<NWORDS> rest = n.active;
-    for (int i = 0; i < N; ++i) {
-        if (n.inCover.test(i)) {
-            rest.unset(i);
-        }
-    }
+    BitSet<NWORDS> rest = undecided_set(n.active, n.inCover, N);
 
     for (int u = 0; u < N; ++u) {
         if (!rest.test(u)) continue;
         BitSet<NWORDS> nbrs = rest;
-        g.intersect_with_row(u, nbrs);
+        g.intersect_with_row(u, nbrs); 
         if (!nbrs.empty()) return false;
     }
     return true;
 }
 
-// reduction: degree-0
-bool apply_reductions(const BitGraph<NWORDS> &g, VCNode &n) {
+// reduction: degree-0 (remove isolated vertices)
+static bool apply_reductions(const BitGraph<NWORDS> &g, VCNode &n) {
     bool changed = false;
     int N = g.size();
 
     while (true) {
         bool local = false;
 
-        BitSet<NWORDS> undec = n.active;
-        for (int i = 0; i < N; ++i) {
-            if (n.inCover.test(i)) {
-                undec.unset(i);
-            }
-        }
+        BitSet<NWORDS> undec = undecided_set(n.active, n.inCover, N);
 
         for (int u = 0; u < N; ++u) {
             if (!undec.test(u)) continue;
 
-            BitSet<NWORDS> nbrs = n.active;
-            g.intersect_with_row(u, nbrs);
-
-            for (int v = 0; v < N; ++v) {
-                if (nbrs.test(v) && n.inCover.test(v)) {
-                    nbrs.unset(v);
-                }
-            }
+            BitSet<NWORDS> nbrs = undec;
+            g.intersect_with_row(u, nbrs); 
 
             if (nbrs.empty()) {
+                // u is isolated in the current undecided subgraph, can deactivate it
                 n.active.unset(u);
                 undec.unset(u);
                 local = true;
             }
         }
+
         changed |= local;
         if (!local) break;
     }
+
     n.isCover = check_is_cover(g, n);
     return changed;
 }
 
-// Greedy maximal matching lower bound
-int matchingLB(const BitGraph<NWORDS> &g, const VCNode &n) {
+// greedy maximal matching lower bound
+static int matchingLB(const BitGraph<NWORDS> &g, const VCNode &n) {
     int N = g.size();
-    BitSet<NWORDS> avail = n.active;
 
-    for (int i = 0; i < N; ++i) {
-        if (n.inCover.test(i)) {
-            avail.unset(i);
-        }
-    }
+    BitSet<NWORDS> avail = undecided_set(n.active, n.inCover, N);
 
-    std::vector<bool> used(N, false);
+    BitSet<NWORDS> used;
+    used.resize(N);
+    used.reset_all();
+
     int M = 0;
 
     for (int u = 0; u < N; ++u) {
-        if (!avail.test(u) || used[u]) continue;
+        if (!avail.test(u) || used.test(u)) continue;
 
         BitSet<NWORDS> nbrs = avail;
-        g.intersect_with_row(u, nbrs);
-
-        for (int v = 0; v < N; ++v) {
-            if (nbrs.test(v) && used[v]) {
-                nbrs.unset(v);
-            }
-        }
+        g.intersect_with_row(u, nbrs);          
+        nbrs.intersect_with_complement(used);  
 
         int v = nbrs.first_set_bit();
         if (v != -1) {
-            used[u] = used[v] = true;
+            used.set(u);
+            used.set(v);
             avail.unset(u);
             avail.unset(v);
-            M++;
-        } 
-        else {
+            ++M;
+        } else {
             avail.unset(u);
         }
     }
+
     return n.size + M;
 }
 
-// Branching helper: pick vertex with maximum residual degree
-int pick_branch_vertex(const BitGraph<NWORDS> &g, const VCNode &n) {
+// pick vertex with maximum residual degree in undecided subgraph
+static int pick_branch_vertex(const BitGraph<NWORDS> &g, const VCNode &n) {
     int N = g.size();
+    BitSet<NWORDS> undec = undecided_set(n.active, n.inCover, N);
+
     int best = -1, bestD = -1;
 
     for (int u = 0; u < N; ++u) {
-        if (!n.active.test(u) || n.inCover.test(u)) continue;
+        if (!undec.test(u)) continue;
 
-        BitSet<NWORDS> nbrs = n.active;
-        g.intersect_with_row(u, nbrs);
+        BitSet<NWORDS> nbrs = undec;
+        g.intersect_with_row(u, nbrs); 
 
-        for (int v = 0; v < N; ++v) {
-            if (nbrs.test(v) && n.inCover.test(v)) {
-                nbrs.unset(v);
-            }
-        }
-        int d = nbrs.popcount();
+        int d = static_cast<int>(nbrs.popcount());
         if (d > bestD) {
             bestD = d;
             best = u;
@@ -183,10 +160,9 @@ int pick_branch_vertex(const BitGraph<NWORDS> &g, const VCNode &n) {
 }
 
 // Recursive branch-and-bound
-VCNode bestSol;
+static VCNode bestSol;
 
-void dfs(const BitGraph<NWORDS> &g, VCNode node, int UB) {
-
+static void dfs(const BitGraph<NWORDS> &g, const VCNode &node, int UB) {
     int LB = matchingLB(g, node);
     if (LB >= UB) return;
 
@@ -204,30 +180,30 @@ void dfs(const BitGraph<NWORDS> &g, VCNode node, int UB) {
         VCNode c = node;
         if (!c.inCover.test(v)) {
             c.inCover.set(v);
-            c.sol.cover.push_back(v);
-            c.size++;
+            ++c.size;
         }
         apply_reductions(g, c);
         dfs(g, c, UB);
         UB = bestSol.size;
     }
 
-    // exclude v
+    // exclude v => must include all neighbors of v in the cover, then deactivate v
     {
         VCNode c = node;
         int N = g.size();
 
+        // neighbors among currently active vertices
         BitSet<NWORDS> nbrs = c.active;
         g.intersect_with_row(v, nbrs);
 
+        // add all neighbors not already in the cover
         for (int u = 0; u < N; ++u) {
             if (nbrs.test(u) && !c.inCover.test(u)) {
                 c.inCover.set(u);
-                c.sol.cover.push_back(u);
-                c.size++;
+                ++c.size;
             }
         }
-        
+
         c.active.unset(v);
         apply_reductions(g, c);
         dfs(g, c, UB);
@@ -235,7 +211,6 @@ void dfs(const BitGraph<NWORDS> &g, VCNode node, int UB) {
 }
 
 int main(int argc, char** argv) {
-
     if (argc < 3 || std::string(argv[1]) != "--input-file") {
         std::cout << "Usage: ./vc_seq --input-file file.clq\n";
         return 0;
@@ -265,4 +240,5 @@ int main(int argc, char** argv) {
 
     std::cout << "Minimum Vertex Cover Size = " << bestSol.size << "\n";
     std::cout << "cpu = " << ms << " ms\n";
+    return 0;
 }
