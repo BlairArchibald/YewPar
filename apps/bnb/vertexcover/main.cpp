@@ -72,13 +72,13 @@ struct VCNode {
   BitSet<NWORDS> active;
   bool isCover = false;
 
-  // function for optimization skeleton - return current cover size if valid cover, otherwise +inf
+  // function for optimisation skeleton - return current cover size if valid cover, otherwise +inf
   int getObj() const {
     if (!isCover) return std::numeric_limits<int>::max();
     return size;
   }
 
-  // serialization support for multi-node work stealing
+  // serialisation support for multi-node work stealing
   template <class Archive>
   void serialize(Archive &ar, const unsigned int) {
     ar & size;
@@ -122,7 +122,7 @@ static bool apply_reductions(const BitGraph<NWORDS> &g, VCNode &n) {
       if (!undec.test(u)) continue;
 
       BitSet<NWORDS> nbrs = undec;
-      g.intersect_with_row(u, nbrs); // neighbors among undecided vertices
+      g.intersect_with_row(u, nbrs); // neighbours among undecided vertices
 
       if (nbrs.empty()) {
         n.active.unset(u);
@@ -138,7 +138,7 @@ static bool apply_reductions(const BitGraph<NWORDS> &g, VCNode &n) {
 }
 
 // Matching-based lower bound on remaining cover size
-// LB = |C| + size of greedy maximal matching on undecided induced subgraph
+// LB(n) = |S| + |M| , size of greedy maximal matching on undecided induced subgraph
 int vcBound(const BitGraph<NWORDS> &g, const VCNode &n) {
   int N = g.size();
 
@@ -182,11 +182,11 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
   int next_child = 0;
   int branchVertex = -1;
 
-  // Default destructor for deserialization
+  // Default destructor for deserialisation
   VCGenNode() : graph(std::cref(*(const BitGraph<NWORDS>*)nullptr)) {}
 
-  // Serialization support for multi-node work stealing
-  // Note: graph reference is NOT serialized - it's shared read-only data
+  // Serialisation support for multi-node work stealing
+  // Note: graph reference is NOT serialised - it's shared read-only data
   // that must be reconstructed from the registry on the receiving node
   friend class boost::serialization::access;
   template <class Archive>
@@ -253,15 +253,15 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
     return child;
   }
 
-  // helper function to exclude current vertex from cover, add neighbors to cover, and apply reductions
+  // helper function to exclude current vertex from cover, add neighbours to cover, and apply reductions
   VCNode exclude_vertex(int v) const {
     VCNode child = parent;
-    // get graph from registry if reference is invalid (after deserialization)
+    // get graph from registry if reference is invalid (after deserialisation)
     const auto &g = getGraph();
     int N = g.size();
 
     BitSet<NWORDS> nbrs = child.active;
-    g.intersect_with_row(v, nbrs); // neighbors among active vertices
+    g.intersect_with_row(v, nbrs); // neighbours among active vertices
 
     for (int u = 0; u < N; ++u) {
       if (!nbrs.test(u)) continue;
@@ -286,11 +286,11 @@ struct VCGenNode : YewPar::NodeGenerator<VCNode, BitGraph<NWORDS>> {
     return out;
   }
 
-  // helper to get graph reference, either from member reference or from registry if deserialized
+  // helper to get graph reference, either from member reference or from registry if deserialised
   private:
     // helper to get graph - uses reference if valid, otherwise gets from registry
     const BitGraph<NWORDS>& getGraph() const {
-      // after deserialization on remote node, need to get from registry
+      // after deserialisation on remote node, need to get from registry
       if (&graph.get() == nullptr) {
         return YewPar::Registry<BitGraph<NWORDS>, VCNode, int, YewPar::CountNodesEnumerator<VCNode>>::gReg->space;
       }
@@ -321,17 +321,7 @@ int hpx_main(hpx::program_options::variables_map &opts) {
   YewPar::Skeletons::API::Params<int> P;
   P.initialBound = graph.size();
 
-  auto skeletonType = opts["skeleton"].as<std::string>();
-  
-  // Debug: Print configuration
-  if (hpx::get_locality_id() == 0) {
-    hpx::cout << "=== Configuration ===\n";
-    hpx::cout << "Skeleton: " << skeletonType << "\n";
-    hpx::cout << "Graph size: " << graph.size() << " vertices\n";
-    hpx::cout << "Num localities: " << hpx::get_num_localities(hpx::launch::sync) << "\n";
-    hpx::cout << "HPX threads per locality: " << hpx::get_os_thread_count() << "\n";
-  }
-  
+  auto skeletonType = opts["skeleton"].as<std::string>();  
   if (skeletonType == "seq") {
     sol = YewPar::Skeletons::Seq<VCGenNode,
           YewPar::Skeletons::API::Optimisation,
@@ -341,10 +331,6 @@ int hpx_main(hpx::program_options::variables_map &opts) {
   }
   else if (skeletonType == "depthbounded") {
     P.spawnDepth = opts["spawn-depth"].as<std::uint64_t>();
-    if (hpx::get_locality_id() == 0) {
-      hpx::cout << "Spawn depth: " << P.spawnDepth << "\n";
-      hpx::cout << "====================\n" << hpx::flush;
-    }
     sol = YewPar::Skeletons::DepthBounded<VCGenNode,
           YewPar::Skeletons::API::Optimisation,
           YewPar::Skeletons::API::BoundFunction<vcBound_func>,
@@ -353,10 +339,6 @@ int hpx_main(hpx::program_options::variables_map &opts) {
   }
   else if (skeletonType == "stacksteal") {
     P.stealAll = static_cast<bool>(opts.count("chunked"));
-    if (hpx::get_locality_id() == 0) {
-      hpx::cout << "Chunked: " << (P.stealAll ? "true" : "false") << "\n";
-      hpx::cout << "====================\n" << hpx::flush;
-    }
     sol = YewPar::Skeletons::StackStealing<VCGenNode,
           YewPar::Skeletons::API::Optimisation,
           YewPar::Skeletons::API::BoundFunction<vcBound_func>,
@@ -382,10 +364,6 @@ int hpx_main(hpx::program_options::variables_map &opts) {
   }
   else if (skeletonType == "budget") {
     P.backtrackBudget = opts["backtrack-budget"].as<unsigned>();
-    if (hpx::get_locality_id() == 0) {
-      hpx::cout << "Backtrack budget: " << P.backtrackBudget << "\n";
-      hpx::cout << "====================\n" << hpx::flush;
-    }
     sol = YewPar::Skeletons::Budget<VCGenNode,
           YewPar::Skeletons::API::Optimisation,
           YewPar::Skeletons::API::BoundFunction<vcBound_func>,
@@ -402,50 +380,6 @@ int hpx_main(hpx::program_options::variables_map &opts) {
 
   hpx::cout << "Minimum Vertex Cover Size = " << sol.size << "\n";
   hpx::cout << "cpu = " << ms.count() << " ms\n";
-
-  // Print task distribution statistics for parallel skeletons
-  // IMPORTANT: Print from ALL localities to see work distribution
-  if (skeletonType != "seq") {
-    // Force barrier to ensure all localities print before exit
-    hpx::wait_all();
-    
-    auto localId = hpx::get_locality_id();
-    auto numLocs = hpx::get_num_localities(hpx::launch::sync);
-    
-    // Each locality prints its stats
-    hpx::cout << "\n=== Task Distribution Statistics (Locality " << localId << " of " << numLocs << ") ===\n";
-    hpx::cout << "Local Steals: " << Workstealing::Policies::SearchManagerPerf::perf_localSteals.load() << "\n";
-    hpx::cout << "Distributed Steals: " << Workstealing::Policies::SearchManagerPerf::perf_distributedSteals.load() << "\n";
-    hpx::cout << "Failed Local Steals: " << Workstealing::Policies::SearchManagerPerf::perf_failedLocalSteals.load() << "\n";
-    hpx::cout << "Failed Distributed Steals: " << Workstealing::Policies::SearchManagerPerf::perf_failedDistributedSteals.load() << "\n";
-    
-    auto totalSteals = Workstealing::Policies::SearchManagerPerf::perf_localSteals.load() + 
-                       Workstealing::Policies::SearchManagerPerf::perf_distributedSteals.load();
-    auto totalFailed = Workstealing::Policies::SearchManagerPerf::perf_failedLocalSteals.load() + 
-                       Workstealing::Policies::SearchManagerPerf::perf_failedDistributedSteals.load();
-    
-    if (totalSteals == 0 && totalFailed == 0) {
-      hpx::cout << "*** WARNING: This locality did NO stealing attempts - likely idle! ***\n";
-    }
-    
-    if (Workstealing::Policies::SearchManagerPerf::perf_distributedSteals.load() > 0 || 
-        !Workstealing::Policies::SearchManagerPerf::distributedStealsList.empty()) {
-      hpx::cout << "\n=== Distributed Steal Details ===\n";
-      Workstealing::Policies::SearchManagerPerf::printDistributedStealsList();
-    }
-    
-    if (!Workstealing::Policies::SearchManagerPerf::chunkSizeList.empty()) {
-      hpx::cout << "\n=== Chunk Sizes ===\n";
-      Workstealing::Policies::SearchManagerPerf::printChunkSizeList();
-    }
-    
-    hpx::cout << "=============================================================\n" << hpx::flush;
-    
-    // Summary from locality 0
-    if (localId == 0) {
-      hpx::cout << "\n*** If only locality 0 has stats above, work distribution FAILED ***\n" << hpx::flush;
-    }
-  }
 
   return hpx::finalize();
 }
