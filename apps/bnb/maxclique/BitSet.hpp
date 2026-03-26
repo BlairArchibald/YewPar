@@ -38,6 +38,11 @@ public:
       set(i);
   }
 
+  auto reset_all() -> void {
+    for (auto &w : _bits)
+      w = 0ULL;
+  }
+
   auto test(int a) const -> bool {
     return _bits[a / bits_per_word] & (BitWord{ 1 } << (a % bits_per_word));
   }
