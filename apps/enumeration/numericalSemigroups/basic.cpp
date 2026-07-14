@@ -100,11 +100,11 @@ struct NodeGen : YewPar::NodeGenerator<SemiGroup, Empty> {
   }
 };
 
-struct CountNodes : YewPar::Enumerator<SemiGroup, std::uint64_t> {
+struct CountNodes : YewPar::Enumerator<Empty, SemiGroup, std::uint64_t> {
   std::uint64_t count;
   CountNodes() = default;
 
-  void accumulate(const SemiGroup & n) override {
+  void accumulate(const Empty&, const SemiGroup & n) override {
     count++;
   }
 

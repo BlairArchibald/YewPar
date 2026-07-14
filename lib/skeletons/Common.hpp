@@ -78,7 +78,7 @@ struct ProcessNode {
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
 
-  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Node>>::type Enumerator;
+  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Space, Node>>::type Enumerator;
 
   static ProcessNodeRet processNode(const API::Params<Bound> & params,
                                     const Space & space,
@@ -86,7 +86,7 @@ struct ProcessNode {
                                     Enumerator & acc) {
 
     if constexpr(isEnumeration) {
-        acc.accumulate(c);
+        acc.accumulate(space, c);
         return ProcessNodeRet::Continue;
     }
 

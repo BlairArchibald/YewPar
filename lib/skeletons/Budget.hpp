@@ -34,7 +34,7 @@ struct Budget {
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
-  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Node>>::type Enum;
+  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Space, Node>>::type Enum;
 
   typedef typename parameter::value_type<args, API::tag::DepthBoundedPoolPolicy, Workstealing::Policies::DepthPoolPolicy>::type Policy;
 
@@ -76,7 +76,7 @@ struct Budget {
 
     // Count the initial element
     if (isEnumeration) {
-      acc.accumulate(n);
+      acc.accumulate(reg->space, n);
     }
 
     while (!genStack.empty()) {

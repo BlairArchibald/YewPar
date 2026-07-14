@@ -36,13 +36,13 @@ struct NodeGen : YewPar::NodeGenerator<Monoid, Empty> {
 };
 
 // Enumerator
-struct CountDepths : YewPar::Enumerator<Monoid, std::vector<uint64_t>> {
+struct CountDepths : YewPar::Enumerator<Empty, Monoid, std::vector<uint64_t>> {
   std::vector<uint64_t> counts;
   CountDepths() {
     counts.resize(50);
   }
 
-  void accumulate(const Monoid & m) override {
+  void accumulate(const Empty&, const Monoid & m) override {
     counts[m.genus] += 1;
   }
 

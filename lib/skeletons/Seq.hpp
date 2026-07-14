@@ -30,7 +30,7 @@ struct Seq {
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
-  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Node>>::type Enumerator;
+  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Space, Node>>::type Enumerator;
 
   static void printSkeletonDetails() {
     hpx::cout << "Skeleton Type: Seq\n";
@@ -56,7 +56,7 @@ struct Seq {
     Generator newCands = Generator(space, n);
 
     if constexpr(isEnumeration) {
-        acc.accumulate(n);
+        acc.accumulate(space, n);
     }
 
     if constexpr(isDepthBounded) {

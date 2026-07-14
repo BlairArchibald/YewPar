@@ -33,11 +33,11 @@ NodeGen generateChildren(const Empty & space, const std::uint64_t & n) {
   return NodeGen(space, n);
 }
 
-struct CountNodes : YewPar::Enumerator<std::uint64_t, std::uint64_t> {
+struct CountNodes : YewPar::Enumerator<Empty, std::uint64_t, std::uint64_t> {
   std::uint64_t count;
   CountNodes() : count(0) {}
 
-  void accumulate(const std::uint64_t & n) override {
+  void accumulate(const Empty&, const std::uint64_t & n) override {
     count++;
   }
 
