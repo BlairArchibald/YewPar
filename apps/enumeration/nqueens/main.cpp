@@ -43,7 +43,11 @@ namespace hpx { namespace serialization {
   }
 }}
 
-struct NodeGen : YewPar::NodeGenerator<Node, Empty> {
+struct NodeGen {
+  using Nodetype = Node;
+  using Spacetype = Empty;
+  unsigned numChildren = 0;
+
   std::uint32_t all;
   std::uint32_t poss;
   std::uint32_t ld;
@@ -56,7 +60,7 @@ struct NodeGen : YewPar::NodeGenerator<Node, Empty> {
     this->numChildren = __builtin_popcount(poss);
   }
 
-  Node next() override {
+  Node next() {
       auto bit = poss & -poss;
       poss -= bit;
 

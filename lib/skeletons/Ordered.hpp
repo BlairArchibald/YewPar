@@ -26,11 +26,11 @@
 namespace YewPar { namespace Skeletons {
 
 namespace Ordered_ {
-template <typename Generator, typename ...Args>
+template <NodeGenerator Generator, typename ...Args>
 struct SubtreeTask;
 }
 
-template <typename Generator, typename ...Args>
+template <NodeGenerator Generator, typename ...Args>
 struct Ordered {
   typedef typename Generator::Nodetype Node;
   typedef typename Generator::Spacetype Space;
@@ -50,7 +50,7 @@ struct Ordered {
   typedef typename parameter::value_type<args, API::tag::BoundFunction, nullFn__>::type boundFn;
   typedef typename boundFn::return_type Bound;
   typedef typename parameter::value_type<args, API::tag::ObjectiveComparison, std::greater<Bound> >::type Objcmp;
-  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Node>>::type Enum;
+  typedef typename parameter::value_type<args, API::tag::Enumerator, IdentityEnumerator<Space, Node>>::type Enum;
 
   static void printSkeletonDetails() {
     hpx::cout << "Skeleton Type: Ordered\n";
@@ -283,7 +283,7 @@ struct Ordered {
 };
 
 namespace Ordered_ {
-template <typename Generator, typename ...Args>
+template <NodeGenerator Generator, typename ...Args>
 struct SubtreeTask : hpx::actions::make_action<
   decltype(&Ordered<Generator, Args...>::subtreeTask),
   &Ordered<Generator, Args...>::subtreeTask,

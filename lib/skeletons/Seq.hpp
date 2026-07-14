@@ -14,7 +14,7 @@
 
 namespace YewPar { namespace Skeletons {
 
-template <typename Generator, typename ...Args>
+template <NodeGenerator Generator, typename ...Args>
 struct Seq {
   typedef typename Generator::Nodetype Node;
   typedef typename Generator::Spacetype Space;

@@ -133,7 +133,11 @@ struct MCNode {
 
 };
 
-struct GenNode : YewPar::NodeGenerator<MCNode, BitGraph<NWORDS> > {
+struct GenNode {
+  using Nodetype = MCNode;
+  using Spacetype = BitGraph<NWORDS>;
+  unsigned numChildren = 0;
+
   std::array<unsigned, NWORDS * bits_per_word> p_order;
   std::array<unsigned, NWORDS * bits_per_word> colourClass;
 
@@ -155,7 +159,7 @@ struct GenNode : YewPar::NodeGenerator<MCNode, BitGraph<NWORDS> > {
   }
 
   // Get the next value
-  MCNode next() override {
+  MCNode next() {
     auto sol = childSol;
     sol.members.push_back(p_order[v]);
     sol.colours = colourClass[v] - 1;

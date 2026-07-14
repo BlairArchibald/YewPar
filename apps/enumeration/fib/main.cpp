@@ -12,7 +12,11 @@
 // Fib doesn't have a space
 struct Empty {};
 
-struct NodeGen : YewPar::NodeGenerator<std::uint64_t, Empty> {
+struct NodeGen {
+  using Nodetype = std::uint64_t;
+  using Spacetype = Empty;
+  unsigned numChildren = 0;
+
   std::uint64_t n;
   unsigned i = 1;
 
@@ -22,7 +26,7 @@ struct NodeGen : YewPar::NodeGenerator<std::uint64_t, Empty> {
     this->numChildren = 2;
   }
 
-  std::uint64_t next() override {
+  std::uint64_t next() {
     auto res = n - i;
     ++i;
     return res;

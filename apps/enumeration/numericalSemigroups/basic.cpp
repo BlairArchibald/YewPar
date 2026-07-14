@@ -71,7 +71,11 @@ SemiGroup::SemiGroup(const SemiGroup& S,uchar x){
 // Numerical Semigroups don't have a space
 struct Empty {};
 
-struct NodeGen : YewPar::NodeGenerator<SemiGroup, Empty> {
+struct NodeGen {
+  using Nodetype = SemiGroup;
+  using Spacetype = Empty;
+  unsigned numChildren = 0;
+
   const SemiGroup & group;
   unsigned it;
 
@@ -88,7 +92,7 @@ struct NodeGen : YewPar::NodeGenerator<SemiGroup, Empty> {
     this->numChildren = children;
   }
 
-  SemiGroup next() override {
+  SemiGroup next() {
     if (group.tab[it] == 1) {
       auto s = SemiGroup(group, it);
       it++;

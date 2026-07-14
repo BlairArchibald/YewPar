@@ -9,12 +9,12 @@
 namespace YewPar { namespace Skeletons {
 
 namespace detail {
-template <typename Generator, typename ...Args>
+template <NodeGenerator Generator, typename ...Args>
 struct BudgetSubtreeTask;
 }
 
 
-template <typename Generator, typename ...Args>
+template <NodeGenerator Generator, typename ...Args>
 struct Budget {
   typedef typename Generator::Nodetype Node;
   typedef typename Generator::Spacetype Space;
@@ -215,7 +215,7 @@ struct Budget {
 };
 
 namespace detail {
-template <typename Generator, typename ...Args>
+template <NodeGenerator Generator, typename ...Args>
 struct BudgetSubtreeTask : hpx::actions::make_action<
   decltype(&Budget<Generator, Args...>::subtreeTask),
   &Budget<Generator, Args...>::subtreeTask,
@@ -227,7 +227,7 @@ struct BudgetSubtreeTask : hpx::actions::make_action<
 
 namespace hpx { namespace traits {
 
-template <typename Generator, typename ...Args>
+template <YewPar::NodeGenerator Generator, typename ...Args>
 struct action_stacksize<YewPar::Skeletons::detail::BudgetSubtreeTask<Generator, Args...> >  {
   static constexpr threads::thread_stacksize value = threads::thread_stacksize::huge;
 };

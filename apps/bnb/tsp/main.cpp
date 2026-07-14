@@ -71,7 +71,11 @@ static int next_set(const std::bitset<words_> & bs, unsigned max, unsigned last_
   return -1; // Error
 }
 
-struct NodeGen : YewPar::NodeGenerator<TSPNode, TSPSpace> {
+struct NodeGen {
+  using Nodetype = TSPNode;
+  using Spacetype = TSPSpace;
+  unsigned numChildren = 0;
+
   unsigned lastCity;
 
   const TSPSpace &space;
@@ -87,7 +91,7 @@ struct NodeGen : YewPar::NodeGenerator<TSPNode, TSPSpace> {
     nextToVisit = next_set<MAX_CITIES>(bs, this->space.numCities, 0);
   }
 
-  TSPNode next() override {
+  TSPNode next() {
     auto nextCity = nextToVisit;
     nextToVisit = next_set<MAX_CITIES>(parent.unvisited, space.numCities, nextToVisit);
 

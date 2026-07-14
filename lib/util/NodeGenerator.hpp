@@ -1,28 +1,16 @@
 #ifndef UTIL_LAZY_NODEGENERATOR_HPP
 #define UTIL_LAZY_NODEGENERATOR_HPP
 
+#include<type_traits>
+
 namespace YewPar {
 
-template <typename NodeType, typename Space>
-struct NodeGenerator {
-  using Nodetype  = NodeType;
-  using Spacetype = Space;
-
-  unsigned numChildren;
-
-  // When called, return the next child element
-  // Pre condition: numChildren < number of next Calls
-  virtual NodeType next() = 0;
-
-  // Quickly skip to the nth child if possible Useful for recompute based
-  // skeletons where we send a path in the tree rather than a particular node
-  NodeType nth(unsigned n) {
-    NodeType c;
-    for (auto i = 0; i <= n; ++i) {
-      c = next();
-    }
-    return c;
-  };
+template <typename T>
+concept NodeGenerator = requires(T t) {
+    typename T::Nodetype;
+    typename T::Spacetype;
+    { t.numChildren } -> std::convertible_to<unsigned>; 
+    { t.next() } -> std::same_as<typename T::Nodetype>;
 };
 
 }

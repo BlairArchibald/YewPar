@@ -27,13 +27,13 @@ namespace YewPar { namespace Skeletons {
 
 namespace DepthBounded_ {
 
-template <typename Generator, typename ...Args>
+template <NodeGenerator Generator, typename ...Args>
 struct SubtreeTask;
 
 }
 
 // This skeleton allows spawning all tasks into a workqueue based policy based on some depth limit
-template <typename Generator, typename ...Args>
+template <NodeGenerator Generator, typename ...Args>
 struct DepthBounded {
   typedef typename Generator::Nodetype Node;
   typedef typename Generator::Spacetype Space;
@@ -230,7 +230,7 @@ struct DepthBounded {
 
 namespace DepthBounded_{
 
-template <typename Generator, typename ...Args>
+template <YewPar::NodeGenerator Generator, typename ...Args>
 struct SubtreeTask : hpx::actions::make_action<
   decltype(&DepthBounded<Generator, Args...>::subtreeTask),
   &DepthBounded<Generator, Args...>::subtreeTask,
@@ -242,7 +242,7 @@ struct SubtreeTask : hpx::actions::make_action<
 
 namespace hpx { namespace traits {
 
-template <typename Generator, typename ...Args>
+template <YewPar::NodeGenerator Generator, typename ...Args>
 struct action_stacksize<YewPar::Skeletons::DepthBounded_::SubtreeTask<Generator, Args...> > {
   static constexpr threads::thread_stacksize value = threads::thread_stacksize::huge;
 };

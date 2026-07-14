@@ -58,7 +58,11 @@ struct KPNode {
 };
 
 template <unsigned numItems>
-struct GenNode : YewPar::NodeGenerator<KPNode, KPSpace<numItems> > {
+struct GenNode {
+  using Nodetype = KPNode;
+  using Spacetype = KPSpace<numItems>;
+  unsigned numChildren = 0;
+
   std::vector<int> items;
   int pos;
 
@@ -70,7 +74,7 @@ struct GenNode : YewPar::NodeGenerator<KPNode, KPSpace<numItems> > {
     this->numChildren = n.rem.size();
   }
 
-  KPNode next() override {
+  KPNode next() {
     auto i = n.rem[pos];
     auto newSol = n.sol;
     newSol.items.push_back(i);

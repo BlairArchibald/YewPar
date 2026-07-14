@@ -19,7 +19,11 @@
 // Numerical Semigroups don't have a space
 struct Empty {};
 
-struct NodeGen : YewPar::NodeGenerator<Monoid, Empty> {
+struct NodeGen {
+  using Nodetype = Monoid;
+  using Spacetype = Empty;
+  unsigned numChildren = 0;
+
   Monoid group;
   generator_iter<CHILDREN> it;
 
@@ -28,7 +32,7 @@ struct NodeGen : YewPar::NodeGenerator<Monoid, Empty> {
     it.move_next(group); // Original code skips begin
   }
 
-  Monoid next() override {
+  Monoid next() {
     auto res = remove_generator(group, it.get_gen());
     it.move_next(group);
     return res;

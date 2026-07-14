@@ -6,7 +6,7 @@ project(YewPar)
 # Instruct cmake to find the HPX settings
 find_package(HPX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib;${CMAKE_INSTALL_PREFIX}/lib64")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)

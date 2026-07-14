@@ -63,7 +63,11 @@ template <TreeType t>
 struct NodeGen {};
 
 template <>
-struct NodeGen<TreeType::BINOMIAL> : YewPar::NodeGenerator<UTSNode, UTSState> {
+struct NodeGen<TreeType::BINOMIAL> {
+  using Nodetype = UTSNode;
+  using Spacetype = UTSState;
+  unsigned numChildren = 0;
+
   UTSNode parent;
   UTSState params;
   int i = 0;
@@ -92,7 +96,7 @@ struct NodeGen<TreeType::BINOMIAL> : YewPar::NodeGenerator<UTSNode, UTSState> {
     this->numChildren = calcNumChildren();
   }
 
-  UTSNode next() override {
+  UTSNode next() {
     UTSNode child { false, parent.depth + 1 };
     rng_spawn(parent.rngstate.state, child.rngstate.state, i);
     ++i;
@@ -102,7 +106,11 @@ struct NodeGen<TreeType::BINOMIAL> : YewPar::NodeGenerator<UTSNode, UTSState> {
 };
 
 template <>
-struct NodeGen<TreeType::GEOMETRIC> : YewPar::NodeGenerator<UTSNode, UTSState> {
+struct NodeGen<TreeType::GEOMETRIC> {
+  using Nodetype = UTSNode;
+  using Spacetype = UTSState;
+  unsigned numChildren = 0;
+
   UTSNode parent;
   UTSState params;
   int i = 0;
@@ -151,7 +159,7 @@ struct NodeGen<TreeType::GEOMETRIC> : YewPar::NodeGenerator<UTSNode, UTSState> {
     return (int) floor(log(1 - u) / log(1 - p));
   }
 
-  UTSNode next() override {
+  UTSNode next() {
     UTSNode child { false, parent.depth + 1 };
     rng_spawn(parent.rngstate.state, child.rngstate.state, i);
     ++i;

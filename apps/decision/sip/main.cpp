@@ -577,7 +577,11 @@ struct SIPNode {
 };
 
 template <unsigned n_words_>
-struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
+struct GenNode {
+  using Nodetype = SIPNode<n_words_>;
+  using Spacetype = Model<n_words_>;
+  unsigned numChildren = 0;
+
   const Domain<n_words_> * branch_domain;
 
   FixedBitSet<n_words_> remaining;
@@ -618,7 +622,7 @@ struct GenNode : YewPar::NodeGenerator<SIPNode<n_words_>, Model<n_words_>> {
   }
 
   // Get the next value
-  SIPNode<n_words_> next() override {
+  SIPNode<n_words_> next() {
     if (sat) { return SIPNode<n_words_>(parent.assignments, true); }
 
     // We need to do the copy in case we are running in parallel
